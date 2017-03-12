@@ -1,22 +1,12 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely edit after that. If you find
-# yourself editing this file very often, consider using Jekyll's data files
-# feature for the data you need to update frequently.
-#
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
-
 # Site settings
 title: Elías García - JavaScript articles
 email: elias@eliasgarcia.es
-description: > # this means to ignore newlines until "baseurl:"
+description: >
   Write an awesome description for your new site here. You can edit this
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
-baseurl: "" # the subpath of your site, e.g. /blog
-#url: "https://eliasgarcia.es" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: ""
+url: "https://eliasgarcia.es"
 twitter_username: egarciadev
 github_username:  elias-garcia
 stack_overflow_username:  elias-garcia
