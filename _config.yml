@@ -9,22 +9,36 @@
 # 'bundle exec jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: Your awesome title
-email: your-email@domain.com
+title: Elías García - JavaScript articles
+email: elias@eliasgarcia.es
 description: > # this means to ignore newlines until "baseurl:"
   Write an awesome description for your new site here. You can edit this
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
-github_username:  jekyll
+#url: "https://eliasgarcia.es" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: egarciadev
+github_username:  elias-garcia
+stack_overflow_username:  elias-garcia
+google_analytics: UA-93475150-1
+disqus.shortname: elias-garcia
+
+# Permalinks settings
+permalink: none
+
+# Pagination settings
+paginate: 10
+
+# Sass settings
+sass:
+    style: compressed
 
 # Build settings
 timezone: Europe/Madrid
 markdown: kramdown
 gems:
   - jekyll-feed
+  - jekyll-paginate
 exclude:
   - Gemfile
   - Gemfile.lock

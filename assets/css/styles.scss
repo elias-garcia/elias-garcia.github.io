@@ -1,0 +1,37 @@
+---
+
+---
+
+@charset "utf-8";
+
+// Colors
+$red:                     #FC575E;
+$dark-grey:               #3A4250;
+$dark-grey-alpha:         rgba(62, 70, 81, 0.5);
+$dark-grey-alpha-border:  rgba(62, 70, 81, 0.35);
+$medium-grey:             #e6e6e6;
+$light-grey:              #F1F4F5;
+$white:                   #FFFFFF;
+$white-alpha:             rgba(255, 255, 255, 0.5);
+
+// Width
+$width:                     800px;
+
+// Responsive breakpoints
+$md-device:                 991px;
+$s-device:                  767px;
+$xs-device:                 575px;
+
+// Media queries mixin
+@mixin media-query($device) {
+  @media (max-width: $device) {
+    @content;
+  }
+}
+
+@import "base";
+@import "header";
+@import "main";
+@import "footer";
+
+@import "blog";

@@ -1,0 +1,94 @@
+main {
+  background-color: $light-grey;
+  padding: 50px 0px;
+}
+
+.main-wrapper {
+  max-width: $width;
+  margin: auto;
+}
+
+.main-header {
+  background-color: $dark-grey;
+  border-radius: 2px 2px 0px 0px;
+  padding: 50px 80px;
+  h1 {
+    margin: 0px;
+    text-align: center;
+    color: $white;
+  }
+}
+
+.main-content {
+  background-color: $white;
+  display: flex;
+  flex-direction: column;
+  padding: 50px 80px;
+  a {
+    display: block;
+    color: $dark-grey;
+    transition: color 0.3s ease;
+    padding: 10px 0px;
+  }
+  a:hover {
+    color: $red;
+    transition: color 0.3s ease;
+  }
+  .button {
+    display: block;
+    width: 30%;
+    margin: 10px auto;
+    text-align: center;
+    text-transform: uppercase;
+    color: $red;
+    background-color: transparent;
+    border: 2px solid $red;
+    border-radius: 2px;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    & .fa {
+      padding-left: 10px;
+    }
+  }
+  .button:hover {
+    color: $white;
+    background-color: $red;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@include media-query($md-device) {
+  main {
+    padding-left: 35px;
+    padding-right: 35px;
+  }
+
+  .main-header, .main-content, .main-footer {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+}
+
+@include media-query($s-device) {
+  main {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
+  .main-header, .main-content, .main-footer {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+}
+
+@include media-query($xs-device) {
+  main {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .main-header, .main-content, .main-footer {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}

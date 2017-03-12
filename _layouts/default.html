@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: "en" }}">
-
+<html lang="{{ page.lang | default: site.lang | default: "es" }}">
   {% include head.html %}
-
   <body>
-
     {% include header.html %}
-
-    <main class="page-content" aria-label="Content">
-      <div class="wrapper">
+    <main>
+    <div class="main-wrapper">
+      <div class="main-header">
+        <h1>{{ page.title | upcase }}</h1>
+      </div>
+      <div class="main-content">
         {{ content }}
       </div>
+    </div>
     </main>
-
     {% include footer.html %}
-
+    <script src="{{ "/assets/js/header.js" | relative_url }}"></script>
   </body>
-
 </html>
