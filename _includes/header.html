@@ -1,17 +1,9 @@
 <header>
   <nav>
     <ul>
-      {% for my_page in site.pages %}
-      {% if my_page.title %}
-      {% if forloop.last == true%}
-      <li><a href="{{ my_page.url | relative_url }}" class="menu-first">{{ my_page.title | upcase }}</a></li>
-      {% elsif forloop.last == true%}
-      <li><a href="{{ my_page.url | relative_url }}" class="menu-last">{{ my_page.title | upcase }}</a></li>
-      {% else %}
-      <li><a href="{{ my_page.url | relative_url }}" class="menu-half">{{ my_page.title | upcase }}</a></li>
-      {% endif %}
-      {% endif %}
-      {% endfor %}
+      <li><a href="{{ '/' | relative_url }}" class="menu-first">BLOG</a></li>
+      <li><a href="{{ '/sobre-mi' | relative_url }}" class="menu-half">SOBRE MÍ</a></li>
+      <li><a href="{{ '/contacto' | relative_url }}" class="menu-last">CONTACTO</a></li>
     </ul>
   </nav>
 </header>

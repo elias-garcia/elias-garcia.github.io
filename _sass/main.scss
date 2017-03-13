@@ -10,7 +10,7 @@ main {
 
 .main-header {
   background-color: $dark-grey;
-  border-radius: 2px 2px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
   padding: 50px 80px;
   h1 {
     margin: 0px;
@@ -36,7 +36,6 @@ main {
   }
   .button {
     display: block;
-    width: 30%;
     margin: 10px auto;
     text-align: center;
     text-transform: uppercase;
@@ -44,7 +43,7 @@ main {
     background-color: transparent;
     border: 2px solid $red;
     border-radius: 2px;
-    padding: 10px 15px;
+    padding: 10px 20px;
     transition: background-color 0.3s ease, color 0.3s ease;
     & .fa {
       padding-left: 10px;
@@ -57,11 +56,15 @@ main {
   }
 }
 
+.content-page {
+  border-radius: 0px 0px 5px 5px;
+}
+
 .main-footer {
   background-color: $dark-grey;
   text-align: center;
   padding: 20px 70px;
-  border-radius: 0px 0px 2px 2px;
+  border-radius: 0px 0px 5px 5px;
   display: flex;
   align-items: center;
   justify-content: space-between;

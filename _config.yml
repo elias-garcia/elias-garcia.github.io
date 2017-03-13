@@ -1,17 +1,18 @@
 # Site settings
-title: Elías García - JavaScript articles
+title: Elías García - Artículos sobre JavaScript
+title_prefix: Elías García -
 email: elias@eliasgarcia.es
 description: >
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  Soy Elías García, desarrollador web Full Stack.
+  Escribo artículos sobre Node JS, Angular y
+  JavaScript en general.
 baseurl: ""
 url: "https://eliasgarcia.es"
 twitter_username: egarciadev
 github_username:  elias-garcia
 stack_overflow_username:  elias-garcia
 google_analytics: UA-93475150-1
-disqus.shortname: elias-garcia
+disqus_shortname: elias-garcia
 
 # Permalinks settings
 permalink: none

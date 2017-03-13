@@ -1,6 +1,7 @@
 ---
-layout: blog
-title: blog
+layout: default
+title: Blog
+blog: true
 ---
 
 {% for post in paginator.posts %}
@@ -12,9 +13,7 @@ title: blog
     <hr>
   </div>
   <p class="post-summary">{{ post.content | strip_html | truncatewords: 60 }}</p>
-  <div>
-    <a href="{{ post.url }}" class="button">Seguir leyendo<i class="fa fa-arrow-circle-right"></i></a>
-  </div>
+  <a href="{{ post.url }}" class="button">Seguir leyendo<i class="fa fa-arrow-circle-right"></i></a>
 </div>
 {% unless forloop.last %}
 <hr class="post-separator">
