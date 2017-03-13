@@ -11,7 +11,6 @@
       <div class="main-content">
         {{ content }}
       </div>
-      {% if paginator.total_pages > 1 %}
       <div class="main-footer">
         <div class="pagination">
           {% if paginator.previous_page %}
@@ -19,13 +18,15 @@
             <i class="fa fa-angle-left fa-lg"></i>
           </a>
           {% else %}
-            <i class="fa fa-angle-left fa-lg"></i>
+            <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}" class="inactive">
+              <i class="fa fa fa-angle-left  fa-lg"></i>
+            </a>
           {% endif %}
           <ul>
             {% for page in (1..paginator.total_pages) %}
               {% if page == paginator.page %}
               <li>
-                <p>{{ page }}</p>
+                <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}" class="active">{{ page }}</a>
               </li>
               {% elsif page == 1 %}
               <li>
@@ -38,16 +39,17 @@
               {% endif %}
             {% endfor %}
           </ul>
-          {% if paginator.previous_page %}
+          {% if paginator.next_page %}
           <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">
             <i class="fa fa fa-angle-right  fa-lg"></i>
           </a>
           {% else %}
-            <i class="fa fa fa-angle-right  fa-lg"></i>
+            <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}" class="inactive">
+              <i class="fa fa fa-angle-right  fa-lg"></i>
+            </a>
           {% endif %}
         </div>
       </div>
-      {% endif %}
     </main>
     {% include footer.html %}
     <script src="{{ "/assets/js/header.js" | relative_url }}"></script>

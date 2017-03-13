@@ -57,6 +57,54 @@ main {
   }
 }
 
+.main-footer {
+  background-color: $dark-grey;
+  text-align: center;
+  padding: 20px 70px;
+  border-radius: 0px 0px 2px 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  & a {
+    color: $white;
+    padding: 4px 10px;
+  }
+}
+
+.pagination {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+  a {
+    display: block;
+    box-sizing: border-box;
+    color: $white-alpha;
+    transition: color 0.3s ease;
+  }
+  a:hover {
+    color: $white;
+    transition: color 0.3s ease;
+  }
+  .active {
+    color: $white;
+    pointer-events: none;
+    cursor: default;
+  }
+  .inactive {
+    color: $white-alpha;
+    pointer-events: none;
+    cursor: default;
+  }
+}
+
 @include media-query($md-device) {
   main {
     padding-left: 35px;
