@@ -25,7 +25,6 @@ main {
   flex-direction: column;
   padding: 50px 80px;
   a {
-    display: block;
     color: $dark-grey;
     transition: color 0.3s ease;
     padding: 10px 0px;
@@ -35,7 +34,7 @@ main {
     transition: color 0.3s ease;
   }
   .button {
-    display: block;
+    max-width: 180px;
     margin: 10px auto;
     text-align: center;
     text-transform: uppercase;
@@ -127,19 +126,19 @@ main {
   }
 
   .main-header, .main-content, .main-footer {
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 35px;
+    padding-right: 35px;
   }
 }
 
 @include media-query($xs-device) {
   main {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .main-header, .main-content, .main-footer {
-    padding-left: 25px;
-    padding-right: 25px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
