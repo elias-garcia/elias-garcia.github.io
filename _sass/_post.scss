@@ -1,0 +1,17 @@
+.content-post {
+  border-radius: 5px 5px 5px 5px;
+  line-height: 1.5;
+  code {
+    font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+    font-size: 14px;
+  }
+  p code {
+    color: $dark-grey;
+    padding: 5px;
+    background-color: $light-grey;
+  }
+  pre code {
+    font-size: 14px;
+    color: $light-grey;
+  }
+}

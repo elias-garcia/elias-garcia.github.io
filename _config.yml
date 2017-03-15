@@ -18,7 +18,7 @@ disqus_shortname: elias-garcia
 permalink: none
 
 # Pagination settings
-paginate: 1
+paginate: 10
 
 # Sass settings
 sass:

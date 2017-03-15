@@ -8,14 +8,9 @@
         <div class="main-header">
           <h1>{{ page.title | upcase }}</h1>
         </div>
-        {% if page.blog %}
         <div class="main-content">
-        {% else %}
-        <div class="main-content content-page">
-        {% endif %}
           {{ content }}
         </div>
-        {% if page.blog %}
         <div class="main-footer">
           <div class="pagination">
             {% if paginator.previous_page %}
@@ -55,7 +50,6 @@
             {% endif %}
           </div>
         </div>
-        {% endif %}
       </div>
     </main>
     {% include footer.html %}
