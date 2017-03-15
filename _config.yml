@@ -15,7 +15,7 @@ google_analytics: UA-93475150-1
 disqus_shortname: elias-garcia
 
 # Permalinks settings
-permalink: none
+permalink: /blog/:title
 
 # Pagination settings
 paginate: 10
