@@ -3,19 +3,6 @@
  * Courtesy of GitHub.com
  */
 
-.highlight {
-  overflow-x: auto;
-}
-
-.highlight {
-  margin: 50px -80px;
-  padding: 50px 80px;
-  border-left-style: solid;
-  border-left-color: $red;
-  border-left-width: thick;
-  background-color: $dark-grey;
-}
-
 .language-ts, .language-js {
   // Normal text
   .p { color: $light-grey; }
