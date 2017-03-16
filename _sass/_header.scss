@@ -14,11 +14,11 @@ nav {
     display: block;
     color: $white-alpha;
     padding: 30px 0px;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
   }
   a:hover {
     color: $white;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
   }
   a.active {
     color: $white;

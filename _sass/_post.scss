@@ -67,26 +67,48 @@ blockquote {
   }
 }
 
+.addthis_inline_share_toolbox {
+  margin: 20px auto 0px auto;
+}
+
+.at-resp-share-element .at-share-btn:focus, .at-resp-share-element .at-share-btn:hover {
+  transform: none !important;
+  -webkit-transform: none !important;
+}
+
 #mc_embed_signup {
+  margin: -50px -80px;
+  padding: 50px 80px;
+  background-color: $dark-grey;
   label {
+    color: $white;
+    font-size: 2em;
+    font-weight: bold;
     display: block;
     text-align: center;
   }
   .mc-wrapper {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     padding: 30px 0px 0px 0px;
   }
-  #mce-EMAIL {
+  .mc-email {
     width: 100%;
-    margin: 0px 30px 0px 0px;
-    border: 2px solid $medium-grey;
-    border-radius: 4px;
-    text-indent: 20px;
+    #mce-EMAIL {
+      width: 100%;
+      height: 42px;
+      margin: 0px 30px 0px 0px;
+      border: 2px solid $light-grey;
+      border-radius: 4px;
+      text-indent: 20px;
+    }
   }
-  .button {
-    margin: 0px auto;
-    cursor: pointer;
+  .mc-button {
+    margin-left: 30px;
+    .button {
+      margin: 0px auto;
+      cursor: pointer;
+    }
   }
 }
 
@@ -98,6 +120,22 @@ blockquote {
   color: $red;
   margin: 0px;
   padding-top: 10px;
+}
+
+.author-information {
+  display: flex;
+  align-items: center;
+  .author-image {
+    img {
+      height: 100px;
+      padding-right: 30px;
+    }
+  }
+  .author-description {
+    p {
+      margin-top: 0px;
+    }
+  }
 }
 
 @include media-query($md-device) {
@@ -133,5 +171,23 @@ blockquote {
   blockquote {
     padding: 30px 20px;
     margin: 50px -20px;
+  }
+
+  #mc_embed_signup {
+    .mc-wrapper {
+      flex-direction: column;
+    }
+    .mc-email {
+      width: 100%;
+    }
+    .mc-button {
+      margin-top: 10px;
+      margin-left: 0px;
+      width: 100%;
+      .button {
+        width: 100%;
+        max-width: none;
+      }
+    }
   }
 }

@@ -6,7 +6,7 @@
       {% if page.title == 'Blog' %}
         {{ site.title | escape }}
       {% else %}
-        {{ page.title | prepend: ' ' | prepend: site.title_prefix | escape }}
+        {{ page.title | escape }}
       {% endif %}
     {% else %}
       {{ site.title | escape }}
