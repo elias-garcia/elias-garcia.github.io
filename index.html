@@ -5,7 +5,7 @@ title: Blog
 
 {% for post in paginator.posts %}
 <div class="post-card">
-  <h1 class="card-title"><a href="{{ post.url }}">{{ post.title | upcase }}</a></h1>
+  <h1 class="card-title"><a href="{{ post.url }}">{{ post.title }}</a></h1>
   <div class="card-date">
     <hr>
     <p>{{ post.date | date: "%e %B, %Y" }}</p>

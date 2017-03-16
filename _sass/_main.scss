@@ -27,12 +27,12 @@ main {
   padding: 50px 80px;
   a {
     color: $dark-grey;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
     padding: 10px 0px;
   }
   a:hover {
     color: $red;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
   }
   .button {
     max-width: 180px;
