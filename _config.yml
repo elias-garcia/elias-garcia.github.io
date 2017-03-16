@@ -1,11 +1,10 @@
 # Site settings
-title: Elías García - Artículos sobre JavaScript
+title: Elías García - Artículos sobre JavaScript en español
 title_prefix: Elías García -
 email: elias@eliasgarcia.es
 description: >
-  Soy Elías García, desarrollador web Full Stack.
-  Escribo artículos sobre Node JS, Angular y
-  JavaScript en general.
+  Soy Elías García, ingeniero informático y desarrollador web Full Stack.
+  Escribo artículos sobre Node JS, Angular y JavaScript en general.
 baseurl: ""
 url: "https://eliasgarcia.es"
 twitter_username: egarciadev
@@ -14,7 +13,7 @@ stack_overflow_username:  elias-garcia
 google_analytics: UA-93475150-1
 disqus_shortname: elias-garcia
 
-# Permalinks settings
+# Post permalinks settings
 permalink: /blog/:title
 
 # Pagination settings

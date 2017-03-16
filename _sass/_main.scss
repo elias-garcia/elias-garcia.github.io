@@ -42,14 +42,14 @@ main {
     color: $red;
     background-color: transparent;
     border: 2px solid $red;
-    border-radius: 2px;
+    border-radius: 4px;
     padding: 10px 20px;
     transition: background-color 0.3s ease, color 0.3s ease;
     & .fa {
       padding-left: 10px;
     }
   }
-  .button:hover {
+  .button:hover, .button:focus {
     color: $white;
     background-color: $red;
     transition: background-color 0.3s ease, color 0.3s ease;
