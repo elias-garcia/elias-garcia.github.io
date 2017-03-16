@@ -14,11 +14,7 @@
             <div class="post-content" itemprop="articleBody">
               {{ content }}
             </div>
-            {% if site.disqus_shortname %}
-              {% include disqus_comments.html %}
-            {% endif %}
           </article>
-          <!-- <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css"> -->
           <div id="mc_embed_signup">
             <form action="//eliasgarcia.us8.list-manage.com/subscribe/post?u=55cf7078733f0b62eb97733e3&amp;id=ace40b1824" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
               <div id="mc_embed_signup_scroll">
@@ -38,6 +34,9 @@
               </div>
             </form>
           </div>
+          {% if site.disqus_shortname %}
+            {% include disqus_comments.html %}
+          {% endif %}
         </div>
       </div>
     </main>
