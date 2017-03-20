@@ -520,6 +520,18 @@ Post List
 	cursor: pointer;
 }
 
+.mc-error-input {
+	border-color: #fc575e !important;
+}
+
+.mc-error-text {
+	margin-bottom: 0px;
+  padding-top: 10px;
+  float: left;
+  margin-left: 1px;
+	color: #fc575e;
+}
+
 #post-meta {
 	font-size: 14px;
 	font-weight: bold;
