@@ -234,8 +234,8 @@ em, i { font-style: italic; }
 
 .post h2 {
 	margin-bottom: 40px;
-	  font: 300 24px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif;
-	  color: #111;
+	font: 300 24px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif;
+	color: #111;
 }
 
 
@@ -244,11 +244,11 @@ em, i { font-style: italic; }
 	font: normal 13px/1.5em "Helvetica Neue",Helvetica,Arial,sans-serif;
 	margin: -5px 0 40px 0;
 	color: #b2b9be;
-	  font-size: 13px;
-	  text-transform: uppercase;
-	  letter-spacing: 2px;
-	  /*margin-top: 15px;*/
-	  display: inline-block;
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	/*margin-top: 15px;*/
+	display: inline-block;
 }
 
 #post-list h2 {
@@ -303,10 +303,10 @@ pre	{
 	overflow:auto;
 	border-radius: 3px;
 	background: #272b2d;
-	  font-family: 'Source Code Pro',Menlo,monospace;
-	  font-size: 13px;
-	  line-height: 1.5em;
-	  font-weight: 500;
+	font-family: 'Source Code Pro',Menlo,monospace;
+	font-size: 13px;
+	line-height: 1.5em;
+	font-weight: 500;
 	color: #d0d4d7;
 
 }
@@ -470,7 +470,7 @@ Post List
 }
 
 #post-meta {
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: bold;
 	line-height: 1.4;
 	border-top: 1px solid #eee;
@@ -583,8 +583,8 @@ h2.month {
 }
 
 #post-meta img.avatar {
-  height: 50px;
-  width: 50px;
+  height: 55px;
+  width: 55px;
   float: left;
   border-radius: 50%;
   margin-right: 30px;
@@ -634,7 +634,7 @@ h2.month {
 }
 
 /* Media Queries */
-@media screen and (max-width: 547px) {
+@media screen and (max-width: 580px) {
 	nav.main-nav {
 		padding: 20px 20px 0;
 	}
