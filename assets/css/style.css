@@ -665,20 +665,24 @@ h2.month {
 	font: 300 16px/1.6 "Helvetica Neue",helvetica,Arial,sans-serif;
 }
 
-#sharing a.facebook {
-  background: #4361b3;
-}
-
 #sharing a.twitter {
   background: #4fafed;
 }
 
-#sharing a.facebook span, #sharing a.twitter span {
+#sharing a.facebook {
+  background: #4361b3;
+}
+
+#sharing a.google-plus {
+  background: #db4437;
+}
+
+#sharing a.twitter span, #sharing a.facebook span, #sharing a.google-plus span {
   padding-right: 7px; 
 }
 
 #sharing a {
-	width: 80px;
+	width: 110px;
   font-size: 20px;
   font-size: 13px;
   font-weight: bold;

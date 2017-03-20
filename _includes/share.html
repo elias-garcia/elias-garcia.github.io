@@ -3,11 +3,16 @@
       'https://twitter.com/intent/tweet?text={{page.title}} por @{{ site.authorTwitter }} - {{ site.domain_name }}{{ page.url }}',
       'twitter-share-dialog',
       'width=626,height=436');
-    return false;"><span class="fa fa-twitter"></span>Tweet</a>
-
+    return false;" alt="Compartir en Twitter"><span class="fa fa-twitter"></span>Tweet</a>
 <a class="facebook" href="#" onclick="
     window.open(
       'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
       'facebook-share-dialog',
       'width=626,height=436');
-    return false;"><span class="fa fa-facebook"></span>Share</a>
+    return false;" alt="Compartir en Facebook"><span class="fa fa-facebook"></span>Compartir</a>
+<a class="google-plus" href="#" onclick="
+    window.open(
+      'https://plus.google.com/share?url='+encodeURIComponent(location.href),
+      'google-plus-share-dialog',
+      'width=626,height=436');
+    return false;" alt="Compartir en Google+"><span class="fa fa-google-plus"></span>Compartir</a>
