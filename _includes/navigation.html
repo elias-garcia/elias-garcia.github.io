@@ -1,0 +1,10 @@
+<nav class="main-nav">
+    {% if page.url != "/" %}
+        <a href="{{ site.baseurl }}"> <span class="arrow">←</span> Inicio </a>
+    {% endif %}
+
+    {% if page.url != "/about/" %}
+        <a href="{{ site.baseurl }}sobre-mi">Sobre mí </a>
+    {% endif %}
+    <a class="cta" href="http://eepurl.com/cFY8tT" target="_blank">Suscríbete</a>
+</nav>

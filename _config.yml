@@ -1,33 +1,50 @@
-# Site settings
-title: Elías García - Artículos sobre JavaScript en español
-email: elias@eliasgarcia.es
+name: Elías García
 description: >
-  Soy Elías García, ingeniero informático y desarrollador web Full Stack.
-  Escribo artículos sobre Node JS, Angular y JavaScript en general.
-baseurl: ""
-url: "https://eliasgarcia.es"
-twitter_username: egarciadev
-github_username:  elias-garcia
-stack_overflow_username:  elias-garcia
-google_analytics: UA-93475150-1
-disqus_shortname: elias-garcia
+    Desarrollador web full-stack.
+    Escribo artículos sobre las últimas tecnologías web como Angular, Node.js y JavaScript en general.
+meta_description: >
+    "Soy Elías García, ingeniero informático y desarrollador web full-stack.
+    Escribo artículos sobre las últimas tecnologías web como Angular, Node.js y JavaScript en general."
 
-# Post permalinks settings
-permalink: /:title
+homeTitle: Artículos sobre Angular, Node.js y JavaScript en general
+aboutPage: true
 
-# Pagination settings
-paginate: 10
-
-# Sass settings
-sass:
-    style: compressed
-
-# Build settings
-timezone: Europe/Madrid
 markdown: kramdown
-gems:
-  - jekyll-feed
-  - jekyll-paginate
-exclude:
-  - Gemfile
-  - Gemfile.lock
+highlighter: rouge
+
+gems: [jekyll-paginate]
+paginate: 10
+baseurl: /
+domain_name: 'http://eliasgarcia.es'
+google_analytics: 'UA-93475150-1'
+disqus: true
+disqus_shortname: 'elias-garcia'
+
+# Details for the RSS feed generator
+url:                    'http://eliasgarcia.es'
+author:                 'Elías García'
+authorTwitter:          'egarciadev'
+authorGithub:           'elias-garcia'
+authorStackOverflow:    'elias-garcia'
+
+permalink:       /:title/
+
+defaults:
+    -
+        scope:
+            path: "" # empty string for all files
+            type: pages
+        values:
+            layout: default
+    -
+        scope:
+            path: "" # empty string for all files
+            type: posts
+        values:
+            layout: post
+    -
+        scope:
+            path: ""
+            type: drafts
+        values:
+            layout: post
