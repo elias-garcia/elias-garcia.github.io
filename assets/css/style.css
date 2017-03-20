@@ -470,9 +470,6 @@ Post List
 }
 
 #post-meta {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
 	font-size: 13px;
 	font-weight: bold;
 	line-height: 1.4;
@@ -497,13 +494,7 @@ Post List
 }
 
 #post-meta div {
-	margin: 0 25px 0 0;
-	float: left;
-}
-
-#author-info {
-	display: flex;
-	align-items: center;
+	margin: 0px;
 }
 
 /* Post Navigation */
@@ -655,10 +646,10 @@ h2.month {
 	#post-list, #archive-list { text-align: center; margin-top: 0; }
 	#post-list h2 { max-width: 100%; }
 	#post-meta { margin-top: 60px; }
-	#post-meta img.avatar { float: none; margin: 0px; }
+	#post-meta img.avatar { float: none; display: block; margin: 0px auto; }
 	#post-meta div { float: none; margin: 0px; }
 	#post-meta div span.dark { margin: 15px 0px 5px 0px; }
-	#author-info { flex-direction: column; text-align: center; }
+	#author-info { text-align: center; }
 	#title { font-size: 17px; }
 	#post-list .dates { display: none; }
 
