@@ -8,6 +8,7 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 	display: table;
 	clear: both;
 }
+
 .hidden { display: none; }
 
 /* Icons */
@@ -44,7 +45,7 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 
 /* Spacing */
 .post h1, h3, h4, h5, p, .post-body ul, #post-list li, pre {
-margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 /* Base */
@@ -107,21 +108,21 @@ input {
 }
 
 #twitter-widget-0 {
-	margin-top: 12px;
+	margin-top: 17px;
+	margin-bottom: 5px;
 }
 
 .profile h2 {
 	font-size: 20px;
-	  font-weight: 300;
-	  color: #aaa;
-	  margin-top: 10px;
-	  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	  font-style: normal;
+	font-weight: 300;
+	color: #aaa;
+	margin-top: 10px;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-style: normal;
 }
 
 nav.main-nav {
 	padding: 20px 40px 0;
-
 	max-width: 700px;
 	width:100%;
 	background: #fff;
@@ -141,6 +142,7 @@ nav.main-nav a {
 	border-radius: 3px;
 
 }
+
 nav.main-nav a.cta {
 	background: #FC575E;
 	color: #fff;
@@ -178,12 +180,14 @@ a,
 	color: #FC575E;
 }
 
-p a { color: #FC575E; }
+p a {
+	color: #FC575E;
+}
 
 /*Transitions*/
 a,
 #post-nav a,
-#post-list a	{
+#post-list a {
 	-webkit-transition: all 0.15s ease;
 	-moz-transition: all 0.15s ease;
 	-ms-transition: all 0.15s ease;
@@ -191,15 +195,28 @@ a,
 	transition: all 0.15s ease;
 }
 
-ul 	{ margin:0; padding:0; }
-li	{ list-style-type:circle; list-style-position:inside; }
+ul {
+	margin:0; padding:0;
+}
+
+li {
+	list-style-type:circle;
+	list-style-position:inside;
+}
 
 /* Line Height */
-#post-body, p { line-height:1.7; }
+#post-body, p {
+	line-height:1.7;
+}
 
-b, strong { font-weight: 500;
-  color: #1E2025; }
-em, i { font-style: italic; }
+b, strong {
+	font-weight: 500;
+  color: #1E2025;
+}
+
+em, i {
+	font-style: italic;
+}
 
 #title {
 	display: inline-block;
@@ -216,8 +233,6 @@ em, i { font-style: italic; }
 	color: #aaa;
 }
 
-
-
 .home h1 {
 	font-size: 30px;
 	letter-spacing: -1px;
@@ -232,7 +247,6 @@ em, i { font-style: italic; }
 
 .post header {
 	text-align:center;
-
 }
 
 .post h1 {
@@ -265,11 +279,23 @@ em, i { font-style: italic; }
 	margin-top: 2px;
 }
 
-h3, h4, h5 { color:#333; }
+h3, h4, h5 {
+	color:#333;
+}
 
-h3 { font-size:20px; font-weight: 400; }
-h4 { font-size:16px; font-weight:bold; }
-h5 { font-size:15px; font-weight: bold; }
+h3 {
+	font-size:20px; font-weight: 400;
+}
+
+h4 {
+	font-size:16px;
+	font-weight:bold;
+}
+
+h5 {
+	font-size:15px;
+	font-weight: bold;
+}
 
 h6 {
 	font-size: 13px;
@@ -298,7 +324,11 @@ hr {
 	background: #eee;
 }
 
-span.code { font-family:Menlo, Monaco, Courier; background-color:#EEE; font-size:14px; }
+span.code {
+	font-family:Menlo, Monaco, Courier;
+	background-color:#EEE;
+	font-size:14px;
+}
 
 pre	{
 	font-family:Menlo, Monaco, Courier;
@@ -361,6 +391,10 @@ img {
 	width: 100%;
 	max-width: 100%;
 	border-radius: 3px;
+}
+
+p img {
+	margin: 10px 0px;
 }
 
 /* Made with Cactus Badge */
@@ -697,9 +731,7 @@ h2.month {
 
 /* Media Queries */
 @media screen and (max-width: 580px) {
-	nav.main-nav {
-		padding: 20px 20px 0;
-	}
+	nav.main-nav { padding: 20px 20px 0; }
 	#wrapper { padding:20px 20px 20px 20px;}
 	#header { margin-bottom: 60px; border-bottom: 1px solid #eee; }
 	.post { margin: 40px 0; }
