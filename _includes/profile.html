@@ -2,11 +2,11 @@
     <section id="wrapper">
         <header id="header">
         {% if site.aboutPage %}
-            <a href="{{ site.baseurl }}sobre-mi">
-                <img id="avatar" class="2x" src="{{ site.baseurl }}assets/images/avatar.png" alt="Imagen de perfil"/>
+            <a href="{{ site.basepath }}sobre-mi">
+                <img id="avatar" class="2x" src="{{ site.basepath }}assets/images/avatar.png" alt="Imagen de perfil"/>
             </a>
         {% else %}
-            <img id="avatar" class="2x" src="{{ site.baseurl }}assets/images/avatar.png" alt="Imagen de perfil"/>
+            <img id="avatar" class="2x" src="{{ site.basepath }}assets/images/avatar.png" alt="Imagen de perfil"/>
         {% endif %}
             <h1>{{ site.author }}</h1>
             <a class="twitter-follow-button" href="https://twitter.com/egarciadev" data-show-count="false"></a>
