@@ -3,10 +3,10 @@ layout: default
 archive: true
 ---
 
-<article class="post">
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
     <header>
-        <h1>{{ page.title }}</h1>
-        <h2 class="headline">
+        <h1 itemprop="name headline">{{ page.title }}</h1>
+        <time class="headline" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
         {% assign m = page.date | date: "%-m" %}
         {{ page.date | date: "%-d" }} de 
         {% case m %}
@@ -24,9 +24,9 @@ archive: true
             {% when '12' %}Diciembre
         {% endcase %}
         del {{ page.date | date: "%Y" }}
-        </h2>
+        </time>
     </header>
-    <section id="post-body">
+    <section id="post-body" itemprop="articleBody">
         {{content}}
     </section>
     <section id="sharing">
