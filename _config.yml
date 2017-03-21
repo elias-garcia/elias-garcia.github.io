@@ -6,7 +6,7 @@ meta_description: >
     "Soy Elías García, ingeniero informático y desarrollador web full-stack.
     Escribo artículos sobre las últimas tecnologías web como Angular, Node.js y JavaScript en general."
 
-homeTitle: Artículos sobre Angular, Node.js y JavaScript en general
+homeTitle: Artículos sobre Angular, Node.js y JavaScript
 aboutPage: true
 
 markdown: kramdown
