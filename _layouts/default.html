@@ -64,12 +64,19 @@
       {% include profile.html %}
   {% endif %}
 
+  <section class="sidebar">
+    <p>SHARE</p>
+    <ul>
+      <li><a class="fb-button" href="#" target="_blank"><i class="fa fa-twitter-square fa-2x" aria-hidden="true"></i></a></li>
+      <li><a class="fb-button" href="#" target="_blank"><i class="fa fa-facebook-square fa-2x" aria-hidden="true"></i></a></li>
+      <li><a class="fb-button" href="#" target="_blank"><i class="fa fa-google-plus-square fa-2x" aria-hidden="true"></i></a></li>
+    </ul>
+  </section>
   <section class="wrapper {% if page.profile %}home{% endif %}">
     {{ content }}
   </section>
 
   <script src="{{ site.basepath }}assets/js/twitter-widget.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="{{ site.basepath }}assets/js/main.js"></script>
   <script src="{{ site.basepath }}assets/js/highlight.js"></script>
   <script src="{{ site.basepath }}assets/js/google-analytics.js"></script>
