@@ -729,23 +729,6 @@ h2.month {
   margin-left: 2px;
 }
 
-.sidebar {
-	position: fixed;
-	top: 150px;
-	float: left;
-	right: calc(50% + 450px);
-	text-align: center;
-}
-
-.sidebar p {
-	margin-bottom: 10px;
-}
-
-.sidebar li {
-	list-style-type: none;
-	padding: 5px 0px;
-}
-
 .fa-twitter-square {
 	color: #4fafed;
 }
@@ -784,10 +767,4 @@ h2.month {
 	.post h2.headline { font-size: 13px; }
 	.post h1 { font-size:24px; }
 	.post h2 { font-size:20px; }
-}
-
-@media screen and (max-width: 991px) {
-	.sidebar {
-		display: none;
-	}
 }
