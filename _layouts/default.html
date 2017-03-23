@@ -67,11 +67,10 @@
   <section class="wrapper {% if page.profile %}home{% endif %}">
     {{ content }}
   </section>
-
-  <script src="{{ site.basepath }}assets/js/twitter-widget.js"></script>
   <script src="{{ site.basepath }}assets/js/main.js"></script>
   <script src="{{ site.basepath }}assets/js/highlight.js"></script>
-  <script src="{{ site.basepath }}assets/js/google-analytics.js"></script>
+  {% include analytics.html %}
+  <script src="{{ site.basepath }}assets/js/twitter-widget.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 </body>
 </html>
