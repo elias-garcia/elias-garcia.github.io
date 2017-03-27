@@ -200,8 +200,7 @@ ul {
 }
 
 li {
-	list-style-type:circle;
-	list-style-position:inside;
+	list-style-type: circle;
 }
 
 /* Line Height */
@@ -249,6 +248,19 @@ em, i {
 	text-align:center;
 }
 
+ol, ul {
+	padding-left: 20px;
+}
+
+li {
+	padding-bottom: 10px;
+}
+
+ol li {
+	padding: 0px;
+	list-style-type: decimal;
+}
+
 .post h1 {
 	margin-bottom: 20px;
 	color: #222;
@@ -256,15 +268,25 @@ em, i {
 }
 
 .post h2 {
-	margin-bottom: 40px;
+	margin-top: 40px;
+	margin-bottom: 30px;
 	font: 300 24px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif;
 	color: #111;
 }
 
+.post h3 {
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+
+.post h4 {
+	margin-top: 25px;
+	margin-bottom: 15px;
+}
 
 .post time.headline {
 	font: normal 13px/1.5em "Helvetica Neue",Helvetica,Arial,sans-serif;
-	margin: -5px 0 40px 0;
+	margin: -5px 0 0 0;
 	color: #b2b9be;
 	font-size: 13px;
 	text-transform: uppercase;
@@ -312,8 +334,19 @@ p.small {
 }
 
 blockquote {
-	padding-left: 15px;
-	border-left: 3px solid #eee;
+	background: #fffafa;
+	padding: 20px;
+	border-left: 3px solid #fc575e;
+	margin: 30px 0px;
+}
+
+blockquote p {
+	margin-bottom: 0px;
+	color: #fc575e;
+}
+
+blockquote strong {
+	color: #fc575e;
 }
 
 hr {
@@ -324,10 +357,14 @@ hr {
 	background: #eee;
 }
 
-span.code {
+p code {
+	padding: 4px 8px;
+	margin: 0px 4px;
 	font-family: Menlo, Monaco, Courier;
-	background-color: #EEE;
-	font-size: 14px;
+	background-color: #f1f1f1;
+	font-size: 13px;
+	border-radius: 2px;
+	color: #666;
 }
 
 pre	{
