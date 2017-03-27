@@ -357,7 +357,7 @@ hr {
 	background: #eee;
 }
 
-p code {
+li code, p code {
 	padding: 4px 8px;
 	margin: 0px 4px;
 	font-family: Menlo, Monaco, Courier;
