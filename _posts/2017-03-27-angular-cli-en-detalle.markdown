@@ -2,6 +2,7 @@
 title:  "Angular CLI en detalle"
 date:   2017-03-27
 description: Agiliza tu workflow con Angular al máximo
+topic: angular
 ---
 
 ## Tabla de contenido
