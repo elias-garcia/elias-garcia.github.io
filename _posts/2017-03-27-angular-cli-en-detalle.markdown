@@ -5,6 +5,10 @@ description: Agiliza tu workflow con Angular al máximo
 topic: angular
 ---
 
+En este post vamos a explorar en detalle las ventajas que nos ofrece Angular CLI
+a la hora de desarrollar nuestro proyecto, coincidiendo con el lanzamiento de su
+primera release hace apenas unos días.
+
 ## Tabla de contenido
 
 1. ¿Qué es Angular CLI?
