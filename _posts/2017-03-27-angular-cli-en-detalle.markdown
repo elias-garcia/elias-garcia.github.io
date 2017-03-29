@@ -11,19 +11,19 @@ primera release hace apenas unos días.
 
 ## Tabla de contenido
 
-1. ¿Qué es Angular CLI?
-2. ¿Qué ventajas nos ofrece Angular CLI?
-3. Instalando Angular CLI
-4. Creando nuestro primer proyecto
-   1. Estructura del proyecto generado
-   2. Ejecutando las pruebas automatizadas
-   3. Generando nuevos elementos
-      1. Módulos
-      2. Componentes
-      3. Servicios
-      4. Directivas
-      5. Pipes
-5. Otros comandos interesantes
+1. [¿Qué es Angular CLI?](#qué-es-angular-cli)
+2. [¿Qué ventajas nos ofrece Angular CLI?](#qué-ventajas-nos-ofrece-angular-cli)
+3. [Instalando Angular CLI](#instalando-angular-cli)
+4. [Creando nuestro primer proyecto](#creando-nuestro-primer-proyecto)
+   1. [Estructura del proyecto generado](#estructura-del-proyecto-generado)
+   2. [Ejecutando las pruebas automatizadas](#ejecutando-las-pruebas-automatizadas)
+   3. [Generando nuevos elementos](#generando-nuevos-elementos)
+      1. [Módulos](#módulos)
+      2. [Componentes](#componentes)
+      3. [Servicios](#servicios)
+      4. [Directivas](#directivas)
+      5. [Pipes](#pipes)
+5. [Otros comandos interesantes](#otros-comandos-interesantes)
 
 ## ¿Qué es Angular CLI?
 
