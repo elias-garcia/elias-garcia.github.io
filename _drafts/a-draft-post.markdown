@@ -1,14 +1,78 @@
 ---
-title:  "A Draft Post"
-description: Work in progress
+title:  "Cambios en Angular 4"
 ## date: add a date when publishing
+description: Work in progress
+topic: angular
 ---
 
-Drafts are posts without a date. They’re posts you’re still working on and don’t want to publish yet. To get up and running with drafts, check the _drafts folder in the site’s root.
+Hace una semana ha sido publicada la versión 4.0 de Angular, la cuál incluye mejoras
+significativas en rendimiento, pero también incluye alguna novedad importante, las cuáles
+trataremos en este post.
 
-To preview your site with drafts, simply run **`jekyll serve`** or **`jekyll build`** with the **`--drafts`** switch. Each will be assigned the value modification time of the draft file for its date, and thus you will see currently edited drafts as the latest posts.
+## Tabla de contenido
 
-Check out the [Jekyll docs][jekyll] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll's GitHub repo][jekyll-gh].
+1. [Ciclos de vida](#ciclos-de-vida)
+2. [Directiva `*ngIf`](#directiva-ngif)
+3. [Paquete de animaciones](#paquete-de-animaciones)
+4. [TypeScript 2.1](#typescript-21)
+   1. [StrictNullChecks](#strict-null-checks)
+5. [Angular Universal](#angular-universal)
+6. [Comparación de rendimiento entre Angular 2 y Angular 4](#mejoras-en-rendimiento)
+7. [Actualizando nuestro proyecto de Angular 2 a Angular 4](#actualizando-nuestro-proyecto-de-angular-2-a-angular-4)
 
-[jekyll-gh]: https://github.com/mojombo/jekyll
-[jekyll]:    http://jekyllrb.com
+## Ciclos de vida
+
+En Angular 2 los ciclos de vida eran clases, las cuáles extendíamos en nuestros componentes,
+por ejemplo:
+
+```ts
+@Component()
+class SomeComponent extends OnInit {}
+```
+
+En la primera release candidate de Angular 4, ésto cambia. A partir de ahora, los ciclos de vida
+son interfaces, por lo cual debemos reemplazar la palabra reservada `extends` por `implements`,
+quedando el código de nuestros componentes de la siguiente forma:
+
+```ts
+@Component()
+class SomeComponent implements OnInit {}
+```
+
+## Directiva *ngIf
+
+A partir de ahora podemos utilizar una sintaxis del estilo `if/else` dentro de la directiva `*ngIf`. La sintaxis
+queda de la siguiente forma: `*ngIf="<something> else <template>`. Como podéis observar, debemos especificar
+un template para la parte del `else`, algo que es realmente útil y nos agilizará bastante el desarrollo.
+También cabe destacar que ahora podemos asignar variables locales.
+
+En este ejemplo se pueden ver dichos cambios:
+
+```ts
+<ng-template #loading>Loading...</ng-template>
+<div *ngIf="userObservable | async; else loading; let user">
+  {{ "{{ user.name " }}}}
+</div>
+```
+
+## Paquete de animaciones
+
+A partir de ahora las animaciones tendrán su propio paquete `@angular/animations`, de forma que si no utilizamos
+las animaciones no se nos cargará todo su código en nuestros bundles de producción. Librerías que utilicen dicho
+paquete, como `Angular Material`, al instalaralas vía NPM nos importarán de forma automática dicho paquete.
+
+## TypeScript 2.1
+
+Todo el código del framework se ha actualizado a la versión 2.1 de TypeScript.
+
+> Es importante destacar que no proporciona compatibilidad hacia atrás con la versión 1.8 o anteriores de TypeScript.
+
+### StrictNullChecks
+
+## Angular Universal
+
+
+
+## Comparación de rendimiento entre Angular 2 y Angular 4
+
+## Actualizando nuestro proyecto a Angular 4
