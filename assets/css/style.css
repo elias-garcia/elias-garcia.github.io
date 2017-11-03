@@ -79,7 +79,7 @@ input {
 }
 
 .profile .wrapper {
-	max-width: 700px;
+	max-width: 900px;
 	margin: 0 auto;
 	padding: 100px 40px 0px;
 }
@@ -123,7 +123,7 @@ input {
 
 nav.main-nav {
 	padding: 20px 40px 0;
-	max-width: 700px;
+	max-width: 900px;
 	width:100%;
 	background: #fff;
 	background: rgba(255,255,255,.90);
@@ -150,13 +150,13 @@ nav.main-nav a.cta {
 }
 
 .wrapper {
-  max-width: 700px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 60px 40px 100px 40px;
 }
 
 .wrapper.home {
-	max-width: 700px;
+	max-width: 900px;
 	margin: 0 auto;
 	padding: 0px 40px 20px 40px;
 }
