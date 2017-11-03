@@ -9,7 +9,7 @@ En este post vamos a explorar en detalle las ventajas que nos ofrece Angular CLI
 a la hora de desarrollar nuestro proyecto, coincidiendo con el lanzamiento de su
 primera release hace apenas unos días.
 
-## Tabla de contenido
+## Tabla de contenidos
 
 1. [¿Qué es Angular CLI?](#qué-es-angular-cli)
 2. [¿Qué ventajas nos ofrece Angular CLI?](#qué-ventajas-nos-ofrece-angular-cli)
