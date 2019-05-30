@@ -1,0 +1,34 @@
+.Header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+}
+
+.Header-logo {
+  height: 100%;
+}
+
+.Header-logo-container {
+  height: 100%;
+  margin: 0 24px;
+}
+
+.Header-tab {
+  color: var(--color-black);
+  margin: 0px 12px;
+}
+
+.Header-tab:hover {
+  color: var(--color-black);
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+.Header-tab--active, .Header-tab--active:hover {
+  color: var(--color-primary);
+  opacity: 1;
+  border-bottom: 2px solid;
+  padding-bottom: 4px;
+}
