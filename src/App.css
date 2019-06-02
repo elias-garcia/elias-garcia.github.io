@@ -1,5 +1,12 @@
 .App {
-  height: 100vh;
   width: 100vw;
   overflow-y: auto;
+}
+
+.App-container {
+  max-width: 1000px;
+  height: 100%;
+  margin: auto;
+  margin-top: 24px;
+  padding: var(--app-padding);
 }

@@ -1,0 +1,14 @@
+.Home {
+  width: 100%;
+}
+
+.Home-jobs {
+  margin: var(--home-section-margin);
+}
+
+.Home-jobs-title, .Home-projects-title {
+  width: fit-content;
+  text-align: center;
+  border-bottom: 2px solid var(--color-black);
+  margin: 0 auto var(--home-section-title-margin-bottom) auto;
+}

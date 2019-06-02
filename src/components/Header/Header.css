@@ -1,9 +1,8 @@
 .Header {
-  height: 80px;
+  height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 8px;
 }
 
 .Header-logo {
@@ -12,7 +11,11 @@
 
 .Header-logo-container {
   height: 100%;
-  margin: 0 24px;
+  margin: 0 40px;
+}
+
+.Header-logo-container:hover {
+  opacity: 1;
 }
 
 .Header-tab {
@@ -22,7 +25,7 @@
 
 .Header-tab:hover {
   color: var(--color-black);
-  opacity: 0.8;
+  opacity: var(--lighter-opacity);
   text-decoration: none;
 }
 

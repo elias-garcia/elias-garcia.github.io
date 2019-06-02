@@ -1,7 +1,5 @@
 import About from "./About/About";
-import Contact from "./Contact/Contact";
 import Home from "./Home/Home";
-import Work from "./Work/Work";
 
 const leftRoutes = [
   {
@@ -9,23 +7,13 @@ const leftRoutes = [
     path: '/',
     exact: true,
     component: Home
-  },
-  {
-    label: 'About',
-    path: '/about',
-    component: About
   }
 ];
 const rightRoutes = [
   {
-    label: 'Work',
-    path: '/work',
-    component: Work
-  },
-  {
-    label: 'Contact',
-    path: '/contact',
-    component: Contact
+    label: 'About',
+    path: '/about',
+    component: About
   }
 ]
 

@@ -1,0 +1,16 @@
+.Cover {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.Cover-welcome {
+  margin-bottom: 0;
+}
+
+.Cover-subtitle {
+  color: var(--color-grey);
+  font-weight: var(--font-weight-light);
+}

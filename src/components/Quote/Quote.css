@@ -1,0 +1,8 @@
+.Quote {
+  text-align: center;
+  color: var(--color-primary);
+}
+
+.Quote-text {
+  color: var(--color-grey);
+}

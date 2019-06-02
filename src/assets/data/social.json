@@ -1,0 +1,44 @@
+{
+  "profiles": [
+    {
+      "name": "Email",
+      "icon": [
+        "fa",
+        "envelope"
+      ],
+      "link": "mailto:eliasgarciadev@gmail.com"
+    },
+    {
+      "name": "Github",
+      "icon": [
+        "fab",
+        "github"
+      ],
+      "link": "https://github.com/elias-garcia"
+    },
+    {
+      "name": "Stack Overflow",
+      "icon": [
+        "fab",
+        "stack-overflow"
+      ],
+      "link": "https://stackoverflow.com/users/4705426/elias-garcia"
+    },
+    {
+      "name": "Linkedin",
+      "icon": [
+        "fab",
+        "linkedin"
+      ],
+      "link": "https://www.linkedin.com/in/elias-garcia-marino"
+    },
+    {
+      "name": "Twitter",
+      "icon": [
+        "fab",
+        "twitter"
+      ],
+      "link": "https://twitter.com/egarciadev"
+    }
+  ]
+}
