@@ -1,13 +1,14 @@
-.Jobs-element {
+.Job {
   margin-bottom: 48px;
 }
 
-.Jobs-element-company {
+.Job-company {
   color: var(--color-primary);
   display: block;
   margin-bottom: 0.5rem;
 }
 
-.Jobs-element-dates {
+.Job-dates {
   color: var(--color-grey);
+  font-weight: var(--font-weight-light);
 }

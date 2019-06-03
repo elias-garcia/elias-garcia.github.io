@@ -1,11 +1,9 @@
-{
-  "data": [
-    {
-      "school": "University of A Coruña",
-      "degree": "Computer Science",
-      "specialization": "Software Engineering",
-      "startDate": "September 2013",
-      "endingDate": "June 2017"
-    }
-  ]
-}
+[
+  {
+    "school": "University of A Coruña",
+    "degree": "Computer Science",
+    "specialization": "Software Engineering",
+    "startDate": "September 2013",
+    "endingDate": "June 2017"
+  }
+]

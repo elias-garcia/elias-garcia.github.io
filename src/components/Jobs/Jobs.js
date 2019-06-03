@@ -5,16 +5,16 @@ import './Jobs.css';
 function getJobs() {
   return JobsData.map((job, i) => {
     return (
-      <div className="Jobs-element" key={i}>
-        <h3 className="Jobs-element-role">{job.role}</h3>
+      <div className="Job" key={i}>
+        <h3 className="Job-role">{job.role}</h3>
         <a
-          className="Jobs-element-company"
+          className="Job-company"
           href={job.website}
           target="_blank"
           rel="noopener noreferrer">
           @{job.company}
         </a>
-        <p className="Jobs-element-dates">{job.startDate} - {job.endingDate}</p>
+        <p className="Job-dates">{job.startDate} - {job.endingDate}</p>
       </div>
     );
   })

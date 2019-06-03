@@ -5,7 +5,7 @@ import Quote from '../Quote/Quote.js';
 import './Footer.css';
 
 function getFooterIcons() {
-  return SocialData.profiles.map((profile, i) => {
+  return SocialData.map((profile, i) => {
     return (
       <a
         className="Footer-social-icon-link"
@@ -22,10 +22,10 @@ function getFooterIcons() {
 function Footer() {
   return (
     <footer className="Footer">
+      <Quote />
       <div className="Footer-social-icons">
         {getFooterIcons()}
       </div>
-      <Quote />
       <p className="Footer-copyright">© Elías García 2019.</p>
     </footer>
   );

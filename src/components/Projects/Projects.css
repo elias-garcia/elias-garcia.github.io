@@ -1,0 +1,40 @@
+.Projects {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Project {
+  margin: 24px;
+  width: calc(50% - 48px);
+  transition: all .3s;
+  cursor: pointer;
+}
+
+.Project:hover {
+  box-shadow: 0 0 8px var(--color-grey-lighter);
+  transform: scale(1.01);
+}
+
+.Project-image {
+  width: 100%;
+}
+
+.Project-info {
+  border: 1px solid var(--color-grey-light);
+  border-top: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+}
+
+.Project-name {
+  margin-top: 0.25rem;
+}
+
+.Project-summary {
+  font-weight: var(--font-weight-light);
+  color: var(--color-grey);
+  margin-bottom: 0.75rem;
+  text-align: center;
+}

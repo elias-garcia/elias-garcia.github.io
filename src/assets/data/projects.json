@@ -1,0 +1,63 @@
+[
+  {
+    "name": "Sneaker Tracker",
+    "description": "",
+    "year": "2019",
+    "image": "sneaker-tracker.jpg",
+    "status": "",
+    "techs": [
+      "Node.js",
+      "TypeScript",
+      "Puppeteer",
+      "Nest.js",
+      "MongoDB",
+      "Elasticsearch",
+      "Angular",
+      "Travis"
+    ]
+  },
+  {
+    "name": "Financial Manager",
+    "description": "",
+    "year": "2019",
+    "image": "financial-manager.jpg",
+    "techs": [
+      "Firebase",
+      "TypeScript",
+      "Ionic",
+      "Swagger",
+      "Travis"
+    ]
+  },
+  {
+    "name": "Apperta",
+    "description": "2019",
+    "year": "2018",
+    "image": "apperta.jpg",
+    "techs": [
+      "Node.js",
+      "AWS",
+      "Ionic",
+      "Angular",
+      "Travis",
+      "Heroku"
+    ]
+  },
+  {
+    "name": "Sporter",
+    "description": "",
+    "year": "2017",
+    "image": "sporter.jpg",
+    "techs": [
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "Socket.io",
+      "Mocha",
+      "Angular",
+      "Api Blueprint",
+      "Travis",
+      "Heroku"
+    ]
+  }
+]

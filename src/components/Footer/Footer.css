@@ -10,6 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 0.5;
 }
 
 .Footer-social-icon-link {
@@ -29,4 +30,5 @@
 
 .Footer-copyright {
   color: var(--color-grey);
+  margin-bottom: 0;
 }
