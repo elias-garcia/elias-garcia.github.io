@@ -9,11 +9,11 @@ function Home() {
     <div className="Home">
       <Cover />
       <div className="Home-jobs">
-        <h1 className="Home-jobs-title">Jobs</h1>
+        <h2 className="Home-jobs-title">Jobs</h2>
         <Jobs />
       </div>
       <div className="Home-projects">
-        <h1 className="Home-projects-title">Projects</h1>
+        <h2 className="Home-projects-title">Projects</h2>
         <Projects />
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { leftRoutes, rightRoutes } from '../../routes/routes';
+import ProjectDetails from '../ProjectDetails/ProjectDetails';
 import './Main.css';
 
 function renderRoutes(routes) {
@@ -18,7 +19,14 @@ function renderRoutes(routes) {
 function Main() {
   return (
     <main className="Main">
-      {renderRoutes([...leftRoutes, ...rightRoutes])}
+      <Switch>
+        {renderRoutes([...leftRoutes, ...rightRoutes])}
+        <Route
+          path="/projects/:projectSlug"
+          exact={true}
+          component={ProjectDetails} />
+        <Redirect from="*" to="/" />
+      </Switch>
     </main>
   );
 }

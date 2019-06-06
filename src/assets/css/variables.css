@@ -4,7 +4,7 @@
   --color-primary-dark: #bf2718;
   --color-black: #2e394d;
   --color-black-dark: #11161d;
-  --color-grey-lighter: #efefef;
+  --color-grey-lighter: #f5f5f5;
   --color-grey-light: #efefef;
   --color-grey: #93a0ab;
   --color-grey-dark: #6a7a88;
@@ -51,9 +51,10 @@
   --paragraph-margin-bottom: 1rem;
 
   /* Other */
-  --header-height: 80px;
-  --app-padding: 0 40px;
+  --app-padding: 40px;
   --main-padding: 120px 0;
+  --header-height: 80px;
+  --modal-header-height: var(--header-height);
   --lighter-opacity: 0.8;
   --home-section-margin: var(--main-padding);
   --home-section-title-margin-bottom: 60px;

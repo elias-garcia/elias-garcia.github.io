@@ -1,6 +1,7 @@
 .Projects {
   display: flex;
   flex-wrap: wrap;
+  margin: -24px;
 }
 
 .Project {
@@ -29,6 +30,7 @@
 }
 
 .Project-name {
+  color: var(--color-black);
   text-align: center;
   margin-top: 0.25rem;
 }

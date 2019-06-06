@@ -7,20 +7,22 @@ import './App.css';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 import Main from './components/Main/Main';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 
-
-library.add(fab, faEnvelope)
+library.add(fab, faEnvelope);
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="App">
-        <div className="App-container">
-          <Header />
-          <Main />
-          <Footer />
+      <ScrollToTop>
+        <div className="App">
+          <div className="App-container">
+            <Header />
+            <Main />
+            <Footer />
+          </div>
         </div>
-      </div>
+      </ScrollToTop>
     </BrowserRouter>
   );
 }

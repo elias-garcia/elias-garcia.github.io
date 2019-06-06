@@ -1,0 +1,15 @@
+.Tags {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.Tag {
+  margin: 4px;
+  padding: 4px 16px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-radius: 16px;
+  font-weight: var(--font-weight-light);
+}

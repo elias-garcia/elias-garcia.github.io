@@ -1,0 +1,80 @@
+.ProjectDetails {
+  width: 100%;
+  height: 100%;
+}
+
+.ProjectDetails-cover {
+  position: relative;
+  width: 100%;
+  height: 400px;
+}
+
+.ProjectDetails-image {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+}
+
+.ProjectDetails-image-overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ProjectDetails-title {
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-white);
+  margin-bottom: 0;
+}
+
+.ProjectDetails-subtitle {
+  font-weight: var(--font-weight-light);
+  color: var(--color-grey-light);
+}
+
+.ProjectDetails-close-button {
+  padding: 8px;
+  margin: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.ProjectDetails-content {
+  padding: var(--app-padding) 0;
+}
+
+.ProjectDetails-description-text, .Project-Details-component-name  {
+  text-align: justify;
+  line-height: 1.75rem;
+}
+
+.Project-Details-component-name {
+  margin-bottom: 0.5rem;
+  color: var(--color-primary);
+}
+
+.Project-Details-component-details {
+  color: var(--color-black);
+}
+
+.ProjectDetails-description-header,
+.ProjectDetails-tags-header {
+  width: fit-content;
+  border-bottom: 2px solid var(--color-black);
+  text-transform: uppercase;
+  text-align: center;
+  margin: 60px auto 40px auto;
+}

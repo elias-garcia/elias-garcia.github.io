@@ -13,6 +13,7 @@ const rightRoutes = [
   {
     label: 'About',
     path: '/about',
+    exact: true,
     component: About
   }
 ]
