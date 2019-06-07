@@ -1,0 +1,30 @@
+.Talks {
+  display: flex;
+  flex-direction: column;
+}
+
+.Talk-title-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.Talk-title {
+  margin-bottom: 0;
+}
+
+.Talk-logo {
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+}
+
+.Talk-place {
+  margin-bottom: 0.5rem;
+}
+
+.Talk-date {
+  color: var(--color-grey);
+  font-weight: var(--font-weight-light);
+}

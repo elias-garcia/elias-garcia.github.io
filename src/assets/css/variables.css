@@ -52,7 +52,7 @@
 
   /* Other */
   --app-padding: 40px;
-  --main-padding: 120px 0;
+  --main-padding: 80px 0;
   --header-height: 80px;
   --modal-header-height: var(--header-height);
   --lighter-opacity: 0.8;

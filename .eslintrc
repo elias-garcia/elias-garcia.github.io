@@ -1,3 +1,22 @@
 {
-  "extends": "react-app"
+  "extends": [
+    "react-app",
+    "airbnb"
+  ],
+  "rules": {
+    "max-len": [
+      1,
+      90
+    ],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js"
+        ]
+      }
+    ],
+    "react/no-array-index-key": false,
+    "react/prop-types": 0
+  }
 }

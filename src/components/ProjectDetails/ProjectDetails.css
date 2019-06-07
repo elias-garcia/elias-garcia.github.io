@@ -41,19 +41,29 @@
   color: var(--color-grey-light);
 }
 
-.ProjectDetails-close-button {
-  padding: 8px;
-  margin: 16px;
+.ProjectDetails-back-button {
+  padding: 16px;
+  margin: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
+  color: var(--color-white);
+}
+
+.ProjectDetails-back-button:hover {
+  opacity: var(--lighter-opacity);
+}
+
+.ProjectDetails-back-button-icon {
+  height: 24px !important;
+  width: 24px !important;
 }
 
 .ProjectDetails-content {
-  padding: var(--app-padding) 0;
+  padding: 0 var(--app-padding);
 }
 
 .ProjectDetails-description-text, .Project-Details-component-name  {

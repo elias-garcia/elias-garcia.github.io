@@ -1,34 +1,29 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import SocialData from '../../assets/data/social.json';
-import Quote from '../Quote/Quote.js';
+import Quote from '../Quote/Quote';
 import './Footer.css';
 
-function getFooterIcons() {
-  return SocialData.map((profile, i) => {
-    return (
-      <a
-        className="Footer-social-icon-link"
-        href={profile.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        key={i}>
-        <FontAwesomeIcon className="Footer-social-icon" icon={profile.icon} />
-      </a>
-    );
-  })
-}
+const getFooterIcons = () => SocialData.map((profile, i) => (
+  <a
+    className="Footer-social-icon-link"
+    href={profile.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    key={i}
+  >
+    <FontAwesomeIcon className="Footer-social-icon" icon={profile.icon} />
+  </a>
+));
 
-function Footer() {
-  return (
-    <footer className="Footer">
-      <Quote />
-      <div className="Footer-social-icons">
-        {getFooterIcons()}
-      </div>
-      <p className="Footer-copyright">© Elías García 2019.</p>
-    </footer>
-  );
-}
+const Footer = () => (
+  <footer className="Footer">
+    <Quote />
+    <div className="Footer-social-icons">
+      {getFooterIcons()}
+    </div>
+    <p className="Footer-copyright">© Elías García 2019.</p>
+  </footer>
+);
 
 export default Footer;
