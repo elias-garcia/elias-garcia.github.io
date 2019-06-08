@@ -14,7 +14,7 @@ const Project = ({ project }) => (
     />
     <div className="Project-info">
       <h3 className="Project-name">{project.name}</h3>
-      <p className="Project-summary">Project description</p>
+      <p className="Project-summary">{project.summary}</p>
     </div>
   </Link>
 );

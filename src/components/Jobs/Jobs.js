@@ -2,18 +2,13 @@ import React from 'react';
 import JobsData from '../../assets/data/jobs.json';
 import './Jobs.css';
 
-const getJobs = () => JobsData.map((job, i) => (
-  <div className="Job" key={i}>
+const Job = ({ job }) => (
+  <div className="Job">
     <h3 className="Job-role">{job.role}</h3>
-    <a
-      className="Job-company"
-      href={job.website}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <p className="Job-company">
       @
       {job.company}
-    </a>
+    </p>
     <p className="Job-dates">
       {job.startDate}
       {' '}
@@ -21,12 +16,18 @@ const getJobs = () => JobsData.map((job, i) => (
       {' '}
       {job.endingDate}
     </p>
+    <button
+      type="button"
+      className="Job-read-more-button"
+    >
+      Read more
+    </button>
   </div>
-));
+);
 
 const Jobs = () => (
   <div className="Jobs">
-    {getJobs()}
+    {JobsData.map((job, i) => <Job job={job} key={i} />)}
   </div>
 );
 

@@ -19,7 +19,10 @@ const Talk = ({ talk }) => (
       />
       <h3 className="Talk-title">{talk.title}</h3>
     </a>
-    <p className="Talk-place">{talk.place}</p>
+    <p className="Talk-place">
+      @
+      {talk.place}
+    </p>
     <p className="Talk-date">
       {talk.date}
       {' '}

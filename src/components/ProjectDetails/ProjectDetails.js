@@ -16,7 +16,7 @@ const ProjectDetails = withRouter(({ history, match }) => {
   }
 
   function handleClick() {
-    history.goBack();
+    history.push('/');
   }
 
   return (
@@ -58,9 +58,11 @@ const ProjectDetails = withRouter(({ history, match }) => {
                   className="Project-Details-component-name"
                   key={i}
                 >
-                  {component.name}
-                  :
-                  {' '}
+                  <b>
+                    {component.name}
+                    :
+                    {' '}
+                  </b>
                   <span className="Project-Details-component-details">
                     {component.details}
                   </span>

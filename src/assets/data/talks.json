@@ -1,10 +1,10 @@
 [
   {
-    "title": "GPUL Labs - Introduction to Angular",
-    "image": "angular-logo.svg",
+    "title": "Introduction to Angular",
+    "place": "GPUL Labs",
     "date": "June 8, 2017",
     "hour": "18:30",
-    "place": "Faculty of Computer Science, A Coruña",
+    "image": "angular-logo.svg",
     "link": "https://www.meetup.com/es-ES/GPUL-Labs/events/239083201/"
   }
 ]

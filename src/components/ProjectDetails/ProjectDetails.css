@@ -73,11 +73,11 @@
 
 .Project-Details-component-name {
   margin-bottom: 0.5rem;
-  color: var(--color-primary);
 }
 
 .Project-Details-component-details {
   color: var(--color-black);
+  font-weight: var(--font-weight-normal);
 }
 
 .ProjectDetails-description-header,

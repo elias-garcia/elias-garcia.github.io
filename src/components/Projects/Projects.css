@@ -14,10 +14,12 @@
 .Project:hover {
   box-shadow: 0 0 8px var(--color-grey-lighter);
   transform: scale(1.01);
+  opacity: 1;
 }
 
 .Project-image {
   width: 100%;
+  border-radius: var(--default-border-radius) var(--default-border-radius) 0 0;
 }
 
 .Project-info {
@@ -27,6 +29,7 @@
   flex-direction: column;
   align-items: center;
   padding: 24px;
+  border-radius: 0 0 var(--default-border-radius) var(--default-border-radius);
 }
 
 .Project-name {

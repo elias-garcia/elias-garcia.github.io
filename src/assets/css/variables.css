@@ -54,6 +54,7 @@
   --app-padding: 40px;
   --main-padding: 80px 0;
   --header-height: 80px;
+  --default-border-radius: 2px;
   --modal-header-height: var(--header-height);
   --lighter-opacity: 0.8;
   --home-section-margin: var(--main-padding);
