@@ -19,11 +19,11 @@
   margin-left: -8px;
   color: var(--color-primary);
   background: var(--color-white);
+  transition: 0.1s all ease-in-out;
 }
 
 .Job-read-more-button:hover {
   color: var(--color-white);
   background: var(--color-primary);
   border-radius: var(--default-border-radius);
-  transition: 0.1s all ease-in-out;
 }

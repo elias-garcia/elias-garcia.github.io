@@ -7,7 +7,9 @@ import './Home.css';
 
 const Home = () => (
   <div className="Home">
-    <Cover />
+    <div className="Home-cover">
+      <Cover />
+    </div>
     <div className="Home-jobs">
       <h2 className="Home-jobs-title">Work experience</h2>
       <Jobs />
