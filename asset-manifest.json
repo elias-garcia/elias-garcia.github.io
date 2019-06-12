@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f7ae61e7.chunk.css",
+    "main.js": "/static/js/main.b63eb3c3.chunk.js",
+    "main.js.map": "/static/js/main.b63eb3c3.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
+    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
+    "static/js/2.9bdc00eb.chunk.js": "/static/js/2.9bdc00eb.chunk.js",
+    "static/js/2.9bdc00eb.chunk.js.map": "/static/js/2.9bdc00eb.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.94bef7ac2a52b6de843cf4d03c357218.js": "/precache-manifest.94bef7ac2a52b6de843cf4d03c357218.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.f7ae61e7.chunk.css.map": "/static/css/main.f7ae61e7.chunk.css.map",
+    "static/media/angular-logo.svg": "/static/media/angular-logo.1c0c349a.svg",
+    "static/media/apperta.jpg": "/static/media/apperta.9af2f104.jpg",
+    "static/media/financial-manager.jpg": "/static/media/financial-manager.921a1f1b.jpg",
+    "static/media/logo.svg": "/static/media/logo.dee70092.svg",
+    "static/media/me.jpg": "/static/media/me.5493187b.jpg",
+    "static/media/sneaker-tracker.jpg": "/static/media/sneaker-tracker.40854f09.jpg",
+    "static/media/sporter.jpg": "/static/media/sporter.779d07a2.jpg"
+  }
+}
