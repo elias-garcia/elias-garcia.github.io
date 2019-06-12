@@ -5,10 +5,15 @@ import './Jobs.css';
 const Job = ({ job }) => (
   <div className="Job">
     <h3 className="Job-role">{job.role}</h3>
-    <p className="Job-company">
+    <a
+      className="Job-company"
+      href={job.website}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       @
       {job.company}
-    </p>
+    </a>
     <p className="Job-dates">
       {job.startDate}
       {' '}
@@ -16,12 +21,13 @@ const Job = ({ job }) => (
       {' '}
       {job.endingDate}
     </p>
-    <button
+    <p className="Job-description">{job.description}</p>
+    {/* <button
       type="button"
       className="Job-read-more-button"
     >
       Read more
-    </button>
+    </button> */}
   </div>
 );
 
