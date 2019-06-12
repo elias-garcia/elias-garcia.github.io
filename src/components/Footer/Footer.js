@@ -18,10 +18,10 @@ const getFooterIcons = () => SocialData.map((profile, i) => (
 
 const Footer = () => (
   <footer className="Footer">
-    <Quote />
     <div className="Footer-social-icons">
       {getFooterIcons()}
     </div>
+    <Quote />
     <p className="Footer-copyright">© Elías García 2019.</p>
   </footer>
 );

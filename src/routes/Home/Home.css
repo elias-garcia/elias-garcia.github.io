@@ -2,6 +2,10 @@
   width: 100%;
 }
 
+.Home-cover {
+  padding: 40px 0;
+}
+
 .Home-jobs,
 .Home-talks {
   margin: var(--home-section-margin);
@@ -12,7 +16,12 @@
 .Home-projects-title {
   width: fit-content;
   text-align: center;
-  text-transform: uppercase;
   border-bottom: 2px solid var(--color-black);
   margin: 0 auto var(--home-section-title-margin-bottom) auto;
+}
+
+@media (min-width: 576px) {
+  .Home-cover {
+    padding: 120px 0;
+  }
 }

@@ -63,7 +63,9 @@
 }
 
 .ProjectDetails-content {
-  padding: 0 var(--app-padding);
+  padding: var(--main-padding);
+  padding-left: var( --app-padding);
+  padding-right: var( --app-padding);
 }
 
 .ProjectDetails-description-text, .Project-Details-component-name  {
@@ -84,7 +86,10 @@
 .ProjectDetails-tags-header {
   width: fit-content;
   border-bottom: 2px solid var(--color-black);
-  text-transform: uppercase;
   text-align: center;
-  margin: 60px auto 40px auto;
+  margin: 0 auto var(--home-section-title-margin-bottom) auto
+}
+
+.ProjectDetails-tags {
+  margin: var(--home-section-margin);
 }
