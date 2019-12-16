@@ -4,7 +4,7 @@ import logo from '../../assets/img/logo.svg';
 import { leftRoutes, rightRoutes } from '../../routes/routes';
 import './Header.css';
 
-const renderTabs = tabsData => tabsData.map((tabData, i) => (
+const renderTabs = (tabsData) => tabsData.map((tabData, i) => (
   <NavLink
     to={tabData.path}
     className="Header-tab"

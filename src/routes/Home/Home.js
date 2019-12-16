@@ -1,9 +1,10 @@
 import React from 'react';
+import './Home.css';
 import Cover from '../../components/Cover/Cover';
 import Jobs from '../../components/Jobs/Jobs';
 import Projects from '../../components/Projects/Projects';
 import Talks from '../../components/Talks/Talks';
-import './Home.css';
+import Groups from '../../components/Groups/Groups';
 
 const Home = () => (
   <div className="Home">
@@ -17,6 +18,10 @@ const Home = () => (
     <div className="Home-talks">
       <h2 className="Home-talks-title">Tech talks</h2>
       <Talks />
+    </div>
+    <div className="Home-open-source">
+      <h2 className="Home-open-source-title">Community groups</h2>
+      <Groups />
     </div>
     <div className="Home-projects">
       <h2 className="Home-projects-title">Side projects</h2>

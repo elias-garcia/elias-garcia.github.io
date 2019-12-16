@@ -5,7 +5,7 @@ import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import './Layout.css';
 
-const renderRoutes = routes => routes.map((route, i) => (
+const renderRoutes = (routes) => routes.map((route, i) => (
   <Route
     path={`${route.path}`}
     exact={route.exact}

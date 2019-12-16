@@ -7,12 +7,14 @@
 }
 
 .Home-jobs,
-.Home-talks {
+.Home-talks,
+.Home-open-source {
   margin: var(--home-section-margin);
 }
 
 .Home-jobs-title,
 .Home-talks-title,
+.Home-open-source-title,
 .Home-projects-title {
   width: fit-content;
   text-align: center;

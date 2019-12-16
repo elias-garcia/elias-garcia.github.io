@@ -4,7 +4,7 @@ import './Jobs.css';
 
 const Job = ({ job }) => (
   <div className="Job">
-    <h3 className="Job-role">{job.role}</h3>
+    <h3>{job.role}</h3>
     <a
       className="Job-company"
       href={job.website}
@@ -22,12 +22,6 @@ const Job = ({ job }) => (
       {job.endingDate}
     </p>
     <p className="Job-description">{job.description}</p>
-    {/* <button
-      type="button"
-      className="Job-read-more-button"
-    >
-      Read more
-    </button> */}
   </div>
 );
 

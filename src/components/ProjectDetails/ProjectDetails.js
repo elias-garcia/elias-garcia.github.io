@@ -7,7 +7,7 @@ import './ProjectDetails.css';
 
 const ProjectDetails = withRouter(({ history, match }) => {
   const imgsPath = require.context('./../../assets/img');
-  const project = ProjectsData.filter(projectData => (
+  const project = ProjectsData.filter((projectData) => (
     projectData.slug === match.params.projectSlug
   ))[0];
 
