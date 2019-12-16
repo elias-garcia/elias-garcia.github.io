@@ -1,23 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8aee7af03a130a0786b92bc21818ce21",
+    "revision": "09aa0eea2377ff7e9689e90f51792eb9",
     "url": "/index.html"
   },
   {
-    "revision": "bcaa8104a640a5db1c0f",
-    "url": "/static/css/main.f7ae61e7.chunk.css"
+    "revision": "a2900866853a0f53110c",
+    "url": "/static/css/main.4ec117d1.chunk.css"
   },
   {
-    "revision": "2ceea3ec0367d12663d6",
-    "url": "/static/js/2.9bdc00eb.chunk.js"
+    "revision": "ff9238246d0f946b8161",
+    "url": "/static/js/2.6a2ac84e.chunk.js"
   },
   {
-    "revision": "bcaa8104a640a5db1c0f",
-    "url": "/static/js/main.2ede7cdf.chunk.js"
+    "revision": "2f33dc5ac6616a7770b8117950a39b8a",
+    "url": "/static/js/2.6a2ac84e.chunk.js.LICENSE"
   },
   {
-    "revision": "42ac5946195a7306e2a5",
-    "url": "/static/js/runtime~main.a8a9905a.js"
+    "revision": "a2900866853a0f53110c",
+    "url": "/static/js/main.640f0b85.chunk.js"
+  },
+  {
+    "revision": "274d14914ff7c2464450",
+    "url": "/static/js/runtime-main.e4581661.js"
   },
   {
     "revision": "1c0c349ad9921e0675e6d7a2920d4c72",
@@ -26,6 +30,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "9af2f104828cc13ca40c628e7e30e666",
     "url": "/static/media/apperta.9af2f104.jpg"
+  },
+  {
+    "revision": "570a35f3374127b3e1d72014f7e1ed8d",
+    "url": "/static/media/coruna-js-logo.570a35f3.png"
   },
   {
     "revision": "921a1f1bd73752fc9b9f3105686527d7",
