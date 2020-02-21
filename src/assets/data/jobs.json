@@ -1,6 +1,6 @@
 [
 	{
-		"role": "Software Engineer",
+		"role": "Frontend Engineer",
 		"company": "Nexiona",
 		"website": "https://nexiona.com",
 		"startDate": "August 2019",
@@ -8,15 +8,15 @@
 		"description": "I'm currently working with a team of 6 engineers building MIIMETIQ COMPOSER, a framework for building private IoT solutions used by the biggest companies in the Industry 4.0. My primary role on the team is developing new features on the various frontends the product has using React and Redux."
 	},
 	{
-		"role": "Lead Front-End Developer",
+		"role": "Lead Frontend Engineer",
 		"company": "Netex Learning",
 		"website": "https://www.netexlearning.com",
 		"startDate": "July 2018",
 		"endingDate": "August 2019",
-		"description": "I led a team of 4 people in the front-end development of contentCloud, an e-learning SaaS built with Angular ang NgRx aimed to create and manage digital contents used by thousands of users every day. I worked on the front-end application architecture trying to write and deliver clean, quality and optimized code. I've also worked hand in hand with the UX team to deliver the best possible experience to our end users and with the software architecture department on building a custom Angular starter project and CI/CD pipeline to which start our products from."
+		"description": "I led a team of 4 people in the frontend development of contentCloud, an e-learning SaaS built with Angular ang NgRx aimed to create and manage digital contents used by thousands of users every day. I worked on the frontend application architecture trying to write and deliver clean, quality and optimized code. I've also worked hand in hand with the UX team to deliver the best possible experience to our end users and with the software architecture department on building a custom Angular starter project and CI/CD pipeline to which start our products from."
 	},
 	{
-		"role": "Full-Stack Javascript Developer",
+		"role": "Full Stack Javascript Developer",
 		"company": "Ágora Binaria",
 		"website": "http://agorabinaria.com",
 		"startDate": "February 2017",
