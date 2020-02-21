@@ -5,7 +5,7 @@
 		"website": "https://nexiona.com",
 		"startDate": "August 2019",
 		"endingDate": "Present",
-		"description": "I'm currently working with a team of 6 engineers building MIIMETIQ COMPOSER, a framework for building private IoT solutions used by the biggest companies in the Industry 4.0. My primary role on the team is developing new features on the various frontends the product has using React and Redux."
+		"description": "I'm currently working with a team of 6 engineers building MIIMETIQ COMPOSER, a framework for building private IoT solutions used by the biggest companies in the Industry 4.0. My primary role on the team is developing new features on the various frontends of the product. We mainly do it using React, Redux, Redux Loop and Typescript, but we use all kind of libraries for each frontend. We follow a very functional, domain driven architecture, based on ELM."
 	},
 	{
 		"role": "Lead Frontend Engineer",
