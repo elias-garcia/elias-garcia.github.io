@@ -1,26 +1,26 @@
 [
-	{
-		"role": "Frontend Engineer",
-		"company": "Nexiona",
-		"website": "https://nexiona.com",
-		"startDate": "August 2019",
-		"endingDate": "Present",
-		"description": "I'm currently working with a team of 6 engineers building MIIMETIQ COMPOSER, a framework for building private IoT solutions used by the biggest companies in the Industry 4.0. My primary role on the team is developing new features on the various frontends of the product. We mainly do it using React, Redux, Redux Loop and Typescript, but we use all kind of libraries for each frontend. We follow a very functional, domain driven architecture, based on ELM."
-	},
-	{
-		"role": "Lead Frontend Engineer",
-		"company": "Netex Learning",
-		"website": "https://www.netexlearning.com",
-		"startDate": "July 2018",
-		"endingDate": "August 2019",
-		"description": "I led a team of 4 people in the frontend development of contentCloud, an e-learning SaaS built with Angular ang NgRx aimed to create and manage digital contents used by thousands of users every day. I worked on the frontend application architecture trying to write and deliver clean, quality and optimized code. I've also worked hand in hand with the UX team to deliver the best possible experience to our end users and with the software architecture department on building a custom Angular starter project and CI/CD pipeline to which start our products from."
-	},
-	{
-		"role": "Full Stack Javascript Developer",
-		"company": "Ágora Binaria",
-		"website": "http://agorabinaria.com",
-		"startDate": "February 2017",
-		"endingDate": "June 2018",
-		"description": "I started in Ágora Binaria as an intern, researching about Angular unit and e2e testing using Karma and Protractor. Later, I’been working in different projects for final clients using Angular, Node.js with express and MongoDB. I’ve also worked improving the performance of some Angular projects and started other from scratch, thanks to I’ve learned a lot about Angular architecture, observables and some advanced Angular techniques. At the same time, I’ve been researching about converting an Angular App into a progressive web application (caching, versioning...) and also about server side rendering using Angular Universal. I’ve also worked with Angular Material and NgRx Store in some projects. I’ve also created some CI and CD pipelines using Heroku and Digital Ocean to deploy our applications."
-	}
+  {
+    "role": "Frontend Engineer",
+    "company": "Nexiona",
+    "website": "https://nexiona.com",
+    "startDate": "August 2019",
+    "endingDate": "Present",
+    "description": "I'm currently working with a team of 6 engineers building MIIMETIQ COMPOSER, a framework for building private IoT solutions used by the biggest companies in the Industry 4.0. The product is built around microservices using Python, Go and Node.js, and although I also like to help developing some backend code, my primary role on the team is developing new features on the various frontends of the product. We mainly do it using React, Redux, Redux Loop and Typescript, but we use all kind of libraries for each frontend. We follow a very functional, monadic and domain driven architecture based on ELM."
+  },
+  {
+    "role": "Lead Frontend Engineer",
+    "company": "Netex Learning",
+    "website": "https://www.netexlearning.com",
+    "startDate": "July 2018",
+    "endingDate": "August 2019",
+    "description": "I led a team of 4 people in the frontend development of contentCloud, an e-learning SaaS built with Angular ang NgRx aimed to create and manage digital contents used by thousands of users every day. I worked on the frontend application architecture trying to write and deliver clean, quality and optimized code. I've also worked hand in hand with the UX team to deliver the best possible experience to our end users and with the software architecture department on building a custom Angular starter project and CI/CD pipeline to which start our products from."
+  },
+  {
+    "role": "Full Stack Javascript Developer",
+    "company": "Ágora Binaria",
+    "website": "http://agorabinaria.com",
+    "startDate": "February 2017",
+    "endingDate": "June 2018",
+    "description": "I started in Ágora Binaria as an intern, researching about Angular unit and e2e testing using Karma and Protractor. Later, I’been working in different projects for final clients using Angular, Node.js with express and MongoDB. I’ve also worked improving the performance of some Angular projects and started other from scratch, thanks to I’ve learned a lot about Angular architecture, observables and some advanced Angular techniques. At the same time, I’ve been researching about converting an Angular App into a progressive web application (caching, versioning...) and also about server side rendering using Angular Universal. I’ve also worked with Angular Material and NgRx Store in some projects. I’ve also created some CI and CD pipelines using Heroku and Digital Ocean to deploy our applications."
+  }
 ]

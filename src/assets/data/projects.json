@@ -1,5 +1,38 @@
 [
   {
+    "slug": "covid-19-spain",
+    "name": "COVID-19 Spain",
+    "year": "2020",
+    "image": "covid-19-spain.jpg",
+    "summary": "Monitor the status of the COVID-19 in Spain",
+    "info": "COVID-19 Spain is a project I built to track the status of the COVID-19 in Spain by autonomous communities from a trusted source, the spanish government. You can get the data directly from the API or you can visualize it in a more interactive way through the web application.",
+    "description": "The architecture of this project has been designed to run on two Heroku's free tiers, one for the backend and another for the web application.",
+    "components": [
+      {
+        "name": "Scraper",
+        "details": "Cron job that’s responsible of scraping all the daily reports from the government about the status of the COVID-19 in each spanish autonomous community. After parsing the pdf files, the data obtained is stored in a MongoDB instance."
+      },
+      {
+        "name": "REST API",
+        "details": "API built on top of Express to easily get the desired data filtered by date, by autonomous communities etc."
+      },
+      {
+        "name": "Webapp",
+        "details": "Built with React and Material UI, it lets you visualize the API data in a more interactive way using D3 charts. It also has a historical view where you can view the evolution of the COVID-19 along the time filtered by the autonomous communities you want"
+      }
+    ],
+    "techs": [
+      "Node.js",
+      "TypeScript",
+      "Puppeteer",
+      "MongoDB",
+      "Docker",
+      "Docker Compose",
+      "React",
+      "Heroku"
+    ]
+  },
+  {
     "slug": "sneaker-tracker",
     "name": "Sneaker Tracker",
     "year": "2019",
@@ -30,22 +63,6 @@
       "Docker",
       "Nest.js",
       "React"
-    ]
-  },
-  {
-    "slug": "financial-manager",
-    "name": "Financial Manager",
-    "year": "2019",
-    "image": "financial-manager.jpg",
-    "summary": "Keep track of your monthly incomes and expenses",
-    "info": "Financial Manager is an application that allows you to control personal expenses and incomes. I’ve begun to develop it mainly with the objectives of deep diving into serverless architectures and creating visually more complex web components than I’m used to (applying advanced CSS transitions, responding to touch events...). The application allows users to register, create expenses and incomes for days, create monthly budgets...",
-    "description": "I’ve decided to use Ionic 3 for the mobile application due to its recent AppFlow platform, which allows live hot code updates in a very simple way, and Firebase for the backend. I’ve chosen Firebase for it’s push notifications in addition to all the analytics and statistics it provides to know the users behavior. The mobile application is responsible for invoking Cloud functions using the Firebase SDK, which interacts with the Firestore database and returns the requested data to the application.",
-    "techs": [
-      "Firebase",
-      "TypeScript",
-      "Ionic",
-      "Angular",
-      "Swagger"
     ]
   },
   {

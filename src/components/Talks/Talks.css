@@ -3,6 +3,10 @@
   flex-direction: column;
 }
 
+.Talk:not(:last-child) {
+  margin-bottom: 48px;
+}
+
 .Talk-title-container {
   display: flex;
   align-items: center;

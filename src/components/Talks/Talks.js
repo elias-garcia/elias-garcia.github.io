@@ -4,13 +4,31 @@ import './Talks.css';
 
 const imgsPath = require.context('./../../assets/img');
 
+const TalkTitle = ({ link, children }) => {
+  if (link) {
+    return (
+      <a
+        className="Talk-title-container"
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <p className="Talk-title-container">
+      {children}
+    </p>
+  );
+};
+
 const Talk = ({ talk }) => (
   <div className="Talk">
-    <a
-      className="Talk-title-container"
-      href={talk.link}
-      target="_blank"
-      rel="noopener noreferrer"
+    <TalkTitle
+      link={talk.link}
     >
       <img
         className="Talk-logo"
@@ -18,7 +36,7 @@ const Talk = ({ talk }) => (
         alt={talk.name}
       />
       <h3 className="Talk-title">{talk.title}</h3>
-    </a>
+    </TalkTitle>
     <p className="Talk-place">
       @
       {talk.place}
@@ -26,7 +44,7 @@ const Talk = ({ talk }) => (
     <p className="Talk-date">
       {talk.date}
       {' '}
-      -
+        -
       {' '}
       {talk.hour}
     </p>

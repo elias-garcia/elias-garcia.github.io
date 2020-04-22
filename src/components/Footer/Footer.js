@@ -22,7 +22,7 @@ const Footer = () => (
       {getFooterIcons()}
     </div>
     <Quote />
-    <p className="Footer-copyright">© Elías García 2019.</p>
+    <p className="Footer-copyright">© Elías García 2020.</p>
   </footer>
 );
 
