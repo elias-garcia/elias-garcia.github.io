@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "6c8469b49d4d1795e7dffb99ddc2c17e",
+    "revision": "5720204cd6e0cb7f86087f9907734e76",
     "url": "/index.html"
   },
   {
-    "revision": "08d34147ed1f8e3984b5",
-    "url": "/static/css/main.4ec117d1.chunk.css"
+    "revision": "513cb726f0409a8af108",
+    "url": "/static/css/main.1d9a1838.chunk.css"
   },
   {
-    "revision": "ff9238246d0f946b8161",
-    "url": "/static/js/2.6a2ac84e.chunk.js"
+    "revision": "c30b7c7970e11f203b65",
+    "url": "/static/js/2.53e5ca76.chunk.js"
   },
   {
     "revision": "2f33dc5ac6616a7770b8117950a39b8a",
-    "url": "/static/js/2.6a2ac84e.chunk.js.LICENSE"
+    "url": "/static/js/2.53e5ca76.chunk.js.LICENSE"
   },
   {
-    "revision": "08d34147ed1f8e3984b5",
-    "url": "/static/js/main.b9971f9e.chunk.js"
+    "revision": "513cb726f0409a8af108",
+    "url": "/static/js/main.4d0e2823.chunk.js"
   },
   {
     "revision": "274d14914ff7c2464450",
@@ -36,8 +36,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/media/coruna-js-logo.570a35f3.png"
   },
   {
-    "revision": "921a1f1bd73752fc9b9f3105686527d7",
-    "url": "/static/media/financial-manager.921a1f1b.jpg"
+    "revision": "b44d82d7cad98361973bf57b5b065857",
+    "url": "/static/media/covid-19-spain.b44d82d7.jpg"
+  },
+  {
+    "revision": "7185921f6cff8fbaee3fad75080e7338",
+    "url": "/static/media/google-tag-manager-logo.7185921f.svg"
   },
   {
     "revision": "dee70092badc6145039a2750390cad69",
