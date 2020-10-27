@@ -1,33 +1,54 @@
 {
-  "name": "gatsby-starter-hello-world",
+  "name": "eliasgarcia.dev",
   "private": true,
-  "description": "A simplified bare-bones starter for Gatsby",
+  "description": "Elias Garcia website",
   "version": "0.1.0",
   "license": "0BSD",
   "scripts": {
     "build": "gatsby build",
-    "develop": "gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "start": "npm run develop",
+    "lint": "eslint --fix \"./src/**/*.{ts,tsx}\"",
+    "start": "gatsby develop",
     "serve": "gatsby serve",
-    "clean": "gatsby clean",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+    "clean": "gatsby clean"
   },
   "dependencies": {
-    "gatsby": "^2.24.67",
-    "gatsby-plugin-better-jss": "^1.0.3",
+    "gatsby": "^2.24.87",
+    "gatsby-plugin-google-fonts": "^1.0.1",
+    "gatsby-plugin-ts-config": "^1.1.0",
     "gatsby-plugin-typescript": "^2.4.21",
+    "normalize.css": "^8.0.1",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "react-jss": "^10.4.0"
   },
   "devDependencies": {
-    "prettier": "2.1.2"
+    "@typescript-eslint/eslint-plugin": "^4.6.0",
+    "@typescript-eslint/parser": "^4.6.0",
+    "eslint": "^7.12.0",
+    "eslint-config-prettier": "^6.14.0",
+    "eslint-plugin-react": "^7.21.5",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.5.0",
+    "prettier": "2.1.2",
+    "typescript": "^4.0.3"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-hello-world"
+    "url": "https://github.com/elias-garcia/elias-garcia.github.io"
   },
-  "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    ".{js,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    ".{json,md,mdx}": [
+      "prettier --write"
+    ]
   }
 }
