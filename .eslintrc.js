@@ -24,7 +24,6 @@ module.exports = {
   ],
   rules: {
     "react/jsx-pascal-case": [2, { allowAllCaps: false }],
-    "react/jsx-fragments": [2, "element"],
     "react/jsx-wrap-multilines": [2, { declaration: "parens" }],
   },
 };
