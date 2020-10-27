@@ -5,10 +5,19 @@ import { ThemeProvider } from "react-jss";
 import { theme } from "./src/styles/theme";
 import { Layout } from "./src/components/core/layout/layout.component";
 
-export const wrapPageElement = ({ element, props }) => {
-  return (
-    <ThemeProvider theme={theme}>
-      <Layout {...props}>{element}</Layout>
-    </ThemeProvider>
-  );
+type WrapPageElementFn = (params: {
+  element: React.ReactNode;
+  props: Record<string, unknown>;
+}) => React.ReactNode;
+
+export const wrapPageElement: WrapPageElementFn = ({ element, props }) => {
+  return <Layout {...props}>{element}</Layout>;
+};
+
+type WrapRootElementFn = (params: {
+  element: React.ReactNode;
+}) => React.ReactNode;
+
+export const wrapRootElement: WrapRootElementFn = ({ element }) => {
+  return <ThemeProvider theme={theme}>{element}</ThemeProvider>;
 };

@@ -13,8 +13,10 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
+    "clsx": "^1.1.1",
     "gatsby": "^2.24.87",
     "gatsby-plugin-google-fonts": "^1.0.1",
+    "gatsby-plugin-react-svg": "^3.0.0",
     "gatsby-plugin-ts-config": "^1.1.0",
     "gatsby-plugin-typescript": "^2.4.21",
     "normalize.css": "^8.0.1",

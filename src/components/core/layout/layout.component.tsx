@@ -1,12 +1,16 @@
 import React from "react";
 
 import { Header } from "../header/header.component";
+import { Main } from "../main/main.component";
 import { useLayoutStyles } from "./layout.styles";
 
-export const Layout: React.FC = () => {
-  useLayoutStyles();
+export const Layout: React.FC = ({ children }) => {
+  const classes = useLayoutStyles();
 
-  return (<div>
+  return (
+    <div className={classes.layout}>
       <Header />
-    </div>);
+      <Main>{children}</Main>
+    </div>
+  );
 };
