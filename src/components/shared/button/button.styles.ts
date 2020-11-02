@@ -1,4 +1,5 @@
 import { createUseStyles } from "react-jss";
+
 import { Theme } from "../../../styles/theme";
 
 export const useButtonStyles = createUseStyles((theme: Theme) => ({
@@ -7,6 +8,7 @@ export const useButtonStyles = createUseStyles((theme: Theme) => ({
     borderRadius: theme.borderRadius,
     background: theme.palette.primary.main,
     color: theme.palette.white,
+    lineHeight: theme.lineHeight,
   },
   linkButton: {
     textDecoration: "none",

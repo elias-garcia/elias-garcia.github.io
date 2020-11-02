@@ -5,8 +5,11 @@ export const useLayoutStyles = createUseStyles((theme: Theme) => ({
   "@global": {
     body: {
       fontFamily: "Rubik",
-      fontSize: "1.125rem",
+      fontSize: `${theme.fontSize}rem`,
       color: theme.palette.black,
+    },
+    p: {
+      lineHeight: theme.lineHeight,
     },
   },
   layout: {

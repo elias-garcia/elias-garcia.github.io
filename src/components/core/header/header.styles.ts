@@ -30,8 +30,25 @@ export const useHeaderStyles = createUseStyles((theme: Theme) => ({
     height: 48,
   },
   nav: {
+    display: "none",
+    [theme.breakpoints.upMd]: {
+      display: "flex",
+      alignItems: "center",
+    },
+  },
+  mobileMenu: {
     display: "flex",
-    alignItems: "center",
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
+    color: theme.palette.black,
+    padding: 0,
+    "&:focus": {
+      outline: "none",
+    },
+    [theme.breakpoints.upMd]: {
+      display: "none",
+    },
   },
   linkList: {
     display: "flex",
@@ -55,7 +72,7 @@ export const useHeaderStyles = createUseStyles((theme: Theme) => ({
       position: "absolute",
       left: 0,
       right: 0,
-      bottom: 0,
+      bottom: theme.spacing(0.25),
       margin: `0 ${theme.spacing(2)}px`,
       height: 2,
       background: theme.palette.primary.main,

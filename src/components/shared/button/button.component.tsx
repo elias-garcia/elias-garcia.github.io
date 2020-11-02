@@ -1,16 +1,17 @@
+import React from "react";
 import clsx from "clsx";
 import { Link } from "gatsby";
 
-import React from "react";
 import { useButtonStyles } from "./button.styles";
 
 type ButtonProps =
   | {
-      type: "button";
+      component: "button";
       label: string;
+      type?: "button" | "submit";
     }
   | {
-      type: "link";
+      component: "link";
       to: string;
       label: string;
     };
@@ -18,7 +19,7 @@ type ButtonProps =
 export const Button: React.FC<ButtonProps> = props => {
   const classes = useButtonStyles();
 
-  switch (props.type) {
+  switch (props.component) {
     case "link": {
       return (
         <Link
@@ -27,18 +28,20 @@ export const Button: React.FC<ButtonProps> = props => {
             [classes.linkButton]: true,
           })}
           to={props.to}
+          role="button"
         >
           {props.label}
         </Link>
       );
     }
-    default: {
+    case "button": {
       return (
         <button
           className={clsx({
             [classes.buttonBase]: true,
             [classes.button]: true,
           })}
+          type={props.type || "button"}
         >
           {props.label}
         </button>

@@ -23,7 +23,7 @@ module.exports = {
     "prettier/react",
   ],
   rules: {
-    "react/jsx-pascal-case": [2, { allowAllCaps: false }],
+    "react/jsx-pascal-case": [2, { allowAllCaps: true }],
     "react/jsx-wrap-multilines": [2, { declaration: "parens" }],
     "react/prop-types": 0,
   },
