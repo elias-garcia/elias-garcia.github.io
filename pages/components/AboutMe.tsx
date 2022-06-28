@@ -99,7 +99,7 @@ export const AboutMe: FC = () => {
             <p className="mt-3 text-lg text-gray-500">
               Tras graduarme como ingeniero de software he decidido centrar mi
               carrera en el desarrollo de aplicaciones web basadas en Javascript
-              y su ecosistema, especializándome sobre todo en frontend y web3.
+              y su ecosistema, especializándome sobre todo en frontend y Web3.
             </p>
             <dl className="mt-10 space-y-10">
               {transferFeatures.map((item) => (

@@ -1,8 +1,6 @@
 import { ArrowRightIcon } from "@heroicons/react/outline";
 import { FC } from "react";
 
-import { routes } from "../routes";
-
 export const Hero: FC = () => {
   return (
     <div className="mx-auto max-w-7xl w-full place-items-center lg:grid lg:grid-cols-2 lg:gap-8 lg:py-36 px-4 sm:px-6">
@@ -16,7 +14,7 @@ export const Hero: FC = () => {
             Soy ingeniero de software especializado en
           </span>
           <span className="block">
-            el desarrollo de aplicaciones frontend web3
+            el desarrollo de aplicaciones frontend Web3
           </span>
         </p>
         <div className="mt-10 sm:flex sm:justify-center lg:justify-start">
