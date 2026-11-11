@@ -5,8 +5,8 @@ profile:
   timezone: Europe/Lisbon
   availability: Open to remote roles
   about:
-    - I’ve spent nine years building products end to end, from real-time data pipelines and APIs to the interfaces on top. Most recently I led engineering at Vesu, a lending protocol on Starknet. Before that, four years at Polygon Labs, leading the frontend of Polygon zkEVM and the team behind Polygon ID.
-    - These days I’m also exploring how AI agents change the way small teams ship. This site is where I keep the projects and notes.
+    - I've spent nine years building products end to end, from real-time data pipelines and APIs to the interfaces on top. Most recently I led engineering at Vesu, a lending protocol on Starknet. Before that, four years at Polygon Labs, leading the frontend of Polygon zkEVM and the team behind Polygon ID.
+    - These days I'm also exploring how AI agents change the way small teams ship. This site is where I keep the projects and notes.
   contact:
     - label: Email
       text: eliasgarciadev@gmail.com

@@ -1,14 +1,16 @@
 ---
+import type { CollectionEntry } from "astro:content";
 import PolFundingSpreads from "./illustrations/PolFundingSpreads.astro";
 import Roleburn from "./illustrations/Roleburn.astro";
 import WorkIssue from "./illustrations/WorkIssue.astro";
 
 type Props = {
   id: string;
+  illustration: CollectionEntry<"projects">["data"]["illustration"];
   status: string;
 };
 
-const { id, status } = Astro.props;
+const { id, illustration, status } = Astro.props;
 
 const illustrations = {
   roleburn: Roleburn,
@@ -16,12 +18,7 @@ const illustrations = {
   "pol-funding-spreads": PolFundingSpreads,
 };
 
-const Illustration = Object.entries(illustrations).find(
-  ([key]) => key === id,
-)?.[1];
-if (Illustration === undefined) {
-  throw new Error(`No illustration for project "${id}".`);
-}
+const Illustration = illustrations[illustration];
 ---
 
 <div class="preview" data-preview={id}>

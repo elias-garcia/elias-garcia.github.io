@@ -49,6 +49,8 @@ html {
   text-size-adjust: 100%;
   /* Anchor targets stop below the sticky header, not under it. */
   scroll-padding-block-start: calc(var(--bar-h) + var(--space-4));
+  /* Short and long pages keep the same width, so navigating doesn't shift. */
+  scrollbar-gutter: stable;
 }
 
 ::selection {

@@ -53,6 +53,7 @@
   --leading-long: 1.75;
 
   --measure: 62ch; /* longest comfortable line for running text */
+  --measure-short: 52ch; /* page intro lines */
 
   --tracking-display: -0.02em;
   --tracking-title: -0.01em;
@@ -89,6 +90,7 @@
   --dur-slow: 250ms; /* page entrance, expanding rows, underline growing */
   --ease: ease-out;
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1); /* things arriving */
+  --row-fade: 0.45; /* other rows while one is hovered */
   --press-scale: 0.97;
   --press-scale-tile: 0.99;
   --dur-ping: 2.4s; /* availability dot, a slow loop */

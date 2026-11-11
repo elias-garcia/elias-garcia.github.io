@@ -1,0 +1,13 @@
+---
+import WritingInPlace from "../components/WritingInPlace.astro";
+import WritingIndex from "../components/WritingIndex.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPage, getPosts } from "../lib/content.ts";
+
+const [page, posts] = await Promise.all([getPage("writing"), getPosts()]);
+---
+
+<BaseLayout title={page.title} description={page.intro}>
+  <WritingInPlace slot="head" />
+  <WritingIndex page={page} posts={posts} />
+</BaseLayout>

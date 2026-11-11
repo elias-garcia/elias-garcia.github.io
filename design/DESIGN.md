@@ -5,11 +5,10 @@ This is the source of truth for the site's design. It was produced in Claude Des
 **How to use this package**
 
 - `design/DESIGN.md` (this file): what to build and the rules it follows.
-- `src/styles/tokens.css`: every colour, radius, motion and layer value. Never retype values. The type scale (§2.2) and spacing (§2.3) are added to it as tokens during setup.
+- `src/styles/tokens.css`: every colour, radius, motion and layer value. Never retype values.
 - `design/reference/*.html`: static renders of every approved page and state, with the real CSS. Open them in a browser to compare, and read their CSS for exact details. They are reference, not source: rebuild them as Astro components rather than copying markup. Interactive behaviour (search, menus, filters) is described in this document because the static files cannot run it.
 - `design/screenshots/`: every page at 1280px and 390px, in light and dark, plus the interactive states. Use them to check your output visually.
 - `design/assets/`: logo, photos, share images (originals; the site uses copies in `src/assets/`). `design/head.html`: the `<head>` snippet for the app icons, which live in `public/`.
-- `src/content/`: example content to seed the first version: YAML data (profile, work, talks, education) and posts and projects as MDX.
 
 ---
 
@@ -18,9 +17,8 @@ This is the source of truth for the site's design. It was produced in Claude Des
 1. **One column, quiet by default.** A 688px column (640px of text plus 24px padding). Grey for context, near-black for the thing itself. No cards unless the content is something you can open.
 2. **One of each.** Each job has exactly one component. If something new is needed, add it to the component list first; never create a variant inline.
 3. **Indigo means state.** The accent marks the current page, the selected chip and links inside prose. Buttons stay neutral.
-4. **Tokens only.** No raw colours, sizes or durations in components. Everything comes from `tokens.css`.
-5. **A link only goes somewhere.** A row or card is a link only if it has a real destination; otherwise it renders as a plain, non-interactive row.
-6. **Accessible and semantic first.** WCAG 2.2 AA in both themes, real HTML elements, keyboard paths for everything.
+4. **A link only goes somewhere.** A row or card is a link only if it has a real destination; otherwise it renders as a plain, non-interactive row.
+5. **Accessible and semantic first.** WCAG 2.2 AA in both themes, real HTML elements, keyboard paths for everything.
 
 ---
 
@@ -123,7 +121,8 @@ The motion system:
 2. **Between pages.** Cross-document View Transitions (`@view-transition { navigation: auto; }`); the header keeps its place (`view-transition-name: site-header`), the old content fades out in 100ms, then step 1 plays. The Roleburn preview (Home tile and Projects card) morphs into the case study hero (shared `view-transition-name: roleburn-preview`, 400ms). This needs a multi-page site, which Astro builds by default.
 3. **Interaction.** Press scales to .97. Nothing animates from scale(0); popovers grow from their trigger (`transform-origin` at the trigger).
 4. **Touch.** Hover movement and list dimming run only on real pointers: wrap them in `@media (hover: hover) and (pointer: fine)`. A tap must never leave rows dimmed.
-5. **Reduced motion.** Gentler, not zero: pages fade in over 150ms without moving; everything that moves becomes instant; the analog-style loops in illustrations stop.
+5. **Within Writing.** Moving between `/writing` and its topic pages keeps the page in place: no page entrance, only the posts re-enter (the same fade and 6px rise, over 150ms). The previous page comes from the Navigation API; without it, the normal entrance plays.
+6. **Reduced motion.** Gentler, not zero: pages fade in over 150ms without moving; everything that moves becomes instant; the analog-style loops in illustrations stop.
 
 Deliberate exceptions: the Roleburn morph (400ms), the easing demo in the post (600ms), and the slow loops inside project illustrations.
 
@@ -148,7 +147,7 @@ Two sizes, one weight: 1.5px stroke, round caps and joins, `currentColor`.
 | `icon-md` | 16px | Icons on their own or in a control: buttons, search result tiles, menu items, header search |
 | `icon-sm` | 12px | The two inline markers, 4px from their word: the see-more chevron and the external-link arrow. Never a tap target on their own |
 
-Icons always sit next to a text label, or carry an accessible name when alone. Decorative icons get `aria-hidden="true"`. Note: inside `.button`, the RSS icon's dot is filled; give any other icon's circles `fill: none` explicitly.
+Icons always sit next to a text label, or carry an accessible name when alone. Decorative icons get `aria-hidden="true"`.
 
 ### 2.8 Fixed sizes and breakpoint
 
@@ -180,19 +179,19 @@ Each component appears exactly once in the design system. Live versions: `refere
 ### Layout
 - **Header.** Sticky, 64px, translucent `--bg` with backdrop blur, hairline at the bottom. Logo (links Home) · Home · Projects · Writing · search button (magnifier + "⌘K", icon only on phones). The current section is `--accent` with a 1px underline; inside a case study or post, its parent (Projects/Writing) is current with `aria-current="true"`; on the page itself `aria-current="page"`. Same on every page.
 - **Footer.** Mirrors the header: 64px bar, hairline on top, content centred; grows only if the two halves wrap. Left: logo + "Elías García, 2026". Right: `<time>12:09</time> in Portugal · 5h ahead of you`. 96px above it; at the bottom of the window on short pages (the body is a flex column with `min-block-size: 100dvh`, `main` flexes).
-- **Footer clock.** Portugal time via `Intl.DateTimeFormat(…, { timeZone: 'Europe/Lisbon' })`, refreshed every 30s. The offset compares with the visitor's clock, rounded to 15 minutes: "same time as you", "5h ahead of you", "5h 30m behind you". Render it client-side. The site is static, so the HTML ships without a time ("Portugal" only) and the script adds it. Hidden on phones.
+- **Footer clock.** Portugal time via `Intl.DateTimeFormat(…, { timeZone: 'Europe/Lisbon' })`, refreshed every 30s. The offset compares with the visitor's clock, rounded to 15 minutes: "same time as you", "5h ahead of you", "5h 30m behind you". The HTML ships with "Portugal" only; the script adds the time and offset. Hidden on phones.
 - **Skip link.** "Skip to content", hidden until the first Tab, then a dark pill at the top left; jumps to `#content`, the same on every page.
 
 ### Actions
 - **Button.** The only action component. 32px, `--control` fill, `--r-full`, 13px label in `--text-2`, optional 16px icon, 8px gap, 12px side padding. Hover `--control-hover`; press scale .97. Never indigo. On a grey surface (the code block) its fill turns `--bg`. Uses: Download CV, Subscribe (Writing), Copy page (posts), Replay and Copy (inside posts).
 - **Menu button: Download CV.** Label + chevron (no leading icon); the chevron rotates 180° while open. Opens a 320px menu under the button (`--r-lg`, `--shadow-overlay`, scale .97→1 from the top-left over 150ms). Two links in the search-row style: **PDF · 120 KB**, "Formatted for reading, printing and sharing" and **Markdown · 4 KB**, "Plain text for AI tools and agents". It is a short list of links in a popover, not a `role="menu"`: Tab moves through the links. Esc or choosing a format closes it and returns focus to the button; a click outside or tabbing past the last link closes it and leaves focus where the visitor moved it. File sizes are computed at build time.
-- **Chip.** A set of choices that filters a list (Writing topics). 32px, `--control`, label + count badge. Selected (`aria-pressed="true"`): `--tint` fill, `--accent` label, count badge `--accent` fill with `--bg` text. Never alone, never for actions. "All" first and selected on load.
+- **Chip.** A set of links that filters a list (Writing topics), each to its own page. 32px, `--control`, label + count badge. Selected (`aria-current="page"`): `--tint` fill, `--accent` label, count badge `--accent` fill with `--bg` text. Never alone, never for actions. "All" first, selected on `/writing`.
 - **See-more link.** Muted 14px text + 12px chevron; on hover the text darkens, an underline grows left→right and the chevron nudges 2px. Only for pages inside the site ("All projects", "All posts", "Read the case study").
 - **Back link + Copy page.** Top of posts: "‹ Writing" on the left, **Copy page** button on the right with the Markdown mark icon; label changes to "Copied" for 1.5s; `aria-label="Copy page as Markdown"`. Copies the post's Markdown (generate it at build time from the MDX).
 - **External-link arrow.** A 12px arrow icon (`M4.5 3.5h4v4M8.5 3.5l-5 5`), 4px after the word, `--text-3` stroke, link colour on hover and a 1px up-right nudge (pointer devices only). Only on standalone links that leave the site: contact rows, the course row, project facts. Links inside prose never get it. Screen readers hear the link text, plus "(opens in a new tab)" when the link opens one.
 
 ### Lists and cards
-- **List row.** 112px date gutter (`<time>` in `--text-3`), title 15/500, one 14px line in `--text-2`, 12px vertical padding, no dividers. Rows are `<li>` in a `<ul role="list">`. When one row is hovered, other link rows fade to .45 (pointer devices only). **A row is a link only if it has somewhere to go; otherwise it is a plain row**: not an `<a>`, no hover, not focusable.
+- **List row.** 112px date gutter (`<time>` in `--text-3`), title 15/500, one 14px line in `--text-2`, 12px vertical padding, no dividers. Rows are `<li>` in a `<ul role="list">`. When one row is hovered, the other link rows fade to .45 (pointer devices only). The fade covers the whole list the row belongs to: on Writing that is every post across all year groups (the years are one list split by headings; scope the rule to the container of the year groups); on Home each section (Writing, Speaking and teaching, Work) fades only its own rows. **A row is a link only if it has somewhere to go; otherwise it is a plain row**: not an `<a>`, no hover, not focusable.
 - **Expandable row (work experience).** A native `<details>` whose `<summary>` holds the date, company (500) + role, and a + icon that rotates to ×. The body's height animates open (250ms) where the browser supports it, and lists the bullets. Layout is a grid: `112px 1fr auto` on desktop; on phones `"date icon" / "text text"` so the + stays beside the date. Only one open at a time (the rows share a `name`). **The newest job is open on load**, the rest closed.
 - **Project tile (Home).** Preview (4:3, `--surface`, `--line` border, `--r-lg`) with a status label, then title (`h3`) and one line. Three tiles in a row; `grid-template-rows: subgrid` keeps titles aligned. Lifts 2px on hover (pointer only).
 - **Project card (Projects).** Bigger preview, title (`h2`), description, tags as plain comma-separated text, optional "Read the case study". When the count is odd the newest spans the full width (16:7 preview). Uses subgrid for alignment.
@@ -200,7 +199,7 @@ Each component appears exactly once in the design system. Live versions: `refere
 - **Previous / next card.** Bordered, `--r-lg`; the chevron sits on the side it leads to. In a `<nav aria-label="More posts">` (or "More projects").
 
 ### Text and metadata
-- **Metadata line.** Items separated by a dot: each dot is its own `aria-hidden` element with an 8px gap on each side (never a dot between plain spaces). On wrapping, a dot stays with the item after it, so a line never ends on a dot. Post header: "November 9, 2026 · Design engineering · 4 min read"; the topic links to Writing filtered by it.
+- **Metadata line.** Items separated by a dot: each dot is its own `aria-hidden` element with an 8px gap on each side (never a dot between plain spaces). On wrapping, a dot stays with the item after it, so a line never ends on a dot. Post header: "November 9, 2026 · Design engineering · 4 min read"; the topic links to its Writing topic page (`/writing/topics/<slug>`).
 - **Project facts.** `<dl>`: **Year · Status · Links** in three equal columns between two hairlines; on phones Year and Status share a row and Links spans the full width. Links are named by destination ("Website", "GitHub", "npm"), product first, code second, with the external arrow; none → "Not public yet" in `--text-3`.
 - **Author footer.** Ends every post: 40px photo, name (`rel="author"`, links Home) and role, inside the article's `<footer>` / `<address>`.
 
@@ -256,7 +255,7 @@ Intro (title, one line), then the card grid (odd count: newest spans the full wi
 Back link "‹ Projects", title (display) and lead, project facts, the hero illustration (shared view-transition name with the Projects preview), then the article: Why I built it, How it works (with a folder-tree code block and a placeholder figure), What's next; previous/next at the end.
 
 ### Writing (`/writing`)
-Intro with **Subscribe** (RSS icon + label) on the right of the title; topic chips (All, AI, DeFi, Design engineering, with counts); posts grouped by year (`h2`), each an `<article>` in an `<li>` with `<time>`, `h3` title link, description, and "Topic · N min read" (the topic is plain text, not a link, because the row is already a link). The selected topic belongs in the URL (`?topic=ai`) so filtered views can be shared; announce the result count in a live region.
+Intro with **Subscribe** (RSS icon + label) on the right of the title; topic chips (All, AI, DeFi, Design engineering, with counts); posts grouped by year (`h2`), each an `<article>` in an `<li>` with `<time>`, `h3` title link, description, and "Topic · N min read" (the topic is plain text, not a link, because the row is already a link). Each topic is its own static page, `/writing/topics/<slug>` (e.g. `/writing/topics/ai`), built from the posts: the same page with that chip selected and only its posts, so filtered views are shareable and work without JavaScript. The chips are links in a `nav`; choosing one is a page change, with the usual page transition.
 
 ### Post (`/writing/<slug>`)
 Back link + Copy page, title (display), metadata line, then the article (max 640px, long-form text), a reading-progress bar under the header (scroll-driven animation where supported), the author footer and previous/next.
@@ -274,7 +273,7 @@ Back link + Copy page, title (display), metadata line, then the article (max 640
 - Plain English, sentence case, short sentences. All titles in English; a source in another language is translated and its language noted ("Online course in Spanish").
 - Dates: "Nov 9" in lists, "Nov 2026" on Home, "November 9, 2026" in post headers ("Nov 9, 2026" on phones). Always in `<time datetime>`.
 - Separators: "·" as its own element with 8px gaps. Ranges use an en dash: "2024–Now".
-- Typographic quotes and apostrophes (’ “ ”) in visible text.
+- Straight quotes and apostrophes (' ") in visible text, as typed. Markdown doesn't curl them.
 - No mention of read.cv anywhere.
 - Placeholder content still to replace is listed in `PLAN.md`. Until a destination exists, render rows and cards as plain (not links).
 
@@ -286,7 +285,7 @@ Every page must pass axe (WCAG 2.2 AA + best practice) in light and dark, at 128
 
 - Landmarks: one `<header>`, `<nav aria-label="Main">`, `<main id="content">`, `<footer>`. One `h1` per page, no skipped heading levels.
 - Lists are `<ul role="list">` (role keeps semantics in Safari with `list-style: none`). Dates are `<time>`. Contact is `<address>` + `<dl>`. Page intros are `<header>` inside `main`, not labelled sections.
-- Every interactive element is a real `<a>`, `<button>` or `<summary>`; the Download CV button opens its popover with `popovertarget` and `aria-controls`; chips use `aria-pressed`; the search uses `role="dialog"`, `aria-modal`, a combobox input and `aria-activedescendant`.
+- Every interactive element is a real `<a>`, `<button>` or `<summary>`; the Download CV button opens its popover with `popovertarget` and `aria-controls`; the selected chip has `aria-current="page"`; the search uses `role="dialog"`, `aria-modal`, a combobox input and `aria-activedescendant`.
 - Visible focus: 2px `--accent` outline, 3px offset, following the element's shape (text links get `--r-sm`).
 - Touch: 44px hit areas on `pointer: coarse` without changing visuals.
 - Decorative illustrations are `aria-hidden`; their captions describe them. Rejected listings fading in the Roleburn hero are exempt decorative text.
@@ -300,41 +299,12 @@ Every page must pass axe (WCAG 2.2 AA + best practice) in light and dark, at 128
 - **`.md` for posts only.** A static endpoint `/writing/<slug>.md` per post, generated from the same MDX with custom components stripped; `<link rel="alternate" type="text/markdown">` on each post. Other pages have no `.md` version.
 - **Copy page** on posts copies the same Markdown.
 - **JSON-LD.** `Person` on Home (name, jobTitle, sameAs GitHub/LinkedIn/X, address country PT); `BlogPosting` on posts (author, datePublished, about/topic).
-- **RSS** via `@astrojs/rss`; style the feed with an XSLT so clicking Subscribe shows a readable page. **Sitemap** via `@astrojs/sitemap`. **robots.txt** explicitly allows AI crawlers (GPTBot, ClaudeBot, PerplexityBot…).
+- **RSS** via `@astrojs/rss`, with the same posts as the Writing page (drafts only in `npm run dev`). Subscribe links straight to `/rss.xml`; the feed is not styled (browsers are removing XSLT). **Sitemap** via `@astrojs/sitemap`. **robots.txt** explicitly allows AI crawlers (GPTBot, ClaudeBot, PerplexityBot…).
 - **App icons and head:** `design/head.html`.
 
 ---
 
-## 8. Build notes (Astro)
+## 8. Build notes
 
-- **Astro 7**, static output, multi-page (needed for cross-document View Transitions). Interactivity is small vanilla scripts; no UI framework and no `<ClientRouter />`.
-- **Markup.** Where §3 and §6 name elements for interactive components (the work-row button, `role="dialog"`), they describe behaviour and semantics. `CLAUDE.md` decides the elements: native `<details>`, `<dialog>` and `popover` where they can match the design.
-- **Content collections** with Zod schemas, all in `src/content/`: `writing` (MDX: title, description, date, topic, draft) and `projects` (MDX: title, summary, description, status, year, links[], tags[]; the body is the case study), loaded with `glob()`; `site` (single `profile` entry), `work`, `talks` and `education` from YAML files with `file()`. Reading time and whether a project has a case study are derived, not stored; reading time comes from a Sätteri plugin (Astro's reading-time recipe).
-- **MDX** via `@astrojs/mdx`, with a components map for the Prose table above.
 - **Code highlighting:** built-in Shiki with its `css-variables` theme, with the `--astro-code-*` variables set from tokens so dark mode follows automatically. The design is deliberately two-tone: code in `--text-2`, comments in `--text-3`; optionally keywords in `--accent`.
-- **Scripts:** search dialog, Download CV menu, work rows, topic chips, easing demo, copy buttons, footer clock. Everything else ships as plain HTML.
-- **Fonts:** Astro Fonts API for Instrument Sans (400–600), `display: swap`.
 - **Download CV:** link the menu items to `/cv.pdf` and `/cv.md`; generate `/cv.md` at build time from the content and compute both sizes at build time.
-
----
-
-## 9. File index
-
-```
-CLAUDE.md                       instructions for Claude Code
-PLAN.md                         build order and open items (temporary)
-design/DESIGN.md                this specification
-design/reference/*.html         static renders of every page and state
-design/screenshots/*.png        1280px and 390px, light and dark, plus states
-design/assets/                  logo.svg (themed), avatar.jpg, speaking-lisbon-2023.jpg, share images
-design/head.html                <head> snippet for the app icons
-public/                         favicon.svg/.ico, apple-touch-icon, PWA icons, site.webmanifest, cv.pdf
-src/assets/                     logo, avatar and speaking photo used by the site
-src/styles/tokens.css           CSS variables (light + dark)
-src/content/site.yaml           profile: identity, about, contact, speaking photo
-src/content/work.yaml           jobs
-src/content/talks.yaml          talks and the course
-src/content/education.yaml      education
-src/content/writing/*.mdx       one file per post (only "Rebuilding this site" is written; the rest are drafts)
-src/content/projects/*.mdx      one file per project; the body is the case study
-```

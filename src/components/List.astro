@@ -12,7 +12,7 @@
   @media (hover: hover) and (pointer: fine) {
     .list:has(:global(.row-interactive:hover))
       :global(.row-interactive:not(:hover)) {
-      opacity: 0.45;
+      opacity: var(--row-fade);
     }
   }
 </style>

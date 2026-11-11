@@ -8,7 +8,7 @@ vesu:
     - Led engineering from launch to $84.6M in customer assets.
     - Built the lender and borrower app, a risk-parameter admin panel and a blockchain-only fallback UI so users can exit positions during an outage, on a shared Ark UI design system.
     - Built the real-time event-ingestion pipeline, a public API, an RFQ system for liquidations over WebSockets and an MCP server for product data.
-    - Set up issue tracking, CI/CD and releases from zero, mentored the frontend team and introduced the company’s AI development practice.
+    - Set up issue tracking, CI/CD and releases from zero, mentored the frontend team and introduced the company's AI development practice.
 
 polygon:
   start: 2020
@@ -38,7 +38,7 @@ netex:
   role: Lead Frontend Engineer
   points:
     - Led the 4-person Angular team behind Netex Cloud, used by thousands of learners at companies including Amazon and Inditex. Delivered internationalisation and accessibility.
-    - Led a cross-department initiative to build a shared component library adopted across the company’s products.
+    - Led a cross-department initiative to build a shared component library adopted across the company's products.
 
 agora:
   start: 2017

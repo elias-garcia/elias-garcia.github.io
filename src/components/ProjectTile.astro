@@ -14,7 +14,11 @@ const Tag = href === undefined ? "div" : "a";
 
 <li class="cell">
   <Tag class:list={["tile", { "tile-link": href !== undefined }]} href={href}>
-    <ProjectPreview id={project.id} status={project.data.status} />
+    <ProjectPreview
+      id={project.id}
+      illustration={project.data.illustration}
+      status={project.data.status}
+    />
     <h3 class="title">{project.data.title}</h3>
     <p class="summary">{project.data.summary}</p>
   </Tag>

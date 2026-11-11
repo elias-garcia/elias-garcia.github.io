@@ -12,6 +12,10 @@ export default defineConfig({
   markdown: {
     processor: satteri({
       mdastPlugins: [mdastReadingTimePlugin],
+      // Straight quotes, as typed (DESIGN.md §5).
+      features: {
+        smartPunctuation: { quotes: false, dashes: true, ellipses: true },
+      },
     }),
     shikiConfig: {
       theme: "css-variables",

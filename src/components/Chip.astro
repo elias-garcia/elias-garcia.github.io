@@ -1,0 +1,76 @@
+---
+type Props = {
+  label: string;
+  count: number;
+  href: string;
+  current: boolean;
+};
+
+const { label, count, href, current } = Astro.props;
+---
+
+<a class="chip" href={href} aria-current={current ? "page" : undefined}>
+  {label} <span class="count">{count}</span>
+</a>
+
+<style>
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: var(--control-h);
+    padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
+    border-radius: var(--r-full);
+    background: var(--control);
+    color: var(--text-2);
+    font-size: var(--text-meta);
+    transition:
+      background var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+
+    &:hover {
+      background: var(--control-hover);
+      color: var(--text);
+    }
+
+    &[aria-current="page"] {
+      background: var(--tint);
+      color: var(--accent);
+      font-weight: var(--weight-medium);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        background var(--dur) var(--ease),
+        color var(--dur) var(--ease),
+        scale var(--dur-fast) var(--ease);
+
+      &:active {
+        scale: var(--press-scale);
+      }
+    }
+  }
+
+  .count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--space-5);
+    min-block-size: var(--space-5);
+    padding-inline: var(--space-2);
+    border-radius: var(--r-full);
+    background: var(--bg);
+    color: var(--text-2);
+    font-size: var(--text-micro);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--weight-medium);
+    transition:
+      background var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+
+    .chip[aria-current="page"] & {
+      background: var(--accent);
+      color: var(--bg);
+    }
+  }
+</style>

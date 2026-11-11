@@ -1,0 +1,21 @@
+---
+// Moving between Writing pages (all posts or one topic) only changes the list,
+// so the page shouldn't play its entrance again. This must run before the
+// first render, so it is an inline script in <head>, not a deferred module.
+// The pattern matches the routes in src/pages/writing.astro and
+// src/pages/writing/topics/[topic].astro.
+---
+
+<script is:inline>
+  {
+    const activation = window.navigation?.activation;
+    const from = activation?.from?.url;
+    if (
+      typeof from === "string" &&
+      activation.navigationType !== "reload" &&
+      /^\/writing(\/topics\/[^/]+)?$/.test(new URL(from).pathname)
+    ) {
+      document.documentElement.dataset.inPlace = "";
+    }
+  }
+</script>

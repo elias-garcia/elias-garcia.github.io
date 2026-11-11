@@ -12,11 +12,13 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "a11y": "node scripts/a11y.ts",
-    "lighthouse": "lhci autorun"
+    "lighthouse": "lhci autorun",
+    "lighthouse:open": "lhci open"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.8",
     "@astrojs/mdx": "^8.1.4",
+    "@astrojs/rss": "^4.0.19",
     "astro": "^7.4.10",
     "reading-time": "^1.5.0",
     "satteri": "^0.11.7"

@@ -16,32 +16,37 @@ const { name, location, timezone } = Astro.props;
       <Logo size="sm" />
       <span>
         {name}
-        <span data-enhanced hidden>
-          , <span data-year></span>
+        <span data-footer-enhanced hidden>
+          , <span data-footer-year></span>
         </span>
       </span>
     </p>
-    <p class="clock" data-timezone={timezone}>
+    <p class="clock" data-footer-timezone={timezone}>
       <span>
-        <span data-enhanced hidden>
-          <time data-time></time> in{" "}
+        <span data-footer-enhanced hidden>
+          <time data-footer-time></time> in{" "}
         </span>
         {location}
       </span>
-      <span class="dot" data-enhanced hidden aria-hidden="true">
+      <span class="dot" data-footer-enhanced hidden aria-hidden="true">
         ·
       </span>
-      <span class="offset" data-enhanced hidden data-offset></span>
+      <span
+        class="offset"
+        data-footer-enhanced
+        hidden
+        data-footer-offset
+      ></span>
     </p>
   </div>
 </footer>
 
 <script>
-  const clock = document.querySelector<HTMLElement>("[data-timezone]");
-  const timeZone = clock?.dataset["timezone"];
-  const year = document.querySelector("[data-year]");
-  const time = document.querySelector("time[data-time]");
-  const offset = document.querySelector("[data-offset]");
+  const clock = document.querySelector<HTMLElement>("[data-footer-timezone]");
+  const timeZone = clock?.dataset["footerTimezone"];
+  const year = document.querySelector("[data-footer-year]");
+  const time = document.querySelector("time[data-footer-time]");
+  const offset = document.querySelector("[data-footer-offset]");
 
   function utcOffsetMinutes(date: Date, zone: string): number {
     const name = new Intl.DateTimeFormat("en", {
@@ -95,7 +100,7 @@ const { name, location, timezone } = Astro.props;
     update(timeZone);
     setInterval(update, 30_000, timeZone);
   }
-  for (const element of document.querySelectorAll("[data-enhanced]")) {
+  for (const element of document.querySelectorAll("[data-footer-enhanced]")) {
     element.removeAttribute("hidden");
   }
 </script>
@@ -111,6 +116,10 @@ const { name, location, timezone } = Astro.props;
 
     @media (prefers-reduced-motion: reduce) {
       animation: page-fade var(--dur) var(--ease) backwards;
+    }
+
+    :global(:root[data-in-place]) & {
+      animation: none;
     }
   }
 

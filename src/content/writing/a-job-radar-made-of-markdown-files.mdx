@@ -3,5 +3,31 @@ title: A job radar made of markdown files
 description: How Roleburn runs on a folder of notes and a few scheduled agents.
 date: 2026-10-21
 topic: AI
-draft: true
 ---
+
+I wanted a short list of remote roles in Web3, payments and AI that fit my CV, delivered every day without checking a dozen job boards. Roleburn is how I get it, and it's simpler than it sounds.
+
+{/* TODO: what the daily search looked like before Roleburn, in your own words. */}
+
+## A folder instead of an app
+
+There is no repository and no backend. Roleburn is a folder of markdown files that scheduled tasks in Claude Cowork read:
+
+- `cv.md`, the source of truth.
+- `criteria.md`, what a good match means: remote from Europe, senior, Web3, payments, AI.
+- `companies.md`, the teams worth watching.
+- A few prompts that tell the agent how to search, score and summarise.
+
+On a schedule, a task reads the folder and writes the digest.
+
+{/* TODO: how scoring works and what a digest entry looks like. */}
+
+## Why markdown
+
+Changing what the radar looks for means editing a text file, not code.
+
+{/* TODO: what worked, what didn't, and what you'd change. */}
+
+## What's next
+
+I'm preparing Roleburn as an open-source repository, so anyone can drop in their own CV and criteria and get the same daily list.

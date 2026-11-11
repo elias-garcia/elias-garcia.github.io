@@ -5,36 +5,50 @@ import ExternalArrow from "./ExternalArrow.astro";
 type Props = {
   title: string;
   href?: string | undefined;
+  article?: boolean;
+  underline?: boolean;
 };
 
-const { title, href } = Astro.props;
-const external = leavesSite(href);
-const Tag = href === undefined ? "div" : "a";
+const { title, href, article = false, underline = false } = Astro.props;
+const Row = article ? "article" : "div";
+const Title = article ? "h3" : "span";
 ---
 
 <li>
-  <Tag
-    class:list={["row", { "row-interactive": href !== undefined }]}
-    href={href}
-    {...linkTarget(href)}
-  >
-    <span class="date">
+  <Row class:list={["row", { "row-interactive": href !== undefined }]}>
+    <div class="date">
       <slot name="date" />
-    </span>
-    <span class="text">
-      <span class="title">
-        {title}
-        {external && <ExternalArrow href={href} />}
-      </span>
+    </div>
+    <div class="text">
+      <Title class="title">
+        {href === undefined ? (
+          title
+        ) : (
+          <a
+            class:list={["title-link", { underline }]}
+            href={href}
+            {...linkTarget(href)}
+          >
+            <span class="title-text">{title}</span>
+            {leavesSite(href) && <ExternalArrow href={href} />}
+          </a>
+        )}
+      </Title>
       <span class="description">
         <slot />
       </span>
-    </span>
-  </Tag>
+      {Astro.slots.has("meta") && (
+        <span class="meta">
+          <slot name="meta" />
+        </span>
+      )}
+    </div>
+  </Row>
 </li>
 
 <style>
   .row {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-1) var(--space-6);
@@ -43,6 +57,48 @@ const Tag = href === undefined ? "div" : "a";
 
   .row-interactive {
     transition: opacity var(--dur) var(--ease);
+  }
+
+  /* The title link covers the whole row: one row, one action. */
+  .title-link {
+    /* Not positioned, despite the touch target rule in global.css, so the
+       ::after covers the row instead of the link. */
+    position: static;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+
+    &:focus-visible {
+      outline: none;
+
+      &::after {
+        border-radius: var(--r-sm);
+        outline: var(--focus-ring) solid var(--accent);
+        outline-offset: var(--focus-offset);
+      }
+    }
+  }
+
+  .underline .title-text {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% var(--hairline);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .row-interactive:hover .underline .title-text {
+      background-size: 100% var(--hairline);
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .underline .title-text {
+      transition: background-size var(--dur-slow) var(--ease-settle);
+    }
   }
 
   .date {
@@ -59,11 +115,18 @@ const Tag = href === undefined ? "div" : "a";
   }
 
   .title {
+    font-size: inherit;
     font-weight: var(--weight-medium);
   }
 
   .description {
     color: var(--text-2);
     font-size: var(--text-small);
+  }
+
+  .meta {
+    margin-block-start: var(--space-1);
+    color: var(--text-3);
+    font-size: var(--text-meta);
   }
 </style>

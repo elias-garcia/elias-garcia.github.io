@@ -7,6 +7,7 @@ import Figure from "../components/Figure.astro";
 import List from "../components/List.astro";
 import ListRow from "../components/ListRow.astro";
 import MetaLine from "../components/MetaLine.astro";
+import PageTitle from "../components/PageTitle.astro";
 import ProjectTile from "../components/ProjectTile.astro";
 import Section from "../components/Section.astro";
 import SeeMore from "../components/SeeMore.astro";
@@ -50,7 +51,7 @@ const newestJob = work[0]?.id;
           fetchpriority="high"
         />
         <div class="who">
-          <h1>{profile.name}</h1>
+          <PageTitle>{profile.name}</PageTitle>
           <p class="role">{profile.role}</p>
           <div class="actions">
             <DownloadCv />
@@ -200,13 +201,6 @@ const newestJob = work[0]?.id;
     flex-direction: column;
     gap: var(--space-1);
     min-inline-size: 0;
-
-    h1 {
-      font-size: var(--text-title);
-      font-weight: var(--weight-semibold);
-      line-height: var(--leading-tight);
-      letter-spacing: var(--tracking-title);
-    }
   }
 
   .role {

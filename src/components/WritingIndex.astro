@@ -1,0 +1,173 @@
+---
+import type { CollectionEntry } from "astro:content";
+import {
+  getReadingMinutes,
+  getTopics,
+  topicLabel,
+  type Topic,
+} from "../lib/content.ts";
+import { formatMonthDay, isoDate } from "../lib/format.ts";
+import Button from "./Button.astro";
+import Chip from "./Chip.astro";
+import List from "./List.astro";
+import ListRow from "./ListRow.astro";
+import MetaLine from "./MetaLine.astro";
+import PageTitle from "./PageTitle.astro";
+
+type Props = {
+  page: CollectionEntry<"pages">["data"];
+  posts: readonly CollectionEntry<"writing">[];
+  topic?: Topic;
+};
+
+const { page, posts, topic } = Astro.props;
+const topics = getTopics(posts);
+const shown =
+  topic === undefined
+    ? posts
+    : posts.filter(({ data }) => data.topic.slug === topic.slug);
+const rows = await Promise.all(
+  shown.map(async (post) => ({
+    post,
+    minutes: await getReadingMinutes(post),
+  })),
+);
+const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
+---
+
+<div class="writing">
+  <header class="intro">
+    <div class="heading">
+      <div class="title-row">
+        <PageTitle>{page.title}</PageTitle>
+        <Button href="/rss.xml">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M3.5 3a9.5 9.5 0 0 1 9.5 9.5M3.5 7a5.5 5.5 0 0 1 5.5 5.5"></path>
+            <circle cx="4" cy="12" r="1.1"></circle>
+          </svg>
+          Subscribe
+        </Button>
+      </div>
+      <p>{page.intro}</p>
+    </div>
+    <nav class="topics" aria-label="Filter posts by topic">
+      <Chip
+        label="All"
+        count={posts.length}
+        href="/writing"
+        current={topic === undefined}
+      />
+      {[...topics.values()].map(({ slug, label, count }) => (
+        <Chip
+          label={label}
+          count={count}
+          href={`/writing/topics/${slug}`}
+          current={slug === topic?.slug}
+        />
+      ))}
+    </nav>
+  </header>
+
+  <div class="years">
+    {[...years].map(([year, yearRows]) => (
+      <section class="year" aria-labelledby={`year-${String(year)}`}>
+        <h2 id={`year-${String(year)}`}>{year}</h2>
+        <List>
+          {yearRows.map(({ post, minutes }) => (
+            <ListRow
+              title={post.data.title}
+              href={`/writing/${post.id}`}
+              article
+              underline
+            >
+              <time slot="date" datetime={isoDate(post.data.date)}>
+                {formatMonthDay(post.data.date)}
+              </time>
+              {post.data.description}
+              <MetaLine
+                slot="meta"
+                items={[
+                  topicLabel(topics, post.data.topic),
+                  `${String(minutes)} min read`,
+                ]}
+              />
+            </ListRow>
+          ))}
+        </List>
+      </section>
+    ))}
+  </div>
+</div>
+
+<style>
+  .writing {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+
+    p {
+      max-inline-size: var(--measure-short);
+      color: var(--text-2);
+    }
+  }
+
+  .title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .topics {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .years {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  /* The year groups read as one list: hovering a post quiets all the others,
+     beyond the per-list fade in List. */
+  @media (hover: hover) and (pointer: fine) {
+    .years:has(:global(.row-interactive:hover))
+      :global(.row-interactive:not(:hover)) {
+      opacity: var(--row-fade);
+    }
+  }
+
+  /* Switching topics keeps the page in place: only the posts re-enter. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(:root[data-in-place]) .years {
+      animation: page-in var(--dur) var(--ease-settle) backwards;
+    }
+  }
+
+  .year {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+
+    h2 {
+      font-size: var(--text-small);
+      font-weight: var(--weight-medium);
+    }
+  }
+</style>

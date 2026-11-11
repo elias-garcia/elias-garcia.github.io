@@ -1,0 +1,8 @@
+# Titles and intro lines for the listing pages.
+writing:
+  title: Writing
+  intro: Notes on building products, interfaces for DeFi, and working alongside AI agents.
+# A Writing page filtered by one topic; {topic} is the topic's label.
+writing-topic:
+  title: "Writing: {topic}"
+  intro: Posts about {topic}.

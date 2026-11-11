@@ -1,6 +1,7 @@
 import { defineCollection } from "astro:content";
 import { file, glob } from "astro/loaders";
 import { z } from "astro/zod";
+import { topicSlug } from "./lib/topics.ts";
 
 const link = z.object({
   label: z.string(),
@@ -67,7 +68,7 @@ const writing = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
-    topic: z.string(),
+    topic: z.string().transform((label) => ({ label, slug: topicSlug(label) })),
     draft: z.boolean().default(false),
   }),
 });
@@ -78,6 +79,7 @@ const projects = defineCollection({
     title: z.string(),
     summary: z.string(),
     description: z.string(),
+    illustration: z.enum(["roleburn", "work-issue", "pol-funding-spreads"]),
     status: z.string(),
     year: z.number().int(),
     tags: z.array(z.string()),
@@ -85,4 +87,20 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { site, work, talks, education, writing, projects };
+const pages = defineCollection({
+  loader: file("src/content/pages.yaml"),
+  schema: z.object({
+    title: z.string(),
+    intro: z.string(),
+  }),
+});
+
+export const collections = {
+  site,
+  pages,
+  work,
+  talks,
+  education,
+  writing,
+  projects,
+};
