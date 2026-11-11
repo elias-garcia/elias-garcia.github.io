@@ -1,0 +1,50 @@
+<svg class="illustration" viewBox="0 0 200 150" aria-hidden="true">
+  <circle cx="100" cy="75" r="56" class="ring"></circle>
+  <circle cx="100" cy="75" r="36" class="ring"></circle>
+  <circle cx="100" cy="75" r="16" class="ring"></circle>
+  <g class="sweep" data-loop>
+    <path class="wedge" d="M100 75 L100 19 A56 56 0 0 1 148.5 47 Z"></path>
+  </g>
+  <circle cx="128" cy="44" r="3.5" class="hit"></circle>
+  <circle cx="70" cy="100" r="3.5" class="hit"></circle>
+  <circle cx="134" cy="96" r="2.5" class="miss"></circle>
+  <circle cx="78" cy="48" r="2.5" class="miss"></circle>
+  <circle cx="110" cy="120" r="2.5" class="miss"></circle>
+  <circle cx="54" cy="70" r="2.5" class="miss"></circle>
+</svg>
+
+<style>
+  .ring {
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+
+  .wedge {
+    fill: var(--accent);
+    opacity: 0.14;
+  }
+
+  .sweep {
+    transform-box: view-box;
+    transform-origin: 100px 75px;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: sweep 3s linear infinite;
+    }
+  }
+
+  .hit {
+    fill: var(--accent);
+  }
+
+  .miss {
+    fill: var(--line-strong);
+  }
+
+  @keyframes sweep {
+    to {
+      rotate: 360deg;
+    }
+  }
+</style>

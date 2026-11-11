@@ -1,14 +1,321 @@
 ---
+import { Image } from "astro:assets";
+import avatar from "../assets/avatar.jpg";
+import DownloadCv from "../components/DownloadCv.astro";
+import ExternalArrow from "../components/ExternalArrow.astro";
+import Figure from "../components/Figure.astro";
+import List from "../components/List.astro";
+import ListRow from "../components/ListRow.astro";
+import MetaLine from "../components/MetaLine.astro";
+import ProjectTile from "../components/ProjectTile.astro";
+import Section from "../components/Section.astro";
+import SeeMore from "../components/SeeMore.astro";
+import WorkRow from "../components/WorkRow.astro";
+import Years from "../components/Years.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { getProfile } from "../lib/content.ts";
+import {
+  getEducation,
+  getPosts,
+  getProfile,
+  getProjects,
+  getTalks,
+  getWork,
+} from "../lib/content.ts";
+import { formatMonthYear, isoMonth } from "../lib/format.ts";
+import { linkTarget } from "../lib/links.ts";
 
-const profile = await getProfile();
+const [profile, projects, work, posts, talks, education] = await Promise.all([
+  getProfile(),
+  getProjects(),
+  getWork(),
+  getPosts(),
+  getTalks(),
+  getEducation(),
+]);
 const [description = profile.role] = profile.about;
+const newestJob = work[0]?.id;
 ---
 
 <BaseLayout title={profile.name} description={description}>
-  <header>
-    <h1>{profile.name}</h1>
-    <p>{profile.role}</p>
-  </header>
+  <div class="home">
+    <header class="intro">
+      <div class="identity">
+        <Image
+          class="avatar"
+          src={avatar}
+          alt={profile.name}
+          widths={[80, 104, 160, 208]}
+          sizes="(width <= 40rem) 80px, 104px"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <div class="who">
+          <h1>{profile.name}</h1>
+          <p class="role">{profile.role}</p>
+          <div class="actions">
+            <DownloadCv />
+            <p class="availability">
+              <span class="dot" aria-hidden="true"></span>
+              {profile.availability}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="about">
+        <h2>About</h2>
+        {profile.about.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+    </header>
+
+    <Section id="projects" title="Projects">
+      <SeeMore slot="action" href="/projects" label="All projects" />
+      <ul class="tiles" role="list">
+        {projects.slice(0, 3).map((project) => (
+          <ProjectTile project={project} />
+        ))}
+      </ul>
+    </Section>
+
+    <Section id="work" title="Work experience">
+      <List>
+        {work.map((job) => (
+          <WorkRow job={job.data} open={job.id === newestJob} />
+        ))}
+      </List>
+    </Section>
+
+    <Section id="writing" title="Writing">
+      <SeeMore slot="action" href="/writing" label="All posts" />
+      <List>
+        {posts.slice(0, 3).map((post) => (
+          <ListRow title={post.data.title} href={`/writing/${post.id}`}>
+            <time slot="date" datetime={isoMonth(post.data.date)}>
+              {formatMonthYear(post.data.date)}
+            </time>
+            {post.data.description}
+          </ListRow>
+        ))}
+      </List>
+    </Section>
+
+    <Section id="speaking" title="Speaking and teaching">
+      <Figure
+        src={profile.speakingPhoto.src}
+        alt={profile.speakingPhoto.alt}
+        caption={profile.speakingPhoto.caption}
+        aspectRatio="16 / 9"
+        objectPosition="35% 45%"
+      />
+      <List>
+        {talks.map(({ data }) => (
+          <ListRow title={data.title} href={data.href}>
+            <time slot="date" datetime={String(data.year)}>
+              {data.year}
+            </time>
+            <MetaLine
+              items={
+                data.detail === undefined
+                  ? [data.where]
+                  : [data.where, data.detail]
+              }
+            />
+          </ListRow>
+        ))}
+      </List>
+    </Section>
+
+    <Section id="education" title="Education">
+      <List>
+        {education.map(({ data }) => (
+          <ListRow title={`${data.title} at ${data.school}`}>
+            <Years slot="date" start={data.start} end={data.end} />
+            {data.detail}
+          </ListRow>
+        ))}
+      </List>
+    </Section>
+
+    <Section id="contact" title="Contact">
+      <address>
+        <dl class="contact">
+          {profile.contact.map((link) => (
+            <div class="contact-row">
+              <dt>{link.label}</dt>
+              <dd>
+                <a href={link.href} {...linkTarget(link.href)}>
+                  {link.text}
+                  <ExternalArrow href={link.href} />
+                </a>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </address>
+    </Section>
+  </div>
 </BaseLayout>
+
+<style>
+  .home {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-18);
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+
+    @media (width <= 40rem) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  .avatar {
+    flex: none;
+    inline-size: var(--avatar);
+    block-size: var(--avatar);
+    border-radius: 50%;
+    background: var(--control);
+    object-fit: cover;
+
+    @media (width <= 40rem) {
+      inline-size: var(--avatar-sm);
+      block-size: var(--avatar-sm);
+    }
+  }
+
+  .who {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-inline-size: 0;
+
+    h1 {
+      font-size: var(--text-title);
+      font-weight: var(--weight-semibold);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-title);
+    }
+  }
+
+  .role {
+    color: var(--text-2);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block-start: var(--space-3);
+  }
+
+  .availability {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: var(--control-h);
+    padding-inline: var(--space-1);
+    color: var(--text-2);
+    font-size: var(--text-meta);
+  }
+
+  .dot {
+    position: relative;
+    flex: none;
+    inline-size: var(--dot);
+    block-size: var(--dot);
+    border-radius: 50%;
+    background: var(--accent);
+
+    @media (prefers-reduced-motion: no-preference) {
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: ping var(--dur-ping) var(--ease-ping) infinite;
+      }
+    }
+  }
+
+  @keyframes ping {
+    from {
+      opacity: 0.45;
+    }
+
+    80%,
+    to {
+      opacity: 0;
+      scale: 2.6;
+    }
+  }
+
+  .about {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+
+    h2 {
+      font-size: var(--text-small);
+      font-weight: var(--weight-medium);
+    }
+
+    p {
+      max-inline-size: var(--measure);
+      color: var(--text-2);
+    }
+  }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(var(--tile-min), 100%), 1fr)
+    );
+    gap: var(--space-1) var(--space-5);
+  }
+
+  .contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .contact-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-6);
+    min-block-size: var(--space-9);
+
+    dt {
+      flex: 0 0 var(--gutter);
+      color: var(--text-3);
+    }
+
+    dd {
+      flex: 1 1 var(--row-basis);
+      margin: 0;
+    }
+
+    a:focus-visible {
+      border-radius: var(--r-sm);
+    }
+  }
+
+  address {
+    font-style: normal;
+  }
+</style>

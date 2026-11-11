@@ -1,0 +1,86 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { hasCaseStudy } from "../lib/content.ts";
+import ProjectPreview from "./ProjectPreview.astro";
+
+type Props = {
+  project: CollectionEntry<"projects">;
+};
+
+const { project } = Astro.props;
+const href = hasCaseStudy(project) ? `/projects/${project.id}` : undefined;
+const Tag = href === undefined ? "div" : "a";
+---
+
+<li class="cell">
+  <Tag class:list={["tile", { "tile-link": href !== undefined }]} href={href}>
+    <ProjectPreview id={project.id} status={project.data.status} />
+    <h3 class="title">{project.data.title}</h3>
+    <p class="summary">{project.data.summary}</p>
+  </Tag>
+</li>
+
+<style>
+  .cell,
+  .tile {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    align-content: start;
+  }
+
+  .tile {
+    :global(.preview) {
+      margin-block-end: var(--space-3);
+    }
+
+    @media (width <= 40rem) {
+      padding-block-end: var(--space-5);
+    }
+  }
+
+  .title {
+    font-size: inherit;
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-tight);
+    text-wrap: balance;
+  }
+
+  .summary {
+    color: var(--text-2);
+    font-size: var(--text-small);
+  }
+
+  /* Illustrations only move while their tile is hovered or focused. */
+  .tile :global([data-loop]) {
+    animation-play-state: paused;
+  }
+
+  .tile-link:is(:hover, :focus-visible) :global([data-loop]) {
+    animation-play-state: running;
+  }
+
+  .tile-link:focus-visible {
+    border-radius: var(--r-lg);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .tile-link:hover :global(.preview) {
+      translate: 0 calc(-1 * var(--nudge));
+      border-color: var(--line-strong);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .tile-link :global(.preview) {
+      transition:
+        translate var(--dur) var(--ease-settle),
+        scale var(--dur-fast) var(--ease),
+        border-color var(--dur) var(--ease);
+    }
+
+    .tile-link:active :global(.preview) {
+      scale: var(--press-scale-tile);
+    }
+  }
+</style>

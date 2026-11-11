@@ -1,0 +1,158 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Years from "./Years.astro";
+
+type Props = {
+  job: CollectionEntry<"work">["data"];
+  open: boolean;
+};
+
+const { job, open } = Astro.props;
+---
+
+<li>
+  <details class="job row-interactive" name="work" open={open}>
+    <summary class="head">
+      <span class="date">
+        <Years start={job.start} end={job.end} />
+      </span>
+      <span class="text">
+        <span class="company">{job.company}</span>
+        <span class="role">{job.role}</span>
+      </span>
+      <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M8 3v10M3 8h10"></path>
+      </svg>
+    </summary>
+    <ul class="points" role="list">
+      {job.points.map((point) => (
+        <li>{point}</li>
+      ))}
+    </ul>
+  </details>
+</li>
+
+<style>
+  .job {
+    transition: opacity var(--dur) var(--ease);
+  }
+
+  .head {
+    display: grid;
+    grid-template-areas: "date text icon";
+    grid-template-columns: var(--gutter) minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--space-1) var(--space-6);
+    padding-block: var(--space-3);
+    list-style: none;
+    cursor: pointer;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:focus-visible {
+      border-radius: var(--r-sm);
+    }
+
+    @media (width <= 40rem) {
+      grid-template-areas:
+        "date icon"
+        "text text";
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+
+  .date {
+    grid-area: date;
+    color: var(--text-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .text {
+    display: flex;
+    grid-area: text;
+    flex-direction: column;
+  }
+
+  .company {
+    font-weight: var(--weight-medium);
+  }
+
+  .role {
+    color: var(--text-2);
+    font-size: var(--text-small);
+  }
+
+  .icon {
+    grid-area: icon;
+    inline-size: var(--icon-md);
+    block-size: var(--icon-md);
+    margin-block-start: var(--space-1);
+    fill: none;
+    stroke: var(--text-3);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    transition: stroke var(--dur) var(--ease);
+
+    .head:hover & {
+      stroke: var(--text);
+    }
+
+    .job[open] & {
+      rotate: 45deg;
+    }
+  }
+
+  .points {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: 0 0 var(--space-5) calc(var(--gutter) + var(--space-6));
+    color: var(--text-2);
+    font-size: var(--text-small);
+
+    @media (width <= 40rem) {
+      padding-inline-start: 0;
+    }
+
+    li {
+      position: relative;
+      padding-inline-start: var(--space-4);
+
+      &::before {
+        content: "";
+        position: absolute;
+        inset-block-start: var(--space-2);
+        inset-inline-start: 0;
+        inline-size: var(--space-1);
+        block-size: var(--space-1);
+        border-radius: 50%;
+        background: var(--line-strong);
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .icon {
+      transition:
+        stroke var(--dur) var(--ease),
+        rotate var(--dur-slow) var(--ease-settle);
+    }
+
+    .job::details-content {
+      interpolate-size: allow-keywords;
+      overflow: clip;
+      contain: layout;
+      transition:
+        block-size var(--dur-slow) var(--ease-settle),
+        content-visibility var(--dur-slow),
+        display var(--dur-slow);
+      transition-behavior: allow-discrete;
+    }
+
+    .job:not([open])::details-content {
+      block-size: 0;
+    }
+  }
+</style>

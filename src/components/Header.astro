@@ -117,17 +117,5 @@ const { pathname } = Astro.url;
         transition: transform var(--dur-slow) var(--ease-settle);
       }
     }
-
-    @media (pointer: coarse) {
-      &::before {
-        content: "";
-        position: absolute;
-        inset-inline: 0;
-        inset-block-start: 50%;
-        min-inline-size: var(--hit-area);
-        block-size: var(--hit-area);
-        translate: 0 -50%;
-      }
-    }
   }
 </style>

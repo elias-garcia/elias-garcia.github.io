@@ -1,0 +1,68 @@
+---
+import PolFundingSpreads from "./illustrations/PolFundingSpreads.astro";
+import Roleburn from "./illustrations/Roleburn.astro";
+import WorkIssue from "./illustrations/WorkIssue.astro";
+
+type Props = {
+  id: string;
+  status: string;
+};
+
+const { id, status } = Astro.props;
+
+const illustrations = {
+  roleburn: Roleburn,
+  "work-issue": WorkIssue,
+  "pol-funding-spreads": PolFundingSpreads,
+};
+
+const Illustration = Object.entries(illustrations).find(
+  ([key]) => key === id,
+)?.[1];
+if (Illustration === undefined) {
+  throw new Error(`No illustration for project "${id}".`);
+}
+---
+
+<div class="preview" data-preview={id}>
+  <Illustration />
+  <span class="status">{status}</span>
+</div>
+
+<style>
+  .preview {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+
+    :global(.illustration) {
+      display: block;
+      inline-size: 100%;
+      block-size: 100%;
+    }
+  }
+
+  /* The Roleburn preview morphs into the case study hero (DESIGN.md §2.5). */
+  [data-preview="roleburn"] {
+    view-transition-name: roleburn-preview;
+  }
+
+  .status {
+    position: absolute;
+    inset-block-start: var(--space-3);
+    inset-inline-start: var(--space-3);
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--space-6);
+    padding-inline: var(--space-2);
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-full);
+    background: var(--status-bg);
+    color: var(--text-2);
+    font-size: var(--text-micro);
+    backdrop-filter: var(--status-backdrop);
+  }
+</style>

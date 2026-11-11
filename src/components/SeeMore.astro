@@ -1,0 +1,72 @@
+---
+type Props = {
+  href: string;
+  label: string;
+};
+
+const { href, label } = Astro.props;
+---
+
+<a class="more" href={href}>
+  <span class="label">{label}</span>
+  <svg viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M6 3.5L10.5 8 6 12.5"></path>
+  </svg>
+</a>
+
+<style>
+  .more {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--text-2);
+    font-size: var(--text-small);
+    transition: color var(--dur) var(--ease);
+
+    &:hover {
+      color: var(--text);
+    }
+
+    &:focus-visible {
+      border-radius: var(--r-sm);
+    }
+  }
+
+  .label {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% var(--hairline);
+  }
+
+  svg {
+    inline-size: var(--icon-sm);
+    block-size: var(--icon-sm);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .more:hover .label {
+      background-size: 100% var(--hairline);
+    }
+
+    .more:hover svg {
+      translate: var(--nudge) 0;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .label {
+      transition: background-size var(--dur-slow) var(--ease-settle);
+    }
+
+    svg {
+      transition: translate var(--dur) var(--ease-settle);
+    }
+  }
+</style>

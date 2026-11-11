@@ -7,7 +7,7 @@ Temporary. Delete this file when the redesign ships.
 One page per step. Each step builds the components that page needs (DESIGN.md §3), reusing the ones earlier steps built, and checks them against `design/reference/components.html` and the page's screenshots in both themes and both widths. Each step ends with the reviewer and a commit.
 
 1. ~~**Setup.**~~ Done: Astro project and tooling, tokens, font, content collections, base layout (head, header, footer, skip link, page transitions) and `npm run a11y`.
-2. **Home.** Intro with the Download CV menu (and the generated `/cv.md`), about, project tiles, work experience rows, latest posts, speaking and teaching, education and contact. Components: button, menu button, status label, see-more link, list row, expandable row, project tile, Roleburn illustration (in its tile, with the `roleburn-preview` transition name), metadata line, figure, external-link arrow.
+2. ~~**Home.**~~ Done. Intro with the Download CV menu (and the generated `/cv.md`), about, project tiles, work experience rows, latest posts, speaking and teaching, education and contact. Components: button, menu button, status label, see-more link, list row, expandable row, project tile, Roleburn illustration (in its tile, with the `roleburn-preview` transition name), metadata line, figure, external-link arrow.
 3. **Writing.** Intro with Subscribe, topic chips, posts grouped by year, and the RSS feed behind Subscribe. Components: chip.
 4. **Post.** The article with its reading progress bar and the `/writing/<slug>.md` version. Components: back link + Copy page, the post-header metadata line (date, topic link, reading time), the prose mapping (headings, links, footnotes, code block, figures for Markdown images), easing demo, author footer, previous/next card.
 5. **Projects.** Intro and the project card grid. Components: project card, reusing the Roleburn illustration.
@@ -18,7 +18,7 @@ One page per step. Each step builds the components that page needs (DESIGN.md §
 
 ## Notes for the next steps
 
-- `src/pages/index.astro` is a placeholder (name and role only) so the layout has a page to render. Step 2 replaces it.
+- The project illustrations in `src/components/illustrations/` are drawn for the Home tile (200×150). The Projects cards (step 5) use a wider drawing of the same idea; check `design/reference/projects.html`.
 - MDX files don't import components. Pass `EasingDemo`, `RoleburnHero` and `Figure` (and the prose components) through the `components` prop of `<Content />` when rendering posts (step 4) and case studies (step 6).
 - Code blocks (step 4): Shiki already uses `theme: 'css-variables'`; set the `--astro-code-*` variables from tokens.
 - Reading time is in `remarkPluginFrontmatter.minutesRead` (a number) from `render(entry)`.

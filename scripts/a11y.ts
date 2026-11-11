@@ -1,7 +1,38 @@
 import { AxeBuilder } from "@axe-core/playwright";
 import { preview } from "astro";
 import { readdir } from "node:fs/promises";
-import { chromium } from "playwright";
+import { chromium, type Page } from "playwright";
+
+// Interactive states to check on top of each page's initial state.
+const states: Record<
+  string,
+  readonly { name: string; open: (page: Page) => Promise<void> }[]
+> = {
+  "/": [
+    {
+      name: "Download CV menu open",
+      open: (page) => page.click('button[popovertarget="cv-formats"]'),
+    },
+    {
+      name: "Download CV menu, first format focused",
+      // Tab from the open menu's button, so the link gets :focus-visible.
+      open: async (page) => {
+        await page.keyboard.press("Tab");
+        const focused = await page
+          .locator("#cv-formats a")
+          .first()
+          .evaluate((link) => link.matches(":focus-visible"));
+        if (!focused) {
+          throw new Error("The first CV format did not get keyboard focus.");
+        }
+      },
+    },
+    {
+      name: "second work row open",
+      open: (page) => page.locator("details.job > summary").nth(1).click(),
+    },
+  ],
+};
 
 const widths = [1280, 390, 320] as const;
 const colorSchemes = ["light", "dark"] as const;
@@ -26,10 +57,48 @@ async function listPages(): Promise<string[]> {
     .sort();
 }
 
+async function check(page: Page, where: string): Promise<void> {
+  // Contrast is only meaningful once animations have finished.
+  // Looping animations never finish, so only wait for the ones that end;
+  // allSettled because a cancelled animation rejects instead of finishing.
+  await page.evaluate(() =>
+    Promise.allSettled(
+      document
+        .getAnimations()
+        .filter(
+          (animation) =>
+            animation.effect?.getComputedTiming().endTime !== Infinity,
+        )
+        .map((animation) => animation.finished),
+    ),
+  );
+
+  const overflows = await page.evaluate(
+    () =>
+      document.documentElement.scrollWidth >
+      document.documentElement.clientWidth,
+  );
+  if (overflows) {
+    failures.push(`${where}: the page scrolls horizontally`);
+  }
+
+  const { violations } = await new AxeBuilder({ page })
+    .withTags(tags)
+    .analyze();
+  for (const violation of violations) {
+    const targets = violation.nodes
+      .map((node) => node.target.join(" "))
+      .join(", ");
+    failures.push(
+      `${where}: ${violation.id} (${violation.help}) on ${targets}`,
+    );
+  }
+}
+
+const failures: string[] = [];
 const server = await preview({ logLevel: "warn" });
 const origin = `http://localhost:${String(server.port)}`;
 const browser = await chromium.launch({ channel: "chrome" });
-const failures: string[] = [];
 
 try {
   for (const path of await listPages()) {
@@ -51,39 +120,12 @@ try {
           );
         }
 
-        // Contrast is only meaningful once the page entrance has finished.
-        // Looping animations never finish, so only wait for the ones that end.
-        await page.evaluate(() =>
-          Promise.all(
-            document
-              .getAnimations()
-              .filter(
-                (animation) =>
-                  animation.effect?.getComputedTiming().endTime !== Infinity,
-              )
-              .map((animation) => animation.finished),
-          ),
-        );
-
-        const overflows = await page.evaluate(
-          () =>
-            document.documentElement.scrollWidth >
-            document.documentElement.clientWidth,
-        );
-        if (overflows) {
-          failures.push(`${where}: the page scrolls horizontally`);
-        }
-
-        const { violations } = await new AxeBuilder({ page })
-          .withTags(tags)
-          .analyze();
-        for (const violation of violations) {
-          const targets = violation.nodes
-            .map((node) => node.target.join(" "))
-            .join(", ");
-          failures.push(
-            `${where}: ${violation.id} (${violation.help}) on ${targets}`,
-          );
+        await check(page, where);
+        for (const state of states[path] ?? []) {
+          await state.open(page);
+          // Hover effects (like dimmed rows) are not part of the state.
+          await page.mouse.move(0, 0);
+          await check(page, `${where}, ${state.name}`);
         }
 
         await context.close();

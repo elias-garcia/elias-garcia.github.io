@@ -1,0 +1,46 @@
+---
+import { opensNewTab } from "../lib/links.ts";
+import VisuallyHidden from "./VisuallyHidden.astro";
+
+type Props = {
+  href: string;
+};
+
+const { href } = Astro.props;
+---
+
+<svg class="external" viewBox="0 0 12 12" aria-hidden="true">
+  <path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path>
+</svg>
+{opensNewTab(href) && <VisuallyHidden> (opens in a new tab)</VisuallyHidden>}
+
+<style>
+  .external {
+    display: inline-block;
+    inline-size: var(--icon-sm);
+    block-size: var(--icon-sm);
+    margin-inline-start: var(--space-1);
+    vertical-align: calc(-1 * var(--nudge-sm));
+    fill: none;
+    stroke: var(--text-3);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke var(--dur) var(--ease);
+
+    :global(a:hover) &,
+    :global(a:focus-visible) & {
+      stroke: currentColor;
+    }
+
+    @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+      transition:
+        stroke var(--dur) var(--ease),
+        translate var(--dur) var(--ease-settle);
+
+      :global(a:hover) & {
+        translate: var(--nudge-sm) calc(-1 * var(--nudge-sm));
+      }
+    }
+  }
+</style>

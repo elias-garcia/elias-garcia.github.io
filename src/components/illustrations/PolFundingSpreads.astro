@@ -1,0 +1,57 @@
+<svg class="illustration" viewBox="0 0 200 150" aria-hidden="true">
+  <path
+    class="line accent"
+    d="M14 86 C40 58, 62 98, 92 70 S142 46, 186 60"
+  ></path>
+  <path
+    class="line muted"
+    d="M14 102 C42 94, 70 112, 100 100 S150 92, 186 106"
+  ></path>
+  <line x1="25" y1="34" x2="25" y2="122" class="scan" data-loop></line>
+  <text x="186" y="50" class="tag">
+    grvt
+  </text>
+  <text x="186" y="122" class="tag">
+    ApeX
+  </text>
+</svg>
+
+<style>
+  .line {
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  .accent {
+    stroke: var(--accent);
+  }
+
+  .muted {
+    stroke: var(--text-3);
+  }
+
+  .scan {
+    stroke: var(--text);
+    stroke-dasharray: 3 3;
+    stroke-opacity: 0.3;
+    stroke-width: 1;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: scan 2.8s ease-in-out infinite alternate;
+    }
+  }
+
+  /* Part of the drawing, hidden from screen readers (DESIGN.md §2.2). */
+  .tag {
+    fill: var(--text-3);
+    font-family: inherit;
+    font-size: 10px;
+    text-anchor: end;
+  }
+
+  @keyframes scan {
+    to {
+      translate: 150px 0;
+    }
+  }
+</style>

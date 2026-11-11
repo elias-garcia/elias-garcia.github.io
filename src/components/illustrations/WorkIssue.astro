@@ -1,0 +1,75 @@
+<svg class="illustration" viewBox="0 0 200 150" aria-hidden="true">
+  <line x1="54" y1="68" x2="78" y2="68" class="link"></line>
+  <line x1="122" y1="68" x2="146" y2="68" class="link"></line>
+  <rect x="10" y="54" width="44" height="28" rx="8" class="node"></rect>
+  <text x="32" y="72" class="label">
+    #142
+  </text>
+  <rect x="78" y="54" width="44" height="28" rx="8" class="node"></rect>
+  <text x="100" y="72" class="label">
+    PR
+  </text>
+  <rect x="146" y="54" width="44" height="28" rx="8" class="node done"></rect>
+  <text x="168" y="72" class="label light">
+    Review
+  </text>
+  <line x1="32" y1="106" x2="168" y2="106" class="track"></line>
+  <circle cx="32" cy="106" r="4" class="runner" data-loop></circle>
+</svg>
+
+<style>
+  .link {
+    stroke: var(--line-strong);
+    stroke-width: 1;
+  }
+
+  .node {
+    fill: var(--bg);
+    stroke: var(--line-strong);
+    stroke-width: 1;
+  }
+
+  .done {
+    fill: var(--accent);
+    stroke: var(--accent);
+  }
+
+  /* Part of the drawing, hidden from screen readers (DESIGN.md §2.2). */
+  .label {
+    fill: var(--text-2);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: var(--weight-medium);
+    text-anchor: middle;
+  }
+
+  .light {
+    fill: var(--bg);
+  }
+
+  .track {
+    stroke: var(--line);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+  }
+
+  .runner {
+    fill: var(--accent);
+    transform-box: fill-box;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: travel 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+  }
+
+  @keyframes travel {
+    42%,
+    58% {
+      translate: 68px 0;
+    }
+
+    100% {
+      translate: 136px 0;
+    }
+  }
+</style>

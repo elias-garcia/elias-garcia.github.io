@@ -29,6 +29,8 @@
   --scrim: rgb(9 9 11 / 0.18); /* behind the search dialog */
   --header-bg: color-mix(in oklch, var(--bg) 82%, transparent);
   --header-backdrop: saturate(1.4) blur(12px);
+  --status-bg: color-mix(in oklch, var(--bg) 92%, transparent);
+  --status-backdrop: blur(4px);
   --logo-shade: #000000; /* folds in the logo mark, drawn at low opacity */
   --photo-brightness: 1; /* photos are dimmed in dark mode */
 
@@ -50,6 +52,8 @@
   --leading-normal: 1.6;
   --leading-long: 1.75;
 
+  --measure: 62ch; /* longest comfortable line for running text */
+
   --tracking-display: -0.02em;
   --tracking-title: -0.01em;
 
@@ -65,6 +69,7 @@
   --space-5: 20px;
   --space-6: 24px;
   --space-8: 32px;
+  --space-9: 36px;
   --space-10: 40px;
   --space-12: 48px;
   --space-14: 56px;
@@ -85,6 +90,9 @@
   --ease: ease-out;
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1); /* things arriving */
   --press-scale: 0.97;
+  --press-scale-tile: 0.99;
+  --dur-ping: 2.4s; /* availability dot, a slow loop */
+  --ease-ping: cubic-bezier(0, 0, 0.2, 1);
   --entrance-offset: 6px;
 
   /* ---- Elevation and layers ---- */
@@ -103,6 +111,14 @@
   --hit-area: 44px; /* touch target on coarse pointers */
   --icon-md: 16px;
   --icon-sm: 12px; /* inline markers only: see-more chevron, external arrow */
+  --menu-w: 320px; /* Download CV menu */
+  --avatar: 104px; /* Home avatar */
+  --avatar-sm: 80px; /* Home avatar on phones */
+  --dot: 8px; /* availability dot */
+  --tile-min: 180px; /* narrowest project tile before the grid wraps */
+  --row-basis: 300px; /* text column next to the gutter; wraps below it when narrower */
+  --nudge-sm: 1px; /* external arrow nudge and baseline offset */
+  --nudge: 2px; /* see-more chevron nudge, tile lift */
   --logo-h: 28px; /* header logo */
   --logo-h-sm: 16px; /* footer logo */
   --hairline: 1px;

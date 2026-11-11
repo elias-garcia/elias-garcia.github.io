@@ -1,0 +1,35 @@
+---
+type Props = {
+  items: readonly string[];
+};
+
+const { items } = Astro.props;
+---
+
+<span class="meta">
+  {items.map((item, index) => (
+    <span class="item">
+      {index > 0 && (
+        <span class="dot" aria-hidden="true">
+          ·
+        </span>
+      )}
+      {item}
+    </span>
+  ))}
+</span>
+
+<style>
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--space-2);
+  }
+
+  /* A dot travels with the item after it, so a line never ends on a dot. */
+  .item {
+    display: inline-flex;
+    gap: var(--space-2);
+  }
+</style>

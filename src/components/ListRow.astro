@@ -1,0 +1,69 @@
+---
+import { leavesSite, linkTarget } from "../lib/links.ts";
+import ExternalArrow from "./ExternalArrow.astro";
+
+type Props = {
+  title: string;
+  href?: string | undefined;
+};
+
+const { title, href } = Astro.props;
+const external = leavesSite(href);
+const Tag = href === undefined ? "div" : "a";
+---
+
+<li>
+  <Tag
+    class:list={["row", { "row-interactive": href !== undefined }]}
+    href={href}
+    {...linkTarget(href)}
+  >
+    <span class="date">
+      <slot name="date" />
+    </span>
+    <span class="text">
+      <span class="title">
+        {title}
+        {external && <ExternalArrow href={href} />}
+      </span>
+      <span class="description">
+        <slot />
+      </span>
+    </span>
+  </Tag>
+</li>
+
+<style>
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-6);
+    padding-block: var(--space-3);
+  }
+
+  .row-interactive {
+    transition: opacity var(--dur) var(--ease);
+  }
+
+  .date {
+    flex: 0 0 var(--gutter);
+    color: var(--text-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .text {
+    display: flex;
+    flex: 1 1 var(--row-basis);
+    flex-direction: column;
+    min-inline-size: 0;
+  }
+
+  .title {
+    font-weight: var(--weight-medium);
+  }
+
+  .description {
+    color: var(--text-2);
+    font-size: var(--text-small);
+  }
+</style>

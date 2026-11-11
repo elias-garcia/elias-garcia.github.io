@@ -1,0 +1,36 @@
+---
+type Props = {
+  id: string;
+  title: string;
+};
+
+const { id, title } = Astro.props;
+---
+
+<section class="section" aria-labelledby={`${id}-heading`}>
+  <div class="heading">
+    <h2 id={`${id}-heading`}>{title}</h2>
+    <slot name="action" />
+  </div>
+  <slot />
+</section>
+
+<style>
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+
+    h2 {
+      font-size: var(--text-small);
+      font-weight: var(--weight-medium);
+    }
+  }
+</style>

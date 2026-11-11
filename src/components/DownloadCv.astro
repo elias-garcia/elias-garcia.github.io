@@ -1,0 +1,250 @@
+---
+import { getCvSizes } from "../lib/cv.ts";
+import { formatFileSize } from "../lib/format.ts";
+import Button from "./Button.astro";
+
+const sizes = await getCvSizes();
+const formats = [
+  {
+    label: "PDF",
+    href: "/cv.pdf",
+    size: formatFileSize(sizes.pdf),
+    description: "Formatted for reading, printing and sharing",
+    icon: "pdf",
+  },
+  {
+    label: "Markdown",
+    href: "/cv.md",
+    size: formatFileSize(sizes.markdown),
+    description: "Plain text for AI tools and agents",
+    icon: "markdown",
+  },
+] as const;
+---
+
+<div class="download">
+  <Button
+    class="trigger"
+    popovertarget="cv-formats"
+    aria-controls="cv-formats"
+    data-cv-button
+  >
+    Download CV
+    <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M4.5 6.5L8 10l3.5-3.5"></path>
+    </svg>
+  </Button>
+  <ul class="formats" id="cv-formats" popover role="list" data-cv-formats>
+    {formats.map((format) => (
+      <li>
+        <a class="format" href={format.href} download>
+          <span class="tile" aria-hidden="true">
+            {format.icon === "pdf" ? (
+              <svg viewBox="0 0 16 16">
+                <path d="M4 2.5h5.5L12 5v8.5H4z" />
+                <path d="M9.5 2.5V5H12" />
+                <path d="M6 9.5h4M6 11.5h2.5" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 16 16">
+                <rect x="1" y="3.5" width="14" height="9" rx="2" />
+                <path
+                  class="filled"
+                  d="M3.75 10.25v-4.5h1.25l1.25 1.75 1.25-1.75h1.25v4.5H7.5v-2.75l-1.25 1.6-1.25-1.6v2.75zM11.5 10.5l-1.9-2.15h1.2V5.75h1.4v2.6h1.2z"
+                />
+              </svg>
+            )}
+          </span>
+          <span class="text">
+            <span class="title">
+              {format.label} <span class="size">{format.size}</span>
+            </span>
+            <span class="description">{format.description}</span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<script>
+  const menu = document.querySelector<HTMLElement>("[data-cv-formats]");
+  const button = document.querySelector<HTMLElement>("[data-cv-button]");
+
+  if (menu !== null && button !== null) {
+    // A download doesn't leave the page, so choosing a format closes the menu.
+    menu.addEventListener("click", ({ target }) => {
+      if (target instanceof Element && target.closest("a") !== null) {
+        menu.hidePopover();
+      }
+    });
+
+    // Tabbing out of the menu closes it, as DESIGN.md asks.
+    menu.addEventListener("focusout", ({ relatedTarget }) => {
+      if (
+        relatedTarget instanceof Node &&
+        !menu.contains(relatedTarget) &&
+        relatedTarget !== button
+      ) {
+        menu.hidePopover();
+      }
+    });
+
+    // Without CSS anchor positioning, place the menu under its button.
+    if (!CSS.supports("anchor-name", "--cv-button")) {
+      menu.addEventListener("beforetoggle", (event) => {
+        if (event.newState !== "open") {
+          return;
+        }
+        const { left, bottom } = button.getBoundingClientRect();
+        menu.style.position = "absolute";
+        menu.style.left = `${String(left + window.scrollX)}px`;
+        menu.style.top = `${String(bottom + window.scrollY)}px`;
+      });
+    }
+  }
+</script>
+
+<style>
+  .chevron {
+    margin-inline-end: calc(-1 * var(--space-1));
+
+    :global(.button:has(+ .formats:popover-open)) & {
+      rotate: 180deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: rotate var(--dur) var(--ease);
+    }
+  }
+
+  .download :global(.trigger) {
+    anchor-name: --cv-button;
+  }
+
+  .formats {
+    position: fixed;
+    position-anchor: --cv-button;
+    inset: auto;
+    margin: var(--space-2) 0 0;
+    inline-size: var(--menu-w);
+    max-inline-size: calc(100dvw - 2 * var(--space-6));
+    padding: var(--space-1);
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: var(--shadow-overlay);
+    position-area: block-end span-inline-end;
+    position-try-fallbacks: flip-inline;
+
+    /* Column direction stays on while the menu animates closed. */
+    flex-direction: column;
+
+    &:popover-open {
+      display: flex;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transform-origin: top left;
+      transition:
+        opacity var(--dur) var(--ease),
+        scale var(--dur) var(--ease),
+        display var(--dur),
+        overlay var(--dur);
+      transition-behavior: allow-discrete;
+
+      &:not(:popover-open) {
+        opacity: 0;
+        scale: var(--press-scale);
+      }
+
+      @starting-style {
+        &:popover-open {
+          opacity: 0;
+          scale: var(--press-scale);
+        }
+      }
+    }
+  }
+
+  .format {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--r-md);
+    transition: background var(--dur-fast) var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--tint);
+      outline-offset: 0;
+    }
+  }
+
+  .tile {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--control-h);
+    block-size: var(--control-h);
+    border-radius: var(--r-md);
+    background: var(--control);
+    color: var(--text-2);
+    transition:
+      background var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
+
+    .format:hover &,
+    .format:focus-visible & {
+      background: var(--bg);
+      color: var(--accent);
+    }
+
+    svg {
+      inline-size: var(--icon-md);
+      block-size: var(--icon-md);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .filled {
+      fill: currentColor;
+      stroke: none;
+    }
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    line-height: var(--leading-tight);
+  }
+
+  .title {
+    font-size: var(--text-small);
+  }
+
+  .size {
+    margin-inline-start: var(--space-1);
+    color: var(--text-3);
+    font-size: var(--text-micro);
+    font-variant-numeric: tabular-nums;
+    transition: color var(--dur-fast) var(--ease);
+
+    /* --text-3 is too faint on the tint background (DESIGN.md §2.1). */
+    .format:is(:hover, :focus-visible) & {
+      color: var(--text-2);
+    }
+  }
+
+  .description {
+    color: var(--text-2);
+    font-size: var(--text-micro);
+  }
+</style>
