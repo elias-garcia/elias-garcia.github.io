@@ -8,6 +8,9 @@ dist/
 # Vercel
 .vercel/
 
+# Lighthouse CI results
+.lighthouseci/
+
 # environment
 .env
 .env.*

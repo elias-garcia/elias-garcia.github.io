@@ -17,7 +17,7 @@ When they disagree, `DESIGN.md` wins on design, this file wins on engineering an
 ## Stack
 
 - Astro 7 with static output, TypeScript (`astro/tsconfigs/strictest`), MDX, plain CSS with no framework.
-- ESLint, Prettier, and Playwright with axe for the accessibility check.
+- ESLint, Prettier, Playwright with axe for the accessibility check, and Lighthouse CI (`lighthouserc.json`) for performance, best practices and SEO.
 - Node 24, pinned with `engines.node`.
 - Vercel through Git: `main` deploys to production (`eliasgarcia.dev`), other branches get previews. The build is plain static files in `dist/`, with no adapter.
 
@@ -88,7 +88,7 @@ design/         # design handoff (reference only)
 ## Process
 
 - Committing, pushing and deploying always need an explicit ask. Pushing to `main` deploys to production.
-- Before committing, run the `reviewer` agent (`.claude/agents/reviewer.md`) on the changes. Fix every "must fix" finding, or explain why not.
+- Before committing, run `npm run lighthouse` (after `npm run build`; it audits every built page, three runs each, so it takes a few minutes) and the `reviewer` agent (`.claude/agents/reviewer.md`) on the changes. Fix every Lighthouse failure and every "must fix" finding, or explain why not.
 - Conventional commits, one logical change per commit.
 - New dependencies only when the task needs them. Always install the latest version.
 - No secrets in the repo, and no third-party scripts without a clear reason.
