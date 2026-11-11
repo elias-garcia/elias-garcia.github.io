@@ -1,0 +1,247 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap">
+<style>
+/* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
+   bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
+   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
+:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-slow:250ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent-c:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+@media (prefers-color-scheme: dark){
+:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent-c:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Instrument Sans",ui-sans-serif,system-ui,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:12px}
+main{max-width:1120px;margin:0 auto;padding:64px 48px 96px;display:flex;flex-direction:column;gap:56px}
+h1{margin:0;font-size:28px;line-height:1.2;font-weight:600;letter-spacing:-.02em}
+h2{margin:0;font-size:14px;font-weight:500}
+.lede{margin:8px 0 0;color:var(--text-2);max-width:64ch}
+section{display:flex;flex-direction:column;gap:16px}
+.note{margin:0;font-size:14px;color:var(--text-2);max-width:72ch}
+.muted{color:var(--text-3)}
+.tbl{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.tr{display:grid;grid-template-columns:160px minmax(0,1fr) 240px 240px;align-items:center;gap:16px;padding:12px 16px;border-top:1px solid var(--line)}
+.tr.th{border-top:0;background:var(--surface);font-size:13px;color:var(--text-3);padding:8px 16px}
+.tk{font-size:13px;color:var(--text);white-space:nowrap}
+.role{font-size:14px;color:var(--text-2)}
+.val{display:flex;align-items:center;gap:12px}
+.sw{width:48px;height:32px;border-radius:var(--r-md);border:1px solid rgba(9,9,11,.1);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;flex:none}
+.darkcell .sw{border-color:rgba(255,255,255,.12)}
+.vt{display:flex;flex-direction:column;line-height:1.3}
+.tw{font-size:13px}
+.vt code{color:var(--text-3)}
+.scales{display:grid;grid-template-columns:1fr;gap:24px}
+.scale{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:4px}
+.step{display:flex;flex-direction:column;gap:4px;font-size:12px}
+.chipc{height:48px;border-radius:var(--r-md);border:1px solid var(--line)}
+.sk{font-size:13px;font-weight:500}
+.step:not(.used) .sk{color:var(--text-3);font-weight:400}
+.step.used .sk::after{content:"";display:inline-block;width:4px;height:4px;margin-left:8px;border-radius:50%;background:var(--text);vertical-align:middle}
+.sh{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11px;color:var(--text-3)}
+.su{color:var(--text-2);line-height:1.35}
+.step:not(.used) .su{color:var(--text-3)}
+table{border-collapse:collapse;width:100%;max-width:720px;font-size:14px}
+th,td{text-align:left;padding:8px 12px;border-top:1px solid var(--line);font-weight:400}
+thead th{border-top:0;font-size:13px;color:var(--text-3)}
+tbody th{font-weight:400}
+td{font-variant-numeric:tabular-nums}
+td.warn{color:var(--text)}
+@media (max-width:900px){.tr{grid-template-columns:1fr 1fr}.tr .role{grid-column:1 / -1}.tr.th{display:none}.scale{grid-template-columns:repeat(6,minmax(0,1fr))}}
+
+
+.tys,.sps{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.ty{display:grid;grid-template-columns:200px minmax(0,1fr) 260px;align-items:center;gap:24px;padding:16px;border-top:1px solid var(--line)}
+.ty:first-child,.sp:first-child{border-top:0}
+.ty-n,.sp-v{display:flex;flex-direction:column;line-height:1.35}
+.ty-n code,.sp-v code{color:var(--text-3)}
+.ty-s{color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ty-u{display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--text-2)}
+.ty-u code{color:var(--text-3)}
+.sp{display:grid;grid-template-columns:120px 112px minmax(0,1fr);align-items:center;gap:24px;padding:12px 16px;border-top:1px solid var(--line)}
+.sp-b{display:flex;align-items:center;height:16px}
+.sp-b span{display:block;height:16px;border-radius:var(--r-sm);background:var(--tint-strong);border:1px solid var(--accent-line)}
+.sp-u{font-size:14px;color:var(--text-2)}
+.sub{margin:8px 0 0;font-size:13px;font-weight:500;color:var(--text-2)}
+@media (max-width:900px){.ty{grid-template-columns:1fr}.sp{grid-template-columns:96px 1fr}.sp-u{grid-column:1 / -1}}
+
+.rds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.rd{display:flex;flex-direction:column;gap:12px}
+.rd-b{height:72px;background:var(--control);border:1px solid var(--line-strong)}
+.rd-u{font-size:13px;color:var(--text-2)}
+.elev{padding:32px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);display:flex}
+.elev-b{padding:20px 24px;border-radius:var(--r-lg);border:1px solid var(--line);background:var(--bg);box-shadow:var(--shadow-overlay);font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:13px}
+.ics{display:flex;flex-wrap:wrap;gap:12px}
+.ic{width:40px;height:40px;border-radius:var(--r-md);background:var(--control);color:var(--text-2);display:flex;align-items:center;justify-content:center}
+.ic svg{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+table + table{margin-top:8px}
+@media (max-width:900px){.rds{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head><body>
+<main>
+  <header>
+    <h1>Foundations</h1>
+    <p class="lede">The building blocks every component uses: colour, type and spacing. Colours are Tailwind zinc and indigo only: 14 tokens, each with a light and a dark value, switched by the visitor’s system setting (<code>prefers-color-scheme</code>). Components use these tokens, never raw values.</p>
+  </header>
+
+  <section aria-labelledby="n-h">
+    <h2 id="n-h">Colour · Neutrals</h2>
+    <div class="tbl" role="table" aria-label="Tokens">
+<div class="tr th" role="row"><span role="columnheader">Token</span><span role="columnheader">Use</span><span role="columnheader">Light</span><span role="columnheader">Dark</span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--bg</code></span><span role="cell" class="role">Page background; text on indigo and on dark popovers</span><span role="cell"><span class="val"><span class="sw" style="background:#FFFFFF"></span><span class="vt"><span class="tw">white</span><code>#FFFFFF</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#09090B"></span><span class="vt"><span class="tw">zinc-950</span><code>#09090B</code></span></span></span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--surface</code></span><span role="cell" class="role">Previews, code blocks, card hover</span><span role="cell"><span class="val"><span class="sw" style="background:#FAFAFA"></span><span class="vt"><span class="tw">zinc-50</span><code>#FAFAFA</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#18181B"></span><span class="vt"><span class="tw">zinc-900</span><code>#18181B</code></span></span></span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--control</code></span><span role="cell" class="role">Buttons, chips, search icon tiles</span><span role="cell"><span class="val"><span class="sw" style="background:#F4F4F5"></span><span class="vt"><span class="tw">zinc-100</span><code>#F4F4F5</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#27272A"></span><span class="vt"><span class="tw">zinc-800</span><code>#27272A</code></span></span></span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--control-hover</code></span><span role="cell" class="role">Button and chip hover</span><span role="cell"><span class="val"><span class="sw" style="background:#E4E4E7"></span><span class="vt"><span class="tw">zinc-200</span><code>#E4E4E7</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#3F3F46"></span><span class="vt"><span class="tw">zinc-700</span><code>#3F3F46</code></span></span></span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--line</code></span><span role="cell" class="role">Every border and divider</span><span role="cell"><span class="val"><span class="sw" style="background:#FFFFFF"><span style="width:28px;height:2px;background:#E4E4E7;display:block"></span></span><span class="vt"><span class="tw">zinc-200</span><code>#E4E4E7</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#09090B"><span style="width:28px;height:2px;background:#27272A;display:block"></span></span><span class="vt"><span class="tw">zinc-800</span><code>#27272A</code></span></span></span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--line-strong</code></span><span role="cell" class="role">Hover borders, illustration strokes</span><span role="cell"><span class="val"><span class="sw" style="background:#FFFFFF"><span style="width:28px;height:2px;background:#D4D4D8;display:block"></span></span><span class="vt"><span class="tw">zinc-300</span><code>#D4D4D8</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#09090B"><span style="width:28px;height:2px;background:#3F3F46;display:block"></span></span><span class="vt"><span class="tw">zinc-700</span><code>#3F3F46</code></span></span></span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--text</code></span><span role="cell" class="role">Titles, names, primary text</span><span role="cell"><span class="val"><span class="sw" style="background:#FFFFFF;color:#18181B">Aa</span><span class="vt"><span class="tw">zinc-900</span><code>#18181B</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#09090B;color:#F4F4F5">Aa</span><span class="vt"><span class="tw">zinc-100</span><code>#F4F4F5</code></span></span></span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--text-2</code></span><span role="cell" class="role">Body copy, descriptions, button labels</span><span role="cell"><span class="val"><span class="sw" style="background:#FFFFFF;color:#52525C">Aa</span><span class="vt"><span class="tw">zinc-600</span><code>#52525C</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#09090B;color:#D4D4D8">Aa</span><span class="vt"><span class="tw">zinc-300</span><code>#D4D4D8</code></span></span></span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--text-3</code></span><span role="cell" class="role">Dates, metadata, captions, placeholders</span><span role="cell"><span class="val"><span class="sw" style="background:#FFFFFF;color:#71717B">Aa</span><span class="vt"><span class="tw">zinc-500</span><code>#71717B</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#09090B;color:#9F9FA9">Aa</span><span class="vt"><span class="tw">zinc-400</span><code>#9F9FA9</code></span></span></span></div>
+</div>
+  </section>
+
+  <section aria-labelledby="a-h">
+    <h2 id="a-h">Colour · Accent</h2>
+    <p class="note">Indigo only marks state: the current page, the selected chip, links inside prose. Buttons stay neutral.</p>
+    <div class="tbl" role="table" aria-label="Tokens">
+<div class="tr th" role="row"><span role="columnheader">Token</span><span role="columnheader">Use</span><span role="columnheader">Light</span><span role="columnheader">Dark</span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--accent</code></span><span role="cell" class="role">Current page, selected chip, links in prose</span><span role="cell"><span class="val"><span class="sw" style="background:#FFFFFF;color:#4F39F6">Aa</span><span class="vt"><span class="tw">indigo-600</span><code>#4F39F6</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#09090B;color:#7C86FF">Aa</span><span class="vt"><span class="tw">indigo-400</span><code>#7C86FF</code></span></span></span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--tint</code></span><span role="cell" class="role">Selected chip and active search row background</span><span role="cell"><span class="val"><span class="sw" style="background:#EEF2FF"></span><span class="vt"><span class="tw">indigo-50</span><code>#EEF2FF</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#1E1A4D"></span><span class="vt"><span class="tw">indigo-950</span><code>#1E1A4D</code></span></span></span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--tint-strong</code></span><span role="cell" class="role">Search match highlight</span><span role="cell"><span class="val"><span class="sw" style="background:#E0E7FF"></span><span class="vt"><span class="tw">indigo-100</span><code>#E0E7FF</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#312C85"></span><span class="vt"><span class="tw">indigo-900</span><code>#312C85</code></span></span></span></div>
+<div class="tr" role="row"><span role="cell"><code class="tk">--accent-line</code></span><span role="cell" class="role">Underline under links in prose</span><span role="cell"><span class="val"><span class="sw" style="background:#FFFFFF"><span style="width:28px;height:2px;background:#A3B3FF;display:block"></span></span><span class="vt"><span class="tw">indigo-300</span><code>#A3B3FF</code></span></span></span><span role="cell" class="darkcell"><span class="val"><span class="sw" style="background:#09090B"><span style="width:28px;height:2px;background:#432DD7;display:block"></span></span><span class="vt"><span class="tw">indigo-700</span><code>#432DD7</code></span></span></span></div>
+</div>
+  </section>
+
+  <section aria-labelledby="s-h">
+    <h2 id="s-h">Colour · Source scales</h2>
+    <p class="note">The full Tailwind v4 scales, unchanged, from lightest (50) to darkest (950). A dot after the number marks the steps the site uses, with the token that uses them below.</p>
+    <div class="scales">
+      <div><h3 style="margin:0 0 8px;font-size:13px;font-weight:500;color:var(--text-2)">zinc</h3><ol class="scale" aria-label="Tailwind zinc scale"><li class="step used"><span class="chipc" style="background:#FAFAFA" aria-hidden="true"></span><span class="sk">50</span><span class="sh">#FAFAFA</span><span class="su">surface</span></li><li class="step used"><span class="chipc" style="background:#F4F4F5" aria-hidden="true"></span><span class="sk">100</span><span class="sh">#F4F4F5</span><span class="su">control<br>text (dark)</span></li><li class="step used"><span class="chipc" style="background:#E4E4E7" aria-hidden="true"></span><span class="sk">200</span><span class="sh">#E4E4E7</span><span class="su">line<br>control-hover</span></li><li class="step used"><span class="chipc" style="background:#D4D4D8" aria-hidden="true"></span><span class="sk">300</span><span class="sh">#D4D4D8</span><span class="su">line-strong<br>text-2 (dark)</span></li><li class="step used"><span class="chipc" style="background:#9F9FA9" aria-hidden="true"></span><span class="sk">400</span><span class="sh">#9F9FA9</span><span class="su">text-3 (dark)</span></li><li class="step used"><span class="chipc" style="background:#71717B" aria-hidden="true"></span><span class="sk">500</span><span class="sh">#71717B</span><span class="su">text-3</span></li><li class="step used"><span class="chipc" style="background:#52525C" aria-hidden="true"></span><span class="sk">600</span><span class="sh">#52525C</span><span class="su">text-2</span></li><li class="step used"><span class="chipc" style="background:#3F3F46" aria-hidden="true"></span><span class="sk">700</span><span class="sh">#3F3F46</span><span class="su">control-hover, line-strong (dark)</span></li><li class="step used"><span class="chipc" style="background:#27272A" aria-hidden="true"></span><span class="sk">800</span><span class="sh">#27272A</span><span class="su">control, line (dark)</span></li><li class="step used"><span class="chipc" style="background:#18181B" aria-hidden="true"></span><span class="sk">900</span><span class="sh">#18181B</span><span class="su">text<br>surface (dark)</span></li><li class="step used"><span class="chipc" style="background:#09090B" aria-hidden="true"></span><span class="sk">950</span><span class="sh">#09090B</span><span class="su">bg (dark)</span></li></ol></div>
+      <div><h3 style="margin:0 0 8px;font-size:13px;font-weight:500;color:var(--text-2)">indigo</h3><ol class="scale" aria-label="Tailwind indigo scale"><li class="step used"><span class="chipc" style="background:#EEF2FF" aria-hidden="true"></span><span class="sk">50</span><span class="sh">#EEF2FF</span><span class="su">tint</span></li><li class="step used"><span class="chipc" style="background:#E0E7FF" aria-hidden="true"></span><span class="sk">100</span><span class="sh">#E0E7FF</span><span class="su">tint-strong</span></li><li class="step"><span class="chipc" style="background:#C6D2FF" aria-hidden="true"></span><span class="sk">200</span><span class="sh">#C6D2FF</span><span class="su">—</span></li><li class="step used"><span class="chipc" style="background:#A3B3FF" aria-hidden="true"></span><span class="sk">300</span><span class="sh">#A3B3FF</span><span class="su">accent-line</span></li><li class="step used"><span class="chipc" style="background:#7C86FF" aria-hidden="true"></span><span class="sk">400</span><span class="sh">#7C86FF</span><span class="su">accent (dark)</span></li><li class="step"><span class="chipc" style="background:#615FFF" aria-hidden="true"></span><span class="sk">500</span><span class="sh">#615FFF</span><span class="su">—</span></li><li class="step used"><span class="chipc" style="background:#4F39F6" aria-hidden="true"></span><span class="sk">600</span><span class="sh">#4F39F6</span><span class="su">accent</span></li><li class="step used"><span class="chipc" style="background:#432DD7" aria-hidden="true"></span><span class="sk">700</span><span class="sh">#432DD7</span><span class="su">accent-line (dark)</span></li><li class="step"><span class="chipc" style="background:#372AAC" aria-hidden="true"></span><span class="sk">800</span><span class="sh">#372AAC</span><span class="su">—</span></li><li class="step used"><span class="chipc" style="background:#312C85" aria-hidden="true"></span><span class="sk">900</span><span class="sh">#312C85</span><span class="su">tint-strong (dark)</span></li><li class="step used"><span class="chipc" style="background:#1E1A4D" aria-hidden="true"></span><span class="sk">950</span><span class="sh">#1E1A4D</span><span class="su">tint (dark)</span></li></ol></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="c-h">
+    <h2 id="c-h">Colour · Contrast</h2>
+    <p class="note">WCAG AA needs 4.5:1 for body text. Rule from this table: <code class="tk">--text-3</code> sits on <code class="tk">--bg</code> or <code class="tk">--surface</code> only, never on <code class="tk">--control</code>.</p>
+    <table>
+      <thead><tr><th scope="col">Text token</th><th scope="col">on bg</th><th scope="col">on surface</th><th scope="col">on control</th></tr></thead>
+      <tbody><tr><th scope="row"><code class="tk">--text</code> <span class="muted">light</span></th><td>17.7:1</td><td>17.0:1</td><td class="">16.1:1</td></tr><tr><th scope="row"><code class="tk">--text</code> <span class="muted">dark</span></th><td>18.1:1</td><td>16.1:1</td><td class="">13.6:1</td></tr><tr><th scope="row"><code class="tk">--text-2</code> <span class="muted">light</span></th><td>7.7:1</td><td>7.4:1</td><td class="">7.0:1</td></tr><tr><th scope="row"><code class="tk">--text-2</code> <span class="muted">dark</span></th><td>13.5:1</td><td>12.0:1</td><td class="">10.1:1</td></tr><tr><th scope="row"><code class="tk">--text-3</code> <span class="muted">light</span></th><td>4.8:1</td><td>4.6:1</td><td class="warn">4.4:1 ✕</td></tr><tr><th scope="row"><code class="tk">--text-3</code> <span class="muted">dark</span></th><td>7.6:1</td><td>6.8:1</td><td class="">5.7:1</td></tr><tr><th scope="row"><code class="tk">--accent</code> <span class="muted">light</span></th><td>6.5:1</td><td>6.2:1</td><td class="">5.9:1</td></tr><tr><th scope="row"><code class="tk">--accent</code> <span class="muted">dark</span></th><td>6.4:1</td><td>5.7:1</td><td class="">4.8:1</td></tr></tbody>
+    </table>
+  </section>
+
+  <section aria-labelledby="t-h">
+    <h2 id="t-h">Typography</h2>
+    <p class="note">One family, Instrument Sans, in three weights: 400 regular, 500 medium, 600 semibold. Eight sizes: 28, 20, 18, 16, 15, 14, 13, 12. Five line heights: 1 for single-line controls, 1.2 display, 1.35 headings and compact rows, 1.6 interface text, 1.75 long-form and code. Headings tighten their letter spacing slightly; everything else stays at 0.</p>
+    <div class="tys" role="table" aria-label="Type scale">
+<div class="ty" role="row">
+      <span role="cell" class="ty-n"><span class="tw">Display</span><code>28px · 600 · 1.2</code></span>
+      <span role="cell" class="ty-s" style="font-size:28px;font-weight:600;line-height:1.2;letter-spacing:-0.02em;font-family:inherit">Rebuilding this site</span>
+      <span role="cell" class="ty-u">Post and case study titles<code>h1</code></span>
+    </div>
+<div class="ty" role="row">
+      <span role="cell" class="ty-n"><span class="tw">Page title</span><code>20px · 600 · 1.35</code></span>
+      <span role="cell" class="ty-s" style="font-size:20px;font-weight:600;line-height:1.35;letter-spacing:-0.01em;font-family:inherit">Writing</span>
+      <span role="cell" class="ty-u">Home name, Projects, Writing<code>h1</code></span>
+    </div>
+<div class="ty" role="row">
+      <span role="cell" class="ty-n"><span class="tw">Heading</span><code>18px · 600 · 1.35</code></span>
+      <span role="cell" class="ty-s" style="font-size:18px;font-weight:600;line-height:1.35;letter-spacing:-0.01em;font-family:inherit">Spending the motion budget</span>
+      <span role="cell" class="ty-u">Section headings in posts; featured card title at 500<code>h2</code></span>
+    </div>
+<div class="ty" role="row">
+      <span role="cell" class="ty-n"><span class="tw">Lead</span><code>18px · 400 · 1.6</code></span>
+      <span role="cell" class="ty-s" style="font-size:18px;font-weight:400;line-height:1.6;letter-spacing:0;font-family:inherit">A daily radar for remote roles that match my CV.</span>
+      <span role="cell" class="ty-u">Case study intro<code>p</code></span>
+    </div>
+<div class="ty" role="row">
+      <span role="cell" class="ty-n"><span class="tw">Long-form body</span><code>16px · 400 · 1.75</code></span>
+      <span role="cell" class="ty-s" style="font-size:16px;font-weight:400;line-height:1.75;letter-spacing:0;font-family:inherit">For a few years my site was a hosted profile: one column, small type.</span>
+      <span role="cell" class="ty-u">Post and case study paragraphs<code>p</code></span>
+    </div>
+<div class="ty" role="row">
+      <span role="cell" class="ty-n"><span class="tw">Body</span><code>15px · 400 / 500 · 1.6</code></span>
+      <span role="cell" class="ty-s" style="font-size:15px;font-weight:400;line-height:1.6;letter-spacing:0;font-family:inherit">Rebuilding this site</span>
+      <span role="cell" class="ty-u">Default text; list and card titles at 500 (1.35 when a title)<code>p, h3</code></span>
+    </div>
+<div class="ty" role="row">
+      <span role="cell" class="ty-n"><span class="tw">Small</span><code>14px · 400 / 500 · 1.6</code></span>
+      <span role="cell" class="ty-s" style="font-size:14px;font-weight:400;line-height:1.6;letter-spacing:0;font-family:inherit">Why it stayed one column, and how I spent the motion budget.</span>
+      <span role="cell" class="ty-u">Descriptions; section labels at 500<code>p, h2</code></span>
+    </div>
+<div class="ty" role="row">
+      <span role="cell" class="ty-n"><span class="tw">Meta</span><code>13px · 400 · 1.6</code></span>
+      <span role="cell" class="ty-s" style="font-size:13px;font-weight:400;line-height:1.6;letter-spacing:0;font-family:inherit">November 9, 2026 · Design engineering · 4 min read</span>
+      <span role="cell" class="ty-u">Dates, captions, buttons, chips, footer<code>time, figcaption</code></span>
+    </div>
+<div class="ty" role="row">
+      <span role="cell" class="ty-n"><span class="tw">Micro</span><code>12px · 400 / 500 · 1.35</code></span>
+      <span role="cell" class="ty-s" style="font-size:12px;font-weight:400;line-height:1.35;letter-spacing:0;font-family:inherit">In progress · 3 · Plain text for AI tools</span>
+      <span role="cell" class="ty-u">Status labels, chip counts, footnote markers, key hints, menu descriptions. The smallest interface text<code>span</code></span>
+    </div>
+<div class="ty" role="row">
+      <span role="cell" class="ty-n"><span class="tw">Code</span><code>13px · 400 · 1.75</code></span>
+      <span role="cell" class="ty-s" style="font-size:13px;font-weight:400;line-height:1.75;letter-spacing:0;font-family:ui-monospace,&quot;SF Mono&quot;,Menlo,Consolas,monospace">animation: page-in 250ms ease-out;</span>
+      <span role="cell" class="ty-u">Code blocks (system monospace)<code>pre, code</code></span>
+    </div>
+    </div>
+    <p class="note muted">Nothing a visitor reads is below 12px. The drawings inside project previews use their own small labels (9–11px, and one 22px number); they are illustrations, hidden from screen readers.</p>
+  </section>
+
+  <section aria-labelledby="sp-h">
+    <h2 id="sp-h">Spacing</h2>
+    <p class="note">Tailwind’s 4px grid: every padding, margin, gap and offset is one of these steps. The right-hand number is the Tailwind class step (<code class="tk">p-4</code> = 16px). Only 1–2px hairlines sit off the grid.</p>
+    <div class="sps" role="table" aria-label="Spacing scale">
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">4px</span><code>1</code></span><span role="cell" class="sp-b"><span style="width:4px"></span></span><span role="cell" class="sp-u">Title to the line below it, icon to label</span></div>
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">8px</span><code>2</code></span><span role="cell" class="sp-b"><span style="width:8px"></span></span><span role="cell" class="sp-u">Gaps inside controls and small groups</span></div>
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">12px</span><code>3</code></span><span role="cell" class="sp-b"><span style="width:12px"></span></span><span role="cell" class="sp-u">List row padding, chip gaps</span></div>
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">16px</span><code>4</code></span><span role="cell" class="sp-b"><span style="width:16px"></span></span><span role="cell" class="sp-u">Card and menu padding, gaps between cards</span></div>
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">20px</span><code>5</code></span><span role="cell" class="sp-b"><span style="width:20px"></span></span><span role="cell" class="sp-u">Prose block padding, facts row padding</span></div>
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">24px</span><code>6</code></span><span role="cell" class="sp-b"><span style="width:24px"></span></span><span role="cell" class="sp-u">Page side padding, column gap next to the date gutter</span></div>
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">32px</span><code>8</code></span><span role="cell" class="sp-b"><span style="width:32px"></span></span><span role="cell" class="sp-u">Between a page intro and its list (Home, Projects, Writing)</span></div>
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">40px</span><code>10</code></span><span role="cell" class="sp-b"><span style="width:40px"></span></span><span role="cell" class="sp-u">Between a post and its author footer</span></div>
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">48px</span><code>12</code></span><span role="cell" class="sp-b"><span style="width:48px"></span></span><span role="cell" class="sp-u">Top of every page on phones</span></div>
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">56px</span><code>14</code></span><span role="cell" class="sp-b"><span style="width:56px"></span></span><span role="cell" class="sp-u">Bottom of pages</span></div>
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">72px</span><code>18</code></span><span role="cell" class="sp-b"><span style="width:72px"></span></span><span role="cell" class="sp-u">Between Home sections</span></div>
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">80px</span><code>20</code></span><span role="cell" class="sp-b"><span style="width:80px"></span></span><span role="cell" class="sp-u">Top of every page</span></div>
+<div class="sp" role="row"><span role="cell" class="sp-v"><span class="tw">96px</span><code>24</code></span><span role="cell" class="sp-b"><span style="width:96px"></span></span><span role="cell" class="sp-u">Above the footer</span></div>
+    </div>
+    <h3 class="sub">Fixed sizes</h3>
+    <table>
+      <thead><tr><th scope="col">Element</th><th scope="col">Size</th><th scope="col">Note</th></tr></thead>
+      <tbody><tr><th scope="row">Content column</th><td><code class="tk">688px</code></td><td class="muted">640px of text plus 24px on each side</td></tr><tr><th scope="row">Date gutter</th><td><code class="tk">112px</code></td><td class="muted">Dates and labels to the left of every list row</td></tr><tr><th scope="row">Controls</th><td><code class="tk">32px</code></td><td class="muted">Buttons, chips, the search button</td></tr><tr><th scope="row">Icons</th><td><code class="tk">16px</code></td><td class="muted">Every icon, drawn at 1.5px stroke</td></tr><tr><th scope="row">Header</th><td><code class="tk">64px</code></td><td class="muted">Sticky at the top of every page</td></tr><tr><th scope="row">Footer</th><td><code class="tk">64px</code></td><td class="muted">Mirrors the header: hairline on top, content centred; grows only if its two halves wrap</td></tr><tr><th scope="row">Touch target</th><td><code class="tk">44px</code></td><td class="muted">Hit area of every link and control on touch screens; the visible size does not change</td></tr><tr><th scope="row">Search row</th><td><code class="tk">56px</code></td><td class="muted">The search input; result rows are 48px</td></tr></tbody>
+    </table>
+  </section>
+
+  <section aria-labelledby="r-h">
+    <h2 id="r-h">Radius</h2>
+    <p class="note">Four steps. Circles (the avatar, dots) use 50%. The focus ring follows the shape of whatever is focused.</p>
+    <div class="rds"><div class="rd"><span class="rd-b" style="border-radius:var(--r-sm)"></span><span class="vt"><code class="tk">--r-sm</code><span class="tw">4px</span></span><span class="rd-u">Search highlights, key hints, footnote markers, focus ring on text links</span></div><div class="rd"><span class="rd-b" style="border-radius:var(--r-md)"></span><span class="vt"><code class="tk">--r-md</code><span class="tw">8px</span></span><span class="rd-u">Icon tiles, menu and search rows, popovers, small buttons</span></div><div class="rd"><span class="rd-b" style="border-radius:var(--r-lg)"></span><span class="vt"><code class="tk">--r-lg</code><span class="tw">12px</span></span><span class="rd-u">Cards, previews, code blocks, menus, the search panel</span></div><div class="rd"><span class="rd-b" style="border-radius:var(--r-full)"></span><span class="vt"><code class="tk">--r-full</code><span class="tw">999px</span></span><span class="rd-u">Buttons, chips, status labels: anything pill-shaped</span></div></div>
+  </section>
+
+  <section aria-labelledby="m-h">
+    <h2 id="m-h">Motion</h2>
+    <p class="note">Three durations and two curves; interface feedback never takes longer than 250ms. Hover movement only runs on devices with a real pointer. With reduced motion on, pages fade in without moving and everything else is instant. Three things sit outside the scale on purpose: the Roleburn preview morphing into its case study between pages (400ms), the easing demo in the blog post (600ms), and the slow loops inside project previews.</p>
+    <table><thead><tr><th scope="col">Duration</th><th scope="col">Value</th><th scope="col">Use</th></tr></thead><tbody><tr><th scope="row"><code class="tk">--dur-fast</code></th><td>100ms</td><td class="muted">Press feedback, search row highlight</td></tr><tr><th scope="row"><code class="tk">--dur</code></th><td>150ms</td><td class="muted">Hover, colour and opacity changes, popovers, the Download CV menu</td></tr><tr><th scope="row"><code class="tk">--dur-slow</code></th><td>250ms</td><td class="muted">Page entrance, expanding rows, underline growing</td></tr></tbody></table>
+    <table><thead><tr><th scope="col">Easing</th><th scope="col">Value</th><th scope="col">Use</th></tr></thead><tbody><tr><th scope="row"><code class="tk">--ease</code></th><td><code>ease-out</code></td><td class="muted">The default for everything: starts fast, settles</td></tr><tr><th scope="row"><code class="tk">--ease-settle</code></th><td><code>cubic-bezier(.22, 1, .36, 1)</code></td><td class="muted">Things arriving: the page, menus, expanding rows</td></tr></tbody></table>
+  </section>
+
+  <section aria-labelledby="e-h">
+    <h2 id="e-h">Elevation and layers</h2>
+    <p class="note">One shadow, for things that float over the page (the search menu, the Download CV menu). Everything else is flat and separated by borders. Layers are named so nothing fights over stacking order.</p>
+    <div class="elev"><span class="elev-b">--shadow-overlay</span></div>
+    <table><thead><tr><th scope="col">Layer</th><th scope="col">z-index</th><th scope="col">Use</th></tr></thead><tbody><tr><th scope="row"><code class="tk">content</code></th><td>2, 5</td><td class="muted">Local stacking inside a component</td></tr><tr><th scope="row"><code class="tk">--z-header</code></th><td>10</td><td class="muted">Sticky header, reading progress bar</td></tr><tr><th scope="row"><code class="tk">--z-menu</code></th><td>30</td><td class="muted">Download CV menu and its click-away layer</td></tr><tr><th scope="row"><code class="tk">--z-dialog</code></th><td>50</td><td class="muted">Search menu and its backdrop</td></tr><tr><th scope="row"><code class="tk">--z-skip</code></th><td>100</td><td class="muted">Skip link, always on top</td></tr></tbody></table>
+  </section>
+
+  <section aria-labelledby="i-h">
+    <h2 id="i-h">Icons</h2>
+    <p class="note">Two sizes, one weight: a 1.5px stroke with round caps and joins, drawn in the current text colour. Each size has one job, so an icon never sits next to text that is out of scale with it.</p>
+    <table><thead><tr><th scope="col">Size</th><th scope="col">Value</th><th scope="col">Use</th></tr></thead><tbody>
+      <tr><th scope="row"><code class="tk">icon-md</code></th><td>16px</td><td class="muted">Icons that stand on their own or sit in a control: buttons, search result tiles, menu items, the header search</td></tr>
+      <tr><th scope="row"><code class="tk">icon-sm</code></th><td>12px</td><td class="muted">The two markers inside a line of text, 4px from the word: the see-more chevron and the external-link arrow (lighter grey until hovered). Never a tap target on their own</td></tr>
+    </tbody></table>
+    <h3 class="sub">Medium · 16px</h3>
+    <div class="ics"><span class="ic"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 2.5v8M4.5 7L8 10.5 11.5 7M3 13.5h10"></path></svg></span><span class="ic"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5L14 14"></path></svg></span><span class="ic"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4.5 6.5L8 10l3.5-3.5"></path></svg></span><span class="ic"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3.5 3a9.5 9.5 0 0 1 9.5 9.5M3.5 7a5.5 5.5 0 0 1 5.5 5.5"></path><circle cx="4" cy="12" r="1.1" style="fill:currentColor;stroke:none"></circle></svg></span><span class="ic"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4 2.5h6l2.5 2.5v8.5h-8.5z"></path><path d="M6 8h4.5M6 10.5h3"></path></svg></span><span class="ic"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></span><span class="ic"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"></rect><path d="M10.5 3.5V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v6.5a1 1 0 0 0 1 1h.5"></path></svg></span></div>
+    <h3 class="sub">Small · 12px</h3>
+    <div class="ics"><span class="ic"><svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"></path></svg></span><span class="ic"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></span></div>
+  </section>
+</main>
+</body></html>

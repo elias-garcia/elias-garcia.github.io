@@ -1,0 +1,673 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap">
+<style>
+/* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
+   bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
+   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
+:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-slow:250ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent-c:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+
+body{margin:0;background:var(--bg)}
+a{color:var(--text);text-decoration:none}
+a:hover{color:var(--accent-c)}
+.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.site *{box-sizing:border-box}
+.site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
+.site p{text-wrap:pretty}
+
+/* one orchestrated load moment */
+
+/* nav underline grows from the pointer side */
+.nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current],.nav a[aria-current]:hover{color:var(--accent-c)}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform var(--dur-slow) var(--ease-settle)}
+.nav a:hover::after,.nav a[aria-current]::after{transform:scaleX(1);transform-origin:left}
+
+.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:13px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
+.kbd:hover{border-color:var(--line-strong);color:var(--text)}
+.kbd:active{transform:scale(.97)}
+
+/* avatar crossfade by career era */
+.av{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* availability dot */
+.dot{position:relative;width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+.dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:ping 2.4s cubic-bezier(0,0,.2,1) infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.45}80%,100%{transform:scale(2.6);opacity:0}}
+
+/* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:13px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
+.button:hover{background:var(--control-hover);color:var(--text)}
+.button:active{transform:scale(.97)}
+.button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.button svg circle{fill:currentColor;stroke:none}
+
+/* lists: hovering one row quiets the others */
+.list .item{transition:opacity var(--dur) var(--ease)}
+.list:has(.item:hover) .item:not(:hover){opacity:.45}
+
+/* jobs expand in place */
+.jobhead{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px 24px;width:100%;padding:12px 0;margin:0;background:none;border:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.jobbody{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--dur-slow) var(--ease-settle),opacity var(--dur) var(--ease)}
+.job.open .jobbody{grid-template-rows:1fr;opacity:1}
+.chev{width:16px;height:16px;margin-top:4px;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;transition:transform var(--dur-slow) var(--ease-settle),stroke var(--dur) var(--ease)}
+.jobhead:hover .chev{stroke:var(--text)}
+.job.open .chev{transform:rotate(45deg)}
+
+/* project tiles: previews run only while hovered */
+/* "see more" links: same hover as the header nav, plus a small arrow that nudges */
+.more{display:inline-flex;align-items:center;gap:4px;font-size:14px;color:var(--text-2);transition:color var(--dur) var(--ease)}
+.more:hover{color:var(--text)}
+.more span{background-image:linear-gradient(currentColor,currentColor);background-size:0% 1px;background-repeat:no-repeat;background-position:0 100%;transition:background-size var(--dur-slow) var(--ease-settle)}
+.more:hover span{background-size:100% 1px}
+.more svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
+.more:hover svg{transform:translateX(2px)}
+/* tiles share rows (preview, title, description): a long title never pushes its neighbours out of line */
+.tiles .tile{display:grid;grid-template-rows:subgrid;grid-row:span 3;align-content:start}
+@media (max-width:640px){.tiles .tile{padding-bottom:20px}}
+.tile .pv{margin-bottom:12px}
+.tile .tt{font-weight:500;line-height:1.35;text-wrap:balance}
+.tile .td{font-size:14px;color:var(--text-2);line-height:1.6}
+.st{position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:var(--r-full);background:color-mix(in oklch, var(--bg) 92%, transparent);border:1px solid var(--line);font-size:12px;color:var(--text-2);backdrop-filter:blur(4px)}
+.tile .pv{transition:transform var(--dur) var(--ease-settle),border-color var(--dur) var(--ease)}
+.tile:hover .pv{transform:translateY(-2px);border-color:var(--line-strong)}
+.tile:active .pv{transform:scale(.99)}
+.anim{animation-play-state:paused !important}
+.tile:hover .anim,.tile:focus-visible .anim{animation-play-state:running !important}
+.ill{width:100%;height:100%;display:block}
+.ring{fill:none;stroke:var(--line);stroke-width:1}
+.wedge{fill:var(--accent);opacity:.14}
+.sweep{transform-origin:100px 75px;transform-box:view-box;animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hit{fill:var(--accent)}
+.miss{fill:var(--line-strong)}
+.node{fill:var(--bg);stroke:var(--line-strong);stroke-width:1}
+.node.done{fill:var(--accent);stroke:var(--accent)}
+.lbl{font-size:10px;font-weight:500;text-anchor:middle;fill:var(--text-2);font-family:inherit}
+.lbl.light{fill:var(--bg)}
+.link{stroke:var(--line-strong);stroke-width:1}
+.track{stroke:var(--line);stroke-width:1;stroke-dasharray:2 4}
+.runner{fill:var(--accent);transform-box:fill-box;animation:travel 2.4s cubic-bezier(.65,0,.35,1) infinite}
+@keyframes travel{0%{transform:translateX(0)}42%,58%{transform:translateX(68px)}100%{transform:translateX(136px)}}
+.lineA{fill:none;stroke:var(--accent);stroke-width:1.5}
+.lineB{fill:none;stroke:var(--text-3);stroke-width:1.5}
+.scan{stroke:var(--text);stroke-opacity:.3;stroke-width:1;stroke-dasharray:3 3;animation:scan 2.8s ease-in-out infinite alternate}
+@keyframes scan{from{transform:translateX(0)}to{transform:translateX(150px)}}
+.tag{font-size:10px;font-family:inherit;fill:var(--text-3)}
+
+
+@media (prefers-reduced-motion:reduce){
+.dot::after,.anim{animation:none !important}
+.jobbody,.chev,.tile .pv{transition:opacity var(--dur) var(--ease)}
+}
+
+/* search menu */
+@keyframes palFade{from{opacity:0}}
+@keyframes palPop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
+.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default;animation:palFade var(--dur) var(--ease) both}
+.ppanel{animation:palPop var(--dur) var(--ease-settle) both;transform-origin:top center}
+.pin{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:15px;color:var(--text);background:transparent;height:100%}
+.pin::placeholder{color:var(--text-3)}
+.ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
+.pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
+.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;transition:background var(--dur-fast) var(--ease)}
+.popt:hover{color:var(--text)}
+.popt.act{background:var(--tint)}
+.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease)}
+.popt.act .pic{background:var(--bg);color:var(--accent-c)}
+.pic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.pret{width:16px;font-size:13px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
+.popt.act .pret{opacity:1}
+mark.phl{background:var(--tint-strong);color:var(--text);border-radius:var(--r-sm);padding:0}
+.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:11px;color:var(--text-2);font-family:inherit}
+.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
+.pclear:hover{background:var(--control-hover);color:var(--text)}
+@media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
+
+/* page entrance: the content arrives as one piece, fast; the header never moves */
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
+@keyframes pageFade{from{opacity:0}}
+main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backwards}
+/* between pages: the header stays put, the content cross-fades */
+@view-transition{navigation:auto}
+.site > header{view-transition-name:site-header}
+::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease) both}
+::view-transition-new(root){animation:none}
+@keyframes vtOut{to{opacity:0}}
+::view-transition-group(roleburn-preview){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
+
+
+/* footer sits after the content, and at the bottom of the window when a page is short (never fixed) */
+.site{display:flex;flex-direction:column}
+.site > main{flex:1 0 auto;width:100%}
+.site > footer{width:100%;flex-shrink:0}
+@media (prefers-color-scheme: dark){
+:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent-c:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
+.site{--accent:var(--accent-c) !important}
+img:not([src$=".svg"]){filter:brightness(.92)}
+}
+
+/* final pass: motion and UX polish */
+html{scroll-padding-top:80px}
+::selection{background:var(--tint-strong);color:var(--text)}
+.skip{position:absolute;left:12px;top:-60px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:top var(--dur) var(--ease)}
+.skip:focus{top:12px;color:var(--bg)}
+/* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
+@media (hover: none), (pointer: coarse){
+.list:has(.item:hover) .item:not(:hover){opacity:1}
+.tile:hover .pv,.card:hover .pv{transform:none;border-color:var(--line)}
+.more:hover svg,.card:hover .go svg,.pn:hover svg,.back:hover svg,.next:hover svg{transform:none}
+.more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
+}
+/* phones: search shows just the icon, and pages start closer to the top */
+@media (max-width: 640px){
+.kbd{width:36px;padding:0;justify-content:center}
+.kbd span{display:none}
+.nav{gap:16px !important}
+.site > main{padding-top:48px !important}
+}
+
+/* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:13px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.pcrumb:hover{background:var(--control-hover);color:var(--text)}
+.pret{text-align:center}
+
+/* Download CV: menu button. Same button, a chevron, and a small menu that explains each format */
+.cvwrap{position:relative;display:inline-flex}
+.cvchev{margin-right:-4px;transition:transform var(--dur) var(--ease)}
+.cvchev.up{transform:rotate(180deg)}
+.cvscrim{position:fixed;inset:0;z-index:var(--z-menu);border:0;padding:0;background:transparent;cursor:default}
+.cvmenu{position:absolute;top:calc(100% + 8px);left:0;z-index:calc(var(--z-menu) + 1);width:320px;max-width:calc(100vw - 48px);display:flex;flex-direction:column;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);transform-origin:top left;animation:cvIn var(--dur) var(--ease)}
+@keyframes cvIn{from{opacity:0;transform:scale(.97) translateY(-4px)}}
+.cvitem{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;outline:none;transition:background var(--dur-fast) var(--ease)}
+.cvitem:hover,.cvitem:focus-visible{background:var(--tint)}
+.cvitem:hover .pic,.cvitem:focus-visible .pic{background:var(--bg);color:var(--accent-c)}
+.cvtext{display:flex;flex-direction:column;gap:0;line-height:1.35;min-width:0}
+.cvtitle{font-size:14px}
+.cvsize{margin-left:4px;font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums}
+.cvdesc{font-size:12px;color:var(--text-2)}
+@media (prefers-reduced-motion:reduce){.cvmenu{animation:none}.cvchev{transition:none}}
+
+
+/* semantic lists keep the existing look: no bullets, no indent. role="list" keeps list semantics in Safari */
+ul.list,ul.tiles{list-style:none;margin:0;padding:0}
+ul.tiles > li{display:grid;grid-template-rows:subgrid;grid-row:span 3}
+.tile .tt{margin:0;font-size:inherit}
+.contact dl,.contact dd{margin:0}
+address{font-style:normal}
+
+/* touch screens: 44px hit areas without changing how anything looks */
+@media (pointer: coarse){
+.nav a,.more,.topiclink,.factlink,.button,.topic,.kbd,.fn,.back,.contact a,.pcrumb,.pclear{position:relative}
+.nav a::before,.more::before,.topiclink::before,.factlink::before,.button::before,.topic::before,.kbd::before,.fn::before,.back::before,.contact a::before,.pcrumb::before,.pclear::before{content:"";position:absolute;left:0;right:0;top:50%;height:44px;min-width:44px;transform:translate(0,-50%)}
+.fn::before{left:50%;right:auto;width:44px;transform:translate(-50%,-50%)}
+}
+
+/* work rows: date, text and + on one line; on phones the + stays beside the date and the text drops below */
+.jobhead{display:grid;grid-template-columns:112px minmax(0,1fr) auto;grid-template-areas:"date text icon";column-gap:24px;row-gap:4px;align-items:start}
+.jobhead > :nth-child(1){grid-area:date}
+.jobhead > :nth-child(2){grid-area:text}
+.jobhead > .chev{grid-area:icon}
+@media (max-width: 640px){.jobhead{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"date icon" "text text"}}
+
+/* footer time: Portugal's time and how far it is from the visitor's own clock.
+   Phones keep one row: the offset (the dot and "5h ahead of you") is left out */
+@media (max-width: 640px){.clock > span:nth-child(n+2){display:none}}
+
+/* external-link arrow: a 12px icon like the see-more chevron, quieter than the text, nudging toward where it goes */
+.ext{display:inline-block;width:12px;height:12px;margin-left:4px;vertical-align:-1px;flex:none;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+a:hover .ext,a:focus-visible .ext{stroke:currentColor}
+@media (hover: hover) and (pointer: fine){a:hover .ext{transform:translate(1px,-1px)}}
+@media (prefers-reduced-motion:reduce){.ext{transition:none}a:hover .ext{transform:none}}
+
+/* intro photo: 104px matches the height of the name, title and button row beside it; phones stack it above the text at 80px */
+@media (max-width: 640px){.avbox{width:80px !important;height:80px !important}}
+
+/* search is a modal: while it is open the page behind it does not scroll */
+html:has(.pscrim){overflow:hidden}
+</style>
+</head><body>
+
+<div class="site" style="--accent: #4F39F6; min-height: 100vh; background: var(--bg)">
+  <a class="skip" href="#top">Skip to content</a>
+
+
+  <header style="position: sticky; top: 0; z-index: var(--z-header); background: color-mix(in oklch, var(--bg) 82%, transparent); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line)">
+    <div style="max-width: 688px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px">
+      <a href="#top" aria-label="Elías García, home" style="display: flex; align-items: center; height: 44px">
+        <svg viewBox="0 0 35.44 60" width="16.54" height="28" aria-hidden="true" style="display: block; flex: none"><path d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c)"></path><path d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: #000; opacity: 0.3"></path><path d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: #000; opacity: 0.3"></path><path d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: #000; opacity: 0.1"></path><path d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: #000; opacity: 0.1"></path></svg>
+      </a>
+      <nav class="nav" aria-label="Main" style="display: flex; align-items: center; gap: 24px; font-size: 14px">
+        <a href="#top" aria-current="page">Home</a>
+        <a href="ProjectsIndex.dc.html">Projects</a>
+        <a href="Writing.dc.html">Writing</a>
+        <button class="kbd" aria-label="Search the site" aria-keyshortcuts="Meta+K Control+K">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" style="fill: none; stroke: currentColor; stroke-width: 1.5"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5L14 14"></path></svg>
+          <span>⌘K</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" style="max-width: 688px; margin: 0 auto; padding: 80px 24px 0; display: flex; flex-direction: column; gap: 72px">
+
+    <header style="display: flex; flex-direction: column; gap: 32px">
+      <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap">
+        <div class="avbox" style="position: relative; width: 104px; height: 104px; border-radius: 50%; overflow: hidden; background: var(--control); flex: none">
+          <img class="av" src="../assets/avatar.jpg" alt="Elías García">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+          <h1 style="margin: 0; font-size: 20px; line-height: 1.35; font-weight: 600; letter-spacing: -0.01em">Elías García</h1>
+          <p style="margin: 0; color: var(--text-2)">Software engineer</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px">
+            <span class="cvwrap">
+              <button class="button" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="cv-menu">Download CV<svg class="cvchev " viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4.5 6.5L8 10l3.5-3.5"></path></svg></button>
+              
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 4px; font-size: 13px; color: var(--text-2)"><span class="dot" aria-hidden="true"></span>Open to remote roles</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <h2 style="margin: 0; font-size: 14px; font-weight: 500">About</h2>
+        <p style="margin: 0; color: var(--text-2); max-width: 62ch">I’ve spent nine years building products end to end, from real-time data pipelines and APIs to the interfaces on top. Most recently I led engineering at Vesu, a lending protocol on Starknet. Before that, four years at Polygon Labs, leading the frontend of Polygon zkEVM and the team behind Polygon ID.</p>
+        <p style="margin: 0; color: var(--text-2); max-width: 62ch">These days I’m also exploring how AI agents change the way small teams ship. This site is where I keep the projects and notes.</p>
+      </div>
+    </header>
+
+    <section id="projects" aria-labelledby="projects-h" style="display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <h2 id="projects-h" style="margin: 0; font-size: 14px; font-weight: 500">Projects</h2>
+        <a class="more" href="ProjectsIndex.dc.html"><span>All projects</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"></path></svg></a>
+      </div>
+      <ul class="tiles" role="list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr)); gap: 4px 20px">
+
+        <li>
+        <a class="tile" href="Project.dc.html">
+          <div class="pv" style="position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden; view-transition-name: roleburn-preview">
+            <svg class="ill" viewBox="0 0 200 150" aria-hidden="true">
+              <circle cx="100" cy="75" r="56" class="ring"></circle>
+              <circle cx="100" cy="75" r="36" class="ring"></circle>
+              <circle cx="100" cy="75" r="16" class="ring"></circle>
+              <g class="sweep anim"><path class="wedge" d="M100 75 L100 19 A56 56 0 0 1 148.5 47 Z"></path></g>
+              <circle cx="128" cy="44" r="3.5" class="hit"></circle>
+              <circle cx="70" cy="100" r="3.5" class="hit"></circle>
+              <circle cx="134" cy="96" r="2.5" class="miss"></circle>
+              <circle cx="78" cy="48" r="2.5" class="miss"></circle>
+              <circle cx="110" cy="120" r="2.5" class="miss"></circle>
+              <circle cx="54" cy="70" r="2.5" class="miss"></circle>
+            </svg>
+            <span class="st">In progress</span>
+          </div>
+          <h3 class="tt">Roleburn</h3>
+          <span class="td">A daily radar for remote roles that match my CV.</span>
+        </a>
+        </li>
+
+        <li>
+        <a class="tile" href="#">
+          <div class="pv" style="position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden">
+            <svg class="ill" viewBox="0 0 200 150" aria-hidden="true">
+              <line x1="54" y1="68" x2="78" y2="68" class="link"></line>
+              <line x1="122" y1="68" x2="146" y2="68" class="link"></line>
+              <rect x="10" y="54" width="44" height="28" rx="8" class="node"></rect>
+              <text x="32" y="72" class="lbl">#142</text>
+              <rect x="78" y="54" width="44" height="28" rx="8" class="node"></rect>
+              <text x="100" y="72" class="lbl">PR</text>
+              <rect x="146" y="54" width="44" height="28" rx="8" class="node done"></rect>
+              <text x="168" y="72" class="lbl light">Review</text>
+              <line x1="32" y1="106" x2="168" y2="106" class="track"></line>
+              <circle cx="32" cy="106" r="4" class="runner anim"></circle>
+            </svg>
+            <span class="st">Experiment</span>
+          </div>
+          <h3 class="tt">work-issue</h3>
+          <span class="td">An agent pipeline from GitHub issue to reviewed pull request.</span>
+        </a>
+        </li>
+
+        <li>
+        <a class="tile" href="#">
+          <div class="pv" style="position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden">
+            <svg class="ill" viewBox="0 0 200 150" aria-hidden="true">
+              <path class="lineA" d="M14 86 C40 58, 62 98, 92 70 S142 46, 186 60"></path>
+              <path class="lineB" d="M14 102 C42 94, 70 112, 100 100 S150 92, 186 106"></path>
+              <line x1="25" y1="34" x2="25" y2="122" class="scan anim"></line>
+              <text x="186" y="50" class="tag" style="text-anchor: end">grvt</text>
+              <text x="186" y="122" class="tag" style="text-anchor: end">ApeX</text>
+            </svg>
+            <span class="st">Research</span>
+          </div>
+          <h3 class="tt">POL funding spreads</h3>
+          <span class="td">Funding-rate arbitrage on POL perpetuals across DEXes.</span>
+        </a>
+        </li>
+
+      </ul>
+    </section>
+
+    <section id="work" aria-labelledby="work-h" style="display: flex; flex-direction: column; gap: 8px">
+      <h2 id="work-h" style="margin: 0 0 8px; font-size: 14px; font-weight: 500">Work experience</h2>
+      <ul class="list" role="list" style="display: flex; flex-direction: column">
+        
+          <li class="item job open">
+            <button class="jobhead" aria-expanded="true">
+              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2024">2024</time>–Now</span>
+              <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+                <span style="font-weight: 500">Vesu</span>
+                <span style="font-size: 14px; color: var(--text-2)">Engineering Lead</span>
+              </span>
+              <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
+            </button>
+            <div class="jobbody">
+              <div style="min-height: 0; overflow: hidden">
+                <div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px">
+                  <span style="flex: 0 0 112px"></span>
+                  <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+                    <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px">
+                      
+                        <li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Led engineering from launch to $84.6M in customer assets.</li>
+                      
+                        <li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Built the lender and borrower app, a risk-parameter admin panel and a blockchain-only fallback UI so users can exit positions during an outage, on a shared Ark UI design system.</li>
+                      
+                        <li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Built the real-time event-ingestion pipeline, a public API, an RFQ system for liquidations over WebSockets and an MCP server for product data.</li>
+                      
+                        <li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Set up issue tracking, CI/CD and releases from zero, mentored the frontend team and introduced the company’s AI development practice.</li>
+                      
+                    </ul>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        
+          <li class="item job ">
+            <button class="jobhead" aria-expanded="false">
+              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2020">2020</time>–<time datetime="2024">2024</time></span>
+              <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+                <span style="font-weight: 500">Polygon Labs</span>
+                <span style="font-size: 14px; color: var(--text-2)">Staff Frontend Engineer → Tech Lead</span>
+              </span>
+              <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
+            </button>
+            <div class="jobbody">
+              <div style="min-height: 0; overflow: hidden">
+                <div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px">
+                  <span style="flex: 0 0 112px"></span>
+                  <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+                    <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px">
+                      
+                        <li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Hermez: built the consumer wallet and block explorer, and contributed to the protocol SDK. Polygon acquired Hermez in 2021.</li>
+                      
+                        <li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Polygon zkEVM: led the 3-person frontend team across every user-facing product, including the bridge, as it grew to $180M in bridged assets.</li>
+                      
+                        <li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Polygon ID: tech lead of a 10-engineer team building the credential issuer, wallet, marketplace and schema tooling.</li>
+                      
+                    </ul>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        
+          <li class="item job ">
+            <button class="jobhead" aria-expanded="false">
+              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2019">2019</time>–<time datetime="2020">2020</time></span>
+              <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+                <span style="font-weight: 500">Nexiona</span>
+                <span style="font-size: 14px; color: var(--text-2)">Senior Frontend Engineer</span>
+              </span>
+              <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
+            </button>
+            <div class="jobbody">
+              <div style="min-height: 0; overflow: hidden">
+                <div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px">
+                  <span style="flex: 0 0 112px"></span>
+                  <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+                    <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px">
+                      
+                        <li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Built the frontend of MIIMETIQ in React and Redux, used across Europe by companies including Celsa Group and Grifols.</li>
+                      
+                    </ul>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        
+          <li class="item job ">
+            <button class="jobhead" aria-expanded="false">
+              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2018">2018</time>–<time datetime="2019">2019</time></span>
+              <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+                <span style="font-weight: 500">Netex Learning</span>
+                <span style="font-size: 14px; color: var(--text-2)">Lead Frontend Engineer</span>
+              </span>
+              <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
+            </button>
+            <div class="jobbody">
+              <div style="min-height: 0; overflow: hidden">
+                <div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px">
+                  <span style="flex: 0 0 112px"></span>
+                  <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+                    <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px">
+                      
+                        <li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Led the 4-person Angular team behind Netex Cloud, used by thousands of learners at companies including Amazon and Inditex. Delivered internationalisation and accessibility.</li>
+                      
+                        <li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Led a cross-department initiative to build a shared component library adopted across the company’s products.</li>
+                      
+                    </ul>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        
+          <li class="item job ">
+            <button class="jobhead" aria-expanded="false">
+              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2017">2017</time>–<time datetime="2018">2018</time></span>
+              <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+                <span style="font-weight: 500">Ágora Binaria</span>
+                <span style="font-size: 14px; color: var(--text-2)">Full-Stack Engineer</span>
+              </span>
+              <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
+            </button>
+            <div class="jobbody">
+              <div style="min-height: 0; overflow: hidden">
+                <div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px">
+                  <span style="flex: 0 0 112px"></span>
+                  <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+                    <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px">
+                      
+                        <li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Built full-stack client applications and did performance work on existing Angular codebases.</li>
+                      
+                    </ul>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        
+      </ul>
+    </section>
+
+    <section id="writing" aria-labelledby="writing-h" style="display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px">
+        <h2 id="writing-h" style="margin: 0; font-size: 14px; font-weight: 500">Writing</h2>
+        <a class="more" href="Writing.dc.html"><span>All posts</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"></path></svg></a>
+      </div>
+      <ul class="list" role="list" style="display: flex; flex-direction: column">
+        <li><a class="item" href="Post.dc.html" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
+          <time datetime="2026-11" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums">Nov 2026</time>
+          <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+            <span style="font-weight: 500">Rebuilding this site</span>
+            <span style="font-size: 14px; color: var(--text-2)">Why it stayed one column, and how I spent the motion budget.</span>
+          </span>
+        </a></li>
+        <li><a class="item" href="#" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
+          <time datetime="2026-10" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums">Oct 2026</time>
+          <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+            <span style="font-weight: 500">A job radar made of markdown files</span>
+            <span style="font-size: 14px; color: var(--text-2)">How Roleburn runs on a folder of notes and a few scheduled agents.</span>
+          </span>
+        </a></li>
+        <li><a class="item" href="#" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
+          <time datetime="2026-09" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums">Sep 2026</time>
+          <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+            <span style="font-weight: 500">From GitHub issue to reviewed pull request</span>
+            <span style="font-size: 14px; color: var(--text-2)">Running my side projects through an agent pipeline with work-issue.</span>
+          </span>
+        </a></li>
+      </ul>
+    </section>
+
+    <section id="speaking" aria-labelledby="speaking-h" style="display: flex; flex-direction: column; gap: 16px">
+      <h2 id="speaking-h" style="margin: 0; font-size: 14px; font-weight: 500">Speaking and teaching</h2>
+      <figure style="margin: 0; display: flex; flex-direction: column; gap: 8px">
+        <img src="../assets/speaking-lisbon-2023.jpg" alt="Elías on stage presenting a slide on traditional identity systems" style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: 35% 45%; border-radius: var(--r-lg); display: block; background: var(--control)">
+        <figcaption style="font-size: 13px; color: var(--text-3)">Explaining identity systems at the Polygon DevX Global Tour in Lisbon, 2023.</figcaption>
+      </figure>
+      <ul class="list" role="list" style="display: flex; flex-direction: column">
+        <li style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
+          <time datetime="2024" style="flex: 0 0 112px; color: var(--text-3)">2024</time>
+          <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+            <span style="font-weight: 500">Preserving privacy with Polygon ID profiles</span>
+            <span style="font-size: 14px; color: var(--text-2)">House of ZK, EthDenver</span>
+          </span>
+        </li>
+        <li style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
+          <time datetime="2024" style="flex: 0 0 112px; color: var(--text-3)">2024</time>
+          <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+            <span style="font-weight: 500">Getting started with Polygon ID</span>
+            <span style="font-size: 14px; color: var(--text-2)">Polygon AggCave, EthDenver</span>
+          </span>
+        </li>
+        <li style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
+          <time datetime="2023" style="flex: 0 0 112px; color: var(--text-3)">2023</time>
+          <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+            <span style="font-weight: 500">Issuing verifiable credentials with Polygon ID</span>
+            <span style="font-size: 14px; color: var(--text-2)">Polygon DevX Global Tour, Lisbon</span>
+          </span>
+        </li>
+        <li><a class="item" href="https://balio.app/curso/defi/" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
+          <time datetime="2022" style="flex: 0 0 112px; color: var(--text-3)">2022</time>
+          <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+            <span style="font-weight: 500">The DeFi revolution<svg class="ext" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></span>
+            <span style="font-size: 14px; color: var(--text-2); display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px"><span>Online course in Spanish, Balio</span><span aria-hidden="true">·</span><span>30 lessons</span></span>
+          </span>
+        </a></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="edu-h" style="display: flex; flex-direction: column; gap: 16px">
+      <h2 id="edu-h" style="margin: 0; font-size: 14px; font-weight: 500">Education</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 4px 24px">
+        <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2013">2013</time>–<time datetime="2017">2017</time></span>
+        <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+          <span style="font-weight: 500">BSc Computer Science at University of A Coruña</span>
+          <span style="font-size: 14px; color: var(--text-2)">Specialization in software engineering</span>
+        </span>
+      </div>
+    </section>
+
+    <section id="contact" class="contact" aria-labelledby="contact-h" style="display: flex; flex-direction: column; gap: 12px">
+      <h2 id="contact-h" style="margin: 0 0 4px; font-size: 14px; font-weight: 500">Contact</h2>
+      <address>
+      <dl style="display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px">
+        <dt style="flex: 0 0 112px; color: var(--text-3)">Email</dt>
+        <dd style="flex: 1 1 300px; min-width: 0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+          <a href="mailto:eliasgarciadev@gmail.com">eliasgarciadev@gmail.com<svg class="ext" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></a>
+        </dd>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px">
+        <dt style="flex: 0 0 112px; color: var(--text-3)">GitHub</dt>
+        <dd style="flex: 1 1 300px"><a href="https://github.com/elias-garcia">elias-garcia<svg class="ext" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></a></dd>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px">
+        <dt style="flex: 0 0 112px; color: var(--text-3)">LinkedIn</dt>
+        <dd style="flex: 1 1 300px"><a href="https://www.linkedin.com/in/elias-garcia">elias-garcia<svg class="ext" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></a></dd>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px">
+        <dt style="flex: 0 0 112px; color: var(--text-3)">X</dt>
+        <dd style="flex: 1 1 300px"><a href="https://x.com/eliasgarciadev">@eliasgarciadev<svg class="ext" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></a></dd>
+      </div>
+      </dl>
+      </address>
+    </section>
+
+  </main>
+
+  <footer style="margin-top: 96px; border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px)">
+    <div style="max-width: 688px; margin: 0 auto; padding: 12px 24px; min-height: 64px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-3)">
+      <span style="display: flex; align-items: center; gap: 12px">
+        <svg viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: none"><path d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c)"></path><path d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: #000; opacity: 0.3"></path><path d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: #000; opacity: 0.3"></path><path d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: #000; opacity: 0.1"></path><path d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: #000; opacity: 0.1"></path></svg>
+        Elías García, 2026
+      </span>
+      <span class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums"><span><time datetime="15:32">15:32</time> in Portugal</span><span aria-hidden="true">·</span><span>same time as you</span></span>
+    </div>
+  </footer>
+
+
+
+
+  
+    <div style="position: fixed; inset: 0; z-index: var(--z-dialog); display: flex; justify-content: center; align-items: flex-start; padding: 96px 16px 0">
+      <button class="pscrim" aria-label="Close search"></button>
+      <div class="ppanel" role="dialog" aria-label="Search" style="position: relative; width: 100%; max-width: 560px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-overlay); overflow: hidden">
+        <label style="display: flex; align-items: center; gap: 12px; padding: 0 16px 0 16px; height: 56px; border-bottom: 1px solid var(--line)">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" style="fill: none; stroke: var(--text-3); stroke-width: 1.5; flex: none"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5L14 14"></path></svg>
+          <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search posts and projects</span>
+          <button class="pcrumb" aria-label="Back to all results">Download CV</button>
+          <input class="pin" type="text" value="" placeholder="Choose a format" role="combobox" aria-expanded="true" aria-controls="pal-list" aria-activedescendant="pal-0" autocomplete="off">
+          
+          <span class="pk">esc</span>
+        </label>
+        
+        <div id="pal-list" role="listbox" aria-label="Results" style="max-height: min(440px, calc(100vh - 220px)); overflow-y: auto; scrollbar-width: thin; padding: 4px 8px 8px">
+          
+            <div role="group" aria-label="Download CV">
+              <div class="pgrp">Download CV</div>
+              
+                <a class="popt act" id="pal-0" role="option" aria-selected="true" href="#">
+                  <span class="pic" aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h5.5L12 5v8.5H4z"></path><path d="M9.5 2.5V5H12"></path><path d="M6 9.5h4M6 11.5h2.5"></path></svg></span>
+                  <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.35">
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px">PDF</span>
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; color: var(--text-2)">Formatted for reading, printing and sharing</span>
+                  </span>
+                  <span style="font-size: 12px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums">120 KB</span>
+                  <span class="pret" aria-hidden="true">↵</span>
+                </a>
+              
+                <a class="popt " id="pal-1" role="option" aria-selected="false" href="#">
+                  <span class="pic" aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="3.5" width="14" height="9" rx="2"></rect><path d="M3.75 10.25v-4.5h1.25l1.25 1.75 1.25-1.75h1.25v4.5H7.5v-2.75l-1.25 1.6-1.25-1.6v2.75zM11.5 10.5l-1.9-2.15h1.2V5.75h1.4v2.6h1.2z" style="fill: currentColor; stroke: none"></path></svg></span>
+                  <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.35">
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px">Markdown</span>
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; color: var(--text-2)">Plain text for AI tools and agents</span>
+                  </span>
+                  <span style="font-size: 12px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums">4 KB</span>
+                  <span class="pret" aria-hidden="true">↵</span>
+                </a>
+              
+            </div>
+          
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--surface); font-size: 12px; color: var(--text-3)">
+          <span style="display: inline-flex; align-items: center; gap: 4px"><span class="pk">↑</span><span class="pk">↓</span>to move</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px"><span class="pk">↵</span>to open</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px"><span class="pk">esc</span>to go back</span>
+          <span style="margin-left: auto; font-variant-numeric: tabular-nums"></span>
+        </div>
+      </div>
+    </div>
+  
+
+</div>
+</body></html>

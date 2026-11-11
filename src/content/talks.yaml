@@ -1,0 +1,24 @@
+# Talks and courses. An entry with `href` renders as a link; without it, as a plain row.
+# Shown newest year first; entries in the same year are ordered by title.
+polygon-id-profiles:
+  year: 2024
+  title: Preserving privacy with Polygon ID profiles
+  where: House of ZK, EthDenver
+
+getting-started-with-polygon-id:
+  year: 2024
+  title: Getting started with Polygon ID
+  where: Polygon AggCave, EthDenver
+
+issuing-verifiable-credentials:
+  year: 2023
+  title: Issuing verifiable credentials with Polygon ID
+  where: Polygon DevX Global Tour, Lisbon
+
+the-defi-revolution:
+  year: 2022
+  title: The DeFi revolution
+  originalTitle: La revolución DeFi
+  where: Online course in Spanish, Balio
+  detail: 30 lessons
+  href: https://balio.app/curso/defi/

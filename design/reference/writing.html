@@ -1,0 +1,318 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap">
+<style>
+/* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
+   bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
+   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
+:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-slow:250ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent-c:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+
+body{margin:0;background:var(--bg)}
+a{color:var(--text);text-decoration:none}
+a:hover{color:var(--accent-c)}
+.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.site *{box-sizing:border-box}
+.site :focus-visible{outline:2px solid var(--accent-c);outline-offset:3px}
+.site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
+.site p{text-wrap:pretty}
+.nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current],.nav a[aria-current]:hover{color:var(--accent-c)}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform var(--dur-slow) var(--ease-settle)}
+.nav a:hover::after,.nav a[aria-current]::after{transform:scaleX(1);transform-origin:left}
+
+
+/* topic chips share the Home pill: grey at rest, indigo only when selected */
+.topics{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.topic{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 8px 0 12px;border:0;border-radius:var(--r-full);background:var(--control);font:inherit;font-size:13px;color:var(--text-2);cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
+.topic:hover{background:var(--control-hover);color:var(--text)}
+.topic:active{transform:scale(.97)}
+.topic[aria-pressed="true"],.topic[aria-pressed="true"]:hover{background:var(--tint);color:var(--accent-c);font-weight:500}
+.topic .c{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 8px;border-radius:var(--r-full);background:var(--bg);font-size:12px;font-weight:500;color:var(--text-2);font-variant-numeric:tabular-nums;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.topic[aria-pressed="true"] .c{background:var(--accent-c);color:var(--bg)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* list re-enters when the topic changes */
+@keyframes inA{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes inB{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fa .enter{animation:inA var(--dur) var(--ease-settle) both}
+.fb .enter{animation:inB var(--dur) var(--ease-settle) both}
+
+/* rows: the title link covers the whole row; one row, one action */
+.list .item{transition:opacity var(--dur) var(--ease)}
+.list:has(.item:hover) .item:not(:hover){opacity:.45}
+.row{position:relative;display:flex;flex-wrap:wrap;gap:4px 24px;padding:12px 0}
+.gut{flex:0 0 112px;color:var(--text-3);font-variant-numeric:tabular-nums}
+.txt{flex:1 1 300px;min-width:0;display:flex;flex-direction:column}
+.ttl{font-weight:500;color:var(--text)}
+.ttl::after{content:"";position:absolute;inset:0}
+.ttl span{background-image:linear-gradient(currentColor,currentColor);background-size:0% 1px;background-repeat:no-repeat;background-position:0 100%;transition:background-size var(--dur-slow) var(--ease-settle)}
+.row:hover .ttl span{background-size:100% 1px}
+
+
+@media (prefers-reduced-motion:reduce){
+.fa .enter,.fb .enter{animation:none !important}
+.ttl span{transition:none}
+}
+
+.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:13px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
+.kbd:hover{border-color:var(--line-strong);color:var(--text)}
+.kbd:active{transform:scale(.97)}
+
+/* search menu */
+@keyframes palFade{from{opacity:0}}
+@keyframes palPop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
+.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default;animation:palFade var(--dur) var(--ease) both}
+.ppanel{animation:palPop var(--dur) var(--ease-settle) both;transform-origin:top center}
+.pin{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:15px;color:var(--text);background:transparent;height:100%}
+.pin::placeholder{color:var(--text-3)}
+.ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
+.pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
+.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;transition:background var(--dur-fast) var(--ease)}
+.popt:hover{color:var(--text)}
+.popt.act{background:var(--tint)}
+.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease)}
+.popt.act .pic{background:var(--bg);color:var(--accent-c)}
+.pic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.pret{width:16px;font-size:13px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
+.popt.act .pret{opacity:1}
+mark.phl{background:var(--tint-strong);color:var(--text);border-radius:var(--r-sm);padding:0}
+.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:11px;color:var(--text-2);font-family:inherit}
+.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
+.pclear:hover{background:var(--control-hover);color:var(--text)}
+@media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
+
+/* page entrance: the content arrives as one piece, fast; the header never moves */
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
+@keyframes pageFade{from{opacity:0}}
+main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backwards}
+/* between pages: the header stays put, the content cross-fades */
+@view-transition{navigation:auto}
+.site > header{view-transition-name:site-header}
+::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease) both}
+::view-transition-new(root){animation:none}
+@keyframes vtOut{to{opacity:0}}
+::view-transition-group(roleburn-preview){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
+
+
+
+
+/* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:13px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
+.button:hover{background:var(--control-hover);color:var(--text)}
+.button:active{transform:scale(.97)}
+.button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.button svg circle{fill:currentColor;stroke:none}
+
+/* footer sits after the content, and at the bottom of the window when a page is short (never fixed) */
+.site{display:flex;flex-direction:column}
+.site > main{flex:1 0 auto;width:100%}
+.site > footer{width:100%;flex-shrink:0}
+@media (prefers-color-scheme: dark){
+:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent-c:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
+.site{--accent:var(--accent-c) !important}
+img:not([src$=".svg"]){filter:brightness(.92)}
+}
+
+/* final pass: motion and UX polish */
+html{scroll-padding-top:80px}
+::selection{background:var(--tint-strong);color:var(--text)}
+.skip{position:absolute;left:12px;top:-60px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:top var(--dur) var(--ease)}
+.skip:focus{top:12px;color:var(--bg)}
+/* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
+@media (hover: none), (pointer: coarse){
+.list:has(.item:hover) .item:not(:hover){opacity:1}
+.tile:hover .pv,.card:hover .pv{transform:none;border-color:var(--line)}
+.more:hover svg,.card:hover .go svg,.pn:hover svg,.back:hover svg,.next:hover svg{transform:none}
+.more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
+}
+/* phones: search shows just the icon, and pages start closer to the top */
+@media (max-width: 640px){
+.kbd{width:36px;padding:0;justify-content:center}
+.kbd span{display:none}
+.nav{gap:16px !important}
+.site > main{padding-top:48px !important}
+}
+
+/* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:13px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.pcrumb:hover{background:var(--control-hover);color:var(--text)}
+.pret{text-align:center}
+
+/* semantic list + post titles as headings, same look */
+ul.list{list-style:none;margin:0;padding:0}
+.ttlh{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit}
+
+/* touch screens: 44px hit areas without changing how anything looks */
+@media (pointer: coarse){
+.nav a,.more,.topiclink,.factlink,.button,.topic,.kbd,.fn,.back,.contact a,.pcrumb,.pclear{position:relative}
+.nav a::before,.more::before,.topiclink::before,.factlink::before,.button::before,.topic::before,.kbd::before,.fn::before,.back::before,.contact a::before,.pcrumb::before,.pclear::before{content:"";position:absolute;left:0;right:0;top:50%;height:44px;min-width:44px;transform:translate(0,-50%)}
+.fn::before{left:50%;right:auto;width:44px;transform:translate(-50%,-50%)}
+}
+
+/* footer time: Portugal's time and how far it is from the visitor's own clock.
+   Phones keep one row: the offset (the dot and "5h ahead of you") is left out */
+@media (max-width: 640px){.clock > span:nth-child(n+2){display:none}}
+
+/* search is a modal: while it is open the page behind it does not scroll */
+html:has(.pscrim){overflow:hidden}
+</style>
+</head><body>
+
+<div class="site" style="min-height: 100vh; background: var(--bg)">
+  <a class="skip" href="#content">Skip to content</a>
+
+
+  <header style="position: sticky; top: 0; z-index: var(--z-header); background: color-mix(in oklch, var(--bg) 82%, transparent); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line)">
+    <div style="max-width: 688px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px">
+      <a href="Main.dc.html" aria-label="Elías García, home" style="display: flex; align-items: center; height: 44px">
+        <svg viewBox="0 0 35.44 60" width="16.54" height="28" aria-hidden="true" style="display: block; flex: none"><path d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c)"></path><path d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: #000; opacity: 0.3"></path><path d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: #000; opacity: 0.3"></path><path d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: #000; opacity: 0.1"></path><path d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: #000; opacity: 0.1"></path></svg>
+      </a>
+      <nav class="nav" aria-label="Main" style="display: flex; align-items: center; gap: 24px; font-size: 14px">
+        <a href="Main.dc.html">Home</a>
+        <a href="ProjectsIndex.dc.html">Projects</a>
+        <a href="Writing.dc.html" aria-current="page">Writing</a>
+        <button class="kbd" aria-label="Search the site" aria-keyshortcuts="Meta+K Control+K">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" style="fill: none; stroke: currentColor; stroke-width: 1.5"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5L14 14"></path></svg>
+          <span>⌘K</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content" style="max-width: 688px; margin: 0 auto; padding: 80px 24px 0; display: flex; flex-direction: column; gap: 32px">
+
+    <header style="display: flex; flex-direction: column; gap: 20px">
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+          <h1 id="h" style="margin: 0; font-size: 20px; line-height: 1.35; font-weight: 600; letter-spacing: -0.01em">Writing</h1>
+          <a class="button" href="#"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3.5 3a9.5 9.5 0 0 1 9.5 9.5M3.5 7a5.5 5.5 0 0 1 5.5 5.5"></path><circle cx="4" cy="12" r="1.1"></circle></svg>Subscribe</a>
+        </div>
+        <p style="margin: 0; color: var(--text-2); max-width: 52ch">Notes on building products, interfaces for DeFi, and working alongside AI agents.</p>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+        <div class="topics" role="group" aria-label="Filter posts by topic">
+          
+            <button class="topic" aria-pressed="true">All<span class="c">5</span></button>
+          
+            <button class="topic" aria-pressed="false">AI<span class="c">3</span></button>
+          
+            <button class="topic" aria-pressed="false">DeFi<span class="c">1</span></button>
+          
+            <button class="topic" aria-pressed="false">Design engineering<span class="c">1</span></button>
+          
+        </div>
+      </div>
+      <p class="sr" aria-live="polite">Showing all 5 posts</p>
+    </header>
+
+    <div class="" style="display: flex; flex-direction: column; gap: 40px">
+      
+        <section class="enter" style="display: flex; flex-direction: column">
+          <h2 style="margin: 0 0 8px; font-size: 14px; font-weight: 500">2026</h2>
+          <ul class="list" role="list" style="display: flex; flex-direction: column">
+            
+              <li>
+              <article class="row item">
+                <time class="gut" datetime="2026-11-09">Nov 9</time>
+                <div class="txt">
+                  <h3 class="ttlh"><a class="ttl" href="Post.dc.html"><span>Rebuilding this site</span></a></h3>
+                  <span style="font-size: 14px; color: var(--text-2)">Why it stayed one column, and how I spent the motion budget.</span>
+                  <span style="display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 13px; color: var(--text-3)">
+                    <span>Design engineering</span>
+                    <span aria-hidden="true">·</span>
+                    <span>4 min read</span>
+                  </span>
+                </div>
+              </article>
+              </li>
+            
+              <li>
+              <article class="row item">
+                <time class="gut" datetime="2026-10-21">Oct 21</time>
+                <div class="txt">
+                  <h3 class="ttlh"><a class="ttl" href="#"><span>A job radar made of markdown files</span></a></h3>
+                  <span style="font-size: 14px; color: var(--text-2)">How Roleburn runs on a folder of notes and a few scheduled agents.</span>
+                  <span style="display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 13px; color: var(--text-3)">
+                    <span>AI</span>
+                    <span aria-hidden="true">·</span>
+                    <span>6 min read</span>
+                  </span>
+                </div>
+              </article>
+              </li>
+            
+              <li>
+              <article class="row item">
+                <time class="gut" datetime="2026-09-30">Sep 30</time>
+                <div class="txt">
+                  <h3 class="ttlh"><a class="ttl" href="#"><span>From GitHub issue to reviewed pull request</span></a></h3>
+                  <span style="font-size: 14px; color: var(--text-2)">Running my side projects through an agent pipeline with work-issue.</span>
+                  <span style="display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 13px; color: var(--text-3)">
+                    <span>AI</span>
+                    <span aria-hidden="true">·</span>
+                    <span>7 min read</span>
+                  </span>
+                </div>
+              </article>
+              </li>
+            
+              <li>
+              <article class="row item">
+                <time class="gut" datetime="2026-06-12">Jun 12</time>
+                <div class="txt">
+                  <h3 class="ttlh"><a class="ttl" href="#"><span>An exit hatch for DeFi users</span></a></h3>
+                  <span style="font-size: 14px; color: var(--text-2)">Designing a blockchain-only fallback UI for when everything else is down.</span>
+                  <span style="display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 13px; color: var(--text-3)">
+                    <span>DeFi</span>
+                    <span aria-hidden="true">·</span>
+                    <span>8 min read</span>
+                  </span>
+                </div>
+              </article>
+              </li>
+            
+          </ul>
+        </section>
+      
+        <section class="enter" style="display: flex; flex-direction: column">
+          <h2 style="margin: 0 0 8px; font-size: 14px; font-weight: 500">2025</h2>
+          <ul class="list" role="list" style="display: flex; flex-direction: column">
+            
+              <li>
+              <article class="row item">
+                <time class="gut" datetime="2025-12-04">Dec 4</time>
+                <div class="txt">
+                  <h3 class="ttlh"><a class="ttl" href="#"><span>Product data without the engineering queue</span></a></h3>
+                  <span style="font-size: 14px; color: var(--text-2)">Building an MCP server so stakeholders can query product data themselves.</span>
+                  <span style="display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 13px; color: var(--text-3)">
+                    <span>AI</span>
+                    <span aria-hidden="true">·</span>
+                    <span>5 min read</span>
+                  </span>
+                </div>
+              </article>
+              </li>
+            
+          </ul>
+        </section>
+      
+    </div>
+
+  </main>
+
+  <footer style="margin-top: 96px; border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px)">
+    <div style="max-width: 688px; margin: 0 auto; padding: 12px 24px; min-height: 64px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-3)">
+      <span style="display: flex; align-items: center; gap: 12px">
+        <svg viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: none"><path d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c)"></path><path d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: #000; opacity: 0.3"></path><path d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: #000; opacity: 0.3"></path><path d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: #000; opacity: 0.1"></path><path d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: #000; opacity: 0.1"></path></svg>
+        Elías García, 2026
+      </span>
+      <span class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums"><span><time datetime="15:32">15:32</time> in Portugal</span><span aria-hidden="true">·</span><span>same time as you</span></span>
+    </div>
+  </footer>
+
+
+  
+
+</div>
+</body></html>
