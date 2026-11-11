@@ -4,24 +4,30 @@ Temporary. Delete this file when the redesign ships.
 
 ## Build order
 
+One page per step. Each step builds the components that page needs (DESIGN.md §3), reusing the ones earlier steps built, and checks them against `design/reference/components.html` and the page's screenshots in both themes and both widths. Each step ends with the reviewer and a commit.
+
 1. ~~**Setup.**~~ Done: Astro project and tooling, tokens, font, content collections, base layout (head, header, footer, skip link, page transitions) and `npm run a11y`.
-2. **Components** from DESIGN.md §3, each checked against `design/reference/components.html`.
-3. **Pages.** Home, Writing, Post (with the `.md` version and Copy page), Projects, the Roleburn case study, 404.
-4. **Features.** Search dialog (and its header button), Download CV menu, RSS, sitemap, `robots.txt` (allowing AI crawlers, DESIGN.md §7), JSON-LD, share images, analytics.
-5. **Final pass.** Compare every page with its screenshots in both themes and both widths, in `npm run dev` so draft posts show. Tab through each page with the keyboard. Run the accessibility check once against a build that includes drafts.
+2. **Home.** Intro with the Download CV menu (and the generated `/cv.md`), about, project tiles, work experience rows, latest posts, speaking and teaching, education and contact. Components: button, menu button, status label, see-more link, list row, expandable row, project tile, Roleburn illustration (in its tile, with the `roleburn-preview` transition name), metadata line, figure, external-link arrow.
+3. **Writing.** Intro with Subscribe, topic chips, posts grouped by year, and the RSS feed behind Subscribe. Components: chip.
+4. **Post.** The article with its reading progress bar and the `/writing/<slug>.md` version. Components: back link + Copy page, the post-header metadata line (date, topic link, reading time), the prose mapping (headings, links, footnotes, code block, figures for Markdown images), easing demo, author footer, previous/next card.
+5. **Projects.** Intro and the project card grid. Components: project card, reusing the Roleburn illustration.
+6. **Roleburn case study.** Hero, article and the shared transition into the hero from both the Home tile and the Projects card. Components: project facts and the figure placeholder, reusing the back link, code block and previous/next card.
+7. **404.** "Try one of these" rows with the path in the gutter and the broken-link email, reusing the list row.
+8. **Site-wide features.** Search dialog and its header button (with key hints), sitemap, `robots.txt` (allowing AI crawlers, DESIGN.md §7), JSON-LD, share images, analytics.
+9. **Final pass.** Compare every page with its screenshots in both themes and both widths, in `npm run dev` so draft posts show. Tab through each page with the keyboard. Run the accessibility check once against a build that includes drafts.
 
 ## Notes for the next steps
 
-- `src/pages/index.astro` is a placeholder (name and role only) so the layout has a page to render. Step 3 replaces it.
-- MDX files don't import components. Pass `EasingDemo`, `RoleburnHero` and `Figure` (and the prose components) through the `components` prop of `<Content />` when rendering posts and case studies.
-- Code blocks: Shiki already uses `theme: 'css-variables'`; set the `--astro-code-*` variables from tokens when building the code block.
+- `src/pages/index.astro` is a placeholder (name and role only) so the layout has a page to render. Step 2 replaces it.
+- MDX files don't import components. Pass `EasingDemo`, `RoleburnHero` and `Figure` (and the prose components) through the `components` prop of `<Content />` when rendering posts (step 4) and case studies (step 6).
+- Code blocks (step 4): Shiki already uses `theme: 'css-variables'`; set the `--astro-code-*` variables from tokens.
 - Reading time is in `remarkPluginFrontmatter.minutesRead` (a number) from `render(entry)`.
-- `npm run a11y` checks pages only. Add each interactive state (open dialog, open menu) to `scripts/a11y.ts` as the component is built.
+- `npm run a11y` checks pages only. Add each interactive state (open menu, open dialog) to `scripts/a11y.ts` in the step that builds it.
 - When `src/env.d.ts` is added, allow `interface` there in `eslint.config.ts`.
 - TypeScript stays on 6.0 because `@astrojs/check` and `typescript-eslint` don't support 7 yet. Move to 7 once both list it as a supported peer.
 - `npm run a11y` runs in the installed Google Chrome (`channel: "chrome"`), so any machine or CI runner that runs it needs Chrome.
-- Share images (step 4): the page only ships the font as woff2, which Satori cannot read. Give Satori its own font file (woff, ttf or otf) without adding it to the page's `@font-face` rules.
-- To confirm in step 4: the `@vercel/analytics` component works with no adapter. If not, add `@astrojs/vercel` and update CLAUDE.md. Packages still to install then: `@astrojs/sitemap`, `@astrojs/rss`, `@vercel/analytics`, Satori and sharp.
+- Share images (step 8): the page only ships the font as woff2, which Satori cannot read. Give Satori its own font file (woff, ttf or otf) without adding it to the page's `@font-face` rules.
+- Packages to install in the step that needs them: `@astrojs/rss` (step 3); `@astrojs/sitemap`, `@vercel/analytics`, Satori and sharp (step 8). In step 8, confirm the `@vercel/analytics` component works with no adapter. If not, add `@astrojs/vercel` and update CLAUDE.md.
 
 ## Content still missing
 
