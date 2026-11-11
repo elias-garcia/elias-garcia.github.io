@@ -1,77 +1,131 @@
 /* ==========================================================================
    Elías García: design tokens
-   Source of truth for every colour, radius, motion and layer value.
-   Colours come from the zinc and indigo palettes only. Light by default; dark follows
-   the visitor's system setting (prefers-color-scheme). No manual toggle.
-   Components use these tokens, never raw values.
+   Source of truth for every design value. Components use these tokens,
+   never raw values. Colours come from the zinc and indigo palettes only.
+   Light by default; dark follows the visitor's system setting. No toggle.
+   The sans-serif family (--font-sans) comes from Astro's Fonts API.
    ========================================================================== */
 
 :root {
   color-scheme: light dark;
 
-  /* ---- Neutrals (role · light value) ---- */
-  --bg: #FFFFFF;            /* page; also text on indigo fills and on dark popovers   · white    */
-  --surface: #FAFAFA;       /* previews, code blocks, card hover                      · zinc-50  */
-  --control: #F4F4F5;       /* buttons, chips, search icon tiles                      · zinc-100 */
-  --control-hover: #E4E4E7; /* button and chip hover                                  · zinc-200 */
-  --line: #E4E4E7;          /* every border and divider                               · zinc-200 */
-  --line-strong: #D4D4D8;   /* hover borders, illustration strokes                    · zinc-300 */
-  --text: #18181B;          /* titles, names, primary text                            · zinc-900 */
-  --text-2: #52525C;        /* body copy, descriptions, button labels                 · zinc-600 */
-  --text-3: #71717B;        /* dates, metadata, captions. Only on bg/surface, never on control · zinc-500 */
+  /* ---- Neutrals ---- */
+  --bg: #ffffff; /* page; also text on indigo fills and on dark popovers · white */
+  --surface: #fafafa; /* previews, code blocks, card hover · zinc-50 */
+  --control: #f4f4f5; /* buttons, chips, search icon tiles · zinc-100 */
+  --control-hover: #e4e4e7; /* button and chip hover · zinc-200 */
+  --line: #e4e4e7; /* every border and divider · zinc-200 */
+  --line-strong: #d4d4d8; /* hover borders, illustration strokes · zinc-300 */
+  --text: #18181b; /* titles, names, primary text · zinc-900 */
+  --text-2: #52525c; /* body copy, descriptions, button labels · zinc-600 */
+  --text-3: #71717b; /* dates, metadata, captions; only on bg/surface, never on control · zinc-500 */
 
   /* ---- Accent: only for state (current page, selected chip, links in prose) ---- */
-  --accent: #4F39F6;        /* indigo-600 */
-  --tint: #EEF2FF;          /* indigo-50: selected chip, active search row */
-  --tint-strong: #E0E7FF;   /* indigo-100: search match highlight */
-  --accent-line: #A3B3FF;   /* indigo-300: underline under links in prose */
+  --accent: #4f39f6; /* indigo-600 */
+  --tint: #eef2ff; /* indigo-50: selected chip, active search row */
+  --tint-strong: #e0e7ff; /* indigo-100: search match highlight */
+  --accent-line: #a3b3ff; /* indigo-300: underline under links in prose */
 
-  --scrim: rgba(9, 9, 11, .18); /* behind the search dialog */
+  --scrim: rgb(9 9 11 / 0.18); /* behind the search dialog */
+  --header-bg: color-mix(in oklch, var(--bg) 82%, transparent);
+  --header-backdrop: saturate(1.4) blur(12px);
+  --logo-shade: #000000; /* folds in the logo mark, drawn at low opacity */
+  --photo-brightness: 1; /* photos are dimmed in dark mode */
+
+  /* ---- Typography (DESIGN.md §2.2): sizes in rem, from the design's px / 16 ---- */
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-display: 1.75rem; /* 28px: post and case study titles */
+  --text-title: 1.25rem; /* 20px: page titles */
+  --text-heading: 1.125rem; /* 18px: section headings in posts, case study lead */
+  --text-long: 1rem; /* 16px: post and case study paragraphs */
+  --text-body: 0.9375rem; /* 15px: default text */
+  --text-small: 0.875rem; /* 14px: descriptions, section labels, navigation */
+  --text-meta: 0.8125rem; /* 13px: dates, captions, buttons, chips, footer, code */
+  --text-micro: 0.75rem; /* 12px: status labels, counts, key hints */
+
+  --leading-none: 1; /* single-line controls */
+  --leading-display: 1.2;
+  --leading-tight: 1.35;
+  --leading-normal: 1.6;
+  --leading-long: 1.75;
+
+  --tracking-display: -0.02em;
+  --tracking-title: -0.01em;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* ---- Spacing (DESIGN.md §2.3): the 4px grid ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-18: 72px;
+  --space-20: 80px;
+  --space-24: 96px;
 
   /* ---- Radius ---- */
-  --r-sm: 4px;    /* search highlights, key hints, footnote markers */
-  --r-md: 8px;    /* icon tiles, menu and search rows, popovers */
-  --r-lg: 12px;   /* cards, previews, code blocks, menus, search panel */
-  --r-full: 999px;/* buttons, chips, status labels */
+  --r-sm: 4px; /* search highlights, key hints, footnote markers, focus ring on text links */
+  --r-md: 8px; /* icon tiles, menu and search rows, popovers */
+  --r-lg: 12px; /* cards, previews, code blocks, menus, search panel */
+  --r-full: 999px; /* buttons, chips, status labels */
 
   /* ---- Motion: UI feedback never exceeds 250ms ---- */
-  --dur-fast: 100ms;  /* press, search row highlight */
-  --dur: 150ms;       /* hover, colour/opacity, popovers, Download CV menu */
-  --dur-slow: 250ms;  /* page entrance, expanding rows, underline growing */
+  --dur-fast: 100ms; /* press, search row highlight, old page fading out */
+  --dur: 150ms; /* hover, colour/opacity, popovers, Download CV menu */
+  --dur-slow: 250ms; /* page entrance, expanding rows, underline growing */
   --ease: ease-out;
-  --ease-settle: cubic-bezier(.22, 1, .36, 1); /* things arriving */
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1); /* things arriving */
+  --press-scale: 0.97;
+  --entrance-offset: 6px;
 
   /* ---- Elevation and layers ---- */
-  --shadow-overlay: 0 1px 2px rgb(9 9 11 / .04), 0 16px 48px -12px rgb(9 9 11 / .24);
+  --shadow-overlay:
+    0 1px 2px rgb(9 9 11 / 0.04), 0 16px 48px -12px rgb(9 9 11 / 0.24);
   --z-header: 10;
   --z-menu: 30;
   --z-dialog: 50;
   --z-skip: 100;
 
   /* ---- Fixed sizes ---- */
-  --column: 688px;   /* content column: 640px of text + 24px each side */
-  --gutter: 112px;   /* date/label column in list rows */
-  --control-h: 32px; /* buttons and chips */
+  --column: 688px; /* content column: 640px of text + 24px each side */
+  --gutter: 112px; /* date/label column in list rows */
+  --control-h: 32px; /* buttons and chips (minimum) */
+  --bar-h: 64px; /* header and footer (minimum) */
+  --hit-area: 44px; /* touch target on coarse pointers */
   --icon-md: 16px;
-  --icon-sm: 12px;   /* inline markers only: see-more chevron, external arrow */
-  --bar-h: 64px;     /* header and footer */
+  --icon-sm: 12px; /* inline markers only: see-more chevron, external arrow */
+  --logo-h: 28px; /* header logo */
+  --logo-h-sm: 16px; /* footer logo */
+  --hairline: 1px;
+  --focus-ring: 2px;
+  --focus-offset: 3px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #09090B;          /* zinc-950 */
-    --surface: #18181B;     /* zinc-900 */
-    --control: #27272A;     /* zinc-800 */
-    --control-hover: #3F3F46; /* zinc-700 */
-    --line: #27272A;        /* zinc-800 */
-    --line-strong: #3F3F46; /* zinc-700 */
-    --text: #F4F4F5;        /* zinc-100 */
-    --text-2: #D4D4D8;      /* zinc-300 */
-    --text-3: #9F9FA9;      /* zinc-400 */
-    --accent: #7C86FF;      /* indigo-400 */
-    --tint: #1E1A4D;        /* indigo-950 */
-    --tint-strong: #312C85; /* indigo-900 */
-    --accent-line: #432DD7; /* indigo-700 */
-    --scrim: rgba(0, 0, 0, .55);
+    --bg: #09090b; /* zinc-950 */
+    --surface: #18181b; /* zinc-900 */
+    --control: #27272a; /* zinc-800 */
+    --control-hover: #3f3f46; /* zinc-700 */
+    --line: #27272a; /* zinc-800 */
+    --line-strong: #3f3f46; /* zinc-700 */
+    --text: #f4f4f5; /* zinc-100 */
+    --text-2: #d4d4d8; /* zinc-300 */
+    --text-3: #9f9fa9; /* zinc-400 */
+    --accent: #7c86ff; /* indigo-400 */
+    --tint: #1e1a4d; /* indigo-950 */
+    --tint-strong: #312c85; /* indigo-900 */
+    --accent-line: #432dd7; /* indigo-700 */
+    --scrim: rgb(0 0 0 / 0.55);
+    --photo-brightness: 0.92;
   }
 }

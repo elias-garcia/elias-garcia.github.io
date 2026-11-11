@@ -4,38 +4,24 @@ Temporary. Delete this file when the redesign ships.
 
 ## Build order
 
-1. **Setup.** Astro project and tooling, tokens, font, content collections, and the base layout: head (with the app icons from `design/head.html`), header, footer, skip link and page transitions. Add `npm run a11y` here so every later step can be verified.
+1. ~~**Setup.**~~ Done: Astro project and tooling, tokens, font, content collections, base layout (head, header, footer, skip link, page transitions) and `npm run a11y`.
 2. **Components** from DESIGN.md §3, each checked against `design/reference/components.html`.
 3. **Pages.** Home, Writing, Post (with the `.md` version and Copy page), Projects, the Roleburn case study, 404.
-4. **Features.** Search dialog, Download CV menu, RSS, sitemap, JSON-LD, share images, analytics.
+4. **Features.** Search dialog (and its header button), Download CV menu, RSS, sitemap, `robots.txt` (allowing AI crawlers, DESIGN.md §7), JSON-LD, share images, analytics.
 5. **Final pass.** Compare every page with its screenshots in both themes and both widths, in `npm run dev` so draft posts show. Tab through each page with the keyboard. Run the accessibility check once against a build that includes drafts.
 
-## Setup notes
+## Notes for the next steps
 
-Tooling:
-
-- Packages: `@astrojs/mdx`, `@astrojs/sitemap`, `@astrojs/rss`, `@vercel/analytics`, `typescript-eslint`, `eslint-plugin-astro`, `prettier-plugin-astro`, `@axe-core/playwright`, Satori with sharp.
-- Also needed: `@astrojs/check` and `typescript` for `astro check`, and `jiti` for `eslint.config.ts`.
-- Add a `.gitignore`. Ignore `design/`, `.agents/` and `.claude/` in Prettier, ESLint and `tsconfig.json`.
-- URLs: `site`, `trailingSlash: 'never'` and `build.format: 'file'` in `astro.config.ts`; `cleanUrls` and `trailingSlash: false` in `vercel.json`.
-
-Tokens (`src/styles/tokens.css`):
-
-- Add the type scale (DESIGN.md §2.2) and spacing (§2.3). Font sizes in `rem`.
-- Colours with `light-dark()`, following the `modern-web-guidance` dark-mode guide, plus `<meta name="color-scheme" content="light dark">` in the base layout.
-- Apply `--control-h` and `--bar-h` as minimum sizes, and use `dvh`, not `vh`, for the full-height page.
-
-Astro:
-
-- Font: Instrument Sans through the Fonts API, weights 400–600, `styles: ["normal"]`, plus a second format because Satori cannot read WOFF2.
-- Code blocks: Shiki `theme: 'css-variables'`, with the `--astro-code-*` variables set from tokens in `global.css`.
-- Reading time: https://docs.astro.build/en/recipes/reading-time/ (Sätteri tab). Store the minutes as a number so the component formats the label.
-
-To confirm while setting up:
-
-- The `@vercel/analytics` component works with no adapter. If not, add `@astrojs/vercel` and update CLAUDE.md.
-- The schema's `image()` helper resolves `speakingPhoto.src` in `site.yaml`.
-- `astro preview` serves no-trailing-slash URLs the way Vercel will.
+- `src/pages/index.astro` is a placeholder (name and role only) so the layout has a page to render. Step 3 replaces it.
+- MDX files don't import components. Pass `EasingDemo`, `RoleburnHero` and `Figure` (and the prose components) through the `components` prop of `<Content />` when rendering posts and case studies.
+- Code blocks: Shiki already uses `theme: 'css-variables'`; set the `--astro-code-*` variables from tokens when building the code block.
+- Reading time is in `remarkPluginFrontmatter.minutesRead` (a number) from `render(entry)`.
+- `npm run a11y` checks pages only. Add each interactive state (open dialog, open menu) to `scripts/a11y.ts` as the component is built.
+- When `src/env.d.ts` is added, allow `interface` there in `eslint.config.ts`.
+- TypeScript stays on 6.0 because `@astrojs/check` and `typescript-eslint` don't support 7 yet. Move to 7 once both list it as a supported peer.
+- `npm run a11y` runs in the installed Google Chrome (`channel: "chrome"`), so any machine or CI runner that runs it needs Chrome.
+- Share images (step 4): the page only ships the font as woff2, which Satori cannot read. Give Satori its own font file (woff, ttf or otf) without adding it to the page's `@font-face` rules.
+- To confirm in step 4: the `@vercel/analytics` component works with no adapter. If not, add `@astrojs/vercel` and update CLAUDE.md. Packages still to install then: `@astrojs/sitemap`, `@astrojs/rss`, `@vercel/analytics`, Satori and sharp.
 
 ## Content still missing
 

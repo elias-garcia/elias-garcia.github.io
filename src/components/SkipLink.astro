@@ -1,0 +1,26 @@
+<a class="skip" href="#content">
+  Skip to content
+</a>
+
+<style>
+  .skip {
+    position: absolute;
+    inset-block-start: var(--space-3);
+    inset-inline-start: var(--space-3);
+    z-index: var(--z-skip);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--r-full);
+    background: var(--text);
+    color: var(--bg);
+    font-size: var(--text-small);
+    translate: 0 calc(-100% - var(--space-6));
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: translate var(--dur) var(--ease);
+    }
+
+    &:focus {
+      translate: 0 0;
+    }
+  }
+</style>

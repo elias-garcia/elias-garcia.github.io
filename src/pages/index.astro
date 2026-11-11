@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getProfile } from "../lib/content.ts";
+
+const profile = await getProfile();
+const [description = profile.role] = profile.about;
+---
+
+<BaseLayout title={profile.name} description={description}>
+  <header>
+    <h1>{profile.name}</h1>
+    <p>{profile.role}</p>
+  </header>
+</BaseLayout>

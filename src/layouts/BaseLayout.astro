@@ -1,0 +1,85 @@
+---
+import { Font } from "astro:assets";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import SkipLink from "../components/SkipLink.astro";
+import { getProfile } from "../lib/content.ts";
+import { toPath } from "../lib/navigation.ts";
+import "../styles/global.css";
+
+type Props = {
+  title: string;
+  description: string;
+};
+
+const { title, description } = Astro.props;
+const profile = await getProfile();
+const canonical = new URL(toPath(Astro.url.pathname), Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={profile.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_US" />
+
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#ffffff"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#09090b"
+    />
+
+    <Font cssVariable="--font-sans" preload />
+  </head>
+  <body>
+    <SkipLink />
+    <Header name={profile.name} />
+    <main id="content">
+      <slot />
+    </main>
+    <Footer
+      name={profile.name}
+      location={profile.location}
+      timezone={profile.timezone}
+    />
+  </body>
+</html>
+
+<style>
+  main {
+    flex: 1 0 auto;
+    inline-size: 100%;
+    max-inline-size: var(--column);
+    margin-inline: auto;
+    padding: var(--space-20) var(--space-6) 0;
+    animation: page-in var(--dur-slow) var(--ease-settle) backwards;
+
+    @media (width <= 40rem) {
+      padding-block-start: var(--space-12);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: page-fade var(--dur) var(--ease) backwards;
+    }
+  }
+</style>

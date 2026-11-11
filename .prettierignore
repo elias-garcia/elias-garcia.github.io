@@ -1,0 +1,9 @@
+design/
+.agents/
+.claude/
+public/
+dist/
+.astro/
+package-lock.json
+skills-lock.json
+src/content/

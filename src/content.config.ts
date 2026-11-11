@@ -1,0 +1,88 @@
+import { defineCollection } from "astro:content";
+import { file, glob } from "astro/loaders";
+import { z } from "astro/zod";
+
+const link = z.object({
+  label: z.string(),
+  href: z.url(),
+});
+
+const site = defineCollection({
+  loader: file("src/content/site.yaml"),
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      role: z.string(),
+      location: z.string(),
+      timezone: z.string(),
+      availability: z.string(),
+      about: z.array(z.string()),
+      contact: z.array(link.extend({ text: z.string() })),
+      speakingPhoto: z.object({
+        src: image(),
+        alt: z.string(),
+        caption: z.string(),
+      }),
+    }),
+});
+
+const work = defineCollection({
+  loader: file("src/content/work.yaml"),
+  schema: z.object({
+    start: z.number().int(),
+    end: z.number().int().optional(),
+    company: z.string(),
+    about: z.string(),
+    role: z.string(),
+    points: z.array(z.string()),
+  }),
+});
+
+const talks = defineCollection({
+  loader: file("src/content/talks.yaml"),
+  schema: z.object({
+    year: z.number().int(),
+    title: z.string(),
+    originalTitle: z.string().optional(),
+    where: z.string(),
+    detail: z.string().optional(),
+    href: z.url().optional(),
+  }),
+});
+
+const education = defineCollection({
+  loader: file("src/content/education.yaml"),
+  schema: z.object({
+    start: z.number().int(),
+    end: z.number().int(),
+    title: z.string(),
+    school: z.string(),
+    detail: z.string(),
+  }),
+});
+
+const writing = defineCollection({
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/writing" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date(),
+    topic: z.string(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+const projects = defineCollection({
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/projects" }),
+  schema: z.object({
+    title: z.string(),
+    summary: z.string(),
+    description: z.string(),
+    status: z.string(),
+    year: z.number().int(),
+    tags: z.array(z.string()),
+    links: z.array(link),
+  }),
+});
+
+export const collections = { site, work, talks, education, writing, projects };

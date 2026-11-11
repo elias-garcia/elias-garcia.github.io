@@ -1,0 +1,133 @@
+---
+import { currentState, sections } from "../lib/navigation.ts";
+import Logo from "./Logo.astro";
+
+type Props = {
+  name: string;
+};
+
+const { name } = Astro.props;
+const { pathname } = Astro.url;
+---
+
+<header class="header">
+  <div class="bar">
+    <a class="home" href="/" aria-label={`${name}, home`}>
+      <Logo size="md" />
+    </a>
+    <nav aria-label="Main">
+      <ul class="links" role="list">
+        {sections.map(({ label, href }) => (
+          <li>
+            <a
+              class="link"
+              href={href}
+              aria-current={currentState(href, pathname)}
+            >
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--z-header);
+    border-block-end: var(--hairline) solid var(--line);
+    background: var(--header-bg);
+    backdrop-filter: var(--header-backdrop);
+    view-transition-name: site-header;
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    max-inline-size: var(--column);
+    min-block-size: var(--bar-h);
+    margin-inline: auto;
+    padding-inline: var(--space-6);
+  }
+
+  .home {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--hit-area);
+  }
+
+  .links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    font-size: var(--text-small);
+
+    @media (width <= 40rem) {
+      gap: var(--space-4);
+    }
+  }
+
+  .link {
+    position: relative;
+    display: inline-block;
+    color: var(--text-2);
+    transition: color var(--dur) var(--ease);
+
+    &:hover {
+      color: var(--text);
+    }
+
+    &[aria-current] {
+      color: var(--accent);
+    }
+
+    &:focus-visible {
+      border-radius: var(--r-sm);
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      inset-block-end: calc(-1 * var(--space-1));
+      block-size: var(--hairline);
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: right;
+    }
+
+    &[aria-current]::after {
+      transform: scaleX(1);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+    }
+
+    @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+      &::after {
+        transition: transform var(--dur-slow) var(--ease-settle);
+      }
+    }
+
+    @media (pointer: coarse) {
+      &::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 50%;
+        min-inline-size: var(--hit-area);
+        block-size: var(--hit-area);
+        translate: 0 -50%;
+      }
+    }
+  }
+</style>

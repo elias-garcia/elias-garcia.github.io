@@ -52,6 +52,7 @@ Rules:
 - `--control-hover` and `--line` share a value today but are separate roles; never merge them.
 - The header and status labels use `--bg` mixed with transparency (`color-mix(in oklch, var(--bg) 82%, transparent)` for the header), not new colours.
 - In the canvas the accent token was named `--accent-c`; in code it is `--accent`.
+- Photos (every image except SVGs) are dimmed to 92% brightness in dark mode, so they don't glare against the dark background.
 
 ### 2.2 Typography
 
@@ -178,9 +179,9 @@ Each component appears exactly once in the design system. Live versions: `refere
 
 ### Layout
 - **Header.** Sticky, 64px, translucent `--bg` with backdrop blur, hairline at the bottom. Logo (links Home) · Home · Projects · Writing · search button (magnifier + "⌘K", icon only on phones). The current section is `--accent` with a 1px underline; inside a case study or post, its parent (Projects/Writing) is current with `aria-current="true"`; on the page itself `aria-current="page"`. Same on every page.
-- **Footer.** Mirrors the header: 64px bar, hairline on top, content centred; grows only if the two halves wrap. Left: logo + "Elías García, 2026". Right: `<time>12:09</time> in Portugal · 5h ahead of you`. 96px above it; at the bottom of the window on short pages (`.site` is a flex column with `min-height: 100vh`, `main` flexes). Pad the bottom with `env(safe-area-inset-bottom)`.
+- **Footer.** Mirrors the header: 64px bar, hairline on top, content centred; grows only if the two halves wrap. Left: logo + "Elías García, 2026". Right: `<time>12:09</time> in Portugal · 5h ahead of you`. 96px above it; at the bottom of the window on short pages (the body is a flex column with `min-block-size: 100dvh`, `main` flexes).
 - **Footer clock.** Portugal time via `Intl.DateTimeFormat(…, { timeZone: 'Europe/Lisbon' })`, refreshed every 30s. The offset compares with the visitor's clock, rounded to 15 minutes: "same time as you", "5h ahead of you", "5h 30m behind you". Render it client-side. The site is static, so the HTML ships without a time ("Portugal" only) and the script adds it. Hidden on phones.
-- **Skip link.** "Skip to content", hidden until the first Tab, then a dark pill at the top left; jumps to `#content` (or `#top` on Home).
+- **Skip link.** "Skip to content", hidden until the first Tab, then a dark pill at the top left; jumps to `#content`, the same on every page.
 
 ### Actions
 - **Button.** The only action component. 32px, `--control` fill, `--r-full`, 13px label in `--text-2`, optional 16px icon, 8px gap, 12px side padding. Hover `--control-hover`; press scale .97. Never indigo. On a grey surface (the code block) its fill turns `--bg`. Uses: Download CV, Subscribe (Writing), Copy page (posts), Replay and Copy (inside posts).

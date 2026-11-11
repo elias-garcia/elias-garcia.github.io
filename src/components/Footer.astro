@@ -1,0 +1,148 @@
+---
+import Logo from "./Logo.astro";
+
+type Props = {
+  name: string;
+  location: string;
+  timezone: string;
+};
+
+const { name, location, timezone } = Astro.props;
+---
+
+<footer class="footer">
+  <div class="bar">
+    <p class="owner">
+      <Logo size="sm" />
+      <span>
+        {name}
+        <span data-enhanced hidden>
+          , <span data-year></span>
+        </span>
+      </span>
+    </p>
+    <p class="clock" data-timezone={timezone}>
+      <span>
+        <span data-enhanced hidden>
+          <time data-time></time> in{" "}
+        </span>
+        {location}
+      </span>
+      <span class="dot" data-enhanced hidden aria-hidden="true">
+        ·
+      </span>
+      <span class="offset" data-enhanced hidden data-offset></span>
+    </p>
+  </div>
+</footer>
+
+<script>
+  const clock = document.querySelector<HTMLElement>("[data-timezone]");
+  const timeZone = clock?.dataset["timezone"];
+  const year = document.querySelector("[data-year]");
+  const time = document.querySelector("time[data-time]");
+  const offset = document.querySelector("[data-offset]");
+
+  function utcOffsetMinutes(date: Date, zone: string): number {
+    const name = new Intl.DateTimeFormat("en", {
+      timeZone: zone,
+      timeZoneName: "longOffset",
+    })
+      .formatToParts(date)
+      .find((part) => part.type === "timeZoneName")?.value;
+    const [, sign = "+", hours = "0", minutes = "0"] =
+      /GMT([+-])(\d{2}):(\d{2})/.exec(name ?? "") ?? [];
+    return (sign === "-" ? -1 : 1) * (Number(hours) * 60 + Number(minutes));
+  }
+
+  function describe(minutes: number): string {
+    if (minutes === 0) {
+      return "same time as you";
+    }
+    const hours = Math.floor(Math.abs(minutes) / 60);
+    const rest = Math.abs(minutes) % 60;
+    const amount = [
+      hours > 0 && `${String(hours)}h`,
+      rest > 0 && `${String(rest)}m`,
+    ]
+      .filter(Boolean)
+      .join(" ");
+    return `${amount} ${minutes > 0 ? "ahead of" : "behind"} you`;
+  }
+
+  function update(zone: string): void {
+    const now = new Date();
+    const portugal = new Intl.DateTimeFormat("en-GB", {
+      timeZone: zone,
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(now);
+    if (time instanceof HTMLTimeElement) {
+      time.dateTime = portugal;
+      time.textContent = portugal;
+    }
+    if (offset !== null) {
+      offset.textContent = describe(
+        utcOffsetMinutes(now, zone) + now.getTimezoneOffset(),
+      );
+    }
+  }
+
+  if (year !== null) {
+    year.textContent = String(new Date().getFullYear());
+  }
+  if (timeZone !== undefined) {
+    update(timeZone);
+    setInterval(update, 30_000, timeZone);
+  }
+  for (const element of document.querySelectorAll("[data-enhanced]")) {
+    element.removeAttribute("hidden");
+  }
+</script>
+
+<style>
+  .footer {
+    flex-shrink: 0;
+    margin-block-start: var(--space-24);
+    border-block-start: var(--hairline) solid var(--line);
+    color: var(--text-3);
+    font-size: var(--text-meta);
+    animation: page-in var(--dur-slow) var(--ease-settle) backwards;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: page-fade var(--dur) var(--ease) backwards;
+    }
+  }
+
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-4);
+    max-inline-size: var(--column);
+    min-block-size: var(--bar-h);
+    margin-inline: auto;
+    padding: var(--space-3) var(--space-6);
+  }
+
+  .owner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .clock {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-variant-numeric: tabular-nums;
+
+    @media (width <= 40rem) {
+      .dot,
+      .offset {
+        display: none;
+      }
+    }
+  }
+</style>

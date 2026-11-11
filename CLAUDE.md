@@ -6,7 +6,7 @@ Personal site of Elías García at eliasgarcia.dev: Home, Projects with case stu
 
 - `design/DESIGN.md`: the specification. Read it before any UI work. `design/screenshots/` and `design/reference/*.html` show the expected result; rebuild as components, never paste their markup. `design/` is reference only: the site never imports from it.
 - `src/styles/tokens.css`: all design values.
-- `PLAN.md`: build order, setup notes and open items for the redesign. Temporary.
+- `PLAN.md`: build order, notes for the next steps and open items for the redesign. Temporary.
 - The `modern-web-guidance` skill: general web platform practice (HTML, CSS, accessibility, performance). This file does not repeat it.
 - The Astro docs, through the `astro-docs` MCP server. Astro changes between major versions: check the docs before using an Astro API.
 
@@ -88,6 +88,7 @@ design/         # design handoff (reference only)
 ## Process
 
 - Committing, pushing and deploying always need an explicit ask. Pushing to `main` deploys to production.
+- Before committing, run the `reviewer` agent (`.claude/agents/reviewer.md`) on the changes. Fix every "must fix" finding, or explain why not.
 - Conventional commits, one logical change per commit.
 - New dependencies only when the task needs them. Always install the latest version.
 - No secrets in the repo, and no third-party scripts without a clear reason.
