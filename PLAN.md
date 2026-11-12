@@ -30,10 +30,6 @@ One page per step. Each step builds the components that page needs (DESIGN.md §
 - 404 page (step 7): Lighthouse audits it for SEO too. If it gets `noindex`, add `"autodiscoverUrlBlocklist": ["/404.html"]` to `collect` in `lighthouserc.json` and say so in CLAUDE.md, or the SEO check fails.
 - Packages to install in the step that needs them: `@astrojs/sitemap`, `@vercel/analytics`, Satori and sharp (step 8). In step 8, confirm the `@vercel/analytics` component works with no adapter. If not, add `@astrojs/vercel` and update CLAUDE.md.
 
-## Open decisions
-
-- An image inside `<Figure caption="…">` (a Markdown image as its content) gets Astro's default `sizes` (`(min-width: 1600px) 1600px, 100vw`), so desktops download more than the 640px column needs. The alternative is importing the image and passing it to `<Figure src={…}>`, but the `import` line would then appear in the Copy page Markdown. Decide before the final pass.
-
 ## Content still missing
 
 - The posts marked `draft: true`.

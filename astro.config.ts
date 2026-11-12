@@ -24,8 +24,8 @@ export default defineConfig({
       transformers: [transformerNotationHighlight()],
     },
   },
-  // Markdown images get a responsive srcset (their sizes: PLAN.md, Open
-  // decisions); components set their own.
+  // Markdown images get a responsive srcset, with sizes from their own
+  // dimensions; components set their own.
   image: {
     layout: "constrained",
     responsiveStyles: true,
