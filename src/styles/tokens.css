@@ -38,8 +38,6 @@
   --scrim: rgb(9 9 11 / 0.18); /* behind the search dialog */
   --header-bg: color-mix(in oklch, var(--bg) 82%, transparent);
   --header-backdrop: saturate(1.4) blur(12px);
-  --status-bg: color-mix(in oklch, var(--bg) 92%, transparent);
-  --status-backdrop: blur(4px);
   --logo-shade: #000000; /* folds in the logo mark, drawn at low opacity */
   --photo-brightness: 1; /* photos are dimmed in dark mode */
 
@@ -62,7 +60,6 @@
   --leading-long: 1.75;
 
   --measure: 62ch; /* longest comfortable line for running text */
-  --measure-short: 52ch; /* page intro lines */
 
   --tracking-display: -0.02em;
   --tracking-title: -0.01em;
@@ -136,8 +133,7 @@
   --code-bar-h: 48px; /* code block header */
   --demo-label: 72px; /* label column in the easing demo */
   --runner: 16px; /* easing demo dot */
-  --dot: 8px; /* availability dot */
-  --tile-min: 180px; /* narrowest project tile before the grid wraps */
+  --dot: 8px; /* availability and project status dots */
   --row-basis: 300px; /* text column next to the gutter; wraps below it when narrower */
   --nudge-sm: 1px; /* external arrow nudge and baseline offset */
   --nudge: 2px; /* see-more chevron nudge, tile lift */

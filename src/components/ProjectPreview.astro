@@ -5,12 +5,12 @@ import Roleburn from "./illustrations/Roleburn.astro";
 import WorkIssue from "./illustrations/WorkIssue.astro";
 
 type Props = {
-  id: string;
   illustration: CollectionEntry<"projects">["data"]["illustration"];
-  status: string;
+  // The featured card on Projects: 16:7 from 640px (every preview is 16:7 below it).
+  wide?: boolean;
 };
 
-const { id, illustration, status } = Astro.props;
+const { illustration, wide = false } = Astro.props;
 
 const illustrations = {
   roleburn: Roleburn,
@@ -21,19 +21,25 @@ const illustrations = {
 const Illustration = illustrations[illustration];
 ---
 
-<div class="preview" data-preview={id}>
-  <Illustration />
-  <span class="status">{status}</span>
+<div class:list={["preview", { wide }]}>
+  {illustration === "roleburn" ? <Roleburn wide={wide} /> : <Illustration />}
 </div>
 
 <style>
   .preview {
-    position: relative;
-    aspect-ratio: 4 / 3;
     overflow: hidden;
+    aspect-ratio: 4 / 3;
     border: var(--hairline) solid var(--line);
     border-radius: var(--r-lg);
     background: var(--surface);
+
+    &.wide {
+      aspect-ratio: 16 / 7;
+    }
+
+    @media (width < 40rem) {
+      aspect-ratio: 16 / 7;
+    }
 
     :global(.illustration) {
       display: block;
@@ -42,24 +48,33 @@ const Illustration = illustrations[illustration];
     }
   }
 
-  /* The Roleburn preview morphs into the case study hero (DESIGN.md §2.5). */
-  [data-preview="roleburn"] {
-    view-transition-name: roleburn-preview;
+  /* Inside a link (a tile or card), the preview reacts to it, and the
+     illustration only moves while the link is hovered or focused. */
+  .preview :global([data-loop]) {
+    animation-play-state: paused;
   }
 
-  .status {
-    position: absolute;
-    inset-block-start: var(--space-3);
-    inset-inline-start: var(--space-3);
-    display: inline-flex;
-    align-items: center;
-    min-block-size: var(--space-6);
-    padding-inline: var(--space-2);
-    border: var(--hairline) solid var(--line);
-    border-radius: var(--r-full);
-    background: var(--status-bg);
-    color: var(--text-2);
-    font-size: var(--text-micro);
-    backdrop-filter: var(--status-backdrop);
+  :global(a:is(:hover, :focus-visible)) > .preview :global([data-loop]) {
+    animation-play-state: running;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    :global(a:hover) > .preview {
+      translate: 0 calc(-1 * var(--nudge));
+      border-color: var(--line-strong);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(a) > .preview {
+      transition:
+        translate var(--dur) var(--ease-settle),
+        scale var(--dur-fast) var(--ease),
+        border-color var(--dur) var(--ease);
+    }
+
+    :global(a:active) > .preview {
+      scale: var(--press-scale-tile);
+    }
   }
 </style>

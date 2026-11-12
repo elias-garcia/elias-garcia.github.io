@@ -44,12 +44,14 @@ const links = [
 <style>
   .previous-next {
     display: grid;
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(min(var(--row-basis), 100%), 1fr)
-    );
     gap: var(--space-4);
     margin-block-start: var(--space-2);
+
+    /* Side by side from 640px; a card on its own takes the full width. */
+    @media (width >= 40rem) {
+      grid-auto-columns: minmax(0, 1fr);
+      grid-auto-flow: column;
+    }
   }
 
   .card {

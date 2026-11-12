@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { hasCaseStudy } from "../lib/content.ts";
 import ProjectPreview from "./ProjectPreview.astro";
+import ProjectStatus from "./ProjectStatus.astro";
 
 type Props = {
   project: CollectionEntry<"projects">;
@@ -13,13 +14,12 @@ const Tag = href === undefined ? "div" : "a";
 ---
 
 <li class="cell">
-  <Tag class:list={["tile", { "tile-link": href !== undefined }]} href={href}>
-    <ProjectPreview
-      id={project.id}
-      illustration={project.data.illustration}
-      status={project.data.status}
-    />
-    <h3 class="title">{project.data.title}</h3>
+  <Tag class="tile" href={href}>
+    <ProjectPreview illustration={project.data.illustration} />
+    <div class="head">
+      <h3 class="title">{project.data.title}</h3>
+      <ProjectStatus status={project.data.status} year={project.data.year} />
+    </div>
     <p class="summary">{project.data.summary}</p>
   </Tag>
 </li>
@@ -33,14 +33,24 @@ const Tag = href === undefined ? "div" : "a";
     align-content: start;
   }
 
+  /* The tile sets its own row gap, so the page's grid gap only spaces
+     tiles apart. */
   .tile {
+    row-gap: var(--space-2);
+
     :global(.preview) {
-      margin-block-end: var(--space-3);
+      margin-block-end: var(--space-2);
     }
 
-    @media (width <= 40rem) {
+    @media (width < 40rem) {
       padding-block-end: var(--space-5);
     }
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
   }
 
   .title {
@@ -55,36 +65,7 @@ const Tag = href === undefined ? "div" : "a";
     font-size: var(--text-small);
   }
 
-  /* Illustrations only move while their tile is hovered or focused. */
-  .tile :global([data-loop]) {
-    animation-play-state: paused;
-  }
-
-  .tile-link:is(:hover, :focus-visible) :global([data-loop]) {
-    animation-play-state: running;
-  }
-
-  .tile-link:focus-visible {
+  .tile:focus-visible {
     border-radius: var(--r-lg);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .tile-link:hover :global(.preview) {
-      translate: 0 calc(-1 * var(--nudge));
-      border-color: var(--line-strong);
-    }
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .tile-link :global(.preview) {
-      transition:
-        translate var(--dur) var(--ease-settle),
-        scale var(--dur-fast) var(--ease),
-        border-color var(--dur) var(--ease);
-    }
-
-    .tile-link:active :global(.preview) {
-      scale: var(--press-scale-tile);
-    }
   }
 </style>

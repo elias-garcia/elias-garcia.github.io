@@ -1,4 +1,7 @@
 # Titles and intro lines for the listing pages.
+projects:
+  title: Projects
+  intro: "Things I build for myself: tools I use every day, experiments with agents, and research I want to share."
 writing:
   title: Writing
   intro: Notes on building products, interfaces for DeFi, and working alongside AI agents.

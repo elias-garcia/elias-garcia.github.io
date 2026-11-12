@@ -1,0 +1,42 @@
+---
+import PageIntro from "../components/PageIntro.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPage, getProjects } from "../lib/content.ts";
+
+const [page, projects] = await Promise.all([
+  getPage("projects"),
+  getProjects(),
+]);
+// With an odd count, the first project spans both columns.
+const wide = projects.length % 2 === 1;
+---
+
+<BaseLayout title={page.title} description={page.intro}>
+  <div class="projects">
+    <PageIntro title={page.title} intro={page.intro} />
+    <ul class="grid" role="list">
+      {projects.map((project, index) => (
+        <ProjectCard project={project} wide={wide && index === 0} />
+      ))}
+    </ul>
+  </div>
+</BaseLayout>
+
+<style>
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2) var(--space-6);
+
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

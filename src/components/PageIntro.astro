@@ -1,0 +1,47 @@
+---
+import PageTitle from "./PageTitle.astro";
+
+type Props = {
+  title: string;
+  intro: string;
+};
+
+const { title, intro } = Astro.props;
+---
+
+<header class="page-intro">
+  <div class="heading">
+    <div class="title-row">
+      <PageTitle>{title}</PageTitle>
+      <slot name="action" />
+    </div>
+    <p>{intro}</p>
+  </div>
+  <slot />
+</header>
+
+<style>
+  .page-intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+
+    p {
+      color: var(--text-2);
+    }
+  }
+
+  .title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+</style>

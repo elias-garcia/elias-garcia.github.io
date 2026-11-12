@@ -1,0 +1,45 @@
+---
+import type { CollectionEntry } from "astro:content";
+import MetaItem from "./MetaItem.astro";
+import MetaLine from "./MetaLine.astro";
+
+type Props = Pick<CollectionEntry<"projects">["data"], "status" | "year">;
+
+const { status, year } = Astro.props;
+---
+
+<p class="status">
+  <MetaLine>
+    <MetaItem>
+      <span class="stage">
+        {status === "In progress" && <span class="dot" aria-hidden="true" />}
+        {status}
+      </span>
+    </MetaItem>
+    <MetaItem>
+      <time datetime={String(year)}>{year}</time>
+    </MetaItem>
+  </MetaLine>
+</p>
+
+<style>
+  .status {
+    color: var(--text-3);
+    font-size: var(--text-meta);
+  }
+
+  .stage {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  /* Static on purpose: pulsing is reserved for "Open to remote roles". */
+  .dot {
+    flex: none;
+    inline-size: var(--dot);
+    block-size: var(--dot);
+    border-radius: 50%;
+    background: var(--accent);
+  }
+</style>

@@ -55,7 +55,11 @@ export async function getEducation() {
 
 export async function getProjects() {
   const projects = await getCollection("projects");
-  return projects.sort((a, b) => byYearThenTitle(a.data, b.data));
+  const inProgress = (project: CollectionEntry<"projects">) =>
+    project.data.status === "In progress" ? 0 : 1;
+  return projects.sort(
+    (a, b) => inProgress(a) - inProgress(b) || byYearThenTitle(a.data, b.data),
+  );
 }
 
 export function hasCaseStudy(project: CollectionEntry<"projects">): boolean {

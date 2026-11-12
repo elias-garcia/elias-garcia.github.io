@@ -61,7 +61,7 @@ design/         # design handoff (reference only)
 - Page transitions are the browser's cross-document View Transitions, in CSS. Never add `<ClientRouter />`.
 - The build is a snapshot. Never render the current time, the current year or anything relative to "now" into HTML: ship a stable fallback and let a script fill it in.
 - Every content file is a collection with a schema in `content.config.ts`. Use the generated types (`CollectionEntry<'writing'>`); don't redeclare them.
-- Collections come back in no fixed order, so always sort: posts by date, newest first; everything else by year, newest first, then by title (for work and education the year is `start`).
+- Collections come back in no fixed order, so always sort: posts by date, newest first; everything else by year, newest first, then by title (for work and education the year is `start`), with projects in progress before the rest.
 - Generated files (CV, RSS, post Markdown…) are static endpoints in `src/pages/`.
 - Images go through `astro:assets`. Component props are declared with `type Props`. Dates, money, units (like file sizes) and other locale-dependent values are formatted with `Intl`; plain counts are not.
 

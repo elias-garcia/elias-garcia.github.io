@@ -65,7 +65,7 @@ a:hover{color:var(--accent-c)}
 .more:hover svg{transform:translateX(2px)}
 /* tiles share rows (preview, title, description): a long title never pushes its neighbours out of line */
 .tiles .tile{display:grid;grid-template-rows:subgrid;grid-row:span 3;align-content:start}
-@media (max-width:640px){.tiles .tile{padding-bottom:20px}}
+@media (max-width: 639.98px){.tiles .tile{padding-bottom:20px}}
 .tile .pv{margin-bottom:12px}
 .tile .tt{font-weight:500;line-height:1.35;text-wrap:balance}
 .tile .td{font-size:14px;color:var(--text-2);line-height:1.6}
@@ -162,7 +162,7 @@ html{scroll-padding-top:80px}
 .more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
 }
 /* phones: search shows just the icon, and pages start closer to the top */
-@media (max-width: 640px){
+@media (max-width: 639.98px){
 .kbd{width:36px;padding:0;justify-content:center}
 .kbd span{display:none}
 .nav{gap:16px !important}
@@ -205,16 +205,16 @@ address{font-style:normal}
 .fn::before{left:50%;right:auto;width:44px;transform:translate(-50%,-50%)}
 }
 
-/* work rows: date, text and + on one line; on phones the + stays beside the date and the text drops below */
+/* work rows: date, text and + on one line; below Tailwind sm (640px) the + stays beside the date and the text drops below */
 .jobhead{display:grid;grid-template-columns:112px minmax(0,1fr) auto;grid-template-areas:"date text icon";column-gap:24px;row-gap:4px;align-items:start}
 .jobhead > :nth-child(1){grid-area:date}
 .jobhead > :nth-child(2){grid-area:text}
 .jobhead > .chev{grid-area:icon}
-@media (max-width: 640px){.jobhead{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"date icon" "text text"}}
+@media (max-width: 639.98px){.jobhead{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"date icon" "text text"}}
 
 /* footer time: Portugal's time and how far it is from the visitor's own clock.
    Phones keep one row: the offset (the dot and "5h ahead of you") is left out */
-@media (max-width: 640px){.clock > span:nth-child(n+2){display:none}}
+@media (max-width: 639.98px){.clock > span:nth-child(n+2){display:none}}
 
 /* external-link arrow: a 12px icon like the see-more chevron, quieter than the text, nudging toward where it goes */
 .ext{display:inline-block;width:12px;height:12px;margin-left:4px;vertical-align:-1px;flex:none;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
@@ -223,13 +223,37 @@ a:hover .ext,a:focus-visible .ext{stroke:currentColor}
 @media (prefers-reduced-motion:reduce){.ext{transition:none}a:hover .ext{transform:none}}
 
 /* intro photo: 104px matches the height of the name, title and button row beside it; phones stack it above the text at 80px */
-@media (max-width: 640px){.avbox{width:80px !important;height:80px !important}}
+@media (max-width: 639.98px){.avbox{width:80px !important;height:80px !important}}
 
 /* search is a modal: while it is open the page behind it does not scroll */
 html:has(.pscrim){overflow:hidden}
 
 /* jumping to a #link scrolls smoothly (heading anchors, footnotes, back links, skip link); instant with reduced motion */
 @media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
+
+/* project tiles: one per row with wide 16:7 previews below Tailwind sm (640px), three in a row from sm. No two-column stage, so no orphan tile */
+ul.tiles{grid-template-columns:minmax(0,1fr)}
+@media (min-width: 640px){ul.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width: 639.98px){.tile .pv{aspect-ratio:16 / 7 !important}}
+
+/* below Tailwind sm (640px): one tile per row, so previews use the wide 16:7 shape (illustrations stay at their desktop size on phones),
+   and the intro photo always sits above the name at 80px; from sm it sits beside it at 104px */
+@media (max-width: 639.98px){
+div:has(> .avbox){flex-direction:column !important;align-items:flex-start !important;gap:16px !important}
+}
+
+
+/* work rows: below Tailwind sm the open row drops its empty date column, so the bullets start under the company name like the header does */
+@media (max-width: 639.98px){.jobgut{display:none}}
+
+/* project status: a 13px line under the title ("In progress · 2026"), never a pill on the preview.
+   Text carries the meaning; a small static indigo dot marks projects that are in progress (no pulse: pulsing is kept for "Open to remote roles") */
+.thead{display:flex;flex-direction:column;gap:4px;min-width:0}
+.sm{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:13px;line-height:1.6;color:var(--text-3)}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--accent-c);flex:none}
+
+/* tiles: 8px between the status line and the description, as on Projects (the tile grid rows are only 4px apart) */
+.tile .thead{padding-bottom:4px}
 </style>
 </head><body>
 
@@ -286,7 +310,7 @@ html:has(.pscrim){overflow:hidden}
         <h2 id="projects-h" style="margin: 0; font-size: 14px; font-weight: 500">Projects</h2>
         <a class="more" href="ProjectsIndex.dc.html"><span>All projects</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"></path></svg></a>
       </div>
-      <ul class="tiles" role="list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr)); gap: 4px 20px">
+      <ul class="tiles" role="list" style="display: grid; gap: 4px 20px">
 
         <li>
         <a class="tile" href="Project.dc.html">
@@ -303,9 +327,8 @@ html:has(.pscrim){overflow:hidden}
               <circle cx="110" cy="120" r="2.5" class="miss"></circle>
               <circle cx="54" cy="70" r="2.5" class="miss"></circle>
             </svg>
-            <span class="st">In progress</span>
           </div>
-          <h3 class="tt">Roleburn</h3>
+          <div class="thead"><h3 class="tt">Roleburn</h3><p class="sm"><span class="sdot" aria-hidden="true"></span><span>In progress</span><span aria-hidden="true">·</span><time datetime="2026">2026</time></p></div>
           <span class="td">A daily radar for remote roles that match my CV.</span>
         </a>
         </li>
@@ -325,9 +348,8 @@ html:has(.pscrim){overflow:hidden}
               <line x1="32" y1="106" x2="168" y2="106" class="track"></line>
               <circle cx="32" cy="106" r="4" class="runner anim"></circle>
             </svg>
-            <span class="st">Experiment</span>
           </div>
-          <h3 class="tt">work-issue</h3>
+          <div class="thead"><h3 class="tt">work-issue</h3><p class="sm"><span>Experiment</span><span aria-hidden="true">·</span><time datetime="2026">2026</time></p></div>
           <span class="td">An agent pipeline from GitHub issue to reviewed pull request.</span>
         </a>
         </li>
@@ -342,9 +364,8 @@ html:has(.pscrim){overflow:hidden}
               <text x="186" y="50" class="tag" style="text-anchor: end">grvt</text>
               <text x="186" y="122" class="tag" style="text-anchor: end">ApeX</text>
             </svg>
-            <span class="st">Research</span>
           </div>
-          <h3 class="tt">POL funding spreads</h3>
+          <div class="thead"><h3 class="tt">POL funding spreads</h3><p class="sm"><span>Research</span><span aria-hidden="true">·</span><time datetime="2026">2026</time></p></div>
           <span class="td">Funding-rate arbitrage on POL perpetuals across DEXes.</span>
         </a>
         </li>
@@ -368,7 +389,7 @@ html:has(.pscrim){overflow:hidden}
             <div class="jobbody">
               <div style="min-height: 0; overflow: hidden">
                 <div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px">
-                  <span style="flex: 0 0 112px"></span>
+                  <span class="jobgut" style="flex: 0 0 112px"></span>
                   <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
                     <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px">
                       
@@ -400,7 +421,7 @@ html:has(.pscrim){overflow:hidden}
             <div class="jobbody">
               <div style="min-height: 0; overflow: hidden">
                 <div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px">
-                  <span style="flex: 0 0 112px"></span>
+                  <span class="jobgut" style="flex: 0 0 112px"></span>
                   <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
                     <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px">
                       
@@ -430,7 +451,7 @@ html:has(.pscrim){overflow:hidden}
             <div class="jobbody">
               <div style="min-height: 0; overflow: hidden">
                 <div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px">
-                  <span style="flex: 0 0 112px"></span>
+                  <span class="jobgut" style="flex: 0 0 112px"></span>
                   <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
                     <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px">
                       
@@ -456,7 +477,7 @@ html:has(.pscrim){overflow:hidden}
             <div class="jobbody">
               <div style="min-height: 0; overflow: hidden">
                 <div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px">
-                  <span style="flex: 0 0 112px"></span>
+                  <span class="jobgut" style="flex: 0 0 112px"></span>
                   <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
                     <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px">
                       
@@ -484,7 +505,7 @@ html:has(.pscrim){overflow:hidden}
             <div class="jobbody">
               <div style="min-height: 0; overflow: hidden">
                 <div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px">
-                  <span style="flex: 0 0 112px"></span>
+                  <span class="jobgut" style="flex: 0 0 112px"></span>
                   <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
                     <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px">
                       
@@ -614,7 +635,7 @@ html:has(.pscrim){overflow:hidden}
         <svg viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: none"><path d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c)"></path><path d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: #000; opacity: 0.3"></path><path d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: #000; opacity: 0.3"></path><path d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: #000; opacity: 0.1"></path><path d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: #000; opacity: 0.1"></path></svg>
         Elías García, 2026
       </span>
-      <span class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums"><span><time datetime="21:41">21:41</time> in Portugal</span><span aria-hidden="true">·</span><span>same time as you</span></span>
+      <span class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums"><span><time datetime="11:46">11:46</time> in Portugal</span><span aria-hidden="true">·</span><span>same time as you</span></span>
     </div>
   </footer>
 

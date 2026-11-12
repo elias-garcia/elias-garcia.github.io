@@ -1,0 +1,145 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { hasCaseStudy } from "../lib/content.ts";
+import ProjectPreview from "./ProjectPreview.astro";
+import ProjectStatus from "./ProjectStatus.astro";
+
+type Props = {
+  project: CollectionEntry<"projects">;
+  // The first project spans the grid from 640px when the count is odd.
+  wide: boolean;
+};
+
+const { project, wide } = Astro.props;
+const { title, description, status, year, illustration } = project.data;
+const href = hasCaseStudy(project) ? `/projects/${project.id}` : undefined;
+const Tag = href === undefined ? "div" : "a";
+---
+
+<li class:list={["cell", { wide }]}>
+  <Tag class="card" href={href}>
+    <ProjectPreview illustration={illustration} wide={wide} />
+    <div class="head">
+      <div class="title-row">
+        <h2 class="title">{title}</h2>
+        {href !== undefined && (
+          <span class="go">
+            View project
+            <svg viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M4.5 3l3 3-3 3"></path>
+            </svg>
+          </span>
+        )}
+      </div>
+      <ProjectStatus status={status} year={year} />
+    </div>
+    <p class="description">{description}</p>
+  </Tag>
+</li>
+
+<style>
+  .cell,
+  .card {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    align-content: start;
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+
+  /* The card sets its own row gap, so the page's grid gap only spaces
+     cards apart. */
+  .card {
+    row-gap: var(--space-2);
+    padding-block-end: var(--space-10);
+
+    :global(.preview) {
+      margin-block-end: var(--space-2);
+    }
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-1) var(--space-4);
+  }
+
+  .title {
+    font-size: inherit;
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-tight);
+    text-wrap: balance;
+
+    @media (width >= 40rem) {
+      .wide & {
+        font-size: var(--text-heading);
+        letter-spacing: var(--tracking-title);
+      }
+    }
+  }
+
+  .description {
+    max-inline-size: var(--measure);
+    color: var(--text-2);
+    font-size: var(--text-small);
+  }
+
+  .go {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--text-2);
+    font-size: var(--text-meta);
+    transition: color var(--dur) var(--ease);
+
+    @media (width < 40rem) {
+      display: none;
+    }
+  }
+
+  svg {
+    inline-size: var(--icon-sm);
+    block-size: var(--icon-sm);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* The title follows the link colour; the label turns with it. */
+  .card {
+    &:focus-visible {
+      border-radius: var(--r-lg);
+      color: var(--accent);
+    }
+
+    &:is(:hover, :focus-visible) .go {
+      color: var(--accent);
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .card:hover svg {
+      translate: var(--nudge) 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    svg {
+      transition: translate var(--dur) var(--ease-settle);
+    }
+  }
+</style>

@@ -1,19 +1,79 @@
-<svg class="illustration" viewBox="0 0 200 150" aria-hidden="true">
-  <circle cx="100" cy="75" r="56" class="ring"></circle>
-  <circle cx="100" cy="75" r="36" class="ring"></circle>
-  <circle cx="100" cy="75" r="16" class="ring"></circle>
+---
+type Props = {
+  // The featured card on Projects: the same radar in a 16:7 drawing.
+  wide?: boolean;
+};
+
+const { wide = false } = Astro.props;
+
+const drawings = {
+  standard: {
+    viewBox: "0 0 200 150",
+    center: [100, 75],
+    rings: [56, 36, 16],
+    wedge: "M100 75 L100 19 A56 56 0 0 1 148.5 47 Z",
+    hits: [
+      [128, 44],
+      [70, 100],
+    ],
+    misses: [
+      [134, 96],
+      [78, 48],
+      [110, 120],
+      [54, 70],
+    ],
+  },
+  wide: {
+    viewBox: "0 0 280 124",
+    center: [140, 62],
+    rings: [52, 34, 16],
+    wedge: "M140 62 L140 10 A52 52 0 0 1 185 36 Z",
+    hits: [
+      [166, 34],
+      [112, 86],
+    ],
+    misses: [
+      [172, 84],
+      [118, 38],
+      [148, 104],
+      [96, 58],
+    ],
+  },
+} as const;
+
+const { viewBox, center, rings, wedge, hits, misses } =
+  drawings[wide ? "wide" : "standard"];
+const [centerX, centerY] = center;
+---
+
+<svg
+  class:list={["illustration", { wide }]}
+  viewBox={viewBox}
+  aria-hidden="true"
+>
+  {rings.map((radius) => (
+    <circle cx={centerX} cy={centerY} r={radius} class="ring" />
+  ))}
   <g class="sweep" data-loop>
-    <path class="wedge" d="M100 75 L100 19 A56 56 0 0 1 148.5 47 Z"></path>
+    <path class="wedge" d={wedge}></path>
   </g>
-  <circle cx="128" cy="44" r="3.5" class="hit"></circle>
-  <circle cx="70" cy="100" r="3.5" class="hit"></circle>
-  <circle cx="134" cy="96" r="2.5" class="miss"></circle>
-  <circle cx="78" cy="48" r="2.5" class="miss"></circle>
-  <circle cx="110" cy="120" r="2.5" class="miss"></circle>
-  <circle cx="54" cy="70" r="2.5" class="miss"></circle>
+  {hits.map(([x, y]) => (
+    <circle cx={x} cy={y} r="3.5" class="hit" />
+  ))}
+  {misses.map(([x, y]) => (
+    <circle cx={x} cy={y} r="2.5" class="miss" />
+  ))}
 </svg>
 
 <style>
+  /* Below 640px every card is equal: both drawings fill a 16:7 preview by
+     height, so 124 / 150 brings the wide one to the standard one's scale. */
+  .wide {
+    @media (width < 40rem) {
+      scale: calc(124 / 150);
+    }
+  }
+
   .ring {
     fill: none;
     stroke: var(--line);
@@ -28,6 +88,10 @@
   .sweep {
     transform-box: view-box;
     transform-origin: 100px 75px;
+
+    .wide & {
+      transform-origin: 140px 62px;
+    }
 
     @media (prefers-reduced-motion: no-preference) {
       animation: sweep 3s linear infinite;

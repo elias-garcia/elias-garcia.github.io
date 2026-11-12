@@ -66,7 +66,7 @@ a:hover{color:var(--accent-c)}
 .more:hover svg{transform:translateX(2px)}
 /* tiles share rows (preview, title, description): a long title never pushes its neighbours out of line */
 .tiles .tile{display:grid;grid-template-rows:subgrid;grid-row:span 3;align-content:start}
-@media (max-width:640px){.tiles .tile{padding-bottom:20px}}
+@media (max-width: 639.98px){.tiles .tile{padding-bottom:20px}}
 .tile .pv{margin-bottom:12px}
 .tile .tt{font-weight:500;line-height:1.35;text-wrap:balance}
 .tile .td{font-size:14px;color:var(--text-2);line-height:1.6}
@@ -163,7 +163,7 @@ html{scroll-padding-top:80px}
 .more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
 }
 /* phones: search shows just the icon, and pages start closer to the top */
-@media (max-width: 640px){
+@media (max-width: 639.98px){
 .kbd{width:36px;padding:0;justify-content:center}
 .kbd span{display:none}
 .nav{gap:16px !important}
@@ -326,7 +326,7 @@ html{scroll-padding-top:80px}
 .more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
 }
 /* phones: search shows just the icon, and pages start closer to the top */
-@media (max-width: 640px){
+@media (max-width: 639.98px){
 .kbd{width:36px;padding:0;justify-content:center}
 .kbd span{display:none}
 .nav{gap:16px !important}
@@ -446,7 +446,7 @@ html{scroll-padding-top:80px}
 .more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
 }
 /* phones: search shows just the icon, and pages start closer to the top */
-@media (max-width: 640px){
+@media (max-width: 639.98px){
 .kbd{width:36px;padding:0;justify-content:center}
 .kbd span{display:none}
 .nav{gap:16px !important}
@@ -458,7 +458,7 @@ html{scroll-padding-top:80px}
 .pcrumb:hover{background:var(--control-hover);color:var(--text)}
 .pret{text-align:center}
 
-/* project facts: Year · Status · Links. One row on desktop; on phones Links takes the full width */
+/* project facts: Year · Status · Links in three columns; below Tailwind sm (640px) Links takes the full width */
 .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 24px}
 .fact{display:flex;flex-direction:column;gap:4px;min-width:0}
 .fact dt{font-size:13px;color:var(--text-3)}
@@ -466,7 +466,7 @@ html{scroll-padding-top:80px}
 .fact.links dd{display:flex;flex-wrap:wrap;gap:4px 16px}
 .factlink{color:var(--text);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px;transition:text-decoration-color var(--dur) var(--ease)}
 .factlink:hover,.factlink:focus-visible{text-decoration-color:currentColor}
-@media (max-width: 640px){.facts{grid-template-columns:1fr 1fr}.fact.links{grid-column:1 / -1}}
+@media (max-width: 639.98px){.facts{grid-template-columns:1fr 1fr}.fact.links{grid-column:1 / -1}}
 
 
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
@@ -490,7 +490,7 @@ a:hover{color:var(--accent-c)}
 
 
 /* grid: two columns, one on narrow screens; the newest spans when the count is odd */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:8px 24px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:8px 24px}
 .card.wide{grid-column:1 / -1}
 .card.wide .pv{aspect-ratio:16 / 7}
 
@@ -603,7 +603,7 @@ html{scroll-padding-top:80px}
 .more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
 }
 /* phones: search shows just the icon, and pages start closer to the top */
-@media (max-width: 640px){
+@media (max-width: 639.98px){
 .kbd{width:36px;padding:0;justify-content:center}
 .kbd span{display:none}
 .nav{gap:16px !important}
@@ -744,7 +744,7 @@ html{scroll-padding-top:80px}
 .more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
 }
 /* phones: search shows just the icon, and pages start closer to the top */
-@media (max-width: 640px){
+@media (max-width: 639.98px){
 .kbd{width:36px;padding:0;justify-content:center}
 .kbd span{display:none}
 .nav{gap:16px !important}
@@ -758,7 +758,7 @@ html{scroll-padding-top:80px}
 /* post meta: each dot stays with the item after it, so a line never ends on a dot; phones use the short date */
 .meta .grp{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
 .dshort{display:none}
-@media (max-width: 640px){.dlong{display:none}.dshort{display:inline}}
+@media (max-width: 639.98px){.dlong{display:none}.dshort{display:inline}}
 
 /* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
 .pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:13px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
@@ -798,16 +798,16 @@ html{scroll-padding-top:80px}
 }
 
 
-/* work rows: date, text and + on one line; on phones the + stays beside the date and the text drops below */
+/* work rows: date, text and + on one line; below Tailwind sm (640px) the + stays beside the date and the text drops below */
 .jobhead{display:grid;grid-template-columns:112px minmax(0,1fr) auto;grid-template-areas:"date text icon";column-gap:24px;row-gap:4px;align-items:start}
 .jobhead > :nth-child(1){grid-area:date}
 .jobhead > :nth-child(2){grid-area:text}
 .jobhead > .chev{grid-area:icon}
-@media (max-width: 640px){.jobhead{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"date icon" "text text"}}
+@media (max-width: 639.98px){.jobhead{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"date icon" "text text"}}
 
 /* footer time: Portugal's time and how far it is from the visitor's own clock.
    Phones keep one row: the offset (the dot and "5h ahead of you") is left out */
-@media (max-width: 640px){.clock > span:nth-child(n+2){display:none}}
+@media (max-width: 639.98px){.clock > span:nth-child(n+2){display:none}}
 
 /* external-link arrow: a 12px icon like the see-more chevron, quieter than the text, nudging toward where it goes */
 .ext{display:inline-block;width:12px;height:12px;margin-left:4px;vertical-align:-1px;flex:none;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
@@ -831,6 +831,41 @@ a:hover .ext,a:focus-visible .ext{stroke:currentColor}
 .tk-c{color:var(--code-comment);font-style:italic}
 .tk-p{color:var(--code-punct)}
 .codeblock .line:empty::after{content:"\200b"}
+
+/* project tiles: one per row with wide 16:7 previews below Tailwind sm (640px), three in a row from sm. No two-column stage, so no orphan tile */
+ul.tiles{grid-template-columns:minmax(0,1fr)}
+@media (min-width: 640px){ul.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width: 639.98px){.tile .pv{aspect-ratio:16 / 7 !important}}
+
+/* project cards: one column on phones, two from Tailwind sm (640px); with an odd count the newest spans both */
+@media (min-width: 640px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* work rows: below Tailwind sm the open row drops its empty date column, so the bullets start under the company name like the header does */
+@media (max-width: 639.98px){.jobgut{display:none}}
+
+/* project status: a 13px line under the title ("In progress · 2026"), never a pill on the preview.
+   Text carries the meaning; a small static indigo dot marks projects that are in progress (no pulse: pulsing is kept for "Open to remote roles") */
+.thead{display:flex;flex-direction:column;gap:4px;min-width:0}
+.sm{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:13px;line-height:1.6;color:var(--text-3)}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--accent-c);flex:none}
+
+/* project card call to action: a label on the title's line ("View project" on every card) whose chevron nudges forward on hover, like the see-more links.
+   The whole card is one link; on hover or focus the title and the label turn indigo together. Below Tailwind sm (640px) the label and arrow are hidden: the title has the whole row and the card itself is the link */
+.trow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 16px;min-width:0}
+.trow .ct{min-width:0}
+.trow .go{display:inline-flex;align-items:center;gap:4px;flex:none;font-size:13px;white-space:nowrap;color:var(--text-2);transition:color var(--dur) var(--ease)}
+.garrow{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
+.card:focus-visible .trow .go{color:var(--accent-c)}
+@media (hover: hover) and (pointer: fine){
+.card:hover .trow .go{color:var(--accent-c)}
+.card:hover .garrow{transform:translateX(2px)}
+}
+@media (max-width: 639.98px){.trow .go{display:none}}
+@media (prefers-reduced-motion:reduce){.garrow{transition:none}.card:hover .garrow{transform:none}}
+
+/* tiles: 8px between the status line and the description, as on Projects (the tile grid rows are only 4px apart) */
+.tile .thead{padding-bottom:4px}
 </style>
 </head><body>
 <div class="site">
@@ -1008,7 +1043,7 @@ a:hover .ext,a:focus-visible .ext{stroke:currentColor}
              <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column"><span style="font-weight: 500">Vesu</span><span style="font-size: 14px; color: var(--text-2)">Engineering Lead</span></span>
              <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
            </button>
-           <div class="jobbody"><div style="min-height: 0; overflow: hidden"><div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px"><span style="flex: 0 0 112px"></span>
+           <div class="jobbody"><div style="min-height: 0; overflow: hidden"><div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px"><span class="jobgut" style="flex: 0 0 112px"></span>
              <ul style="flex: 1 1 300px; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px"><li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Led engineering from launch to $84.6M in customer assets.</li><li style="font-size: 14px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative"><span aria-hidden="true" style="position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong)"></span>Built the real-time event-ingestion pipeline and a public API.</li></ul>
            </div></div></div>
          </li>
@@ -1025,12 +1060,12 @@ a:hover .ext,a:focus-visible .ext{stroke:currentColor}
   <section class="spec" aria-labelledby="c-tile">
     <div class="spec-h">
       <h3 id="c-tile">Project tile</h3>
-      <p class="spec-u">Preview with a status label, title, one line. Titles line up across tiles.</p>
+      <p class="spec-u">Preview, title, the status line under it, one line of description. Titles line up across tiles.</p>
       <p class="spec-w">Used on: Home</p>
       
     </div>
     <div class="demo">
-<ul class="tiles" role="list" style="display: grid; grid-template-columns: 1fr; max-width: 240px"><li>
+<ul class="tiles" role="list" style="display: grid; grid-template-columns: 1fr; gap: 4px 20px; max-width: 240px"><li>
         <a class="tile" href="Project.dc.html">
           <div class="pv" style="position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden; view-transition-name: roleburn-preview">
             <svg class="ill" viewBox="0 0 200 150" aria-hidden="true">
@@ -1045,9 +1080,8 @@ a:hover .ext,a:focus-visible .ext{stroke:currentColor}
               <circle cx="110" cy="120" r="2.5" class="miss"></circle>
               <circle cx="54" cy="70" r="2.5" class="miss"></circle>
             </svg>
-            <span class="st">In progress</span>
-          </div>
-          <h3 class="tt">Roleburn</h3>
+            </div>
+          <div class="thead"><h3 class="tt">Roleburn</h3><p class="sm"><span class="sdot" aria-hidden="true"></span><span>In progress</span><span aria-hidden="true">·</span><time datetime="2026">2026</time></p></div>
           <span class="td">A daily radar for remote roles that match my CV.</span>
         </a>
         </li></ul>
@@ -1056,16 +1090,16 @@ a:hover .ext,a:focus-visible .ext{stroke:currentColor}
   <section class="spec" aria-labelledby="c-card">
     <div class="spec-h">
       <h3 id="c-card">Project card</h3>
-      <p class="spec-u">Bigger preview, title, description, tags as plain text. The newest spans the full width when the count is odd.</p>
+      <p class="spec-u">Preview, title with “View project” on its line (desktop only), the status line, description. The newest spans the full width when the count is odd (desktop only); on phones all cards are equal.</p>
       <p class="spec-w">Used on: Projects</p>
       
     </div>
     <div class="demo">
-<ul class="grid" role="list" style="grid-template-columns: 1fr; max-width: 360px"><li class="">
-      <a class="card " href="Project.dc.html">
+<ul class="grid" role="list" style="grid-template-columns: 1fr; max-width: 360px"><li>
+      <a class="card" href="Project.dc.html">
         <div class="pv" style="view-transition-name: roleburn-preview">
           <svg class="ill" viewBox="0 0 200 150" aria-hidden="true">
-            <g transform="translate(0 13)">
+            <g transform="">
               <circle cx="100" cy="62" r="52" class="ring"></circle>
               <circle cx="100" cy="62" r="34" class="ring"></circle>
               <circle cx="100" cy="62" r="16" class="ring"></circle>
@@ -1078,27 +1112,25 @@ a:hover .ext,a:focus-visible .ext{stroke:currentColor}
               <circle cx="56" cy="58" r="2.5" class="miss"></circle>
             </g>
           </svg>
-          <span class="st"><span>In progress, <time datetime="2026">2026</time></span></span>
+          
         </div>
-        <h2 class="ct" style="margin: 0; font-size: 18px; font-weight: 500; letter-spacing: -0.01em">Roleburn</h2>
+        <div class="thead"><div class="trow"><h2 class="ct" style="margin: 0; font-size: 15px; font-weight: 500">Roleburn</h2><span class="go"><span class="gl">View project</span><svg class="garrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M4.5 3l3 3-3 3"></path></svg></span></div><p class="sm"><span class="sdot" aria-hidden="true"></span><span>In progress</span><span aria-hidden="true">·</span><time datetime="2026">2026</time></p></div>
         <p class="cd" style="margin: 0; font-size: 14px; color: var(--text-2); max-width: 62ch">A daily radar for remote roles in Web3, payments and AI that match my CV. A folder of markdown files plus scheduled agents in Claude Cowork, soon open source.</p>
-        <div class="cm" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
-          <span class="tags">Claude Cowork, Markdown, Agents</span>
-          <span class="go"><span>Read the case study</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"></path></svg></span>
-        </div>
+        
       </a>
       </li></ul>
     </div>
   </section>
   <section class="spec" aria-labelledby="c-status">
     <div class="spec-h">
-      <h3 id="c-status">Status label</h3>
-      <p class="spec-u">A small static label on a preview’s corner. Text only, 12px; it is never clickable.</p>
-      <p class="spec-w">Used on: project tiles and cards</p>
+      <h3 id="c-status">Project status</h3>
+      <p class="spec-u">A 13px grey line under the project’s title: the stage, a dot, the year. Only “In progress” gets the 8px indigo dot, which never pulses (pulsing is kept for “Open to remote roles”). The text always carries the meaning; the dot is decorative.</p>
+      <p class="spec-w">Used on: project tiles (Home) and project cards (Projects)</p>
     </div>
     <div class="demo">
-<div style="position: relative; width: 240px; height: 96px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface)"><span class="st">In progress</span></div>
-     <div style="position: relative; width: 240px; height: 96px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface)"><span class="st"><span>Experiment, <time datetime="2026">2026</time></span></span></div>
+<p class="sm"><span class="sdot" aria-hidden="true"></span><span>In progress</span><span aria-hidden="true">·</span><time datetime="2026">2026</time></p>
+<p class="sm"><span>Experiment</span><span aria-hidden="true">·</span><time datetime="2026">2026</time></p>
+<p class="sm"><span>Research</span><span aria-hidden="true">·</span><time datetime="2026">2026</time></p>
     </div>
   </section>
   <section class="spec" aria-labelledby="c-pn">

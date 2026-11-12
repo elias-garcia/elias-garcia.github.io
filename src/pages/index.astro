@@ -47,7 +47,7 @@ const newestJob = work[0]?.id;
           src={avatar}
           alt={profile.name}
           widths={[80, 104, 160, 208]}
-          sizes="(width <= 40rem) 80px, 104px"
+          sizes="(width < 40rem) 80px, 104px"
           loading="eager"
           fetchpriority="high"
         />
@@ -174,7 +174,7 @@ const newestJob = work[0]?.id;
     align-items: center;
     gap: var(--space-6);
 
-    @media (width <= 40rem) {
+    @media (width < 40rem) {
       flex-direction: column;
       align-items: flex-start;
     }
@@ -188,7 +188,7 @@ const newestJob = work[0]?.id;
     background: var(--control);
     object-fit: cover;
 
-    @media (width <= 40rem) {
+    @media (width < 40rem) {
       inline-size: var(--avatar-sm);
       block-size: var(--avatar-sm);
     }
@@ -272,11 +272,12 @@ const newestJob = work[0]?.id;
 
   .tiles {
     display: grid;
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(min(var(--tile-min), 100%), 1fr)
-    );
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-1) var(--space-5);
+
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 
   .contact {

@@ -14,7 +14,7 @@ import List from "./List.astro";
 import ListRow from "./ListRow.astro";
 import MetaItem from "./MetaItem.astro";
 import MetaLine from "./MetaLine.astro";
-import PageTitle from "./PageTitle.astro";
+import PageIntro from "./PageIntro.astro";
 import VisuallyHidden from "./VisuallyHidden.astro";
 
 type Props = {
@@ -39,21 +39,15 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
 ---
 
 <div class="writing">
-  <header class="intro">
-    <div class="heading">
-      <div class="title-row">
-        <PageTitle>{page.title}</PageTitle>
-        <Button href="/rss.xml" {...linkTarget("/rss.xml")}>
-          <svg viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M3.5 3a9.5 9.5 0 0 1 9.5 9.5M3.5 7a5.5 5.5 0 0 1 5.5 5.5"></path>
-            <circle cx="4" cy="12" r="1.1"></circle>
-          </svg>
-          Subscribe
-          <VisuallyHidden>{newTabNote}</VisuallyHidden>
-        </Button>
-      </div>
-      <p>{page.intro}</p>
-    </div>
+  <PageIntro title={page.title} intro={page.intro}>
+    <Button slot="action" href="/rss.xml" {...linkTarget("/rss.xml")}>
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M3.5 3a9.5 9.5 0 0 1 9.5 9.5M3.5 7a5.5 5.5 0 0 1 5.5 5.5"></path>
+        <circle cx="4" cy="12" r="1.1"></circle>
+      </svg>
+      Subscribe
+      <VisuallyHidden>{newTabNote}</VisuallyHidden>
+    </Button>
     <nav class="topics" aria-label="Filter posts by topic">
       <Chip
         label="All"
@@ -70,7 +64,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
         />
       ))}
     </nav>
-  </header>
+  </PageIntro>
 
   <div class="years">
     {[...years].map(([year, yearRows]) => (
@@ -105,31 +99,6 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
     display: flex;
     flex-direction: column;
     gap: var(--space-8);
-  }
-
-  .intro {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
-  }
-
-  .heading {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-
-    p {
-      max-inline-size: var(--measure-short);
-      color: var(--text-2);
-    }
-  }
-
-  .title-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
   }
 
   .topics {

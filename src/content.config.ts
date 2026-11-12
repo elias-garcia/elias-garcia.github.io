@@ -80,9 +80,8 @@ const projects = defineCollection({
     summary: z.string(),
     description: z.string(),
     illustration: z.enum(["roleburn", "work-issue", "pol-funding-spreads"]),
-    status: z.string(),
+    status: z.enum(["In progress", "Experiment", "Research"]),
     year: z.number().int(),
-    tags: z.array(z.string()),
     links: z.array(link),
   }),
 });

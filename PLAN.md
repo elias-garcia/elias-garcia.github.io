@@ -7,18 +7,17 @@ Temporary. Delete this file when the redesign ships.
 One page per step. Each step builds the components that page needs (DESIGN.md §3), reusing the ones earlier steps built, and checks them against `design/reference/components.html` and the page's screenshots in both themes and both widths. Each step ends with the reviewer and a commit.
 
 1. ~~**Setup.**~~ Done: Astro project and tooling, tokens, font, content collections, base layout (head, header, footer, skip link, page transitions) and `npm run a11y`.
-2. ~~**Home.**~~ Done. Intro with the Download CV menu (and the generated `/cv.md`), about, project tiles, work experience rows, latest posts, speaking and teaching, education and contact. Components: button, menu button, status label, see-more link, list row, expandable row, project tile, Roleburn illustration (in its tile, with the `roleburn-preview` transition name), metadata line, figure, external-link arrow.
+2. ~~**Home.**~~ Done. Intro with the Download CV menu (and the generated `/cv.md`), about, project tiles, work experience rows, latest posts, speaking and teaching, education and contact. Components: button, menu button, see-more link, list row, expandable row, project tile, Roleburn illustration (in its tile), metadata line, figure, external-link arrow.
 3. ~~**Writing.**~~ Done. Intro with Subscribe, topic chips, posts grouped by year, and the RSS feed behind Subscribe. Components: chip.
 4. ~~**Post.**~~ Done. The article with its reading progress bar and the `/writing/<slug>.md` version. Components: back link + Copy page, the post-header metadata line (date, topic link, reading time), the prose (every Markdown element, footnotes with their Notes section, code blocks with the indigo theme, the Note callout and details), easing demo, author footer, previous/next card.
-5. **Projects.** Intro and the project card grid. Components: project card, reusing the Roleburn illustration.
-6. **Roleburn case study.** Hero, article and the shared transition into the hero from both the Home tile and the Projects card. Components: project facts and the figure placeholder, reusing the back link, code block and previous/next card.
-7. **404.** "Try one of these" rows with the path in the gutter and the broken-link email, reusing the list row.
+5. ~~**Projects.**~~ Done. Intro and the project card grid (from 640px, the first project spans both columns when the count is odd). Components: project card, project status line (also on the Home tiles) and page intro (shared with Writing), reusing the project illustrations.
+6. **Roleburn case study.** Hero, article and the shared transition into the hero from both the Home tile and the Projects card. Give the preview its transition name only on navigations to or from the case study (for example in `pageswap`/`pagereveal`), so Home and Projects don't morph into each other. Components: project facts and the figure placeholder, reusing the back link, code block and previous/next card.
+7. **404.** The page intro with "404" above the title, "Try one of these" rows with the path in the gutter and the broken-link email, reusing the list row.
 8. **Site-wide features.** Search dialog and its header button (with key hints), sitemap, `robots.txt` (allowing AI crawlers, DESIGN.md §7), JSON-LD, share images, analytics.
 9. **Final pass.** Compare every page with its screenshots in both themes and both widths, in `npm run dev` so draft posts show. Tab through each page with the keyboard. Run the accessibility check once against a build that includes drafts.
 
 ## Notes for the next steps
 
-- The project illustrations in `src/components/illustrations/` are drawn for the Home tile (200×150). The Projects cards (step 5) use a wider drawing of the same idea; check `design/reference/projects.html`.
 - MDX files don't import components. Render them with `<Content components={mdxComponents} />` inside `Prose`, as the post page does; `src/components/mdx/index.ts` maps Markdown elements to components and lists the components posts can use. The case study (step 6) adds `RoleburnHero` to that map.
 - `src/content/writing/prose.mdx` is a draft with every prose element (`/writing/prose` in `npm run dev`). Check it against `design/reference/prose.html` whenever prose or code styles change.
 - Reading time: use `getReadingMinutes(post)` from `src/lib/content.ts`.

@@ -48,7 +48,7 @@ The **zinc** and **indigo** palettes only, 14 tokens, each with a light and a da
 Rules:
 - `--text-3` sits only on `--bg` or `--surface`, never on `--control` (4.4:1 in light mode, below AA).
 - `--control-hover` and `--line` share a value today but are separate roles; never merge them.
-- The header and status labels use `--bg` mixed with transparency (`color-mix(in oklch, var(--bg) 82%, transparent)` for the header), not new colours.
+- The header uses `--bg` mixed with transparency (`color-mix(in oklch, var(--bg) 82%, transparent)`), not new colours.
 - In the canvas the accent token was named `--accent-c`; in code it is `--accent`.
 - Photos (every image except SVGs) are dimmed to 92% brightness in dark mode, so they don't glare against the dark background.
 
@@ -66,7 +66,7 @@ One family, **Instrument Sans** (Google Fonts, via Astro's Fonts API), weights 4
 | Body | 15 · 400/500 · 1.6 | 0 | Default text; list and card titles at 500 (1.35) | `p`, `h3` |
 | Small | 14 · 400/500 · 1.6 | 0 | Descriptions; section labels at 500 | `p`, `h2` |
 | Meta | 13 · 400 · 1.6 | 0 | Dates, captions, buttons, chips, footer | `time`, `figcaption` |
-| Micro | 12 · 400/500 · 1.35 | 0 | Status labels, chip counts, footnote markers, key hints, menu descriptions | `span` |
+| Micro | 12 · 400/500 · 1.35 | 0 | Chip counts, footnote markers, key hints, menu descriptions | `span` |
 | Code | 13 · 400 · 1.75 | 0 | Code blocks | `pre`, `code` |
 
 Nothing a visitor reads is below 12px. Labels inside the decorative project illustrations (9–11px, one 22px number) are part of the drawings and hidden from screen readers.
@@ -100,7 +100,7 @@ A 4px grid. Every padding, margin, gap and offset is a multiple of 4. Only 1–2
 | `--r-sm` | 4px | Search highlights, key hints, footnote markers, focus ring on text links |
 | `--r-md` | 8px | Icon tiles, menu and search rows |
 | `--r-lg` | 12px | Cards, previews, code blocks, menus, the search panel |
-| `--r-full` | 999px | Buttons, chips, status labels |
+| `--r-full` | 999px | Buttons, chips |
 
 Circles (avatar, dots) use 50%. The keyboard focus ring follows the shape of whatever is focused.
 
@@ -162,13 +162,14 @@ Icons always sit next to a text label, or carry an accessible name when alone. D
 | Home avatar | 104px desktop, 80px on phones |
 | Touch hit area | 44px on `pointer: coarse` for every link and control (visible size unchanged) |
 
-One breakpoint: **640px**. At ≤640px:
+One breakpoint, **640px** (Tailwind's `sm`), and nothing else: no other media queries, no container queries. Phone rules apply below it (`width < 40rem`). Grids use explicit column counts per breakpoint, never `auto-fit`/`minmax` (that creates in-between column counts and orphaned items). Below 640px (phones, and narrow tablets or windows):
 - the header search shows only its icon (no "⌘K");
 - pages start 48px below the header instead of 80px;
 - the footer drops the offset ("· 5h ahead of you") and keeps one row;
-- the Home avatar is 80px and sits above the intro text;
-- work rows put the + beside the date and the company/role below;
+- the Home avatar is 80px and sits above the intro text, left-aligned with it; from 640px it is 104px beside the text;
+- work rows put the + beside the date and the company/role below, and an open row's bullets start under the company name (the empty 112px date column is dropped);
 - the post meta uses the short date ("Nov 9, 2026");
+- Home project tiles and Projects cards go to one per row with 16:7 previews, every card equal (see Components).
 
 ---
 
@@ -186,19 +187,24 @@ Each component appears exactly once in the design system. Live versions: `refere
 - **Button.** The only action component. 32px, `--control` fill, `--r-full`, 13px label in `--text-2`, optional 16px icon, 8px gap, 12px side padding. Hover `--control-hover`; press scale .97. Never indigo. On a grey surface (the code block) its fill turns `--bg`. Uses: Download CV, Subscribe (Writing), Copy page (posts), Replay and Copy (inside posts).
 - **Menu button: Download CV.** Label + chevron (no leading icon); the chevron rotates 180° while open. Opens a 320px menu under the button (`--r-lg`, `--shadow-overlay`, scale .97→1 from the top-left over 150ms). Two links in the search-row style: **PDF · 120 KB**, "Formatted for reading, printing and sharing" and **Markdown · 4 KB**, "Plain text for AI tools and agents". It is a short list of links in a popover, not a `role="menu"`: Tab moves through the links. Esc or choosing a format closes it and returns focus to the button; a click outside or tabbing past the last link closes it and leaves focus where the visitor moved it. File sizes are computed at build time.
 - **Chip.** A set of links that filters a list (Writing topics), each to its own page. 32px, `--control`, label + count badge. Selected (`aria-current="page"`): `--tint` fill, `--accent` label, count badge `--accent` fill with `--bg` text. Never alone, never for actions. "All" first, selected on `/writing`.
-- **See-more link.** Muted 14px text + 12px chevron; on hover the text darkens, an underline grows left→right and the chevron nudges 2px. Only for pages inside the site ("All projects", "All posts", "Read the case study").
+- **See-more link.** Muted 14px text + 12px chevron; on hover the text darkens, an underline grows left→right and the chevron nudges 2px. Only for pages inside the site ("All projects", "All posts").
 - **Back link + Copy page.** Top of posts: "‹ Writing" on the left, **Copy page** button on the right with the Markdown mark icon; label changes to "Copied" for 1.5s; `aria-label="Copy page as Markdown"`. Copies the post's Markdown (generate it at build time from the MDX).
 - **External-link arrow.** A 12px arrow icon (`M4.5 3.5h4v4M8.5 3.5l-5 5`), 4px after the word, `--text-3` stroke, link colour on hover and a 1px up-right nudge (pointer devices only). Only on standalone links that leave the site: contact rows, the course row, project facts. Links inside prose never get it. Screen readers hear the link text, plus "(opens in a new tab)" when the link opens one.
 
 ### Lists and cards
 - **List row.** 112px date gutter (`<time>` in `--text-3`), title 15/500, one 14px line in `--text-2`, 12px vertical padding, no dividers. Rows are `<li>` in a `<ul role="list">`. When one row is hovered, the other link rows fade to .45 (pointer devices only). The fade covers the whole list the row belongs to: on Writing that is every post across all year groups (the years are one list split by headings; scope the rule to the container of the year groups); on Home each section (Writing, Speaking and teaching, Work) fades only its own rows. **A row is a link only if it has somewhere to go; otherwise it is a plain row**: not an `<a>`, no hover, not focusable.
 - **Expandable row (work experience).** A native `<details>` whose `<summary>` holds the date, company (500) + role, and a + icon that rotates to ×. The body's height animates open (250ms) where the browser supports it, and lists the bullets. Layout is a grid: `112px 1fr auto` on desktop; on phones `"date icon" / "text text"` so the + stays beside the date. Only one open at a time (the rows share a `name`). **The newest job is open on load**, the rest closed.
-- **Project tile (Home).** Preview (4:3, `--surface`, `--line` border, `--r-lg`) with a status label, then title (`h3`) and one line. Three tiles in a row; `grid-template-rows: subgrid` keeps titles aligned. Lifts 2px on hover (pointer only).
-- **Project card (Projects).** Bigger preview, title (`h2`), description, tags as plain comma-separated text, optional "Read the case study". When the count is odd the newest spans the full width (16:7 preview). Uses subgrid for alignment.
-- **Status label.** Small static white label on a preview's corner: "In progress", or "In progress, 2026" on Projects. 12px, never clickable.
+- **Project tile (Home).** Preview (`--surface`, `--line` border, `--r-lg`, nothing on top of it), then the title (`h3`), the project status line, and one line of description. One per row with a 16:7 preview below 640px, three in a row with 4:3 from 640px; never two columns. `grid-template-rows: subgrid` keeps titles aligned. Lifts 2px on hover (pointer only).
+- **Project card (Projects).** One link per card (the whole card). Preview with nothing on top of it, then the title row, the project status line, the description. No stack/tags line.
+  - **Title row (from 640px):** title (`h2`) on the left, the label **"View project"** (13px, `--text-2`) with a 12px chevron (`M4.5 3l3 3-3 3`) on the right, on one line; the label is styled text inside the card link, never a separate link. Same label on every card.
+  - **Hover and keyboard focus:** title and label turn `--accent` together (the card is a link, so it follows the site-wide link hover) and the chevron slides 2px right (150ms, `--ease-settle`), like the see-more links. Pointer devices only for the movement; still with reduced motion.
+  - **Phones (below 640px):** the label and chevron are hidden; the title has the whole row and the card itself is the link.
+  - **Grid:** one column below 640px, two from 640px. From 640px, with an odd count the first card spans both columns (featured: 18px title, 16:7 preview, wider illustration); pairs use 4:3 previews. Below 640px every card is equal: one per row, 16:7 previews, 15px titles, and the featured card's wider illustration is scaled to match the others.
+- **Project status.** A line directly under the project title (4px below it, 8px above the description): 13px `--text-3`, the stage, a separator dot, the year, e.g. "In progress · 2026", "Experiment · 2026". Only an in-progress project gets an 8px `--accent` dot before the text (`aria-hidden`), and it never pulses: pulsing is reserved for "Open to remote roles". The text carries the meaning. Used on Home tiles and Projects cards; previews have no status pill.
 - **Previous / next card.** Bordered, `--r-lg`; the chevron sits on the side it leads to. In a `<nav aria-label="More posts">` (or "More projects").
 
 ### Text and metadata
+- **Page intro.** The `<header>` that opens Projects, Writing and the 404: the page title, optionally with an action on its right (Subscribe on Writing), and one paragraph in `--text-2` 8px below, across the full text column (no narrower measure). Anything else in the intro, like the Writing topic chips, sits 20px below.
 - **Metadata line.** Items separated by a dot: each dot is its own `aria-hidden` element with an 8px gap on each side (never a dot between plain spaces). On wrapping, a dot stays with the item after it, so a line never ends on a dot. Post header: "November 9, 2026 · Design engineering · 4 min read"; the topic links to its Writing topic page (`/writing/topics/<slug>`).
 - **Project facts.** `<dl>`: **Year · Status · Links** in three equal columns between two hairlines; on phones Year and Status share a row and Links spans the full width. Links are named by destination ("Website", "GitHub", "npm"), product first, code second, with the external arrow; none → "Not public yet" in `--text-3`.
 - **Author footer.** Ends every post: 40px photo, name (`rel="author"`, links Home) and role, inside the article's `<footer>` / `<address>`.
@@ -290,7 +296,7 @@ Screenshots for each: `screenshots/<page>.{desktop,phone}.{light,dark}.png`.
 Sections are `<section aria-labelledby>` with 14/500 `h2` labels, 72px apart; the intro is a `<header>`.
 
 ### Projects (`/projects`)
-Intro (title, one line), then the card grid (odd count: newest spans the full width). Roleburn has "Read the case study ›".
+Intro (title, one line), then the card grid: one per row on phones, two per row from 640px with the first spanning both when the count is odd. Order: projects in progress first, then the rest; each group by year, newest first, then by title. Every card shows "View project ›" on the title row (from 640px).
 
 ### Case study (`/projects/roleburn`)
 Back link "‹ Projects", title (display) and lead, project facts, the hero illustration (shared view-transition name with the Projects preview), then the article: Why I built it, How it works (with a folder-tree code block and a placeholder figure), What's next; previous/next at the end.
