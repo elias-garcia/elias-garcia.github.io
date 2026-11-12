@@ -12,9 +12,10 @@ One page per step. Each step builds the components that page needs (DESIGN.md §
 4. ~~**Post.**~~ Done. The article with its reading progress bar and the `/writing/<slug>.md` version. Components: back link + Copy page, the post-header metadata line (date, topic link, reading time), the prose (every Markdown element, footnotes with their Notes section, code blocks with the indigo theme, the Note callout and details), easing demo, author footer, previous/next card.
 5. ~~**Projects.**~~ Done. Intro and the project card grid (from 640px, the first project spans both columns when the count is odd). Components: project card, project status line (also on the Home tiles) and page intro (shared with Writing), reusing the project illustrations.
 6. ~~**Roleburn case study.**~~ Done. The case study page (`/projects/<slug>`) with its hero and the preview morph from Home and Projects. Components: project facts, the Roleburn hero and the figure placeholder, reusing the back link, code block and previous/next card. work-issue and POL funding spreads have draft placeholder case studies (dev only).
-7. **404.** The page intro with "404" above the title, "Try one of these" rows with the path in the gutter and the broken-link email, reusing the list row.
-8. **Site-wide features.** Search dialog and its header button (with key hints), sitemap, `robots.txt` (allowing AI crawlers, DESIGN.md §7), JSON-LD, share images, analytics.
-9. **Final pass.** Compare every page with its screenshots in both themes and both widths, in `npm run dev` so draft posts show. Tab through each page with the keyboard. Run the accessibility check once against a build that includes drafts.
+7. **Home updates.** From the home-redesign handoff (`CHANGES-home-redesign.md`). Intro line with the location. Work rows: work mode after the company, first-line alignment of date, company and +/×, spaced en dash in ranges (also Education). "Speaking and teaching" split into Speaking and Teaching, without the Lisbon photo: talks dated by month with photo attachments; the course as a link row with the course rating line and a video preview. Project facts: one fact per row below 640px, label in the 112px column. Content: `site.yaml`, `work.yaml`, `talks.yaml` (split into talks and courses) and the generated `/cv.md`; the talk photos and trailer thumbnail into `src/assets/`, `speaking-lisbon-2023.jpg` replaced by `talk-lisbon-slide.jpg` (also in `prose.mdx`) and deleted. Components: list row attachment (photos, video preview), course rating line. `public/cv.pdf` needs the location and work modes too.
+8. **404.** The page intro with "404" above the title, "Try one of these" rows with the path in the gutter and the broken-link email, reusing the list row.
+9. **Site-wide features.** Search dialog and its header button (with 12px key hints and the input's padding reset), sitemap, `robots.txt` (allowing AI crawlers, DESIGN.md §7), JSON-LD (the Home `Person` with the Porto address), share images, analytics.
+10. **Final pass.** Compare every page with its screenshots in both themes and both widths, in `npm run dev` so draft posts show. Tab through each page with the keyboard. Run the accessibility check once against a build that includes drafts.
 
 ## Notes for the next steps
 
@@ -25,9 +26,9 @@ One page per step. Each step builds the components that page needs (DESIGN.md §
 - When `src/env.d.ts` is added, allow `interface` there in `eslint.config.ts`.
 - TypeScript stays on 6.0 because `@astrojs/check` and `typescript-eslint` don't support 7 yet. Move to 7 once both list it as a supported peer.
 - `npm run a11y` runs in the installed Google Chrome (`channel: "chrome"`), so any machine or CI runner that runs it needs Chrome.
-- Share images (step 8): the page only ships the font as woff2, which Satori cannot read. Give Satori its own font file (woff, ttf or otf) without adding it to the page's `@font-face` rules.
-- 404 page (step 7): Lighthouse audits it for SEO too. If it gets `noindex`, add `"autodiscoverUrlBlocklist": ["/404.html"]` to `collect` in `lighthouserc.json` and say so in CLAUDE.md, or the SEO check fails.
-- Packages to install in the step that needs them: `@astrojs/sitemap`, `@vercel/analytics`, Satori and sharp (step 8). In step 8, confirm the `@vercel/analytics` component works with no adapter. If not, add `@astrojs/vercel` and update CLAUDE.md.
+- Share images (step 9): the page only ships the font as woff2, which Satori cannot read. Give Satori its own font file (woff, ttf or otf) without adding it to the page's `@font-face` rules.
+- 404 page (step 8): Lighthouse audits it for SEO too. If it gets `noindex`, add `"autodiscoverUrlBlocklist": ["/404.html"]` to `collect` in `lighthouserc.json` and say so in CLAUDE.md, or the SEO check fails.
+- Packages to install in the step that needs them: `@astrojs/sitemap`, `@vercel/analytics`, Satori and sharp (step 9). In step 9, confirm the `@vercel/analytics` component works with no adapter. If not, add `@astrojs/vercel` and update CLAUDE.md.
 
 ## Content still missing
 
