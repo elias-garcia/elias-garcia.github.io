@@ -1,5 +1,6 @@
 ---
 import { linkTarget, newTabNote, opensNewTab } from "../../lib/links.ts";
+import TextLink from "../TextLink.astro";
 import VisuallyHidden from "../VisuallyHidden.astro";
 
 // What MDX passes for a Markdown link. GFM marks footnote references and back
@@ -36,8 +37,8 @@ const number =
     </svg>
   </a>
 ) : (
-  <a href={href} id={id} title={title} {...linkTarget(href)}>
+  <TextLink href={href} id={id} title={title} {...linkTarget(href)}>
     <slot />
     {opensNewTab(href) && <VisuallyHidden>{newTabNote}</VisuallyHidden>}
-  </a>
+  </TextLink>
 )}

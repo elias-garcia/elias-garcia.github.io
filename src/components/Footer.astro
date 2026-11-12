@@ -3,11 +3,11 @@ import Logo from "./Logo.astro";
 
 type Props = {
   name: string;
-  location: string;
+  country: string;
   timezone: string;
 };
 
-const { name, location, timezone } = Astro.props;
+const { name, country, timezone } = Astro.props;
 ---
 
 <footer class="footer">
@@ -26,7 +26,7 @@ const { name, location, timezone } = Astro.props;
         <span data-footer-enhanced hidden>
           <time data-footer-time></time> in{" "}
         </span>
-        {location}
+        {country}
       </span>
       <span class="dot" data-footer-enhanced hidden aria-hidden="true">
         ·

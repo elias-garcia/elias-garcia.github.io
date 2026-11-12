@@ -1,0 +1,18 @@
+not-found:
+  label: "404"
+  title: Page not found
+  intro: There's nothing at this address.
+  # {address} is the requested path, filled in on the page by a script.
+  introWithAddress: There's nothing at {address}. It may have moved, or the address has a typo.
+  suggestionsTitle: Try one of these
+  # One line for each section of the header navigation, by its path.
+  suggestions:
+    /: About me, work experience, talks and contact
+    /projects: Tools, experiments with agents, and research
+    /writing: Notes on building products, DeFi interfaces and AI agents
+  # {link} is the email link. The script adds the requested path to the
+  # subject, and fills in the body's {url} and {referrer}.
+  report: Followed a link here? {link} and I'll fix it.
+  reportLink: Email me
+  reportSubject: Broken link
+  reportBody: "I followed a link to {url} from: {referrer}"

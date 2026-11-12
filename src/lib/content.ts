@@ -106,6 +106,11 @@ export async function getPage(id: string) {
   return data;
 }
 
+export async function getNotFoundPage() {
+  const { data } = await requireEntry("notFound", "not-found");
+  return data;
+}
+
 export async function getFeedTitle(): Promise<string> {
   const [profile, page] = await Promise.all([getProfile(), getPage("writing")]);
   return `${profile.name}: ${page.title}`;

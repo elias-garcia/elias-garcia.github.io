@@ -59,7 +59,7 @@ export async function renderCvMarkdown(): Promise<string> {
 
   return [
     `# ${profile.name}`,
-    `${profile.role} · ${profile.location} · ${profile.availability}`,
+    `${profile.role} · ${profile.city}, ${profile.country} · ${profile.availability}`,
     contact,
     "## About",
     profile.about.join("\n\n"),

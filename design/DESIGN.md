@@ -58,7 +58,7 @@ One family, **Instrument Sans** (Google Fonts, via Astro's Fonts API), weights 4
 
 | Style | Size · weight · line height | Tracking | Use | Element |
 |---|---|---|---|---|
-| Display | 28 · 600 · 1.2 | −0.02em | Post and case study titles | `h1` |
+| Display | 28 · 600 · 1.2 | −0.02em | Post and case study titles; the "404" label on the 404 page (`--text-3`, `aria-hidden`) | `h1`; `p` (404 label) |
 | Page title | 20 · 600 · 1.35 | −0.01em | Home name, Projects, Writing, 404 | `h1` |
 | Heading | 18 · 600 · 1.35 | −0.01em | Section headings in posts and case studies | `h2` |
 | Lead | 18 · 400 · 1.6 | 0 | Case study intro | `p` |
@@ -210,7 +210,7 @@ Each component appears exactly once in the design system. Live versions: `refere
 - **Previous / next card.** Bordered, `--r-lg`; the chevron sits on the side it leads to. In a `<nav aria-label="More posts">` (or "More projects").
 
 ### Text and metadata
-- **Page intro.** The `<header>` that opens Projects, Writing and the 404: the page title, optionally with an action on its right (Subscribe on Writing), and one paragraph in `--text-2` 8px below, across the full text column (no narrower measure). Anything else in the intro, like the Writing topic chips, sits 20px below.
+- **Page intro.** The `<header>` that opens Projects, Writing and the 404: optionally a label 4px above the title ("404"), the page title, optionally with an action on its right (Subscribe on Writing), and one paragraph in `--text-2` 8px below, across the full text column (no narrower measure). Anything else in the intro, like the Writing topic chips, sits 20px below.
 - **Metadata line.** Items separated by a dot: each dot is its own `aria-hidden` element with an 8px gap on each side (never a dot between plain spaces). On wrapping, a dot stays with the item after it, so a line never ends on a dot. Post header: "November 9, 2026 · Design engineering · 4 min read"; the topic links to its Writing topic page (`/writing/topics/<slug>`).
 - **Project facts.** `<dl>`: **Year · Status · Links** in three equal columns between two hairlines; below 640px one fact per row: the 13px label in a 112px column (like the lists' date column) and the 14px value beside it on the same baseline, 24px apart, 12px between rows; links that don't fit wrap under the first, still in the value column. Links are named by destination ("Website", "GitHub", "npm"), product first, code second, with the external arrow; none → "Not public yet" in `--text-3`.
 - **Author footer.** Ends every post: 40px photo, name (`rel="author"`, links Home) and role, inside the article's `<footer>` / `<address>`.
@@ -315,7 +315,10 @@ Intro with **Subscribe** (RSS icon + label) on the right of the title; topic chi
 Back link + Copy page, title (display), metadata line, then the article (max 640px, long-form text), a reading-progress bar under the header (scroll-driven animation where supported), the author footer and previous/next.
 
 ### 404
-"404" (meta), "Page not found" (page title), one sentence, then "Try one of these" as list rows with the path in the gutter ("/", "/projects", "/writing"), and "Followed a link here? **Email me** the address and I'll fix it." (mailto with subject "Broken link"; in the real build, prefill the body with the requested URL). No separate search button: the header search is enough.
+- **Header:** the page intro. "404" at Display size (28 · 600 · 1.2, −0.02em, tabular figures) in `--text-3`, `aria-hidden`; 4px below it the page title `h1` "Page not found" (20 · 600), whose accessible text is "404: Page not found" (a visually hidden "404: " before it); 8px below, one sentence in `--text-2`, full width like the other intros: "There's nothing at **{address}**. It may have moved, or the address has a typo." The address is the requested path (`location.pathname`) in `--text` 500, allowed to break after "/" (`<wbr>` after each slash). Without JavaScript, or when the path is empty, the sentence reads "There's nothing at this address." instead.
+- **Try one of these:** 32px below, an `h2` "Try one of these" (14 · 500) and three list rows: Home, Projects, Writing, each with its one-line description. From 640px, the path ("/", "/projects", "/writing") sits in the 112px date column as a visual hint, `aria-hidden`; below 640px the path and its column are hidden, so each row is title and description only.
+- **Report line:** 32px below, "Followed a link here? **Email me** and I'll fix it." The link is a `mailto:` with subject "Broken link: {address}" and body "I followed a link to {full URL} from: {document.referrer, or nothing}", both URL-encoded. Without JavaScript the subject is "Broken link".
+- **Build:** the page returns a real **404 status** (`src/pages/404.astro`, which the host serves for unknown paths; never a redirect to Home, never a 200). Browser title "Page not found", like the other pages' titles. 404s are logged by the site's analytics: its page views record the requested path and the referrer. No separate search on the page: the header search (⌘K) is enough.
 
 ### Share images (Open Graph, 1200×630)
 `assets/share-site.png` and `assets/share-post.png`, templates in `reference/share-*.html`. Always light theme. Top: logo (+ "Elías García · Writing" on posts); middle: photo + name + title, or the post title at 72px; bottom: details on the left, eliasgarcia.dev on the right, dots spaced 16px. No time-sensitive status on them. Generate one per post at build time in a static endpoint, with Satori and sharp.

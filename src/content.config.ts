@@ -13,7 +13,9 @@ const site = defineCollection({
   schema: z.object({
     name: z.string(),
     role: z.string(),
-    location: z.string(),
+    city: z.string(),
+    // The footer clock says the time "in {country}", where the timezone is.
+    country: z.string(),
     timezone: z.string(),
     availability: z.string(),
     about: z.array(z.string()),
@@ -116,9 +118,26 @@ const pages = defineCollection({
   }),
 });
 
+const notFound = defineCollection({
+  loader: file("src/content/not-found.yaml"),
+  schema: z.object({
+    label: z.string(),
+    title: z.string(),
+    intro: z.string(),
+    introWithAddress: z.string().includes("{address}"),
+    suggestionsTitle: z.string(),
+    suggestions: z.record(z.string(), z.string()),
+    report: z.string().includes("{link}"),
+    reportLink: z.string(),
+    reportSubject: z.string(),
+    reportBody: z.string().includes("{url}").includes("{referrer}"),
+  }),
+});
+
 export const collections = {
   site,
   pages,
+  notFound,
   work,
   talks,
   courses,

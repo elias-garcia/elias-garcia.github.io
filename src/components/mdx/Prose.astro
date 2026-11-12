@@ -23,28 +23,6 @@
       color: var(--text-3);
     }
 
-    /* Links in prose: indigo with a soft underline that is always there. */
-    & :global(a:not(.fn, .backref, .anchor)) {
-      color: var(--accent);
-      text-decoration: underline;
-      text-decoration-color: var(--accent-line);
-      text-decoration-thickness: var(--hairline);
-      text-underline-offset: var(--underline-offset);
-      transition:
-        text-decoration-color var(--dur) var(--ease),
-        text-decoration-thickness var(--dur) var(--ease);
-
-      &:hover,
-      &:focus-visible {
-        text-decoration-color: var(--accent);
-        text-decoration-thickness: var(--underline-strong);
-      }
-
-      &:focus-visible {
-        border-radius: var(--r-sm);
-      }
-    }
-
     /* Inline code takes the size of where it sits, and a link's colour. */
     & :global(:not(pre) > code) {
       padding-inline: var(--space-1);

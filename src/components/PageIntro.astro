@@ -1,21 +1,38 @@
 ---
 import PageTitle from "./PageTitle.astro";
+import VisuallyHidden from "./VisuallyHidden.astro";
 
+// `label` sits above the title ("404"); screen readers hear it as part of the
+// title instead. The intro is the `intro` prop, or the `intro` slot for a page
+// that fills it in with a script.
 type Props = {
   title: string;
-  intro: string;
+  intro?: string;
+  label?: string;
 };
 
-const { title, intro } = Astro.props;
+const { title, intro, label } = Astro.props;
 ---
 
 <header class="page-intro">
   <div class="heading">
-    <div class="title-row">
-      <PageTitle>{title}</PageTitle>
-      <slot name="action" />
+    <div class="titles">
+      {label !== undefined && (
+        <p class="label" aria-hidden="true">
+          {label}
+        </p>
+      )}
+      <div class="title-row">
+        <PageTitle>
+          {label !== undefined && <VisuallyHidden>{label}: </VisuallyHidden>}
+          {title}
+        </PageTitle>
+        <slot name="action" />
+      </div>
     </div>
-    <p>{intro}</p>
+    <p>
+      <slot name="intro">{intro}</slot>
+    </p>
   </div>
   <slot />
 </header>
@@ -35,6 +52,21 @@ const { title, intro } = Astro.props;
     p {
       color: var(--text-2);
     }
+  }
+
+  .titles {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .heading .label {
+    color: var(--text-3);
+    font-size: var(--text-display);
+    font-weight: var(--weight-semibold);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
   }
 
   .title-row {

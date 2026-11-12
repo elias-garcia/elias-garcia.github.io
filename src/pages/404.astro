@@ -1,0 +1,142 @@
+---
+import List from "../components/List.astro";
+import ListRow from "../components/ListRow.astro";
+import PageIntro from "../components/PageIntro.astro";
+import Section from "../components/Section.astro";
+import TextLink from "../components/TextLink.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getNotFoundPage, getProfile } from "../lib/content.ts";
+import { sections } from "../lib/navigation.ts";
+
+const [page, profile] = await Promise.all([getNotFoundPage(), getProfile()]);
+
+const email = profile.contact.find(({ href }) => href.startsWith("mailto:"));
+if (email === undefined) {
+  throw new Error("The profile has no `mailto:` contact for broken links.");
+}
+
+const suggestions = sections.map(({ label, href }) => {
+  const description = page.suggestions[href];
+  if (description === undefined) {
+    throw new Error(`\`not-found.yaml\` has no suggestion for \`${href}\`.`);
+  }
+  return { label, href, description };
+});
+const unused = Object.keys(page.suggestions).filter(
+  (path) => !sections.some(({ href }) => href === path),
+);
+if (unused.length > 0) {
+  throw new Error(
+    `\`not-found.yaml\` has suggestions for paths outside the navigation: ${unused.join(", ")}.`,
+  );
+}
+
+const [beforeLink, afterLink] = page.report.split("{link}");
+---
+
+<BaseLayout title={page.title} description={page.intro}>
+  <div class="not-found">
+    <PageIntro label={page.label} title={page.title}>
+      <span slot="intro" data-missing-address={page.introWithAddress}>
+        {page.intro}
+      </span>
+    </PageIntro>
+
+    <Section id="suggestions" title={page.suggestionsTitle}>
+      <List>
+        {suggestions.map(({ label, href, description }) => (
+          <ListRow title={label} href={href} dateOnPhones={false}>
+            <span slot="date" aria-hidden="true">
+              {href}
+            </span>
+            {description}
+          </ListRow>
+        ))}
+      </List>
+    </Section>
+
+    <p class="report">
+      {beforeLink}
+      <TextLink
+        href={`${email.href}?subject=${encodeURIComponent(page.reportSubject)}`}
+        data-report-subject={page.reportSubject}
+        data-report-body={page.reportBody}
+      >
+        {page.reportLink}
+      </TextLink>
+      {afterLink}
+    </p>
+  </div>
+</BaseLayout>
+
+<script>
+  // Name the missing address in the intro and in the report email. Without
+  // the script, both stay generic.
+  const path = (() => {
+    try {
+      return decodeURI(location.pathname);
+    } catch {
+      return location.pathname;
+    }
+  })();
+
+  const intro = document.querySelector<HTMLElement>("[data-missing-address]");
+  const [before, after] =
+    intro?.dataset.missingAddress?.split("{address}") ?? [];
+  if (
+    intro !== null &&
+    before !== undefined &&
+    after !== undefined &&
+    path !== ""
+  ) {
+    const address = document.createElement("strong");
+    // A long address may break after any slash.
+    for (const [index, part] of path.split("/").entries()) {
+      if (index > 0) {
+        address.append("/", document.createElement("wbr"));
+      }
+      address.append(part);
+    }
+    intro.replaceChildren(before, address, after);
+  }
+
+  const report = document.querySelector<HTMLAnchorElement>(
+    "[data-report-subject]",
+  );
+  if (report !== null) {
+    const url = new URL(report.href);
+    const subject = `${report.dataset.reportSubject ?? ""}: ${path}`;
+    // Split on the placeholders, so neither value is searched for the
+    // other's placeholder and a "$" in the address isn't read as a pattern.
+    const values = new Map([
+      ["{url}", location.href],
+      ["{referrer}", document.referrer],
+    ]);
+    const body = (report.dataset.reportBody ?? "")
+      .split(/(\{url\}|\{referrer\})/)
+      .map((part) => values.get(part) ?? part)
+      .join("");
+    // Not URLSearchParams: mail apps don't read its "+" as a space.
+    url.search = `subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    report.href = url.href;
+  }
+</script>
+
+<style>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .not-found :global([data-missing-address] strong) {
+    color: var(--text);
+    font-weight: var(--weight-medium);
+    overflow-wrap: anywhere;
+  }
+
+  .report {
+    color: var(--text-2);
+    font-size: var(--text-small);
+  }
+</style>

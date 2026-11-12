@@ -7,16 +7,24 @@ type Props = {
   href?: string | undefined;
   article?: boolean;
   underline?: boolean;
+  // Below 40rem, drop the date column with what's in it.
+  dateOnPhones?: boolean;
 };
 
-const { title, href, article = false, underline = false } = Astro.props;
+const {
+  title,
+  href,
+  article = false,
+  underline = false,
+  dateOnPhones = true,
+} = Astro.props;
 const Row = article ? "article" : "div";
 const Title = article ? "h3" : "span";
 ---
 
 <li>
   <Row class:list={["row", { "row-interactive": href !== undefined }]}>
-    <div class="date">
+    <div class:list={["date", { "date-wide-only": !dateOnPhones }]}>
       <slot name="date" />
     </div>
     <div class="text">
@@ -112,6 +120,12 @@ const Title = article ? "h3" : "span";
     flex: 0 0 var(--gutter);
     color: var(--text-3);
     font-variant-numeric: tabular-nums;
+  }
+
+  .date-wide-only {
+    @media (width < 40rem) {
+      display: none;
+    }
   }
 
   .text {

@@ -24,7 +24,7 @@
   --accent: #4f39f6; /* indigo-600 */
   --tint: #eef2ff; /* indigo-50: selected chip, active search row */
   --tint-strong: #e0e7ff; /* indigo-100: search match highlight */
-  --accent-line: #a3b3ff; /* indigo-300: underline under links in prose */
+  --accent-line: #a3b3ff; /* indigo-300: underline under text links */
 
   /* ---- Code: minimal indigo syntax theme (every colour ≥4.5:1 on --surface) ---- */
   --code-plain: #52525c; /* zinc-600 */
@@ -156,8 +156,8 @@
   --code-inline: 0.875em; /* inline code, relative to the text around it */
   --focus-ring: 2px;
   --focus-offset: 3px;
-  --underline-offset: 3px; /* links in prose and the post's topic link */
-  --underline-strong: 2px; /* a prose link's underline on hover and focus */
+  --underline-offset: 3px; /* text links and the post's topic link */
+  --underline-strong: 2px; /* a text link's underline on hover and focus */
   --kbd-min: 20px; /* narrowest key hint */
   --hero-row: 36px; /* listing rows in a case study hero */
   --hero-chip: 28px; /* chips in a case study hero */

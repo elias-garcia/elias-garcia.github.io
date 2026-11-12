@@ -1,7 +1,8 @@
 profile:
   name: Elías García
   role: Software engineer
-  location: Porto, Portugal
+  city: Porto
+  country: Portugal
   timezone: Europe/Lisbon
   availability: Open to remote roles
   about:
