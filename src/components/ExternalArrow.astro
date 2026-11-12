@@ -1,5 +1,5 @@
 ---
-import { opensNewTab } from "../lib/links.ts";
+import { newTabNote, opensNewTab } from "../lib/links.ts";
 import VisuallyHidden from "./VisuallyHidden.astro";
 
 type Props = {
@@ -12,7 +12,7 @@ const { href } = Astro.props;
 <svg class="external" viewBox="0 0 12 12" aria-hidden="true">
   <path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path>
 </svg>
-{opensNewTab(href) && <VisuallyHidden> (opens in a new tab)</VisuallyHidden>}
+{opensNewTab(href) && <VisuallyHidden>{newTabNote}</VisuallyHidden>}
 
 <style>
   .external {

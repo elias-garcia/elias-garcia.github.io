@@ -1,0 +1,33 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"h2">;
+
+const { id, class: className } = Astro.props;
+// GFM's own heading for the footnotes: hidden, with this id.
+const footnotes = id === "footnote-label" && className === "sr-only";
+// The anchor is named "Link to section: <heading>", so each reads differently.
+const label = `${String(id)}-anchor`;
+---
+
+{footnotes ? (
+  <h2 id={id} class="notes-label">
+    Notes
+  </h2>
+) : (
+  <div class="heading">
+    <h2 id={id}>
+      <slot />
+    </h2>
+    <a
+      class="anchor"
+      href={`#${String(id)}`}
+      aria-labelledby={`${label} ${String(id)}`}
+    >
+      #
+    </a>
+    <span id={label} hidden>
+      Link to section:
+    </span>
+  </div>
+)}

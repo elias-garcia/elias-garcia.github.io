@@ -1,0 +1,18 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+// GFM renders footnotes as <section data-footnotes>: they become the Notes.
+type Props = HTMLAttributes<"section"> & { "data-footnotes"?: unknown };
+
+const { "data-footnotes": footnotes, ...attributes } = Astro.props;
+---
+
+{footnotes !== undefined ? (
+  <section class="notes" aria-labelledby="footnote-label">
+    <slot />
+  </section>
+) : (
+  <section {...attributes}>
+    <slot />
+  </section>
+)}

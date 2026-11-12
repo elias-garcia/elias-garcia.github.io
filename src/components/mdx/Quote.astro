@@ -1,0 +1,29 @@
+---
+// A quote with its source. The source goes outside the <blockquote>, as the
+// HTML spec asks: <Quote source="…">, with the Markdown quote inside.
+type Props = {
+  source: string;
+};
+
+const { source } = Astro.props;
+---
+
+<figure class="quote">
+  <slot />
+  <figcaption>— {source}</figcaption>
+</figure>
+
+<style>
+  .quote {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding-inline-start: var(--space-5);
+    border-inline-start: var(--rule-strong) solid var(--line-strong);
+  }
+
+  figcaption {
+    color: var(--text-3);
+    font-size: var(--text-small);
+  }
+</style>

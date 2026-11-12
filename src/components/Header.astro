@@ -4,9 +4,10 @@ import Logo from "./Logo.astro";
 
 type Props = {
   name: string;
+  readingProgress: boolean;
 };
 
-const { name } = Astro.props;
+const { name, readingProgress } = Astro.props;
 const { pathname } = Astro.url;
 ---
 
@@ -31,6 +32,7 @@ const { pathname } = Astro.url;
       </ul>
     </nav>
   </div>
+  {readingProgress && <div class="progress" aria-hidden="true" />}
 </header>
 
 <style>
@@ -42,6 +44,39 @@ const { pathname } = Astro.url;
     background: var(--header-bg);
     backdrop-filter: var(--header-backdrop);
     view-transition-name: site-header;
+  }
+
+  /* Grows with the page's scroll, where scroll-driven animations exist. */
+  .progress {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      .progress {
+        display: block;
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: calc(-1 * var(--hairline));
+        block-size: var(--progress-h);
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+        animation: grow auto linear both;
+        animation-timeline: scroll(root block);
+      }
+    }
+  }
+
+  /* Empty until the page scrolls: a page too short to scroll keeps it at 0. */
+  @keyframes grow {
+    from {
+      transform: scaleX(0);
+    }
+
+    to {
+      transform: scaleX(1);
+    }
   }
 
   .bar {

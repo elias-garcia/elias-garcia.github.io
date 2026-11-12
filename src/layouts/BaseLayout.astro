@@ -10,9 +10,10 @@ import "../styles/global.css";
 type Props = {
   title: string;
   description: string;
+  readingProgress?: boolean;
 };
 
-const { title, description } = Astro.props;
+const { title, description, readingProgress = false } = Astro.props;
 const [profile, feedTitle] = await Promise.all([getProfile(), getFeedTitle()]);
 const canonical = new URL(toPath(Astro.url.pathname), Astro.site);
 ---
@@ -60,7 +61,7 @@ const canonical = new URL(toPath(Astro.url.pathname), Astro.site);
   </head>
   <body>
     <SkipLink />
-    <Header name={profile.name} />
+    <Header name={profile.name} readingProgress={readingProgress} />
     <main id="content">
       <slot />
     </main>

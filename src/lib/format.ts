@@ -18,6 +18,16 @@ const kilobytes = new Intl.NumberFormat(locale, {
   maximumFractionDigits: 0,
 });
 
+const longDate = new Intl.DateTimeFormat(locale, {
+  dateStyle: "long",
+  timeZone: "UTC",
+});
+
+const mediumDate = new Intl.DateTimeFormat(locale, {
+  dateStyle: "medium",
+  timeZone: "UTC",
+});
+
 const monthDay = new Intl.DateTimeFormat(locale, {
   month: "short",
   day: "numeric",
@@ -26,6 +36,14 @@ const monthDay = new Intl.DateTimeFormat(locale, {
 
 export function formatMonthDay(date: Date): string {
   return monthDay.format(date);
+}
+
+export function formatLongDate(date: Date): string {
+  return longDate.format(date);
+}
+
+export function formatMediumDate(date: Date): string {
+  return mediumDate.format(date);
 }
 
 export function isoDate(date: Date): string {

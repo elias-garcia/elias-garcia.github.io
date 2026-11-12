@@ -1,7 +1,9 @@
 import { satteri } from "@astrojs/markdown-satteri";
 import mdx from "@astrojs/mdx";
+import { transformerNotationHighlight } from "@shikijs/transformers";
 import { defineConfig, fontProviders } from "astro/config";
 import { mdastReadingTimePlugin } from "./src/lib/mdast-reading-time.ts";
+import { indigoMinimal } from "./src/lib/shiki-theme.ts";
 
 export default defineConfig({
   site: "https://eliasgarcia.dev",
@@ -18,8 +20,15 @@ export default defineConfig({
       },
     }),
     shikiConfig: {
-      theme: "css-variables",
+      theme: indigoMinimal,
+      transformers: [transformerNotationHighlight()],
     },
+  },
+  // Markdown images get a responsive srcset (their sizes: PLAN.md, Open
+  // decisions); components set their own.
+  image: {
+    layout: "constrained",
+    responsiveStyles: true,
   },
   integrations: [mdx()],
   fonts: [

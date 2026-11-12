@@ -8,6 +8,16 @@ const states: Record<
   string,
   readonly { name: string; open: (page: Page) => Promise<void> }[]
 > = {
+  "/writing/rebuilding-this-site": [
+    {
+      name: "first footnote marker focused",
+      open: (page) => page.locator("a.fn").first().focus(),
+    },
+    {
+      name: "heading anchor focused",
+      open: (page) => page.locator(".anchor").first().focus(),
+    },
+  ],
   "/": [
     {
       name: "Download CV menu open",

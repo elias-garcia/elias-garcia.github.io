@@ -51,6 +51,11 @@ html {
   scroll-padding-block-start: calc(var(--bar-h) + var(--space-4));
   /* Short and long pages keep the same width, so navigating doesn't shift. */
   scrollbar-gutter: stable;
+
+  /* Jumps to a #link (anchors, footnotes, the skip link) scroll smoothly. */
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
 }
 
 ::selection {

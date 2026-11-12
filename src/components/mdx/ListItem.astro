@@ -1,0 +1,38 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"li">;
+
+const { class: className, ...attributes } = Astro.props;
+const task = String(className ?? "")
+  .split(" ")
+  .includes("task-list-item");
+const content = task ? await Astro.slots.render("default") : "";
+// A task's own text names its checkbox, through a label. A label may only
+// hold inline content, so a task with paragraphs or a nested list names its
+// checkbox in an aria-label instead: the text before its first block, or its
+// first paragraph in a loose list. The rendered HTML is already escaped, so
+// that text can go in an attribute.
+const block =
+  /<(?:p|ul|ol|div|pre|blockquote|figure|table|details|h[1-6])[\s>]/;
+const inline = task && !block.test(content);
+const lead = content.split(block)[0] ?? "";
+const firstParagraph =
+  /<p(?:\s[^>]*)?>([\s\S]*?)<\/p>/.exec(content)?.[1] ?? "";
+const name = (lead.replace(/<[^>]*>/g, "").trim() || firstParagraph)
+  .replace(/<[^>]*>/g, "")
+  .trim();
+const named = content.replace("<input", `<input aria-label="${name}"`);
+---
+
+{inline ? (
+  <li class={className} {...attributes}>
+    <label set:html={content} />
+  </li>
+) : task ? (
+  <li class={className} {...attributes} set:html={named} />
+) : (
+  <li class={className} {...attributes}>
+    <slot />
+  </li>
+)}

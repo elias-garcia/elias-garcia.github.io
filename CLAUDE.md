@@ -12,6 +12,8 @@ Personal site of Elías García at eliasgarcia.dev: Home, Projects with case stu
 
 When they disagree, `DESIGN.md` wins on design, this file wins on engineering and tooling, and both win over the skill. When anything is ambiguous or missing, ask; never assume.
 
+Markup follows the HTML specification, even where the reference HTML does something else: keep the design's look, not its markup.
+
 **Browser support:** newer web features are fine as progressive enhancement. The site must work without them. No polyfills.
 
 ## Stack
@@ -43,7 +45,7 @@ When they disagree, `DESIGN.md` wins on design, this file wins on engineering an
 ```
 src/
   assets/       # images processed by astro:assets
-  components/   # .astro components, one per file, PascalCase
+  components/   # .astro components, one per file, PascalCase; mdx/ holds the prose and MDX ones
   layouts/      # page shells
   pages/        # routes and static endpoints
   content/      # YAML data and MDX (writing/, projects/)
@@ -68,7 +70,7 @@ design/         # design handoff (reference only)
 - Tokens only: no raw colours, sizes, radii, durations or z-indexes in components. Font-size tokens are in `rem` (the design's px value divided by 16), and elements that hold text get a minimum size, not a fixed height.
 - Styles live in each component's scoped `<style>`. Global CSS only for tokens, reset and base element styles.
 - Check both themes for every change.
-- Links to other websites open in a new tab (`linkTarget()` in `src/lib/links.ts`). Pages on this site, downloads and `mailto:` links don't.
+- Links to other websites and the RSS feed open in a new tab (`linkTarget()` in `src/lib/links.ts`). Pages on this site, downloads and `mailto:` links don't.
 
 ## Content
 

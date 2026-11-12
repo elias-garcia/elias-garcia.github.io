@@ -1,0 +1,62 @@
+---
+import { Image } from "astro:assets";
+import avatar from "../assets/avatar.jpg";
+
+type Props = {
+  name: string;
+  role: string;
+};
+
+const { name, role } = Astro.props;
+---
+
+<footer class="author">
+  <Image class="avatar" src={avatar} alt="" widths={[40, 80]} sizes="40px" />
+  <address>
+    <a class="name" href="/" rel="author">
+      {name}
+    </a>
+    <span class="role">{role}</span>
+  </address>
+</footer>
+
+<style>
+  .author {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-block-start: var(--space-10);
+    padding-block-start: var(--space-6);
+    border-block-start: var(--hairline) solid var(--line);
+  }
+
+  .avatar {
+    flex: none;
+    inline-size: var(--avatar-xs);
+    block-size: var(--avatar-xs);
+    border-radius: 50%;
+    background: var(--control);
+    object-fit: cover;
+  }
+
+  address {
+    display: flex;
+    flex-direction: column;
+    font-style: normal;
+    line-height: var(--leading-tight);
+  }
+
+  .name {
+    font-size: var(--text-small);
+    font-weight: var(--weight-medium);
+
+    &:focus-visible {
+      border-radius: var(--r-sm);
+    }
+  }
+
+  .role {
+    color: var(--text-3);
+    font-size: var(--text-meta);
+  }
+</style>

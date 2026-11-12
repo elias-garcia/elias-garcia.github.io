@@ -1,0 +1,10 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+// role="list" keeps the list semantics Safari drops with list-style: none.
+type Props = HTMLAttributes<"ul">;
+---
+
+<ul role="list" {...Astro.props}>
+  <slot />
+</ul>

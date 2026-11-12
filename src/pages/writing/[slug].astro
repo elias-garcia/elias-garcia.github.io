@@ -1,0 +1,175 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import { render } from "astro:content";
+import AuthorFooter from "../../components/AuthorFooter.astro";
+import BackLink from "../../components/BackLink.astro";
+import CopyButton from "../../components/CopyButton.astro";
+import DisplayTitle from "../../components/DisplayTitle.astro";
+import MetaItem from "../../components/MetaItem.astro";
+import MetaLine from "../../components/MetaLine.astro";
+import { mdxComponents } from "../../components/mdx/index.ts";
+import Prose from "../../components/mdx/Prose.astro";
+import PreviousNext from "../../components/PreviousNext.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  getPage,
+  getPosts,
+  getProfile,
+  getReadingMinutes,
+  getTopics,
+  topicLabel,
+} from "../../lib/content.ts";
+import { formatLongDate, formatMediumDate, isoDate } from "../../lib/format.ts";
+
+export const getStaticPaths = (async () => {
+  const posts = await getPosts();
+  const topics = getTopics(posts);
+  return posts.map((post, index) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      topics,
+      // Posts are newest first: the previous post is the older one.
+      previous: posts[index + 1],
+      next: posts[index - 1],
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { post, topics, previous, next } = Astro.props;
+const { title, description, date, topic } = post.data;
+const [{ Content }, minutes, profile, writing] = await Promise.all([
+  render(post),
+  getReadingMinutes(post),
+  getProfile(),
+  getPage("writing"),
+]);
+const label = topicLabel(topics, topic);
+const markdown = `/writing/${post.id}.md`;
+---
+
+<BaseLayout title={title} description={description} readingProgress>
+  <link slot="head" rel="alternate" type="text/markdown" href={markdown} />
+  <article class="post">
+    <div class="top">
+      <BackLink href="/writing" label={writing.title} />
+      <CopyButton label="Copy page" name="Copy page as Markdown" url={markdown}>
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="1" y="3.5" width="14" height="9" rx="2"></rect>
+          <path
+            d="M3.75 10.25v-4.5h1.25l1.25 1.75 1.25-1.75h1.25v4.5H7.5v-2.75l-1.25 1.6-1.25-1.6v2.75zM11.5 10.5l-1.9-2.15h1.2V5.75h1.4v2.6h1.2z"
+            fill="currentColor"
+            stroke="none"
+          ></path>
+        </svg>
+      </CopyButton>
+    </div>
+    <header class="intro">
+      <DisplayTitle>{title}</DisplayTitle>
+      <p class="meta">
+        <MetaLine>
+          <MetaItem>
+            <time datetime={isoDate(date)}>
+              <span class="long">{formatLongDate(date)}</span>
+              <span class="short">{formatMediumDate(date)}</span>
+            </time>
+          </MetaItem>
+          <MetaItem>
+            <a
+              class="topic"
+              href={`/writing/topics/${topic.slug}`}
+              aria-label={`More posts about ${label}`}
+            >
+              {label}
+            </a>
+          </MetaItem>
+          <MetaItem>{minutes} min read</MetaItem>
+        </MetaLine>
+      </p>
+    </header>
+    <Prose>
+      <Content components={mdxComponents} />
+    </Prose>
+    <AuthorFooter name={profile.name} role={profile.role} />
+    <PreviousNext
+      name="More posts"
+      previous={
+        previous && {
+          href: `/writing/${previous.id}`,
+          title: previous.data.title,
+          label: "Previous post",
+        }
+      }
+      next={
+        next && {
+          href: `/writing/${next.id}`,
+          title: next.data.title,
+          label: "Next post",
+        }
+      }
+    />
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-block-end: var(--space-3);
+  }
+
+  .meta {
+    color: var(--text-3);
+    font-size: var(--text-small);
+  }
+
+  .short {
+    display: none;
+  }
+
+  @media (width <= 40rem) {
+    .long {
+      display: none;
+    }
+
+    .short {
+      display: inline;
+    }
+  }
+
+  .topic {
+    color: var(--text-3);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: var(--underline-offset);
+    transition:
+      color var(--dur) var(--ease),
+      text-decoration-color var(--dur) var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--text);
+      text-decoration-color: currentColor;
+    }
+
+    &:focus-visible {
+      border-radius: var(--r-sm);
+    }
+  }
+</style>

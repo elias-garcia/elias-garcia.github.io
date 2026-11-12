@@ -1,0 +1,87 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import CopyButton from "../CopyButton.astro";
+
+type Props = HTMLAttributes<"pre"> & { "data-language"?: string };
+
+const {
+  class: className,
+  style,
+  "data-language": language = "plaintext",
+} = Astro.props;
+const name = `${language} code`;
+---
+
+<div class="code" data-copy-scope>
+  <div class="header">
+    <span class="language">{language}</span>
+    <CopyButton label="Copy" name={`Copy ${name}`} onSurface />
+  </div>
+  <pre
+    class:list={["block", className]}
+    style={style}
+    tabindex="0"
+    role="region"
+    aria-label={name}
+    data-copy-text
+  ><slot /></pre>
+</div>
+
+<style>
+  /* Colours come from the code tokens through src/lib/shiki-theme.ts. */
+  .code {
+    overflow: hidden;
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: var(--code-bar-h);
+    padding-inline: var(--space-4) var(--space-2);
+    border-block-end: var(--hairline) solid var(--line);
+  }
+
+  .language {
+    color: var(--text-3);
+    font-size: var(--text-micro);
+    font-weight: var(--weight-medium);
+  }
+
+  .block {
+    margin: 0;
+    padding-block: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    line-height: var(--leading-long);
+
+    &:focus-visible {
+      outline-offset: calc(-1 * var(--focus-ring));
+    }
+
+    & :global(code) {
+      display: block;
+      min-inline-size: max-content;
+    }
+
+    /* Shiki separates lines with newlines, so lines stay inline-block:
+       display: block would add an empty line between each. */
+    & :global(.line) {
+      display: inline-block;
+      inline-size: 100%;
+      padding-inline: var(--space-5);
+    }
+
+    /* Comments drop to the plain colour on a highlighted line: zinc-500 on
+       indigo-50 falls below 4.5:1. */
+    & :global(.line.highlighted) {
+      --code-comment: var(--code-plain);
+
+      background: var(--code-highlight);
+      box-shadow: inset var(--rule-strong) 0 var(--accent);
+    }
+  }
+</style>

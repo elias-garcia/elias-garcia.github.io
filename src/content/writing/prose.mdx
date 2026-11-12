@@ -1,0 +1,115 @@
+---
+title: "Prose reference"
+description: "Every element a post can contain."
+date: 2026-11-11
+topic: Design engineering
+draft: true
+---
+
+This page uses every element a Markdown or MDX post can produce, styled exactly as posts are. Paragraphs are 16px with a 1.75 line height. Text can be **bold**, *italic* or ~~struck through~~, and links can stay [inside the site](/writing) or go to [another site](https://astro.build); links in a sentence never get the external arrow.[^1] Inline code looks like `prefers-color-scheme`, and takes the colour of a link around it, as in the [`astro:content` guide](https://docs.astro.build/en/guides/content-collections/). Keys look like <kbd>⌘</kbd> <kbd>K</kbd>.
+
+## Headings
+
+The post title is the only level-one heading. Sections start at level two, like the one above.
+
+### A level-three heading with `code`
+
+Use it to break a long section into parts. It is 16px, the size of the text, and set apart by weight.
+
+#### A level-four heading
+
+The smallest heading, at 15px. If a post needs more levels than this, it probably needs to be two posts.
+
+## Lists
+
+- An unordered list uses small grey dots.
+- Items can run onto two lines, and the second line stays aligned with the first, without hanging under the dot.
+- Nested items get a hollow dot:
+  - one level in,
+  - and no deeper.
+
+1. An ordered list keeps its numbers grey.
+2. Numbers line up, even past nine.
+3. Use it when the order matters, like steps.
+
+- [x] A task that is done
+- [ ] A task still open
+- [ ] A task with `code` and a [link](/writing) in its text
+- [ ] A task with steps
+  - a nested step
+
+## Quotes and breaks
+
+<Quote source="Where it comes from">
+
+> A quote is set off by a grey rule, not by colour or italics, so long quotes stay comfortable to read.
+
+</Quote>
+
+A thematic break separates two parts of a post without a heading:
+
+---
+
+And the text continues after it.
+
+## Code
+
+Code blocks show their language and a Copy button. The syntax theme is mostly neutral: keywords in indigo, values in a deeper indigo, names in the text colour, and comments and punctuation in grey. Highlighted lines get a light indigo background and a rule on the left.[^2]
+
+```ts
+import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
+
+// every post is a .mdx file with typed frontmatter
+const writing = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/writing' }),
+  schema: z.object({ // [!code highlight]
+    title: z.string(), // [!code highlight]
+    date: z.coerce.date(), // [!code highlight]
+    topic: z.enum(['AI', 'DeFi', 'Design engineering']), // [!code highlight]
+    readingTime: z.number().int(), // minutes [!code highlight]
+  }),
+});
+
+export const collections = { writing };
+```
+
+```sh
+# preview every element while editing styles
+npm run dev
+open http://localhost:4321/writing/prose
+```
+
+## Tables
+
+Tables sit in a bordered box that scrolls sideways on narrow screens. Numbers align to the right.
+
+| Token | Light | Dark | Contrast |
+|---|---|---|--:|
+| `--code-keyword` | indigo-600 | indigo-400 | 6.2 / 5.7 |
+| `--code-literal` | indigo-800 | indigo-200 | 9.6 / 11.9 |
+| `--code-comment` | zinc-500 | zinc-400 | 4.6 / 6.8 |
+
+## Images
+
+<Figure caption="Images span the text column, with rounded corners and an optional caption.">
+
+![Elías on stage presenting a slide on traditional identity systems](../../assets/speaking-lisbon-2023.jpg)
+
+</Figure>
+
+## MDX extras
+
+Two components that Markdown alone doesn't produce, for the occasional post that needs them.
+
+<Note>A callout holds a side remark that matters more than a footnote. It is grey, not coloured: indigo stays reserved for state.</Note>
+
+<details>
+<summary>A collapsible section</summary>
+
+Long asides, logs or full listings can hide here, so readers who don't need them can skip past.
+
+</details>
+
+[^1]: Notes can hold [links](https://docs.astro.build) and `code`.
+[^2]: Each note ends with a link back to where you were reading.

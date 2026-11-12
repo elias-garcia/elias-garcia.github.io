@@ -10,7 +10,7 @@
   color-scheme: light dark;
 
   /* ---- Neutrals ---- */
-  --bg: #ffffff; /* page; also text on indigo fills and on dark popovers · white */
+  --bg: #ffffff; /* page; also text on indigo fills and on the dark skip link · white */
   --surface: #fafafa; /* previews, code blocks, card hover · zinc-50 */
   --control: #f4f4f5; /* buttons, chips, search icon tiles · zinc-100 */
   --control-hover: #e4e4e7; /* button and chip hover · zinc-200 */
@@ -25,6 +25,15 @@
   --tint: #eef2ff; /* indigo-50: selected chip, active search row */
   --tint-strong: #e0e7ff; /* indigo-100: search match highlight */
   --accent-line: #a3b3ff; /* indigo-300: underline under links in prose */
+
+  /* ---- Code: minimal indigo syntax theme (every colour ≥4.5:1 on --surface) ---- */
+  --code-plain: #52525c; /* zinc-600 */
+  --code-keyword: #4f39f6; /* indigo-600: const, import, return, @media */
+  --code-literal: #372aac; /* indigo-800: strings, numbers */
+  --code-name: #18181b; /* zinc-900: functions, properties, tags */
+  --code-comment: #71717b; /* zinc-500, italic */
+  --code-punct: #71717b; /* zinc-500: punctuation, operators */
+  --code-highlight: #eef2ff; /* indigo-50: highlighted line background */
 
   --scrim: rgb(9 9 11 / 0.18); /* behind the search dialog */
   --header-bg: color-mix(in oklch, var(--bg) 82%, transparent);
@@ -80,13 +89,13 @@
 
   /* ---- Radius ---- */
   --r-sm: 4px; /* search highlights, key hints, footnote markers, focus ring on text links */
-  --r-md: 8px; /* icon tiles, menu and search rows, popovers */
+  --r-md: 8px; /* icon tiles, menu and search rows */
   --r-lg: 12px; /* cards, previews, code blocks, menus, search panel */
   --r-full: 999px; /* buttons, chips, status labels */
 
   /* ---- Motion: UI feedback never exceeds 250ms ---- */
   --dur-fast: 100ms; /* press, search row highlight, old page fading out */
-  --dur: 150ms; /* hover, colour/opacity, popovers, Download CV menu */
+  --dur: 150ms; /* hover, colour/opacity, Download CV menu */
   --dur-slow: 250ms; /* page entrance, expanding rows, underline growing */
   --ease: ease-out;
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1); /* things arriving */
@@ -96,6 +105,8 @@
   --dur-ping: 2.4s; /* availability dot, a slow loop */
   --ease-ping: cubic-bezier(0, 0, 0.2, 1);
   --entrance-offset: 6px;
+  --dur-demo: 600ms; /* easing demo in posts, a deliberate exception */
+  --dur-flash: 2s; /* a footnote or marker you arrive at lights up, then fades */
 
   /* ---- Elevation and layers ---- */
   --shadow-overlay:
@@ -116,6 +127,15 @@
   --menu-w: 320px; /* Download CV menu */
   --avatar: 104px; /* Home avatar */
   --avatar-sm: 80px; /* Home avatar on phones */
+  --avatar-xs: 40px; /* author footer */
+  --marker: 20px; /* footnote markers */
+  --marker-lift: 2px; /* footnote markers sit just above the baseline */
+  --marker-scroll: 30vh; /* a marker you return to lands a third of the way down */
+  --target-sm: 24px; /* smallest target (WCAG 2.5.8): the footnote back link */
+  --rule-short: 64px; /* rule above the notes */
+  --code-bar-h: 48px; /* code block header */
+  --demo-label: 72px; /* label column in the easing demo */
+  --runner: 16px; /* easing demo dot */
   --dot: 8px; /* availability dot */
   --tile-min: 180px; /* narrowest project tile before the grid wraps */
   --row-basis: 300px; /* text column next to the gutter; wraps below it when narrower */
@@ -124,8 +144,14 @@
   --logo-h: 28px; /* header logo */
   --logo-h-sm: 16px; /* footer logo */
   --hairline: 1px;
+  --progress-h: 2px; /* reading progress bar */
+  --rule-strong: 2px; /* quote rule, key bottom edge, highlighted code line */
+  --code-inline: 0.875em; /* inline code, relative to the text around it */
   --focus-ring: 2px;
   --focus-offset: 3px;
+  --underline-offset: 3px; /* links in prose and the post's topic link */
+  --underline-strong: 2px; /* a prose link's underline on hover and focus */
+  --kbd-min: 20px; /* narrowest key hint */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -143,6 +169,13 @@
     --tint: #1e1a4d; /* indigo-950 */
     --tint-strong: #312c85; /* indigo-900 */
     --accent-line: #432dd7; /* indigo-700 */
+    --code-plain: #d4d4d8; /* zinc-300 */
+    --code-keyword: #7c86ff; /* indigo-400 */
+    --code-literal: #c6d2ff; /* indigo-200 */
+    --code-name: #f4f4f5; /* zinc-100 */
+    --code-comment: #9f9fa9; /* zinc-400 */
+    --code-punct: #9f9fa9; /* zinc-400 */
+    --code-highlight: #1e1a4d; /* indigo-950 */
     --scrim: rgb(0 0 0 / 0.55);
     --photo-brightness: 0.92;
   }

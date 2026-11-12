@@ -6,6 +6,7 @@ import ExternalArrow from "../components/ExternalArrow.astro";
 import Figure from "../components/Figure.astro";
 import List from "../components/List.astro";
 import ListRow from "../components/ListRow.astro";
+import MetaItem from "../components/MetaItem.astro";
 import MetaLine from "../components/MetaLine.astro";
 import PageTitle from "../components/PageTitle.astro";
 import ProjectTile from "../components/ProjectTile.astro";
@@ -115,13 +116,10 @@ const newestJob = work[0]?.id;
             <time slot="date" datetime={String(data.year)}>
               {data.year}
             </time>
-            <MetaLine
-              items={
-                data.detail === undefined
-                  ? [data.where]
-                  : [data.where, data.detail]
-              }
-            />
+            <MetaLine>
+              <MetaItem>{data.where}</MetaItem>
+              {data.detail !== undefined && <MetaItem>{data.detail}</MetaItem>}
+            </MetaLine>
           </ListRow>
         ))}
       </List>

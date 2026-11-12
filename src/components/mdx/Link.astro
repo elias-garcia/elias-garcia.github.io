@@ -1,0 +1,43 @@
+---
+import { linkTarget, newTabNote, opensNewTab } from "../../lib/links.ts";
+import VisuallyHidden from "../VisuallyHidden.astro";
+
+// What MDX passes for a Markdown link. GFM marks footnote references and back
+// links with data attributes.
+type Props = {
+  href?: string;
+  id?: string;
+  title?: string;
+  "aria-label"?: string;
+  "data-footnote-ref"?: unknown;
+  "data-footnote-backref"?: unknown;
+};
+
+const {
+  href,
+  id,
+  title,
+  "aria-label": label,
+  "data-footnote-ref": reference,
+  "data-footnote-backref": backlink,
+} = Astro.props;
+const number =
+  reference === undefined ? "" : await Astro.slots.render("default");
+---
+
+{reference !== undefined ? (
+  <a class="fn" href={href} id={id} aria-label={`Note ${number}`}>
+    {number}
+  </a>
+) : backlink !== undefined ? (
+  <a class="backref" href={href} aria-label={label}>
+    <svg viewBox="0 0 12 12" aria-hidden="true">
+      <path d="M9.5 3.5v2a2 2 0 0 1-2 2h-5M4.5 5.5l-2 2 2 2"></path>
+    </svg>
+  </a>
+) : (
+  <a href={href} id={id} title={title} {...linkTarget(href)}>
+    <slot />
+    {opensNewTab(href) && <VisuallyHidden>{newTabNote}</VisuallyHidden>}
+  </a>
+)}

@@ -1,19 +1,28 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 
-type Props =
+// onSurface: on a grey surface (a code block), the fill turns --bg.
+type Props = { onSurface?: boolean } & (
   | (HTMLAttributes<"button"> & { href?: never })
-  | (HTMLAttributes<"a"> & { href: string });
+  | (HTMLAttributes<"a"> & { href: string })
+);
 
-const { class: className, ...attributes } = Astro.props;
+const { class: className, onSurface = false, ...attributes } = Astro.props;
 ---
 
 {attributes.href === undefined ? (
-  <button class:list={["button", className]} type="button" {...attributes}>
+  <button
+    class:list={["button", { "on-surface": onSurface }, className]}
+    type="button"
+    {...attributes}
+  >
     <slot />
   </button>
 ) : (
-  <a class:list={["button", className]} {...attributes}>
+  <a
+    class:list={["button", { "on-surface": onSurface }, className]}
+    {...attributes}
+  >
     <slot />
   </a>
 )}
@@ -37,6 +46,10 @@ const { class: className, ...attributes } = Astro.props;
     transition:
       background var(--dur) var(--ease),
       color var(--dur) var(--ease);
+
+    &.on-surface {
+      background: var(--bg);
+    }
 
     &:hover {
       background: var(--control-hover);

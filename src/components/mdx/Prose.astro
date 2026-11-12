@@ -1,0 +1,578 @@
+<div class="prose">
+  <slot />
+</div>
+
+<style>
+  .prose {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+
+    & :global(p) {
+      color: var(--text-2);
+      font-size: var(--text-long);
+      line-height: var(--leading-long);
+    }
+
+    & :global(strong) {
+      color: var(--text);
+      font-weight: var(--weight-semibold);
+    }
+
+    & :global(del) {
+      color: var(--text-3);
+    }
+
+    /* Links in prose: indigo with a soft underline that is always there. */
+    & :global(a:not(.fn, .backref, .anchor)) {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-color: var(--accent-line);
+      text-decoration-thickness: var(--hairline);
+      text-underline-offset: var(--underline-offset);
+      transition:
+        text-decoration-color var(--dur) var(--ease),
+        text-decoration-thickness var(--dur) var(--ease);
+
+      &:hover,
+      &:focus-visible {
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: var(--underline-strong);
+      }
+
+      &:focus-visible {
+        border-radius: var(--r-sm);
+      }
+    }
+
+    /* Inline code takes the size of where it sits, and a link's colour. */
+    & :global(:not(pre) > code) {
+      padding-inline: var(--space-1);
+      border-radius: var(--r-sm);
+      background: var(--control);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: var(--code-inline);
+    }
+
+    & :global(a code) {
+      color: inherit;
+    }
+
+    & :global(kbd) {
+      display: inline-block;
+      min-inline-size: var(--kbd-min);
+      padding-inline: var(--space-1);
+      border: var(--hairline) solid var(--line);
+      border-block-end-width: var(--rule-strong);
+      border-radius: var(--r-sm);
+      background: var(--bg);
+      color: var(--text);
+      font: inherit;
+      font-size: var(--text-meta);
+      line-height: var(--leading-tight);
+      text-align: center;
+    }
+
+    & :global(h3),
+    & :global(h4) {
+      color: var(--text);
+      font-weight: var(--weight-semibold);
+      line-height: var(--leading-tight);
+    }
+
+    & :global(h3) {
+      font-size: var(--text-long);
+    }
+
+    & :global(h4) {
+      font-size: var(--text-body);
+    }
+  }
+
+  /* ---- Lists, wherever they sit in a post: the article, quotes, details
+     and notes. The Notes list at the end keeps its own style. ---- */
+
+  /* :where() keeps this easy to override (task lists drop the indent). */
+  .prose :global(:where(ul, ol):not(:where(.notes > ol))) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding-inline-start: var(--space-6);
+  }
+
+  /* In the article itself, lists take the text style of its paragraphs;
+     elsewhere they take the size of what holds them. */
+  .prose > :global(:is(ul, ol)) {
+    color: var(--text-2);
+    font-size: var(--text-long);
+    line-height: var(--leading-long);
+  }
+
+  .prose :global(li > :is(ul, ol)) {
+    margin-block-start: var(--space-1);
+  }
+
+  /* In a loose list (blank lines between items), each item's paragraph takes
+     the list's text style, not the article's, and paragraphs are 8px apart,
+     as in quotes. */
+  .prose :global(li > p) {
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  .prose :global(li > p + p) {
+    margin-block-start: var(--space-2);
+  }
+
+  .prose :global(ul:not(.contains-task-list) > li) {
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset-block-start: calc(0.5lh - var(--space-1) / 2);
+      inset-inline-start: calc(-1 * var(--space-4));
+      inline-size: var(--space-1);
+      block-size: var(--space-1);
+      border-radius: 50%;
+      background: var(--text-3);
+    }
+  }
+
+  .prose :global(li > ul > li)::before {
+    background: transparent;
+    box-shadow: inset 0 0 0 var(--hairline) var(--text-3);
+  }
+
+  /* role="list" (for Safari) makes the reset drop the markers: numbered
+     lists get theirs back. */
+  .prose :global(ol) {
+    list-style: decimal;
+  }
+
+  .prose :global(ol > li)::marker {
+    color: var(--text-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Task lists: a drawn box, never the browser's faded disabled checkbox. */
+  .prose :global(ul.contains-task-list) {
+    padding-inline-start: 0;
+
+    /* The text flows as one line of text; the box sits in front of it. */
+    & > :global(li) {
+      position: relative;
+      padding-inline-start: calc(var(--icon-md) + var(--space-3));
+
+      &:has(:global(input:checked)) {
+        color: var(--text-3);
+      }
+    }
+
+    & :global(input) {
+      position: absolute;
+      inset-inline-start: 0;
+      inset-block-start: 0;
+      display: grid;
+      place-content: center;
+      inline-size: var(--icon-md);
+      block-size: var(--icon-md);
+      /* The text's font, so 1lh is the line it sits on. */
+      margin: calc(0.5lh - var(--icon-md) / 2) 0 0;
+      font: inherit;
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-sm);
+      background: var(--bg);
+      appearance: none;
+
+      &:checked {
+        border-color: var(--accent);
+        background: var(--accent);
+
+        &::before {
+          content: "";
+          inline-size: var(--space-2);
+          block-size: var(--space-1);
+          margin-block-start: calc(-1 * var(--nudge));
+          border-block-end: var(--rule-strong) solid var(--bg);
+          border-inline-start: var(--rule-strong) solid var(--bg);
+          rotate: -45deg;
+        }
+      }
+    }
+  }
+
+  /* ---- Quotes, breaks, figures, tables and details ---- */
+
+  /* Paragraphs in every quote are 8px apart; a quote with a source has its
+     rule on the Quote figure instead. */
+  .prose :global(blockquote) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    color: var(--text-2);
+    font-size: var(--text-long);
+    line-height: var(--leading-long);
+  }
+
+  .prose > :global(blockquote) {
+    padding-inline-start: var(--space-5);
+    border-inline-start: var(--rule-strong) solid var(--line-strong);
+  }
+
+  .prose > :global(hr) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    block-size: var(--space-6);
+    border: 0;
+
+    /* A separator's content isn't read out. The negative margin cancels the
+       spacing after the last dot, so the dots sit exactly in the centre. */
+    &::before {
+      content: "· · ·";
+      margin-inline-end: calc(-1 * var(--space-2));
+      color: var(--text-3);
+      letter-spacing: var(--space-2);
+    }
+  }
+
+  /* Images in posts get a hairline border; Figure does the rest. A Markdown
+     image used without Figure gets the same column width and corners. */
+  .prose > :global(figure) :global(img) {
+    border: var(--hairline) solid var(--line);
+  }
+
+  .prose > :global(p > img) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+  }
+
+  .prose :global(.table) {
+    overflow-x: auto;
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+
+    /* Cells never wrap mid-word on phones: the box scrolls instead. */
+    & :global(table) {
+      inline-size: max-content;
+      min-inline-size: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-small);
+      line-height: var(--leading-normal);
+    }
+
+    & :global(th) {
+      padding: var(--space-2) var(--space-4);
+      border-block-end: var(--hairline) solid var(--line);
+      background: var(--surface);
+      color: var(--text-3);
+      font-size: var(--text-meta);
+      font-weight: var(--weight-medium);
+      text-align: start;
+      white-space: nowrap;
+    }
+
+    & :global(td) {
+      padding: var(--space-2) var(--space-4);
+      border-block-start: var(--hairline) solid var(--line);
+      color: var(--text-2);
+      vertical-align: top;
+    }
+
+    & :global(tbody tr:first-child td) {
+      border-block-start: 0;
+    }
+
+    & :global(:is(th, td)[style*="right"]) {
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  .prose > :global(details) {
+    border: var(--hairline) solid var(--line);
+    color: var(--text-2);
+    border-radius: var(--r-lg);
+
+    & > :global(summary) {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--r-lg);
+      color: var(--text);
+      font-size: var(--text-body);
+      font-weight: var(--weight-medium);
+      list-style: none;
+      cursor: pointer;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      & > :global(.chevron) {
+        flex: none;
+        inline-size: var(--icon-md);
+        block-size: var(--icon-md);
+        fill: none;
+        stroke: var(--text-3);
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+
+        @media (prefers-reduced-motion: no-preference) {
+          transition: rotate var(--dur-slow) var(--ease-settle);
+        }
+      }
+    }
+
+    &[open] > :global(summary > .chevron) {
+      rotate: 90deg;
+    }
+
+    /* Content is indented to the summary text. */
+    & > :global(:not(summary)) {
+      margin-inline: calc(var(--space-4) + var(--icon-md) + var(--space-2))
+        var(--space-4);
+      font-size: var(--text-body);
+      line-height: var(--leading-normal);
+    }
+
+    & > :global(:not(summary) + :not(summary)) {
+      margin-block-start: var(--space-3);
+    }
+
+    & > :global(:last-child:not(summary)) {
+      margin-block-end: var(--space-4);
+    }
+
+    /* Opens and closes with the expanding-row motion; browsers without
+       support open instantly. */
+    @media (prefers-reduced-motion: no-preference) {
+      &::details-content {
+        interpolate-size: allow-keywords;
+        overflow: clip;
+        contain: layout;
+        transition:
+          block-size var(--dur-slow) var(--ease-settle),
+          content-visibility var(--dur-slow),
+          display var(--dur-slow);
+        transition-behavior: allow-discrete;
+      }
+
+      &:not([open])::details-content {
+        block-size: 0;
+      }
+    }
+  }
+
+  /* ---- Section headings, with a # link on hover and focus ---- */
+
+  .prose :global(.heading) {
+    position: relative;
+    margin-block-start: var(--space-6);
+
+    & :global(h2) {
+      font-size: var(--text-heading);
+      font-weight: var(--weight-semibold);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-title);
+    }
+
+    & :global(.anchor) {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: calc(-1 * var(--space-6));
+      inline-size: var(--space-5);
+      color: var(--text-3);
+      font-size: var(--text-heading);
+      font-weight: var(--weight-medium);
+      line-height: var(--leading-tight);
+      opacity: 0;
+      transition: opacity var(--dur) var(--ease);
+
+      &:focus-visible {
+        border-radius: var(--r-sm);
+        opacity: 1;
+      }
+    }
+
+    &:hover :global(.anchor) {
+      opacity: 1;
+    }
+  }
+
+  /* ---- Footnote markers ---- */
+
+  .prose :global(.fn) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--marker);
+    min-block-size: var(--marker);
+    margin-inline-start: var(--space-1);
+    padding-inline: var(--space-1);
+    border-radius: var(--r-sm);
+    background: var(--control);
+    color: var(--text-2);
+    font-size: var(--text-micro);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-none);
+    vertical-align: var(--marker-lift);
+    /* Returning from a note, the marker lands a third of the way down, with
+       the sentence before it in view, and lights up in its hover colours. */
+    scroll-margin-block-start: var(--marker-scroll);
+    transition:
+      background var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    &:target {
+      animation: light var(--dur-flash) var(--ease) both;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        background: var(--accent);
+        color: var(--bg);
+      }
+    }
+  }
+
+  /* GFM puts each marker in a <sup>: the marker sets its own size and lift. */
+  .prose :global(sup:has(.fn)) {
+    font-size: inherit;
+    vertical-align: baseline;
+  }
+
+  /* Touch: the 44px hit area is centred on the small markers. */
+  @media (pointer: coarse) {
+    .prose :global(:is(.fn, .backref))::before {
+      inset-inline: 50% auto;
+      inline-size: var(--hit-area);
+      translate: -50% -50%;
+    }
+  }
+
+  /* ---- Notes at the end of the article ---- */
+
+  .prose :global(.notes) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-block-start: var(--space-10);
+    padding-block-start: var(--space-6);
+
+    /* A short rule: a full-width one would compete with the author footer's. */
+    &::before {
+      content: "";
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      inline-size: var(--rule-short);
+      block-size: var(--hairline);
+      background: var(--line);
+    }
+
+    & :global(.notes-label) {
+      font-size: var(--text-small);
+      font-weight: var(--weight-medium);
+      line-height: var(--leading-tight);
+    }
+
+    & :global(ol) {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      list-style: decimal;
+      padding-inline-start: var(--space-5);
+      color: var(--text-2);
+      font-size: var(--text-small);
+      line-height: var(--leading-normal);
+    }
+
+    & :global(li) {
+      margin-inline-start: calc(-1 * var(--space-2));
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--r-md);
+
+      &::marker {
+        color: var(--text-3);
+        font-variant-numeric: tabular-nums;
+      }
+
+      &:target {
+        animation: tint var(--dur-flash) var(--ease) both;
+
+        @media (prefers-reduced-motion: reduce) {
+          animation: none;
+          background: var(--tint);
+        }
+      }
+    }
+
+    & :global(li p) {
+      color: inherit;
+      font-size: inherit;
+      line-height: inherit;
+    }
+
+    /* A 24px target around the 12px icon; the negative block margins keep
+       the line height as it is. */
+    & :global(.backref) {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      inline-size: var(--target-sm);
+      block-size: var(--target-sm);
+      margin: calc(-1 * var(--space-1)) 0 calc(-1 * var(--space-1))
+        var(--space-1);
+      border-radius: var(--r-sm);
+      color: var(--text-3);
+      vertical-align: middle;
+      transition:
+        color var(--dur) var(--ease),
+        background var(--dur) var(--ease);
+
+      &:hover,
+      &:focus-visible {
+        background: var(--control);
+        color: var(--accent);
+      }
+
+      & :global(svg) {
+        inline-size: var(--icon-sm);
+        block-size: var(--icon-sm);
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    }
+  }
+
+  @keyframes tint {
+    from {
+      background: var(--tint);
+    }
+  }
+
+  @keyframes light {
+    0%,
+    25% {
+      background: var(--accent);
+      color: var(--bg);
+    }
+  }
+</style>

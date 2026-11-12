@@ -5,7 +5,7 @@
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
    text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
-:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-slow:250ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent-c:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+:root{color-scheme:light dark;--code-plain:#52525C;--code-keyword:#4F39F6;--code-literal:#372AAC;--code-name:#18181B;--code-comment:#71717B;--code-punct:#71717B;--code-highlight:#EEF2FF;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-slow:250ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent-c:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
@@ -145,7 +145,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 .site > main{flex:1 0 auto;width:100%}
 .site > footer{width:100%;flex-shrink:0}
 @media (prefers-color-scheme: dark){
-:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent-c:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
+:root{--code-plain:#D4D4D8;--code-keyword:#7C86FF;--code-literal:#C6D2FF;--code-name:#F4F4F5;--code-comment:#9F9FA9;--code-punct:#9F9FA9;--code-highlight:#1E1A4D;--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent-c:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
 .site{--accent:var(--accent-c) !important}
 img:not([src$=".svg"]){filter:brightness(.92)}
 }
@@ -652,13 +652,8 @@ a:hover{color:var(--accent-c)}
 .h .anchor{position:absolute;left:-24px;top:0;width:20px;color:var(--text-3);font-weight:500;opacity:0;transition:opacity var(--dur) var(--ease)}
 .h:hover .anchor,.h .anchor:focus-visible{opacity:1}
 
-/* footnote popovers grow from their marker */
-.fnwrap{position:relative;display:inline-block}
 .fn{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;margin-left:4px;padding:0 4px;border:0;border-radius:var(--r-sm);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;font-weight:600;line-height:1;vertical-align:2px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
 .fn:hover,.fn:focus-visible{background:var(--accent);color:var(--bg)}
-.fnpop{position:absolute;bottom:calc(100% + 12px);left:50%;width:280px;padding:12px 16px;border-radius:var(--r-md);background:var(--text);color:var(--bg);font-size:13px;line-height:1.6;opacity:0;pointer-events:none;transform:translateX(-50%) scale(.96);transform-origin:bottom center;transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease-settle);z-index:5}
-.fnwrap:hover .fnpop,.fnwrap:focus-within .fnpop{opacity:1;transform:translateX(-50%) scale(1)}
-
 /* easing demo */
 .track{position:relative;height:32px;border-radius:var(--r-full);background:var(--control)}
 .runner{position:absolute;inset:0;transform:translateX(0)}
@@ -683,7 +678,7 @@ a:hover{color:var(--accent-c)}
 .more:hover span{background-size:100% 1px}
 .more svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
 .more:hover svg{transform:translateX(2px)}
-@media (prefers-reduced-motion:reduce){.runner,.fnpop{transition:none !important}.progress{animation:none !important}}
+@media (prefers-reduced-motion:reduce){.runner{transition:none !important}.progress{animation:none !important}}
 
 .kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:13px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
 .kbd:hover{border-color:var(--line-strong);color:var(--text)}
@@ -792,8 +787,7 @@ html{scroll-padding-top:80px}
 .onsurface{display:inline-flex;padding:8px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line)}
 .demo > header,.demo > footer,.demo > .body,.demo > div[style*="space-between"],.demo > dl,.demo > ul,.demo > nav,.demo > div[role="listbox"]{flex:1 1 100%}
 .demo > header > div,.demo > footer > div{max-width:none !important}
-.demo .fnpop{opacity:1;transform:translateX(-50%) scale(1)}
-@media (max-width:900px){.specs{grid-template-columns:1fr}}
+.demo @media (max-width:900px){.specs{grid-template-columns:1fr}}
 
 
 /* touch screens: 44px hit areas without changing how anything looks */
@@ -803,11 +797,6 @@ html{scroll-padding-top:80px}
 .fn::before{left:50%;right:auto;width:44px;transform:translate(-50%,-50%)}
 }
 
-/* phones: the footnote becomes a panel pinned above the bottom edge, inside the page margins, so it can never push the page wider */
-@media (max-width: 640px){
-.fnpop{position:fixed;left:24px;right:24px;bottom:24px;width:auto;z-index:var(--z-menu);transform:translateY(8px);transform-origin:bottom center}
-.fnwrap:hover .fnpop,.fnwrap:focus-within .fnpop{transform:none}
-}
 
 /* work rows: date, text and + on one line; on phones the + stays beside the date and the text drops below */
 .jobhead{display:grid;grid-template-columns:112px minmax(0,1fr) auto;grid-template-areas:"date text icon";column-gap:24px;row-gap:4px;align-items:start}
@@ -825,6 +814,23 @@ html{scroll-padding-top:80px}
 a:hover .ext,a:focus-visible .ext{stroke:currentColor}
 @media (hover: hover) and (pointer: fine){a:hover .ext{transform:translate(1px,-1px)}}
 @media (prefers-reduced-motion:reduce){.ext{transition:none}a:hover .ext{transform:none}}
+
+/* ---- code blocks: language label + copy, minimal indigo syntax theme ---- */
+.codeblock{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);overflow:hidden}
+.codeblock .code-h{display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 8px 0 16px;border-bottom:1px solid var(--line)}
+.codeblock .lang{font-size:12px;font-weight:500;color:var(--text-3)}
+.codeblock pre{margin:0;padding:16px 0;overflow-x:auto;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:13px;line-height:1.75;color:var(--code-plain)}
+.codeblock code{display:block;min-width:max-content}
+.codeblock .line{display:block;padding:0 20px}
+.codeblock .line:empty::after{content:"\200b"}
+.codeblock .line.hl{background:var(--code-highlight);box-shadow:inset 2px 0 var(--accent-c)}
+.codeblock .line.hl .tk-c{color:var(--code-plain)}
+.tk-k{color:var(--code-keyword)}
+.tk-s{color:var(--code-literal)}
+.tk-n{color:var(--code-name)}
+.tk-c{color:var(--code-comment);font-style:italic}
+.tk-p{color:var(--code-punct)}
+.codeblock .line:empty::after{content:"\200b"}
 </style>
 </head><body>
 <div class="site">
@@ -1173,7 +1179,8 @@ a:hover .ext,a:focus-visible .ext{stroke:currentColor}
   <section class="spec wide" aria-labelledby="c-prose">
     <div class="spec-h">
       <h3 id="c-prose">Heading, paragraph, link, footnote</h3>
-      <p class="spec-u">Section headings get a # anchor on hover. Links inside prose are indigo with a soft underline and never carry the ↗ arrow; the arrow is only for standalone links (contact rows, the course row, project facts). Footnotes open as a small popover.</p>
+      <p class="spec-w">Every other Markdown element (lists, quotes, tables, inline code, checklists, callouts) is on the Prose reference artboard.</p>
+      <p class="spec-u">Section headings get a # anchor on hover. Links inside prose are indigo with a soft underline and never carry the ↗ arrow; the arrow is only for standalone links (contact rows, the course row, project facts). Footnote markers are links to a Notes section at the end of the article, below a short 64px rule (numbered, 14px grey). Each note ends with a ↩ link (24px target) back to its marker, which lands a third of the way down the screen. Arriving at a note or back at a marker briefly lights it up. No popovers.</p>
       <p class="spec-w">Used on: posts, case studies</p>
       <span class="mdx">MDX: <code>h2 · p · a · footnotes</code></span>
     </div>
@@ -1181,35 +1188,21 @@ a:hover .ext,a:focus-visible .ext{stroke:currentColor}
 <div class="body" style="display: flex; flex-direction: column; gap: 16px">
          <h2 id="demo-h" class="h"><a class="anchor" href="#demo-h" aria-label="Link to this section">#</a>Spending the motion budget</h2>
          <p style="margin: 0">I wanted the site to feel crafted without feeling busy, so motion follows <a href="#">a few rules</a>. Pages arrive in one quick motion.</p>
-         <p style="margin: 0; padding-top: 112px; font-size: 14px; color: var(--text-2)">Footnote marker with its popover open<span class="fnwrap"><button class="fn" aria-describedby="fn1">1</button><span class="fnpop" role="tooltip" id="fn1">Borrowed largely from Emil Kowalski’s writing on animation: how often something happens decides whether it should animate at all.</span></span></p>
+         <p style="margin: 0; font-size: 16px; line-height: 1.75; color: var(--text-2)">A sentence with a footnote marker<a class="fn" href="#" role="doc-noteref" aria-label="Note 1">1</a>, which links to the Notes section at the end of the post.</p>
        </div>
     </div>
   </section>
   <section class="spec wide" aria-labelledby="c-code">
     <div class="spec-h">
       <h3 id="c-code">Code block</h3>
-      <p class="spec-u">Monospace on the surface colour, Copy button top right. Highlighting comes from Shiki with a theme made from these tokens.</p>
+      <p class="spec-u">A bordered block on the surface colour with a header bar: the language on the left, Copy on the right. Minimal indigo syntax theme (keywords indigo, values deeper indigo, names in the text colour, comments and punctuation grey); highlighted lines get a light indigo background and a rule on the left.</p>
       <p class="spec-w">Used on: posts, case studies</p>
       <span class="mdx">MDX: <code>pre / code</code></span>
     </div>
     <div class="demo">
-<div class="body"><div style="position: relative">
-        <button class="button" style="position: absolute; top: 12px; right: 12px; background: var(--bg)">Copy</button>
-        <pre tabindex="0" role="region" aria-label="CSS for the page entrance" style="margin: 0; padding: 20px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); overflow-x: auto; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; line-height: 1.75; color: var(--text-2)"><code><span style="color: var(--text-3)">/* the page arrives as one piece */</span>
-@keyframes page-in {
-  from { opacity: 0; transform: translateY(6px); }
-}
-@keyframes page-fade {
-  from { opacity: 0; }
-}
-main {
-  animation: page-in 250ms cubic-bezier(.22, 1, .36, 1) backwards;
-}
-@view-transition { navigation: auto; }
-<span style="color: var(--text-3)">/* reduced motion: still a fade, just no movement */</span>
-@media (prefers-reduced-motion: reduce) {
-  main { animation: page-fade 150ms ease-out backwards; }
-}</code></pre>
+<div class="body">      <div class="codeblock">
+        <div class="code-h"><span class="lang">CSS</span><button class="button" type="button" style="background: var(--bg)">Copy</button></div>
+        <pre tabindex="0" role="region" aria-label="CSS for the page entrance"><code><span class="line"><span class="tk-c">/* the page arrives as one piece */</span></span><span class="line"><span class="tk-k">@keyframes</span> <span class="tk-n">page-in</span> <span class="tk-p">{</span></span><span class="line">  <span class="tk-n">from</span> <span class="tk-p">{</span> <span class="tk-n">opacity</span><span class="tk-p">:</span> <span class="tk-s">0</span><span class="tk-p">;</span> <span class="tk-n">transform</span><span class="tk-p">:</span> translateY<span class="tk-p">(</span><span class="tk-s">6px</span><span class="tk-p">)</span><span class="tk-p">;</span> <span class="tk-p">}</span></span><span class="line"><span class="tk-p">}</span></span><span class="line"><span class="tk-k">@keyframes</span> <span class="tk-n">page-fade</span> <span class="tk-p">{</span></span><span class="line">  <span class="tk-n">from</span> <span class="tk-p">{</span> <span class="tk-n">opacity</span><span class="tk-p">:</span> <span class="tk-s">0</span><span class="tk-p">;</span> <span class="tk-p">}</span></span><span class="line"><span class="tk-p">}</span></span><span class="line"><span class="tk-n">main</span> <span class="tk-p">{</span></span><span class="line">  <span class="tk-n">animation</span><span class="tk-p">:</span> page-in <span class="tk-s">250ms</span> cubic-bezier<span class="tk-p">(</span><span class="tk-s">.22</span><span class="tk-p">,</span> <span class="tk-s">1</span><span class="tk-p">,</span> <span class="tk-s">.36</span><span class="tk-p">,</span> <span class="tk-s">1</span><span class="tk-p">)</span> backwards<span class="tk-p">;</span></span><span class="line"><span class="tk-p">}</span></span><span class="line"><span class="tk-k">@view-transition</span> <span class="tk-p">{</span> <span class="tk-n">navigation</span><span class="tk-p">:</span> auto<span class="tk-p">;</span> <span class="tk-p">}</span></span><span class="line"><span class="tk-c">/* reduced motion: still a fade, just no movement */</span></span><span class="line"><span class="tk-k">@media</span> <span class="tk-p">(</span><span class="tk-n">prefers-reduced-motion</span><span class="tk-p">:</span> reduce<span class="tk-p">)</span> <span class="tk-p">{</span></span><span class="line">  <span class="tk-n">main</span> <span class="tk-p">{</span> <span class="tk-n">animation</span><span class="tk-p">:</span> page-fade <span class="tk-s">150ms</span> ease-out backwards<span class="tk-p">;</span> <span class="tk-p">}</span></span><span class="line"><span class="tk-p">}</span></span></code></pre>
       </div></div>
     </div>
   </section>

@@ -7,12 +7,15 @@ import {
   type Topic,
 } from "../lib/content.ts";
 import { formatMonthDay, isoDate } from "../lib/format.ts";
+import { linkTarget, newTabNote } from "../lib/links.ts";
 import Button from "./Button.astro";
 import Chip from "./Chip.astro";
 import List from "./List.astro";
 import ListRow from "./ListRow.astro";
+import MetaItem from "./MetaItem.astro";
 import MetaLine from "./MetaLine.astro";
 import PageTitle from "./PageTitle.astro";
+import VisuallyHidden from "./VisuallyHidden.astro";
 
 type Props = {
   page: CollectionEntry<"pages">["data"];
@@ -40,12 +43,13 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
     <div class="heading">
       <div class="title-row">
         <PageTitle>{page.title}</PageTitle>
-        <Button href="/rss.xml">
+        <Button href="/rss.xml" {...linkTarget("/rss.xml")}>
           <svg viewBox="0 0 16 16" aria-hidden="true">
             <path d="M3.5 3a9.5 9.5 0 0 1 9.5 9.5M3.5 7a5.5 5.5 0 0 1 5.5 5.5"></path>
             <circle cx="4" cy="12" r="1.1"></circle>
           </svg>
           Subscribe
+          <VisuallyHidden>{newTabNote}</VisuallyHidden>
         </Button>
       </div>
       <p>{page.intro}</p>
@@ -84,13 +88,10 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
                 {formatMonthDay(post.data.date)}
               </time>
               {post.data.description}
-              <MetaLine
-                slot="meta"
-                items={[
-                  topicLabel(topics, post.data.topic),
-                  `${String(minutes)} min read`,
-                ]}
-              />
+              <MetaLine slot="meta">
+                <MetaItem>{topicLabel(topics, post.data.topic)}</MetaItem>
+                <MetaItem>{minutes} min read</MetaItem>
+              </MetaLine>
             </ListRow>
           ))}
         </List>

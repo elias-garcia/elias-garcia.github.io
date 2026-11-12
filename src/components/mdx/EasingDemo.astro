@@ -1,0 +1,170 @@
+---
+import Button from "../Button.astro";
+
+type Props = {
+  caption: string;
+};
+
+const { caption } = Astro.props;
+const curves = ["linear", "ease-out"] as const;
+---
+
+<figure class="demo" data-easing-demo>
+  <div class="runs">
+    {curves.map((curve) => (
+      <div class="run">
+        <span class="curve">{curve}</span>
+        <div class:list={["track", curve]}>
+          <div class="runner">
+            <span class="dot"></span>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+  <span class="replay">
+    <Button data-easing-replay>Replay</Button>
+  </span>
+  <figcaption>{caption}</figcaption>
+</figure>
+
+<script>
+  for (const demo of document.querySelectorAll<HTMLElement>(
+    "[data-easing-demo]",
+  )) {
+    demo
+      .querySelector("[data-easing-replay]")
+      ?.addEventListener("click", () => {
+        // Two identical animations, swapped on each press, so it restarts.
+        const first = demo.classList.contains("run-a");
+        demo.classList.toggle("run-a", !first);
+        demo.classList.toggle("run-b", first);
+      });
+  }
+</script>
+
+<style>
+  /* The caption is the figure's last child, as figcaption must be; the grid
+     puts Replay beside it, or under it on phones. */
+  .demo {
+    display: grid;
+    grid-template-areas:
+      "runs runs"
+      "caption replay";
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--space-4) var(--space-3);
+    margin: var(--space-2) 0;
+    padding: var(--space-5);
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+
+    @media (width <= 40rem) {
+      grid-template-areas:
+        "runs"
+        "caption"
+        "replay";
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .runs {
+    grid-area: runs;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .run {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .curve {
+    flex: 0 0 var(--demo-label);
+    color: var(--text-3);
+    font-size: var(--text-meta);
+  }
+
+  .track {
+    position: relative;
+    flex: 1;
+    block-size: var(--control-h);
+    overflow: clip;
+    border-radius: var(--r-full);
+    background: var(--control);
+  }
+
+  .runner {
+    position: absolute;
+    inset: 0;
+  }
+
+  .dot {
+    position: absolute;
+    inset-block-start: var(--space-2);
+    inset-inline-start: var(--space-2);
+    inline-size: var(--runner);
+    block-size: var(--runner);
+    border-radius: 50%;
+    background: var(--text-3);
+
+    .ease-out & {
+      background: var(--accent);
+    }
+  }
+
+  .run-a .runner {
+    animation: run-a var(--dur-demo) both;
+  }
+
+  .run-b .runner {
+    animation: run-b var(--dur-demo) both;
+  }
+
+  .linear .runner {
+    animation-timing-function: linear;
+  }
+
+  .ease-out .runner {
+    animation-timing-function: var(--ease-settle);
+  }
+
+  /* Reduced motion: the dots jump straight to the end. */
+  @media (prefers-reduced-motion: reduce) {
+    .run-a .runner,
+    .run-b .runner {
+      animation-duration: 0s;
+    }
+  }
+
+  @keyframes run-a {
+    to {
+      translate: calc(100% - var(--control-h)) 0;
+    }
+  }
+
+  @keyframes run-b {
+    to {
+      translate: calc(100% - var(--control-h)) 0;
+    }
+  }
+
+  figcaption {
+    grid-area: caption;
+    color: var(--text-3);
+    font-size: var(--text-meta);
+  }
+
+  /* Replaying needs the script. */
+  .replay {
+    grid-area: replay;
+    justify-self: start;
+
+    @media (scripting: none) {
+      display: none;
+    }
+  }
+</style>

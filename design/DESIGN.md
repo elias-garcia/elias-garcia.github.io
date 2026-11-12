@@ -30,7 +30,7 @@ The **zinc** and **indigo** palettes only, 14 tokens, each with a light and a da
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `--bg` | white | zinc-950 | Page; also text on indigo fills and on dark popovers |
+| `--bg` | white | zinc-950 | Page; also text on indigo fills and on the dark skip link |
 | `--surface` | zinc-50 | zinc-900 | Previews, code blocks, card hover |
 | `--control` | zinc-100 | zinc-800 | Buttons, chips, search icon tiles |
 | `--control-hover` | zinc-200 | zinc-700 | Button and chip hover |
@@ -98,7 +98,7 @@ A 4px grid. Every padding, margin, gap and offset is a multiple of 4. Only 1–2
 | Token | Value | Use |
 |---|---|---|
 | `--r-sm` | 4px | Search highlights, key hints, footnote markers, focus ring on text links |
-| `--r-md` | 8px | Icon tiles, menu and search rows, popovers |
+| `--r-md` | 8px | Icon tiles, menu and search rows |
 | `--r-lg` | 12px | Cards, previews, code blocks, menus, the search panel |
 | `--r-full` | 999px | Buttons, chips, status labels |
 
@@ -111,7 +111,7 @@ Three durations, two curves. Interface feedback never takes longer than 250ms.
 | Token | Value | Use |
 |---|---|---|
 | `--dur-fast` | 100ms | Press feedback, search row highlight |
-| `--dur` | 150ms | Hover, colour and opacity, popovers, Download CV menu |
+| `--dur` | 150ms | Hover, colour and opacity, Download CV menu |
 | `--dur-slow` | 250ms | Page entrance, expanding rows, underline growing |
 | `--ease` | ease-out | Default for everything |
 | `--ease-settle` | cubic-bezier(.22, 1, .36, 1) | Things arriving: the page, menus, expanding rows |
@@ -119,12 +119,13 @@ Three durations, two curves. Interface feedback never takes longer than 250ms.
 The motion system:
 1. **Page entrance.** The header never moves. `main` and the footer arrive as one piece: opacity 0→1 and translateY 6px→0 over 250ms with `--ease-settle`. No stagger, no scroll reveals.
 2. **Between pages.** Cross-document View Transitions (`@view-transition { navigation: auto; }`); the header keeps its place (`view-transition-name: site-header`), the old content fades out in 100ms, then step 1 plays. The Roleburn preview (Home tile and Projects card) morphs into the case study hero (shared `view-transition-name: roleburn-preview`, 400ms). This needs a multi-page site, which Astro builds by default.
-3. **Interaction.** Press scales to .97. Nothing animates from scale(0); popovers grow from their trigger (`transform-origin` at the trigger).
+3. **Interaction.** Press scales to .97. Nothing animates from scale(0); menus grow from their trigger (`transform-origin` at the trigger).
 4. **Touch.** Hover movement and list dimming run only on real pointers: wrap them in `@media (hover: hover) and (pointer: fine)`. A tap must never leave rows dimmed.
 5. **Within Writing.** Moving between `/writing` and its topic pages keeps the page in place: no page entrance, only the posts re-enter (the same fade and 6px rise, over 150ms). The previous page comes from the Navigation API; without it, the normal entrance plays.
-6. **Reduced motion.** Gentler, not zero: pages fade in over 150ms without moving; everything that moves becomes instant; the analog-style loops in illustrations stop.
+6. **In-page jumps.** Following a `#` link (heading anchors, footnote markers and back links, the skip link) scrolls smoothly: `@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth } }`. `scroll-padding-top` keeps the target clear of the sticky header, and footnote targets get their arrival tint.
+7. **Reduced motion.** Gentler, not zero: pages fade in over 150ms without moving; everything that moves becomes instant; the analog-style loops in illustrations stop.
 
-Deliberate exceptions: the Roleburn morph (400ms), the easing demo in the post (600ms), and the slow loops inside project illustrations.
+Deliberate exceptions: the Roleburn morph (400ms), the easing demo in the post (600ms), the footnote arrival highlight (2s), and the slow loops inside project illustrations.
 
 ### 2.6 Elevation and layers
 
@@ -134,7 +135,7 @@ One shadow, `--shadow-overlay`, for things that float (search dialog, Download C
 |---|---|---|
 | content | 2, 5 | Local stacking inside a component |
 | `--z-header` | 10 | Sticky header, reading progress bar |
-| `--z-menu` | 30 | Download CV menu and its click-away layer; footnote panel on phones |
+| `--z-menu` | 30 | Download CV menu and its click-away layer |
 | `--z-dialog` | 50 | Search dialog and its backdrop |
 | `--z-skip` | 100 | Skip link |
 
@@ -168,7 +169,6 @@ One breakpoint: **640px**. At ≤640px:
 - the Home avatar is 80px and sits above the intro text;
 - work rows put the + beside the date and the company/role below;
 - the post meta uses the short date ("Nov 9, 2026");
-- footnotes open as a panel pinned 24px above the bottom edge, inside the page margins.
 
 ---
 
@@ -204,17 +204,58 @@ Each component appears exactly once in the design system. Live versions: `refere
 - **Author footer.** Ends every post: 40px photo, name (`rel="author"`, links Home) and role, inside the article's `<footer>` / `<address>`.
 
 ### Prose (MDX mapping)
-These are what Markdown elements map to in posts and case studies:
+Every element a Markdown or MDX post can produce. Live versions of all of them: `reference/prose.html` (and the phone screenshots); its MDX source is the draft post `src/content/writing/prose.mdx`, at `/writing/prose` in `npm run dev` only. Use it to check every element whenever styles change.
 
-| Markdown | Component | Notes |
-|---|---|---|
-| `## h2` | Heading | 18/600, an extra 24px above (on top of the paragraph gap); a `#` anchor link appears on hover and on keyboard focus, 24px to the left |
-| `p` | Paragraph | 16/1.75 in posts, `--text-2` |
-| `[a](…)` | Prose link | `--accent`, 1px `--accent-line` underline at 3px offset; solid and 2px on hover/focus. No arrow, even for external links |
-| footnote `[^1]` | Footnote | 20px round marker (12px text); hover/focus shows a dark popover (`--text` bg, `--bg` text, 280px) above the marker; on phones a panel pinned to the bottom |
-| ` ```lang ` | Code block | `--surface`, `--line` border, `--r-lg`, 20px padding, 13/1.75 mono, horizontal scroll inside the block (focusable `role="region"` with a label), Copy button top right |
-| image | Figure | `<figure>` + `<figcaption>` (13px `--text-3`), image `--r-lg` |
-| `ul` / `ol` | List | Not used in posts yet: when needed, reuse the work-row bullet style (4px round dot in `--text-3`, 16px indent) at long-form size |
+| Markdown | Style |
+|---|---|
+| `## h2` | Heading: 18/600, an extra 24px above (on top of the paragraph gap); a `#` anchor link appears on hover and on keyboard focus, 24px to the left |
+| `### h3` | 16/600 `--text` (the text size, set apart by weight) |
+| `#### h4` | 15/600 `--text`. No deeper levels |
+| `p` | 16/1.75 `--text-2`, `text-wrap: pretty`; 24px between blocks |
+| `**strong**` / `*em*` / `~~del~~` | 600 in `--text` / italic / `--text-3` with line-through |
+| `[a](…)` | Prose link: `--accent`, 1px `--accent-line` underline at 3px offset; solid and 2px on hover/focus. No external arrow, even for external links |
+| `` `code` `` | 0.875em mono, `--text` on `--control`, `--r-sm`, 0 4px padding. It always takes the size of where it sits (0.875em of a heading or a note). Inside a link it takes the link colour (`color: inherit`) and keeps the underline. |
+| `<kbd>` | 13px, `--bg`, 1px `--line` border with a 2px bottom, `--r-sm`, min-width 20px |
+| `- list` | 24px indent, 4px round dot in `--text-3`; nested lists get a hollow dot; 4px between items; two levels max |
+| `1. list` | Same indent, numbers in `--text-3` with tabular figures |
+| `- [x] task` | No dot; a drawn 16px box (`--line-strong` border, `--r-sm`); checked = `--accent` fill with a `--bg` tick and the item text in `--text-3`. Never use the browser's faded disabled checkbox |
+| `> quote` | 2px `--line-strong` rule on the left, 20px indent, same text style (no italics, no colour); an optional source line in 14px `--text-3`. The source sits outside the quote, as the HTML spec asks: `<Quote source="…">` around the Markdown quote renders `figure > blockquote + figcaption` |
+| `---` | Thematic break: no line, three spaced dots `· · ·` in `--text-3`, centred, 24px tall |
+| image | `<figure>`: full column width, `--r-lg`, 1px `--line` border; caption 13px `--text-3` 8px below |
+| table | Inside a bordered `--r-lg` box that scrolls sideways (`overflow-x: auto`, focusable region with a label). Table `width: max-content; min-width: 100%` so cells never wrap mid-word on phones. Header cells 13/500 `--text-3` on `--surface`; body 14/1.6 `--text-2`; row hairlines in `--line`; numeric columns right-aligned with tabular figures |
+| ` ```lang ` | Code block, below |
+| footnote `[^1]` | See "Footnotes" below: a linked marker and a Notes section at the end of the article, with back links |
+| `ul` / `ol` in Notes | The Notes list keeps its own 14px style: scope list styles to lists in the article text (`.body > ul`, `.body li > ul`…), not every list |
+
+MDX-only components, for the occasional post that needs them:
+- **Callout** (`<Note>`): `--surface`, 1px `--line` border, `--r-lg`, 16px 20px padding; a 13/500 label ("Note") over 15/1.6 text. Grey, never indigo.
+- **Details** (`<details>`): bordered `--r-lg` box; summary 15/500 with a 16px chevron; content indented to the text. Opening and closing animate the height with the expanding-row motion (250ms, `--ease-settle`) and the chevron turns 90° in step. Use the native element with `interpolate-size: allow-keywords` and a transition on `::details-content` (height and `content-visibility … allow-discrete`); browsers without support open instantly, and reduced motion disables it.
+
+**Code blocks.** A bordered block (`--line`, `--r-lg`) on `--surface` with a 48px header bar: the language on the left (12/500 `--text-3`, the code fence's name as written, e.g. `ts`) and the Copy button on the right (fill `--bg` on the grey surface). Code below: 13/1.75 mono, 16px vertical padding, 20px per line horizontally, horizontal scroll inside the block (focusable region with a label). Blank lines keep their height.
+
+**Syntax theme: minimal indigo.** Mostly neutral; indigo marks keywords and values. Every colour is at least 4.5:1 on `--surface` in both themes (indigo-500 is excluded: 4.4 / 3.9).
+
+| Token | Light | Dark | Used for |
+|---|---|---|---|
+| `--code-plain` | zinc-600 | zinc-300 | Everything not listed below |
+| `--code-keyword` | indigo-600 | indigo-400 | `const`, `import`, `return`, `@media` |
+| `--code-literal` | indigo-800 | indigo-200 | Strings and numbers |
+| `--code-name` | zinc-900 | zinc-100 | Functions, properties, tags |
+| `--code-comment` | zinc-500, italic | zinc-400, italic | Comments |
+| `--code-punct` | zinc-500 | zinc-400 | Punctuation and operators |
+| `--code-highlight` | indigo-50 | indigo-950 | Highlighted lines, with a 2px `--accent` rule on the left |
+
+On a highlighted line, comments switch to `--code-plain` (zinc-500 on indigo-50 falls below 4.5:1). Implementation: `src/lib/shiki-theme.ts`, a Shiki theme that maps token scopes straight to the code tokens; `CodeBlock` styles lines and highlights. Highlight lines in posts with `// [!code highlight]` via `transformerNotationHighlight`. The language label comes from the code fence's language (Astro adds `data-language` to `pre`); map `pre` to a `CodeBlock` component that renders the header bar.
+
+**Footnotes.** No popovers: a footnote is a link to its note, and every note links back.
+
+- **Marker.** A link (`<a href="#note-1" id="ref-1" aria-label="Note 1">1</a>`) placed straight after the word or punctuation it belongs to (after all punctuation except a dash), with only a 4px margin-left: the boxed equivalent of the typographic "no space before a note number". 20px, `--r-sm`, `--control` fill, 12px/600 `--text-2`. Hover and focus: `--accent` fill with `--bg` text (6.5:1), no underline. Exclude it from the prose-link style (`.body p a:not(.fn)`), or it inherits indigo text and becomes unreadable on hover.
+- **Notes section.** After the last paragraph and before the author footer: `<section aria-labelledby="notes-h">` with a 14/500 "Notes" label and an `<ol>` (14px/1.6, `--text-2`, numbers in `--text-3`). Above it, a short footnote rule: 64px × 1px in `--line`, 40px below the article, then 24px to the label (a full-width line would compete with the author footer's line just below).
+- **Back link.** Each note ends with a return link (`aria-label="Back to reference 1"`): a 12px icon in a 24×24px target (WCAG 2.5.8), `--r-sm`, `--text-3`; on hover and focus `--accent` with a `--control` background. 4px margin-left (after the normal word space), so the hover square starts about 7px from the text and the icon about 13px; negative vertical margin keeps the line height unchanged.
+- **Scrolling.** Both directions scroll smoothly (see Motion, in-page jumps). Notes land below the sticky header (`scroll-padding-top`); markers land a third of the way down the screen (`.fn { scroll-margin-top: 30vh }`) so the sentence before them is visible.
+- **Arrival.** The note you jump to is tinted `--tint`, fading out over 2s. A marker you return to lights up in its hover colours (`--accent` fill, `--bg` text) and fades back to normal over 2s. With reduced motion the scroll is instant and both stay highlighted.
+- **Links and code in notes.** Notes can contain links and inline code; links are normal prose links (`--accent`, `--accent-line` underline, solid on hover) at the note size.
+- **In the build.** MDX with GitHub-flavoured footnotes (remark-gfm) already outputs this structure (references, a footnotes section, back links): restyle it to this spec, rename the section label to "Notes", and replace the "↩" text with the icon, through the MDX components map. No DPUB roles: Astro's attribute types don't allow them. The Copy page Markdown keeps standard `[^1]` footnotes.
 
 Custom MDX components: `<EasingDemo />` (two runners, linear vs ease-out, 600ms, Replay button), `<RoleburnHero />` (the animated radar illustration, decorative, `aria-hidden`), `<Figure />`.
 
@@ -299,12 +340,12 @@ Every page must pass axe (WCAG 2.2 AA + best practice) in light and dark, at 128
 - **`.md` for posts only.** A static endpoint `/writing/<slug>.md` per post, generated from the same MDX with custom components stripped; `<link rel="alternate" type="text/markdown">` on each post. Other pages have no `.md` version.
 - **Copy page** on posts copies the same Markdown.
 - **JSON-LD.** `Person` on Home (name, jobTitle, sameAs GitHub/LinkedIn/X, address country PT); `BlogPosting` on posts (author, datePublished, about/topic).
-- **RSS** via `@astrojs/rss`, with the same posts as the Writing page (drafts only in `npm run dev`). Subscribe links straight to `/rss.xml`; the feed is not styled (browsers are removing XSLT). **Sitemap** via `@astrojs/sitemap`. **robots.txt** explicitly allows AI crawlers (GPTBot, ClaudeBot, PerplexityBot…).
+- **RSS** via `@astrojs/rss`, with the same posts as the Writing page (drafts only in `npm run dev`). Subscribe links straight to `/rss.xml`, in a new tab; the feed is not styled (browsers are removing XSLT). **Sitemap** via `@astrojs/sitemap`. **robots.txt** explicitly allows AI crawlers (GPTBot, ClaudeBot, PerplexityBot…).
 - **App icons and head:** `design/head.html`.
 
 ---
 
 ## 8. Build notes
 
-- **Code highlighting:** built-in Shiki with its `css-variables` theme, with the `--astro-code-*` variables set from tokens so dark mode follows automatically. The design is deliberately two-tone: code in `--text-2`, comments in `--text-3`; optionally keywords in `--accent`.
+- **Code highlighting:** built-in Shiki with the minimal indigo theme in `src/lib/shiki-theme.ts` (see Code blocks above).
 - **Download CV:** link the menu items to `/cv.pdf` and `/cv.md`; generate `/cv.md` at build time from the content and compute both sizes at build time.

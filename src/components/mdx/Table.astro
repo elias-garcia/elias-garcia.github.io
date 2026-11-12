@@ -1,0 +1,12 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+// Wide tables scroll sideways inside a box that keyboards can reach.
+type Props = HTMLAttributes<"table">;
+---
+
+<div class="table" tabindex="0" role="region" aria-label="Table">
+  <table {...Astro.props}>
+    <slot />
+  </table>
+</div>
