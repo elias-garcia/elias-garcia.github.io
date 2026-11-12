@@ -175,7 +175,7 @@ One breakpoint, **640px** (Tailwind's `sm`), and nothing else: no other media qu
 
 ## 3. Components
 
-Each component appears exactly once in the design system. Live versions: `reference/components.html` and `screenshots/components.png`.
+Each component appears exactly once in the design system. Live versions: `reference/components.html` (layout, actions, lists and cards, text and metadata) and `reference/components-2.html` (prose and search), with `screenshots/components.png` and `screenshots/components-2.png`.
 
 ### Layout
 - **Header.** Sticky, 64px, translucent `--bg` with backdrop blur, hairline at the bottom. Logo (links Home) · Home · Projects · Writing · search button (magnifier + "⌘K", icon only on phones). The current section is `--accent` with a 1px underline; inside a case study or post, its parent (Projects/Writing) is current with `aria-current="true"`; on the page itself `aria-current="page"`. Same on every page.
@@ -194,8 +194,17 @@ Each component appears exactly once in the design system. Live versions: `refere
 ### Lists and cards
 - **List row.** 112px date gutter (`<time>` in `--text-3`), title 15/500, one 14px line in `--text-2`, 12px vertical padding, no dividers. Rows are `<li>` in a `<ul role="list">`. When one row is hovered, the other link rows fade to .45 (pointer devices only). The fade covers the whole list the row belongs to: on Writing that is every post across all year groups (the years are one list split by headings; scope the rule to the container of the year groups); on Home each section (Writing, Speaking, Teaching, Work) fades only its own rows. **A row is a link only if it has somewhere to go; otherwise it is a plain row**: not an `<a>`, no hover, not focusable.
 - **List row attachment.** Optional media under a list row's text, at most one per row, of one of two kinds. It starts exactly under the row's title: it wraps like the row, with an empty 112px date column beside it that drops away on phones together with the date. 12px from the text above and from the next row. Every attachment image has the same size and shape: a third of the text column (a slot in a row of three, 8px gaps), 3:2, `object-fit: cover`, 8px radius, hairline `--line` border, `--surface` behind it.
-  - **Photos:** 1 to 3 images in a `<ul role="list">` grid of three columns; fewer stay left-aligned at the same size; never more than three. Every image has descriptive alt text. Not clickable for now. The talk photos ship pre-processed (1200×800, colour-corrected to match each other); don't re-crop them. Lazy-loaded.
+  - **Photos:** 1 to 3 images in a `<ul role="list">` grid of three columns; fewer stay left-aligned at the same size; never more than three. Every image has descriptive alt text. The talk photos ship pre-processed (1200×800, colour-corrected to match each other); don't re-crop them. Lazy-loaded. Each photo is a `<button>` wrapping the image (`aria-label` "Open photo 2 of 3: {talk title}", `cursor: zoom-in`, image at 88% opacity on hover) that opens the **image viewer** on that photo.
   - **Video preview:** exactly one bordered card spanning the full text column (`--r-lg`, `--bg`), a single link to the video, separate from the row's link. The thumbnail fills the first third (same size as a photo) with a 32px round play button centred on it (`--bg` at 92% with blur, `--line` border, 16px play icon); then the label (14/500, "Watch the trailer") and the source (13px `--text-3`, "YouTube" + ↗). Hover/focus: the card border goes `--line-strong`, the label turns `--accent`, the play button inverts (`--text` fill, `--bg` icon). It opens the video elsewhere and never embeds a player; no duration.
+- **Image viewer.** Opens from a photo attachment. A modal dialog, labelled "Photo 2 of 3: {talk title}", in the search palette's language:
+  - **Card:** 720px wide (`min(720px, 100%)`), `--bg`, `--line` border, `--r-lg`, `--shadow-overlay`, over the `--scrim` backdrop (with 2px blur); the page behind doesn't scroll.
+  - **Inside:** the photo on top (3:2, `object-fit: contain` on `--surface`, a hairline below it); the caption padded 16px 20px: talk title (15/500) and a meta line (13px `--text-3`): place · date · "2 / 3"; a 44px footer with key hints, "← → to move" and "esc to close" (12px `--text-3`).
+  - **Controls:** 40px round buttons (`--bg` at 92% with blur, `--line` border, 16px icons with a 1.5px stroke; on hover `--line-strong` border and `--bg`): × in the photo's top-right corner, ‹ › centred on the photo's left and right edges.
+  - **Behaviour:** focus moves to × on open, Tab cycles only inside the dialog, and on close focus returns to the thumbnail that opened it. Esc, ×, clicking the backdrop and a swipe down (more than 80px, more vertical than horizontal) close it; ← → and horizontal swipes (more than 50px) move, wrapping around. The count is `aria-live="polite"`. Without JavaScript the photos stay visible and the buttons do nothing.
+  - **One photo:** no arrows, no count; ← → do nothing.
+  - **Phones (below 640px):** full screen on `--bg`, photo full width, caption below, no arrows (swipe) and no footer, × fixed top-right at 44px.
+  - **Motion:** the card fades and scales from 0.98 (250ms, `--ease-settle`), the backdrop fades (150ms); with reduced motion, a fade only.
+  - **Image:** the same source as the thumbnail, at widths up to 1440 (2× the card).
 - **Course rating line.** Under a course's line: one 12px filled star in `--text`, the score (500, `--text`), the review count in `--text-3` ("4.7 (26 reviews)"), then "30 lessons · 2h 20m" with "·" separators, all 13px `--text-3`. The visible rating is `aria-hidden`; a visually hidden sentence carries it for screen readers: "Rated 4.7 out of 5 from 26 reviews." Never a row of yellow stars. The rating is a fixed value in the content, updated by hand.
 - **Expandable row (work experience).** A native `<details>` whose `<summary>` holds the date, company (500) + role, and a + icon that rotates to ×. The body's height animates open (250ms) where the browser supports it, and lists the bullets. Layout is a grid: `112px 1fr auto` on desktop; on phones `"date icon" / "text text"` so the + stays beside the date. Only one open at a time (the rows share a `name`). **The newest job is open on load**, the rest closed.
   - **Work mode:** the company line carries how the job was done, after the company name: a "·" (8px each side, `--text-3`) then the mode in 14px 400 `--text-3`: "Remote", or the mode and city ("On-site, A Coruña", "Hybrid, A Coruña"). Plain text: no chips, icons or colour. Screen readers get a visually hidden comma instead of the dot ("Polygon Labs, Remote").
@@ -281,7 +290,7 @@ Custom MDX components: `<EasingDemo />` (two runners, linear vs ease-out, 600ms,
 - Index: a small JSON index built from the content collections at build time and fetched when the dialog first opens.
 
 ### Key hint
-20px square, 12px text, `--line` border, `--r-sm`, never focusable: ↑ ↓ ↵ esc.
+20px square, 12px text, `--line` border, `--r-sm`, never focusable: ↑ ↓ ↵ esc ← →. In a footer, keys that work together sit 4px apart as a group, and the group sits 8px before its label ("↑ ↓ to move"), so each key and label read as a pair.
 
 ---
 

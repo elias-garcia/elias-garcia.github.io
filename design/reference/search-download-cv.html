@@ -297,6 +297,49 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
 
 .cmode{font-size:14px;font-weight:400;color:var(--text-3)}
 
+
+/* image viewer. Thumbnails are real buttons; the viewer is a modal dialog: focus moves to Close on open and returns
+   to the thumbnail on close; Tab stays inside; Esc, the × and the backdrop close it; ← → and swipe move; swipe down closes. No counter or arrows for one photo */
+.phbtn{display:block;width:100%;padding:0;border:0;background:none;border-radius:var(--r-md);cursor:zoom-in}
+.phbtn img{transition:opacity var(--dur) var(--ease)}
+@media (hover: hover) and (pointer: fine){.phbtn:hover img{opacity:.88}}
+html:has(.vwrap){overflow:hidden}
+.vwrap{position:fixed;inset:0;z-index:var(--z-dialog);display:flex;align-items:center;justify-content:center;padding:24px}
+.vscrim{position:fixed;inset:0;border:0;padding:0;margin:0;cursor:zoom-out;animation:palFade var(--dur) var(--ease) both}
+.vdlg{position:relative;outline:none;animation:vwIn var(--dur-slow) var(--ease-settle) both}
+@keyframes vwIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
+.vfig{margin:0;display:flex;flex-direction:column}
+.vimg{display:block;width:100%;height:100%;object-fit:contain}
+.vcap{display:flex;flex-direction:column;gap:2px;min-width:0}
+.vtitle{font-size:15px;font-weight:500;line-height:1.35;color:var(--text)}
+.vmeta{display:flex;flex-wrap:wrap;column-gap:8px;font-size:13px;line-height:1.6;color:var(--text-3)}
+.vcount{font-variant-numeric:tabular-nums}
+.vbtn{position:absolute;z-index:1;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:color-mix(in oklch, var(--bg) 92%, transparent);color:var(--text);backdrop-filter:blur(4px);cursor:pointer;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease)}
+.vbtn svg{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.vbtn:hover{border-color:var(--line-strong);background:var(--bg)}
+/* the viewer is a card in the search palette's language: the photo on top of a bordered card, caption below, a footer with key hints */
+.vw-card .vscrim{background:var(--scrim);backdrop-filter:blur(2px)}
+.vw-card .vdlg{width:min(720px,100%);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);overflow:hidden}
+.vw-card .vimgbox{aspect-ratio:3 / 2;background:var(--surface);border-bottom:1px solid var(--line)}
+.vw-card .vcap{padding:16px 20px}
+.vw-card .vclose{top:12px;right:12px}
+.vw-card .vprev{left:12px;top:calc((min(720px,100vw - 48px) * 2 / 3) / 2);margin-top:-20px}
+.vw-card .vnext{right:12px;top:calc((min(720px,100vw - 48px) * 2 / 3) / 2);margin-top:-20px}
+.vfoot{display:flex;justify-content:space-between;gap:16px;height:44px;align-items:center;padding:0 20px;border-top:1px solid var(--line);font-size:12px;color:var(--text-3)}
+.vfoot > span{display:inline-flex;align-items:center;gap:8px}
+.vkeys{display:inline-flex;gap:4px}
+/* phones: the viewer goes full screen; arrows give way to swipe, the close button stays */
+@media (max-width: 639.98px){
+.vwrap{padding:0;align-items:stretch}
+.vw-card .vdlg{width:100%;height:100%;border:0;border-radius:0;box-shadow:none;display:flex;flex-direction:column;justify-content:center;padding:64px 0 24px;gap:16px}
+.vw-card .vimgbox{width:100%;max-height:none;border-radius:0;border:0}
+.vw-card .vdlg{background:var(--bg)}
+.vcap{padding:0 24px !important}
+.vprev,.vnext{display:none}
+.vbtn.vclose{position:fixed;top:12px;right:12px;width:44px;height:44px}
+.vfoot{display:none}
+}
+@media (prefers-reduced-motion:reduce){.vdlg{animation:palFade var(--dur) var(--ease) both}.vscrim{animation:none}}
 </style>
 </head><body>
 
@@ -604,15 +647,15 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
             <span style="font-weight: 500">Preserving privacy with Polygon ID profiles</span>
             <span style="font-size: 14px; color: var(--text-2)">House of ZK, EthDenver</span>
           </span>
-          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c"><ul class="photos" role="list"><li><img src="../assets/talk-hozk.jpg" alt="Elías pointing at the Polygon ID identity state diagram while presenting at House of ZK, EthDenver 2024" loading="lazy"></li></ul></div></div>
+          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c"><ul class="photos" role="list"><li><button class="phbtn" type="button" aria-label="Open photo 1 of 1: Preserving privacy with Polygon ID profiles"><img src="../assets/talk-hozk.jpg" alt="Elías pointing at the Polygon ID identity state diagram while presenting at House of ZK, EthDenver 2024" loading="lazy"></button></li></ul></div></div>
         </li>
         <li style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
           <time datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3)">Jan 2024</time>
           <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
-            <span style="font-weight: 500">Getting started with Polygon ID</span>
+            <span style="font-weight: 500">Zero-knowledge identity with Polygon ID</span>
             <span style="font-size: 14px; color: var(--text-2)">Polygon AggCave, EthDenver</span>
           </span>
-          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c"><ul class="photos" role="list"><li><img src="../assets/talk-aggcave.jpg" alt="Elías, holding a microphone, beside a fellow speaker presenting the main features of Polygon ID at the Polygon Aggregation Cave, EthDenver 2024" loading="lazy"></li></ul></div></div>
+          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c"><ul class="photos" role="list"><li><button class="phbtn" type="button" aria-label="Open photo 1 of 1: Zero-knowledge identity with Polygon ID"><img src="../assets/talk-aggcave.jpg" alt="Elías, holding a microphone, beside a fellow speaker presenting the main features of Polygon ID at the Polygon Aggregation Cave, EthDenver 2024" loading="lazy"></button></li></ul></div></div>
         </li>
         <li style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
           <time datetime="2023-07" style="flex: 0 0 112px; color: var(--text-3)">Jul 2023</time>
@@ -620,7 +663,7 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
             <span style="font-weight: 500">Issuing verifiable credentials with Polygon ID</span>
             <span style="font-size: 14px; color: var(--text-2)">Polygon DevX Global Tour, Lisbon</span>
           </span>
-          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c"><ul class="photos" role="list"><li><img src="../assets/talk-lisbon-slide.jpg" alt="Elías on stage presenting a slide on traditional identity systems at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></li><li><img src="../assets/talk-lisbon-panel.jpg" alt="Elías and two other speakers on stage at the Polygon DevX Global Tour in Lisbon, in front of a slide reading “Issuing Lens Verifiable Credentials using Polygon ID”" loading="lazy"></li><li><img src="../assets/talk-lisbon-group.jpg" alt="Elías with the speakers and organisers on stage at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></li></ul></div></div>
+          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c"><ul class="photos" role="list"><li><button class="phbtn" type="button" aria-label="Open photo 1 of 3: Issuing verifiable credentials with Polygon ID"><img src="../assets/talk-lisbon-slide.jpg" alt="Elías on stage presenting a slide on traditional identity systems at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></button></li><li><button class="phbtn" type="button" aria-label="Open photo 2 of 3: Issuing verifiable credentials with Polygon ID"><img src="../assets/talk-lisbon-panel.jpg" alt="Elías and two other speakers on stage at the Polygon DevX Global Tour in Lisbon, in front of a slide reading “Issuing Lens Verifiable Credentials using Polygon ID”" loading="lazy"></button></li><li><button class="phbtn" type="button" aria-label="Open photo 3 of 3: Issuing verifiable credentials with Polygon ID"><img src="../assets/talk-lisbon-group.jpg" alt="Elías with the speakers and organisers on stage at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></button></li></ul></div></div>
         </li>
       </ul>
     </section>
@@ -678,7 +721,7 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
       </div>
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px">
         <dt style="flex: 0 0 112px; color: var(--text-3)">LinkedIn</dt>
-        <dd style="flex: 1 1 300px"><a href="https://www.linkedin.com/in/elias-garcia">elias-garcia<svg class="ext" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></a></dd>
+        <dd style="flex: 1 1 300px"><a href="https://www.linkedin.com/in/elias-garcia-marino">elias-garcia-marino<svg class="ext" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></a></dd>
       </div>
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px">
         <dt style="flex: 0 0 112px; color: var(--text-3)">X</dt>
@@ -696,13 +739,14 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
         <svg viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: none"><path d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c)"></path><path d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: #000; opacity: 0.3"></path><path d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: #000; opacity: 0.3"></path><path d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: #000; opacity: 0.1"></path><path d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: #000; opacity: 0.1"></path></svg>
         Elías García, 2026
       </span>
-      <span class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums"><span><time datetime="17:43">17:43</time> in Portugal</span><span aria-hidden="true">·</span><span>same time as you</span></span>
+      <span class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums"><span><time datetime="19:44">19:44</time> in Portugal</span><span aria-hidden="true">·</span><span>same time as you</span></span>
     </div>
   </footer>
 
 
 
 
+  
   
     <div style="position: fixed; inset: 0; z-index: var(--z-dialog); display: flex; justify-content: center; align-items: flex-start; padding: 96px 16px 0">
       <button class="pscrim" aria-label="Close search"></button>
@@ -745,9 +789,9 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
           
         </div>
         <div style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--surface); font-size: 12px; color: var(--text-3)">
-          <span style="display: inline-flex; align-items: center; gap: 4px"><span class="pk">↑</span><span class="pk">↓</span>to move</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px"><span class="pk">↵</span>to open</span>
-          <span style="display: inline-flex; align-items: center; gap: 4px"><span class="pk">esc</span>to go back</span>
+          <span style="display: inline-flex; align-items: center; gap: 8px"><span style="display: inline-flex; gap: 4px"><span class="pk">↑</span><span class="pk">↓</span></span>to move</span>
+          <span style="display: inline-flex; align-items: center; gap: 8px"><span style="display: inline-flex; gap: 4px"><span class="pk">↵</span></span>to open</span>
+          <span style="display: inline-flex; align-items: center; gap: 8px"><span style="display: inline-flex; gap: 4px"><span class="pk">esc</span></span>to go back</span>
           <span style="margin-left: auto; font-variant-numeric: tabular-nums"></span>
         </div>
       </div>
