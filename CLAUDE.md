@@ -77,7 +77,7 @@ design/         # design handoff (reference only)
 - `src/content/` is the single source of content. Never hardcode copy in components or duplicate it in another file. Each post or project is one file with its metadata in the frontmatter.
 - Never store what can be derived, like topic counts, reading time or whether a project has a case study (it has a body).
 - Topics are not case sensitive (`AI` and `ai` are one topic); the label is the newest post's spelling.
-- Posts with `draft: true` show in `npm run dev` and are left out of the production build.
+- Posts with `draft: true` show in `npm run dev` and are left out of the production build. A project with `draft: true` keeps its card, but its case study is left out the same way.
 - `public/cv.pdf` is made by hand. When the work, talks or education content changes, say that the PDF needs updating too.
 - Don't invent facts, numbers or links. Leave a clear TODO where something is missing.
 

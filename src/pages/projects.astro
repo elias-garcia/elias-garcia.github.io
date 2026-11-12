@@ -1,5 +1,6 @@
 ---
 import PageIntro from "../components/PageIntro.astro";
+import PreviewMorph from "../components/PreviewMorph.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getPage, getProjects } from "../lib/content.ts";
@@ -13,6 +14,7 @@ const wide = projects.length % 2 === 1;
 ---
 
 <BaseLayout title={page.title} description={page.intro}>
+  <PreviewMorph slot="head" />
   <div class="projects">
     <PageIntro title={page.title} intro={page.intro} />
     <ul class="grid" role="list">

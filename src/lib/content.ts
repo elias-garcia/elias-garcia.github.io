@@ -63,7 +63,10 @@ export async function getProjects() {
 }
 
 export function hasCaseStudy(project: CollectionEntry<"projects">): boolean {
-  return (project.body ?? "").trim() !== "";
+  return (
+    (import.meta.env.DEV || !project.data.draft) &&
+    (project.body ?? "").trim() !== ""
+  );
 }
 
 function byNewest(

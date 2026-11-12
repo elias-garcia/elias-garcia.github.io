@@ -118,7 +118,7 @@ Three durations, two curves. Interface feedback never takes longer than 250ms.
 
 The motion system:
 1. **Page entrance.** The header never moves. `main` and the footer arrive as one piece: opacity 0→1 and translateY 6px→0 over 250ms with `--ease-settle`. No stagger, no scroll reveals.
-2. **Between pages.** Cross-document View Transitions (`@view-transition { navigation: auto; }`); the header keeps its place (`view-transition-name: site-header`), the old content fades out in 100ms, then step 1 plays. The Roleburn preview (Home tile and Projects card) morphs into the case study hero (shared `view-transition-name: roleburn-preview`, 400ms). This needs a multi-page site, which Astro builds by default.
+2. **Between pages.** Cross-document View Transitions (`@view-transition { navigation: auto; }`); the header keeps its place (`view-transition-name: site-header`), the old content fades out in 100ms, then step 1 plays. The Roleburn preview (Home tile and Projects card) morphs into the case study hero (`view-transition-name: roleburn-preview`, 400ms). The hero always carries the name; a preview gets it only on navigations to or from the case study (`pageswap`/`pagereveal`), so Home and Projects never morph into each other. A hero with no partner on the other page fades like the rest of the page. This needs a multi-page site, which Astro builds by default.
 3. **Interaction.** Press scales to .97. Nothing animates from scale(0); menus grow from their trigger (`transform-origin` at the trigger).
 4. **Touch.** Hover movement and list dimming run only on real pointers: wrap them in `@media (hover: hover) and (pointer: fine)`. A tap must never leave rows dimmed.
 5. **Within Writing.** Moving between `/writing` and its topic pages keeps the page in place: no page entrance, only the posts re-enter (the same fade and 6px rise, over 150ms). The previous page comes from the Navigation API; without it, the normal entrance plays.
@@ -263,7 +263,7 @@ On a highlighted line, comments switch to `--code-plain` (zinc-500 on indigo-50 
 - **Links and code in notes.** Notes can contain links and inline code; links are normal prose links (`--accent`, `--accent-line` underline, solid on hover) at the note size.
 - **In the build.** MDX with GitHub-flavoured footnotes (remark-gfm) already outputs this structure (references, a footnotes section, back links): restyle it to this spec, rename the section label to "Notes", and replace the "↩" text with the icon, through the MDX components map. No DPUB roles: Astro's attribute types don't allow them. The Copy page Markdown keeps standard `[^1]` footnotes.
 
-Custom MDX components: `<EasingDemo />` (two runners, linear vs ease-out, 600ms, Replay button), `<RoleburnHero />` (the animated radar illustration, decorative, `aria-hidden`), `<Figure />`.
+Custom MDX components: `<EasingDemo />` (two runners, linear vs ease-out, 600ms, Replay button), `<RoleburnHero caption="…" />` (the animated listings scan, decorative, `aria-hidden`, with its caption), `<Figure />`.
 
 ### Search dialog (⌘K)
 - Opens with ⌘K / Ctrl+K and from the header button. A modal `role="dialog"` with `aria-modal="true"` with a 56px input row, a listbox of grouped results and a footer of key hints. **While open, the page behind does not scroll** (`html:has(.scrim) { overflow: hidden }` or equivalent).
@@ -299,7 +299,7 @@ Sections are `<section aria-labelledby>` with 14/500 `h2` labels, 72px apart; th
 Intro (title, one line), then the card grid: one per row on phones, two per row from 640px with the first spanning both when the count is odd. Order: projects in progress first, then the rest; each group by year, newest first, then by title. Every card shows "View project ›" on the title row (from 640px).
 
 ### Case study (`/projects/roleburn`)
-Back link "‹ Projects", title (display) and lead, project facts, the hero illustration (shared view-transition name with the Projects preview), then the article: Why I built it, How it works (with a folder-tree code block and a placeholder figure), What's next; previous/next at the end.
+Back link "‹ Projects", title (display) and lead (the project's description, full column width), project facts, the hero illustration (it morphs from the Projects or Home preview), then the article: Why I built it, How it works (with a folder-tree code block and a placeholder figure), What's next. Previous/next at the end ("Previous", "Next") moves between projects that have a case study, in the Projects order.
 
 ### Writing (`/writing`)
 Intro with **Subscribe** (RSS icon + label) on the right of the title; topic chips (All, AI, DeFi, Design engineering, with counts); posts grouped by year (`h2`), each an `<article>` in an `<li>` with `<time>`, `h3` title link, description, and "Topic · N min read" (the topic is plain text, not a link, because the row is already a link). Each topic is its own static page, `/writing/topics/<slug>` (e.g. `/writing/topics/ai`), built from the posts: the same page with that chip selected and only its posts, so filtered views are shareable and work without JavaScript. The chips are links in a `nav`; choosing one is a page change, with the usual page transition.

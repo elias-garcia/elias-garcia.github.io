@@ -1,0 +1,107 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { linkTarget } from "../lib/links.ts";
+import ExternalArrow from "./ExternalArrow.astro";
+
+type Props = Pick<
+  CollectionEntry<"projects">["data"],
+  "year" | "status" | "links"
+>;
+
+const { year, status, links } = Astro.props;
+---
+
+<dl class="facts">
+  <div class="fact">
+    <dt>Year</dt>
+    <dd>
+      <time datetime={String(year)}>{year}</time>
+    </dd>
+  </div>
+  <div class="fact">
+    <dt>Status</dt>
+    <dd>{status}</dd>
+  </div>
+  <div class="fact links">
+    <dt>Links</dt>
+    <dd>
+      {links.length === 0 ? (
+        <span class="none">Not public yet</span>
+      ) : (
+        links.map(({ label, href }) => (
+          <a href={href} {...linkTarget(href)}>
+            {label}
+            <ExternalArrow href={href} />
+          </a>
+        ))
+      )}
+    </dd>
+  </div>
+</dl>
+
+<style>
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4) var(--space-6);
+    padding-block: var(--space-5);
+    border-block: var(--hairline) solid var(--line);
+
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .fact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-inline-size: 0;
+  }
+
+  .links {
+    grid-column: 1 / -1;
+
+    @media (width >= 40rem) {
+      grid-column: auto;
+    }
+
+    dd {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1) var(--space-4);
+    }
+  }
+
+  dt {
+    color: var(--text-3);
+    font-size: var(--text-meta);
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--text-small);
+  }
+
+  .none {
+    color: var(--text-3);
+  }
+
+  a {
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-decoration-thickness: var(--hairline);
+    text-underline-offset: var(--underline-offset);
+    transition: text-decoration-color var(--dur) var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      color: inherit;
+      text-decoration-color: currentColor;
+    }
+
+    &:focus-visible {
+      border-radius: var(--r-sm);
+    }
+  }
+</style>

@@ -8,6 +8,7 @@ import ListItem from "./ListItem.astro";
 import Note from "./Note.astro";
 import OrderedList from "./OrderedList.astro";
 import Quote from "./Quote.astro";
+import RoleburnHero from "./RoleburnHero.astro";
 import Summary from "./Summary.astro";
 import Table from "./Table.astro";
 import UnorderedList from "./UnorderedList.astro";
@@ -28,4 +29,5 @@ export const mdxComponents = {
   Figure,
   Note,
   Quote,
+  RoleburnHero,
 };

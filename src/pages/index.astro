@@ -9,6 +9,7 @@ import ListRow from "../components/ListRow.astro";
 import MetaItem from "../components/MetaItem.astro";
 import MetaLine from "../components/MetaLine.astro";
 import PageTitle from "../components/PageTitle.astro";
+import PreviewMorph from "../components/PreviewMorph.astro";
 import ProjectTile from "../components/ProjectTile.astro";
 import Section from "../components/Section.astro";
 import SeeMore from "../components/SeeMore.astro";
@@ -39,6 +40,7 @@ const newestJob = work[0]?.id;
 ---
 
 <BaseLayout title={profile.name} description={description}>
+  <PreviewMorph slot="head" />
   <div class="home">
     <header class="intro">
       <div class="identity">

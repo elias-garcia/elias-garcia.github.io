@@ -1,0 +1,36 @@
+---
+// A project preview morphs into its case study hero, which always carries the
+// transition name. The preview only gets the name on navigations to or from
+// the page its link opens, so Home and Projects don't morph into each other.
+// pagereveal fires before the first render, so this is an inline script in
+// <head>, not a deferred module.
+---
+
+<script is:inline>
+  {
+    const nameMorphingPreview = (url, transition) => {
+      if (transition === null || typeof url !== "string") {
+        return;
+      }
+      const preview = document.querySelector(
+        `a[href="${new URL(url).pathname}"] > [data-morph]`,
+      );
+      if (preview === null) {
+        return;
+      }
+      preview.style.viewTransitionName = preview.dataset.morph;
+      transition.finished.finally(() => {
+        preview.style.removeProperty("view-transition-name");
+      });
+    };
+    addEventListener("pageswap", (event) => {
+      nameMorphingPreview(event.activation?.entry.url, event.viewTransition);
+    });
+    addEventListener("pagereveal", (event) => {
+      nameMorphingPreview(
+        window.navigation?.activation?.from?.url,
+        event.viewTransition,
+      );
+    });
+  }
+</script>

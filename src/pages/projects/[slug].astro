@@ -1,0 +1,92 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import { render } from "astro:content";
+import BackLink from "../../components/BackLink.astro";
+import DisplayTitle from "../../components/DisplayTitle.astro";
+import { mdxComponents } from "../../components/mdx/index.ts";
+import Prose from "../../components/mdx/Prose.astro";
+import PreviousNext from "../../components/PreviousNext.astro";
+import ProjectFacts from "../../components/ProjectFacts.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPage, getProjects, hasCaseStudy } from "../../lib/content.ts";
+
+export const getStaticPaths = (async () => {
+  const caseStudies = (await getProjects()).filter(hasCaseStudy);
+  return caseStudies.map((project, index) => ({
+    params: { slug: project.id },
+    props: {
+      project,
+      // In the order of the Projects page.
+      previous: caseStudies[index - 1],
+      next: caseStudies[index + 1],
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { project, previous, next } = Astro.props;
+const { title, description, year, status, links } = project.data;
+const [{ Content }, projects] = await Promise.all([
+  render(project),
+  getPage("projects"),
+]);
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="case-study">
+    <div class="top">
+      <BackLink href="/projects" label={projects.title} />
+      <header class="intro">
+        <DisplayTitle>{title}</DisplayTitle>
+        <p class="lead">{description}</p>
+      </header>
+      <ProjectFacts year={year} status={status} links={links} />
+    </div>
+    <Prose>
+      <Content components={mdxComponents} />
+    </Prose>
+    <PreviousNext
+      name="More projects"
+      previous={
+        previous && {
+          href: `/projects/${previous.id}`,
+          title: previous.data.title,
+          label: "Previous",
+        }
+      }
+      next={
+        next && {
+          href: `/projects/${next.id}`,
+          title: next.data.title,
+          label: "Next",
+        }
+      }
+    />
+  </article>
+</BaseLayout>
+
+<style>
+  .case-study {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+
+  .top {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .lead {
+    color: var(--text-2);
+    font-size: var(--text-heading);
+  }
+</style>

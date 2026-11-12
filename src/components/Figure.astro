@@ -2,23 +2,28 @@
 import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 
-// An imported image, or (in MDX) a Markdown image passed as the content:
-// <Figure caption="…">![alt](path)</Figure>
+// An imported image, (in MDX) a Markdown image passed as the content:
+// <Figure caption="…">![alt](path)</Figure>, or a placeholder for an image
+// still to come.
 type Props = { caption: string } & (
   | {
       src: ImageMetadata;
       alt: string;
       aspectRatio?: string;
       objectPosition?: string;
+      placeholder?: never;
     }
-  | { src?: never }
+  | { placeholder: string }
+  | { src?: never; placeholder?: never }
 );
 
 const { caption } = Astro.props;
 ---
 
 <figure class="figure">
-  {Astro.props.src === undefined ? (
+  {Astro.props.placeholder !== undefined ? (
+    <div class="placeholder">{Astro.props.placeholder}</div>
+  ) : Astro.props.src === undefined ? (
     <div class="markdown">
       <slot />
     </div>
@@ -53,6 +58,19 @@ const { caption } = Astro.props;
     border-radius: var(--r-lg);
     background: var(--control);
     object-fit: cover;
+  }
+
+  .placeholder {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 10;
+    padding: var(--space-6);
+    border: var(--hairline) dashed var(--line-strong);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    color: var(--text-3);
+    font-size: var(--text-small);
+    text-align: center;
   }
 
   .caption {

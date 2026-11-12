@@ -21,7 +21,10 @@ const illustrations = {
 const Illustration = illustrations[illustration];
 ---
 
-<div class:list={["preview", { wide }]}>
+<div
+  class:list={["preview", { wide }]}
+  data-morph={illustration === "roleburn" ? "roleburn-preview" : undefined}
+>
   {illustration === "roleburn" ? <Roleburn wide={wide} /> : <Illustration />}
 </div>
 

@@ -83,6 +83,8 @@ const projects = defineCollection({
     status: z.enum(["In progress", "Experiment", "Research"]),
     year: z.number().int(),
     links: z.array(link),
+    // A draft case study shows in `npm run dev` only; the project still lists.
+    draft: z.boolean().default(false),
   }),
 });
 
