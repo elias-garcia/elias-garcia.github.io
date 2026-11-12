@@ -10,45 +10,65 @@ const link = z.object({
 
 const site = defineCollection({
   loader: file("src/content/site.yaml"),
-  schema: ({ image }) =>
-    z.object({
-      name: z.string(),
-      role: z.string(),
-      location: z.string(),
-      timezone: z.string(),
-      availability: z.string(),
-      about: z.array(z.string()),
-      contact: z.array(link.extend({ text: z.string() })),
-      speakingPhoto: z.object({
-        src: image(),
-        alt: z.string(),
-        caption: z.string(),
-      }),
-    }),
+  schema: z.object({
+    name: z.string(),
+    role: z.string(),
+    location: z.string(),
+    timezone: z.string(),
+    availability: z.string(),
+    about: z.array(z.string()),
+    contact: z.array(link.extend({ text: z.string() })),
+  }),
+});
+
+const job = z.object({
+  start: z.number().int(),
+  end: z.number().int().optional(),
+  company: z.string(),
+  about: z.string(),
+  role: z.string(),
+  points: z.array(z.string()),
 });
 
 const work = defineCollection({
   loader: file("src/content/work.yaml"),
-  schema: z.object({
-    start: z.number().int(),
-    end: z.number().int().optional(),
-    company: z.string(),
-    about: z.string(),
-    role: z.string(),
-    points: z.array(z.string()),
-  }),
+  schema: z.discriminatedUnion("mode", [
+    job.extend({ mode: z.literal("Remote") }),
+    job.extend({ mode: z.enum(["On-site", "Hybrid"]), place: z.string() }),
+  ]),
 });
 
 const talks = defineCollection({
   loader: file("src/content/talks.yaml"),
-  schema: z.object({
-    year: z.number().int(),
-    title: z.string(),
-    originalTitle: z.string().optional(),
-    where: z.string(),
-    detail: z.string().optional(),
-    href: z.url().optional(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      date: z.coerce.date(),
+      title: z.string(),
+      where: z.string(),
+      photos: z
+        .array(z.object({ src: image(), alt: z.string() }))
+        .min(1)
+        .max(3),
+    }),
+});
+
+const courses = defineCollection({
+  loader: file("src/content/courses.yaml"),
+  schema: ({ image }) =>
+    z.object({
+      date: z.coerce.date(),
+      title: z.string(),
+      originalTitle: z.string().optional(),
+      where: z.string(),
+      href: z.url(),
+      rating: z.object({
+        score: z.number().min(0).max(5),
+        reviews: z.number().int().positive(),
+      }),
+      lessons: z.number().int().positive(),
+      minutes: z.number().int().positive(),
+      video: link.extend({ thumbnail: image(), source: z.string() }),
+    }),
 });
 
 const education = defineCollection({
@@ -101,6 +121,7 @@ export const collections = {
   pages,
   work,
   talks,
+  courses,
   education,
   writing,
   projects,

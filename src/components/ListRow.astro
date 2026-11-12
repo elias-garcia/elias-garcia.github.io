@@ -44,6 +44,13 @@ const Title = article ? "h3" : "span";
       )}
     </div>
   </Row>
+  {Astro.slots.has("attachment") && (
+    <div class="attachment">
+      <div class="attachment-content">
+        <slot name="attachment" />
+      </div>
+    </div>
+  )}
 </li>
 
 <style>
@@ -128,5 +135,24 @@ const Title = article ? "h3" : "span";
     margin-block-start: var(--space-1);
     color: var(--text-3);
     font-size: var(--text-meta);
+  }
+
+  /* Media under the row's text. It wraps like the row, with an empty date
+     column, so it starts under the title and drops below with the date. */
+  .attachment {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--space-6);
+    margin-block-end: var(--space-3);
+
+    &::before {
+      content: "";
+      flex: 0 0 var(--gutter);
+    }
+  }
+
+  .attachment-content {
+    flex: 1 1 var(--row-basis);
+    min-inline-size: 0;
   }
 </style>

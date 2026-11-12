@@ -1,0 +1,50 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { formatMinutes, formatScore } from "../lib/format.ts";
+import MetaItem from "./MetaItem.astro";
+import MetaLine from "./MetaLine.astro";
+import VisuallyHidden from "./VisuallyHidden.astro";
+
+type Props = {
+  course: CollectionEntry<"courses">["data"];
+};
+
+const { rating, lessons, minutes } = Astro.props.course;
+const score = formatScore(rating.score);
+---
+
+<MetaLine>
+  <MetaItem>
+    <VisuallyHidden>
+      Rated {score} out of 5 from {rating.reviews} reviews.
+    </VisuallyHidden>
+    <span class="rating" aria-hidden="true">
+      <svg class="star" viewBox="0 0 12 12">
+        <path d="M6 .9l1.55 3.17 3.5.5-2.53 2.47.6 3.48L6 8.88l-3.12 1.64.6-3.48L.95 4.57l3.5-.5z"></path>
+      </svg>
+      <span class="score">{score}</span>({rating.reviews} reviews)
+    </span>
+  </MetaItem>
+  <MetaItem>{lessons} lessons</MetaItem>
+  <MetaItem>{formatMinutes(minutes)}</MetaItem>
+</MetaLine>
+
+<style>
+  .rating {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .star {
+    flex: none;
+    inline-size: var(--icon-sm);
+    block-size: var(--icon-sm);
+    fill: var(--text);
+  }
+
+  .score {
+    color: var(--text);
+    font-weight: var(--weight-medium);
+  }
+</style>

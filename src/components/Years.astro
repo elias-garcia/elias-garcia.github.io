@@ -7,5 +7,6 @@ type Props = {
 const { start, end } = Astro.props;
 ---
 
-<time datetime={String(start)}>{start}</time>–
+<time datetime={String(start)}>{start}</time>
+{" – "}
 {end === undefined ? "Now" : <time datetime={String(end)}>{end}</time>}

@@ -1,21 +1,25 @@
 import { stat } from "node:fs/promises";
 import {
+  getCourses,
   getEducation,
   getProfile,
   getProjects,
   getTalks,
   getWork,
+  workMode,
 } from "./content.ts";
-import { formatYearRange } from "./format.ts";
+import { formatMinutes, formatMonthYear, formatYearRange } from "./format.ts";
 
 export async function renderCvMarkdown(): Promise<string> {
-  const [profile, work, talks, education, projects] = await Promise.all([
-    getProfile(),
-    getWork(),
-    getTalks(),
-    getEducation(),
-    getProjects(),
-  ]);
+  const [profile, work, talks, courses, education, projects] =
+    await Promise.all([
+      getProfile(),
+      getWork(),
+      getTalks(),
+      getCourses(),
+      getEducation(),
+      getProjects(),
+    ]);
 
   const contact = profile.contact
     .map(({ label, text }) => `${label}: ${text}`)
@@ -24,19 +28,23 @@ export async function renderCvMarkdown(): Promise<string> {
   const jobs = work.map(({ data }) =>
     [
       `### ${data.company}: ${data.role}`,
-      `${formatYearRange(data)} · ${data.about}`,
+      `${formatYearRange(data)} · ${workMode(data)} · ${data.about}`,
       "",
       ...data.points.map((point) => `- ${point}`),
     ].join("\n"),
   );
 
-  const talkLines = talks.map(({ data }) => {
+  const talkLines = talks.map(
+    ({ data }) =>
+      `- ${formatMonthYear(data.date)}: ${data.title}, ${data.where}`,
+  );
+
+  const courseLines = courses.map(({ data }) => {
     const title =
       data.originalTitle === undefined
         ? data.title
         : `${data.title} (${data.originalTitle})`;
-    const detail = data.detail === undefined ? "" : ` · ${data.detail}`;
-    return `- ${String(data.year)}: ${title}, ${data.where}${detail}`;
+    return `- ${formatMonthYear(data.date)}: ${title}, ${data.where} · ${String(data.lessons)} lessons · ${formatMinutes(data.minutes)}`;
   });
 
   const degrees = education.map(
@@ -57,8 +65,10 @@ export async function renderCvMarkdown(): Promise<string> {
     profile.about.join("\n\n"),
     "## Experience",
     jobs.join("\n\n"),
-    "## Speaking and teaching",
+    "## Speaking",
     talkLines.join("\n"),
+    "## Teaching",
+    courseLines.join("\n"),
     "## Education",
     degrees.join("\n"),
     "## Projects",

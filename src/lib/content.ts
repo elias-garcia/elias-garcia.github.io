@@ -40,9 +40,26 @@ export async function getWork() {
   );
 }
 
+function byDateThenTitle(
+  a: { readonly date: Date; readonly title: string },
+  b: { readonly date: Date; readonly title: string },
+): number {
+  return b.date.valueOf() - a.date.valueOf() || compareText(a.title, b.title);
+}
+
 export async function getTalks() {
   const talks = await getCollection("talks");
-  return talks.sort((a, b) => byYearThenTitle(a.data, b.data));
+  return talks.sort((a, b) => byDateThenTitle(a.data, b.data));
+}
+
+export async function getCourses() {
+  const courses = await getCollection("courses");
+  return courses.sort((a, b) => byDateThenTitle(a.data, b.data));
+}
+
+// "Remote", or the mode and the city, comma separated.
+export function workMode(job: CollectionEntry<"work">["data"]): string {
+  return job.mode === "Remote" ? job.mode : `${job.mode}, ${job.place}`;
 }
 
 export async function getEducation() {

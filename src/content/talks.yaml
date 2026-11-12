@@ -1,24 +1,29 @@
-# Talks and courses. An entry with `href` renders as a link; without it, as a plain row.
-# Shown newest year first; entries in the same year are ordered by title.
+# Each talk has one to three photos, already cropped to 3:2.
 polygon-id-profiles:
-  year: 2024
+  date: 2024-01
   title: Preserving privacy with Polygon ID profiles
   where: House of ZK, EthDenver
+  photos:
+    - src: ../assets/talk-hozk.jpg
+      alt: Elías pointing at the Polygon ID identity state diagram while presenting at House of ZK, EthDenver 2024
 
 getting-started-with-polygon-id:
-  year: 2024
+  date: 2024-01
   title: Getting started with Polygon ID
   where: Polygon AggCave, EthDenver
+  photos:
+    - src: ../assets/talk-aggcave.jpg
+      alt: Elías, holding a microphone, beside a fellow speaker presenting the main features of Polygon ID at the Polygon Aggregation Cave, EthDenver 2024
 
+# Photos by babypro.art.
 issuing-verifiable-credentials:
-  year: 2023
+  date: 2023-07
   title: Issuing verifiable credentials with Polygon ID
   where: Polygon DevX Global Tour, Lisbon
-
-the-defi-revolution:
-  year: 2022
-  title: The DeFi revolution
-  originalTitle: La revolución DeFi
-  where: Online course in Spanish, Balio
-  detail: 30 lessons
-  href: https://balio.app/curso/defi/
+  photos:
+    - src: ../assets/talk-lisbon-slide.jpg
+      alt: Elías on stage presenting a slide on traditional identity systems at the Polygon DevX Global Tour in Lisbon, 2023
+    - src: ../assets/talk-lisbon-panel.jpg
+      alt: Elías and two other speakers on stage at the Polygon DevX Global Tour in Lisbon, in front of a slide reading “Issuing Lens Verifiable Credentials using Polygon ID”
+    - src: ../assets/talk-lisbon-group.jpg
+      alt: Elías with the speakers and organisers on stage at the Polygon DevX Global Tour in Lisbon, 2023

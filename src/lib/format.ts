@@ -68,5 +68,24 @@ export type YearRange = {
 };
 
 export function formatYearRange({ start, end }: YearRange): string {
-  return `${String(start)}–${end === undefined ? "Now" : String(end)}`;
+  return `${String(start)} – ${end === undefined ? "Now" : String(end)}`;
+}
+
+const duration = new Intl.DurationFormat(locale, { style: "narrow" });
+
+// 140 → "2h 20m".
+export function formatMinutes(minutes: number): string {
+  return duration.format({
+    hours: Math.floor(minutes / 60),
+    minutes: minutes % 60,
+  });
+}
+
+const score = new Intl.NumberFormat(locale, {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+});
+
+export function formatScore(value: number): string {
+  return score.format(value);
 }

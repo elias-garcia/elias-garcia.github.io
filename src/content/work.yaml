@@ -4,6 +4,7 @@ vesu:
   company: Vesu
   about: Lending protocol on Starknet
   role: Engineering Lead
+  mode: Remote
   points:
     - Led engineering from launch to $84.6M in customer assets.
     - Built the lender and borrower app, a risk-parameter admin panel and a blockchain-only fallback UI so users can exit positions during an outage, on a shared Ark UI design system.
@@ -16,6 +17,7 @@ polygon:
   company: Polygon Labs
   about: Hermez, Polygon zkEVM, Polygon ID
   role: Staff Frontend Engineer → Tech Lead
+  mode: Remote
   points:
     - "Hermez: built the consumer wallet and block explorer, and contributed to the protocol SDK. Polygon acquired Hermez in 2021."
     - "Polygon zkEVM: led the 3-person frontend team across every user-facing product, including the bridge, as it grew to $180M in bridged assets."
@@ -27,6 +29,7 @@ nexiona:
   company: Nexiona
   about: Industrial IoT
   role: Senior Frontend Engineer
+  mode: Remote
   points:
     - Built the frontend of MIIMETIQ in React and Redux, used across Europe by companies including Celsa Group and Grifols.
 
@@ -36,6 +39,8 @@ netex:
   company: Netex Learning
   about: E-learning SaaS
   role: Lead Frontend Engineer
+  mode: On-site
+  place: A Coruña
   points:
     - Led the 4-person Angular team behind Netex Cloud, used by thousands of learners at companies including Amazon and Inditex. Delivered internationalisation and accessibility.
     - Led a cross-department initiative to build a shared component library adopted across the company's products.
@@ -46,5 +51,7 @@ agora:
   company: Ágora Binaria
   about: Client applications
   role: Full-Stack Engineer
+  mode: Hybrid
+  place: A Coruña
   points:
     - Built full-stack client applications and did performance work on existing Angular codebases.

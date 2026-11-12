@@ -40,47 +40,54 @@ const { year, status, links } = Astro.props;
 </dl>
 
 <style>
+  /* Phones: one fact per row, the label in the lists' date column. From
+     40rem: three columns, each label above its value. */
   .facts {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-4) var(--space-6);
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
     padding-block: var(--space-5);
     border-block: var(--hairline) solid var(--line);
 
     @media (width >= 40rem) {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-4) var(--space-6);
     }
   }
 
   .fact {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
+    align-items: baseline;
+    gap: var(--space-6);
     min-inline-size: 0;
-  }
-
-  .links {
-    grid-column: 1 / -1;
 
     @media (width >= 40rem) {
-      grid-column: auto;
-    }
-
-    dd {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-1) var(--space-4);
+      flex-direction: column;
+      align-items: start;
+      gap: var(--space-1);
     }
   }
 
   dt {
+    flex: 0 0 var(--gutter);
     color: var(--text-3);
     font-size: var(--text-meta);
+
+    @media (width >= 40rem) {
+      flex-basis: auto;
+    }
   }
 
   dd {
+    min-inline-size: 0;
     margin: 0;
     font-size: var(--text-small);
+  }
+
+  .links dd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
   }
 
   .none {

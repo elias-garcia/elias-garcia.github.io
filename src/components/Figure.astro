@@ -1,44 +1,22 @@
 ---
-import type { ImageMetadata } from "astro";
-import { Image } from "astro:assets";
-
-// An imported image, (in MDX) a Markdown image passed as the content:
+// In MDX, a Markdown image passed as the content:
 // <Figure caption="…">![alt](path)</Figure>, or a placeholder for an image
 // still to come.
-type Props = { caption: string } & (
-  | {
-      src: ImageMetadata;
-      alt: string;
-      aspectRatio?: string;
-      objectPosition?: string;
-      placeholder?: never;
-    }
-  | { placeholder: string }
-  | { src?: never; placeholder?: never }
-);
+type Props = {
+  caption: string;
+  placeholder?: string;
+};
 
-const { caption } = Astro.props;
+const { caption, placeholder } = Astro.props;
 ---
 
 <figure class="figure">
-  {Astro.props.placeholder !== undefined ? (
-    <div class="placeholder">{Astro.props.placeholder}</div>
-  ) : Astro.props.src === undefined ? (
+  {placeholder === undefined ? (
     <div class="markdown">
       <slot />
     </div>
   ) : (
-    <Image
-      class="image"
-      src={Astro.props.src}
-      alt={Astro.props.alt}
-      widths={[640, 1280]}
-      sizes="(width <= 688px) 100vw, 640px"
-      style={{
-        aspectRatio: Astro.props.aspectRatio,
-        objectPosition: Astro.props.objectPosition,
-      }}
-    />
+    <div class="placeholder">{placeholder}</div>
   )}
   <figcaption class="caption">{caption}</figcaption>
 </figure>
@@ -50,7 +28,6 @@ const { caption } = Astro.props;
     gap: var(--space-2);
   }
 
-  .image,
   .markdown :global(img) {
     display: block;
     inline-size: 100%;

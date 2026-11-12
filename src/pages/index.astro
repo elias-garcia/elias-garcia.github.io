@@ -1,22 +1,23 @@
 ---
 import { Image } from "astro:assets";
 import avatar from "../assets/avatar.jpg";
+import CourseRating from "../components/CourseRating.astro";
 import DownloadCv from "../components/DownloadCv.astro";
 import ExternalArrow from "../components/ExternalArrow.astro";
-import Figure from "../components/Figure.astro";
 import List from "../components/List.astro";
 import ListRow from "../components/ListRow.astro";
-import MetaItem from "../components/MetaItem.astro";
-import MetaLine from "../components/MetaLine.astro";
 import PageTitle from "../components/PageTitle.astro";
 import PreviewMorph from "../components/PreviewMorph.astro";
 import ProjectTile from "../components/ProjectTile.astro";
+import RowPhotos from "../components/RowPhotos.astro";
 import Section from "../components/Section.astro";
 import SeeMore from "../components/SeeMore.astro";
+import VideoPreview from "../components/VideoPreview.astro";
 import WorkRow from "../components/WorkRow.astro";
 import Years from "../components/Years.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {
+  getCourses,
   getEducation,
   getPosts,
   getProfile,
@@ -27,14 +28,16 @@ import {
 import { formatMonthYear, isoMonth } from "../lib/format.ts";
 import { linkTarget } from "../lib/links.ts";
 
-const [profile, projects, work, posts, talks, education] = await Promise.all([
-  getProfile(),
-  getProjects(),
-  getWork(),
-  getPosts(),
-  getTalks(),
-  getEducation(),
-]);
+const [profile, projects, work, posts, talks, courses, education] =
+  await Promise.all([
+    getProfile(),
+    getProjects(),
+    getWork(),
+    getPosts(),
+    getTalks(),
+    getCourses(),
+    getEducation(),
+  ]);
 const [description = profile.role] = profile.about;
 const newestJob = work[0]?.id;
 ---
@@ -55,7 +58,9 @@ const newestJob = work[0]?.id;
         />
         <div class="who">
           <PageTitle>{profile.name}</PageTitle>
-          <p class="role">{profile.role}</p>
+          <p class="role">
+            {profile.role} in {profile.location}
+          </p>
           <div class="actions">
             <DownloadCv />
             <p class="availability">
@@ -104,24 +109,30 @@ const newestJob = work[0]?.id;
       </List>
     </Section>
 
-    <Section id="speaking" title="Speaking and teaching">
-      <Figure
-        src={profile.speakingPhoto.src}
-        alt={profile.speakingPhoto.alt}
-        caption={profile.speakingPhoto.caption}
-        aspectRatio="16 / 9"
-        objectPosition="35% 45%"
-      />
+    <Section id="speaking" title="Speaking">
       <List>
         {talks.map(({ data }) => (
-          <ListRow title={data.title} href={data.href}>
-            <time slot="date" datetime={String(data.year)}>
-              {data.year}
+          <ListRow title={data.title}>
+            <time slot="date" datetime={isoMonth(data.date)}>
+              {formatMonthYear(data.date)}
             </time>
-            <MetaLine>
-              <MetaItem>{data.where}</MetaItem>
-              {data.detail !== undefined && <MetaItem>{data.detail}</MetaItem>}
-            </MetaLine>
+            {data.where}
+            <RowPhotos slot="attachment" photos={data.photos} />
+          </ListRow>
+        ))}
+      </List>
+    </Section>
+
+    <Section id="teaching" title="Teaching">
+      <List>
+        {courses.map(({ data }) => (
+          <ListRow title={data.title} href={data.href}>
+            <time slot="date" datetime={isoMonth(data.date)}>
+              {formatMonthYear(data.date)}
+            </time>
+            {data.where}
+            <CourseRating slot="meta" course={data} />
+            <VideoPreview slot="attachment" video={data.video} />
           </ListRow>
         ))}
       </List>

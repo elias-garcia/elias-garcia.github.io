@@ -8,7 +8,7 @@ This is the source of truth for the site's design. It was produced in Claude Des
 - `src/styles/tokens.css`: every colour, radius, motion and layer value. Never retype values.
 - `design/reference/*.html`: static renders of every approved page and state, with the real CSS. Open them in a browser to compare, and read their CSS for exact details. They are reference, not source: rebuild them as Astro components rather than copying markup. Interactive behaviour (search, menus, filters) is described in this document because the static files cannot run it.
 - `design/screenshots/`: every page at 1280px and 390px, in light and dark, plus the interactive states. Use them to check your output visually.
-- `design/assets/`: logo, photos, share images (originals; the site uses copies in `src/assets/`). `design/head.html`: the `<head>` snippet for the app icons, which live in `public/`.
+- `design/assets/`: logo, avatar, talk photos, the course trailer thumbnail, share images (originals; the site uses copies in `src/assets/`). `design/head.html`: the `<head>` snippet for the app icons, which live in `public/`.
 
 ---
 
@@ -192,8 +192,14 @@ Each component appears exactly once in the design system. Live versions: `refere
 - **External-link arrow.** A 12px arrow icon (`M4.5 3.5h4v4M8.5 3.5l-5 5`), 4px after the word, `--text-3` stroke, link colour on hover and a 1px up-right nudge (pointer devices only). Only on standalone links that leave the site: contact rows, the course row, project facts. Links inside prose never get it. Screen readers hear the link text, plus "(opens in a new tab)" when the link opens one.
 
 ### Lists and cards
-- **List row.** 112px date gutter (`<time>` in `--text-3`), title 15/500, one 14px line in `--text-2`, 12px vertical padding, no dividers. Rows are `<li>` in a `<ul role="list">`. When one row is hovered, the other link rows fade to .45 (pointer devices only). The fade covers the whole list the row belongs to: on Writing that is every post across all year groups (the years are one list split by headings; scope the rule to the container of the year groups); on Home each section (Writing, Speaking and teaching, Work) fades only its own rows. **A row is a link only if it has somewhere to go; otherwise it is a plain row**: not an `<a>`, no hover, not focusable.
+- **List row.** 112px date gutter (`<time>` in `--text-3`), title 15/500, one 14px line in `--text-2`, 12px vertical padding, no dividers. Rows are `<li>` in a `<ul role="list">`. When one row is hovered, the other link rows fade to .45 (pointer devices only). The fade covers the whole list the row belongs to: on Writing that is every post across all year groups (the years are one list split by headings; scope the rule to the container of the year groups); on Home each section (Writing, Speaking, Teaching, Work) fades only its own rows. **A row is a link only if it has somewhere to go; otherwise it is a plain row**: not an `<a>`, no hover, not focusable.
+- **List row attachment.** Optional media under a list row's text, at most one per row, of one of two kinds. It starts exactly under the row's title: it wraps like the row, with an empty 112px date column beside it that drops away on phones together with the date. 12px from the text above and from the next row. Every attachment image has the same size and shape: a third of the text column (a slot in a row of three, 8px gaps), 3:2, `object-fit: cover`, 8px radius, hairline `--line` border, `--surface` behind it.
+  - **Photos:** 1 to 3 images in a `<ul role="list">` grid of three columns; fewer stay left-aligned at the same size; never more than three. Every image has descriptive alt text. Not clickable for now. The talk photos ship pre-processed (1200×800, colour-corrected to match each other); don't re-crop them. Lazy-loaded.
+  - **Video preview:** exactly one bordered card spanning the full text column (`--r-lg`, `--bg`), a single link to the video, separate from the row's link. The thumbnail fills the first third (same size as a photo) with a 32px round play button centred on it (`--bg` at 92% with blur, `--line` border, 16px play icon); then the label (14/500, "Watch the trailer") and the source (13px `--text-3`, "YouTube" + ↗). Hover/focus: the card border goes `--line-strong`, the label turns `--accent`, the play button inverts (`--text` fill, `--bg` icon). It opens the video elsewhere and never embeds a player; no duration.
+- **Course rating line.** Under a course's line: one 12px filled star in `--text`, the score (500, `--text`), the review count in `--text-3` ("4.7 (26 reviews)"), then "30 lessons · 2h 20m" with "·" separators, all 13px `--text-3`. The visible rating is `aria-hidden`; a visually hidden sentence carries it for screen readers: "Rated 4.7 out of 5 from 26 reviews." Never a row of yellow stars. The rating is a fixed value in the content, updated by hand.
 - **Expandable row (work experience).** A native `<details>` whose `<summary>` holds the date, company (500) + role, and a + icon that rotates to ×. The body's height animates open (250ms) where the browser supports it, and lists the bullets. Layout is a grid: `112px 1fr auto` on desktop; on phones `"date icon" / "text text"` so the + stays beside the date. Only one open at a time (the rows share a `name`). **The newest job is open on load**, the rest closed.
+  - **Work mode:** the company line carries how the job was done, after the company name: a "·" (8px each side, `--text-3`) then the mode in 14px 400 `--text-3`: "Remote", or the mode and city ("On-site, A Coruña", "Hybrid, A Coruña"). Plain text: no chips, icons or colour. Screen readers get a visually hidden comma instead of the dot ("Polygon Labs, Remote").
+  - **First-line alignment:** the head is a grid aligned to the start; the date and the company share 15px / 24px; the 16px +/× sits in the first line and is centred on it, so all three share the first line's centre. On phones the date and the icon share the first line the same way. Never centre the icon against the whole two-line head.
 - **Project tile (Home).** Preview (`--surface`, `--line` border, `--r-lg`, nothing on top of it), then the title (`h3`), the project status line, and one line of description. One per row with a 16:7 preview below 640px, three in a row with 4:3 from 640px; never two columns. `grid-template-rows: subgrid` keeps titles aligned. Lifts 2px on hover (pointer only).
 - **Project card (Projects).** One link per card (the whole card). Preview with nothing on top of it, then the title row, the project status line, the description. No stack/tags line.
   - **Title row (from 640px):** title (`h2`) on the left, the label **"View project"** (13px, `--text-2`) with a 12px chevron (`M4.5 3l3 3-3 3`) on the right, on one line; the label is styled text inside the card link, never a separate link. Same label on every card.
@@ -206,7 +212,7 @@ Each component appears exactly once in the design system. Live versions: `refere
 ### Text and metadata
 - **Page intro.** The `<header>` that opens Projects, Writing and the 404: the page title, optionally with an action on its right (Subscribe on Writing), and one paragraph in `--text-2` 8px below, across the full text column (no narrower measure). Anything else in the intro, like the Writing topic chips, sits 20px below.
 - **Metadata line.** Items separated by a dot: each dot is its own `aria-hidden` element with an 8px gap on each side (never a dot between plain spaces). On wrapping, a dot stays with the item after it, so a line never ends on a dot. Post header: "November 9, 2026 · Design engineering · 4 min read"; the topic links to its Writing topic page (`/writing/topics/<slug>`).
-- **Project facts.** `<dl>`: **Year · Status · Links** in three equal columns between two hairlines; on phones Year and Status share a row and Links spans the full width. Links are named by destination ("Website", "GitHub", "npm"), product first, code second, with the external arrow; none → "Not public yet" in `--text-3`.
+- **Project facts.** `<dl>`: **Year · Status · Links** in three equal columns between two hairlines; below 640px one fact per row: the 13px label in a 112px column (like the lists' date column) and the 14px value beside it on the same baseline, 24px apart, 12px between rows; links that don't fit wrap under the first, still in the value column. Links are named by destination ("Website", "GitHub", "npm"), product first, code second, with the external arrow; none → "Not public yet" in `--text-3`.
 - **Author footer.** Ends every post: 40px photo, name (`rel="author"`, links Home) and role, inside the article's `<footer>` / `<address>`.
 
 ### Prose (MDX mapping)
@@ -266,7 +272,7 @@ On a highlighted line, comments switch to `--code-plain` (zinc-500 on indigo-50 
 Custom MDX components: `<EasingDemo />` (two runners, linear vs ease-out, 600ms, Replay button), `<RoleburnHero caption="…" />` (the animated listings scan, decorative, `aria-hidden`, with its caption), `<Figure />`.
 
 ### Search dialog (⌘K)
-- Opens with ⌘K / Ctrl+K and from the header button. A modal `role="dialog"` with `aria-modal="true"` with a 56px input row, a listbox of grouped results and a footer of key hints. **While open, the page behind does not scroll** (`html:has(.scrim) { overflow: hidden }` or equivalent).
+- Opens with ⌘K / Ctrl+K and from the header button. The input resets the browser default padding (`padding: 0`); its row provides the spacing. A modal `role="dialog"` with `aria-modal="true"` with a 56px input row, a listbox of grouped results and a footer of key hints. **While open, the page behind does not scroll** (`html:has(.scrim) { overflow: hidden }` or equivalent).
 - **Empty state:** Go to (Home, Projects, Writing) and Actions (Send me an email, Download CV, Subscribe with RSS).
 - **Typed:** matches posts and projects; matching text highlighted with `--tint-strong`.
 - **Rows:** 32px icon tile, title, one line, meta on the right; the active row is `--tint` with a ↵ hint. ↑↓ move, ↵ opens, Esc closes.
@@ -284,14 +290,15 @@ Custom MDX components: `<EasingDemo />` (two runners, linear vs ease-out, 600ms,
 Screenshots for each: `screenshots/<page>.{desktop,phone}.{light,dark}.png`.
 
 ### Home (`/`)
-1. **Intro.** Avatar (104px; 80px on phones, above the text), name (page title, `h1`), "Software engineer", then **Download CV** menu button and "Open to remote roles" with an indigo dot.
+1. **Intro.** Avatar (104px; 80px on phones, above the text), name (page title, `h1`), "Software engineer in Porto, Portugal" (one sentence, `--text-2`; no separator here, the "·" is for rows of facts), then **Download CV** menu button and "Open to remote roles" with an indigo dot.
 2. **About.** Two paragraphs.
 3. **Projects.** Three tiles + "All projects ›".
 4. **Work experience.** Five expandable rows, Vesu open.
 5. **Writing.** The three newest posts as list rows (date "Nov 2026") + "All posts ›".
-6. **Speaking and teaching.** The Lisbon photo with caption, then: three talks as **plain rows** (no recordings exist) and the course, "The DeFi revolution", as the one link (to balio.app, with the arrow), line "Online course in Spanish, Balio · 30 lessons".
-7. **Education.** One plain row.
-8. **Contact.** `<address>` with a `<dl>`: Email, GitHub, LinkedIn, X, each value a link with the arrow.
+6. **Speaking.** Three talks as **plain rows** (no recordings exist), dated by month ("Jan 2024", "Jul 2023"), each with a **photo attachment**: House of ZK one photo, AggCave one, Lisbon three. No section photo above the list.
+7. **Teaching.** The course as one link row to balio.app (with the arrow): date "Mar 2022", title "The DeFi revolution", line "Online course in Spanish, Balio", the **course rating line**, then a **video preview** attachment ("Watch the trailer", YouTube).
+8. **Education.** One plain row.
+9. **Contact.** `<address>` with a `<dl>`: Email, GitHub, LinkedIn, X, each value a link with the arrow.
 
 Sections are `<section aria-labelledby>` with 14/500 `h2` labels, 72px apart; the intro is a `<header>`.
 
@@ -319,7 +326,8 @@ Back link + Copy page, title (display), metadata line, then the article (max 640
 
 - Plain English, sentence case, short sentences. All titles in English; a source in another language is translated and its language noted ("Online course in Spanish").
 - Dates: "Nov 9" in lists, "Nov 2026" on Home, "November 9, 2026" in post headers ("Nov 9, 2026" on phones). Always in `<time datetime>`.
-- Separators: "·" as its own element with 8px gaps. Ranges use an en dash: "2024–Now".
+- Separators: "·" as its own element with 8px gaps.
+- Dates: ranges use a **spaced en dash**, never a hyphen: "2024 – Now", "2013 – 2017" (in markup: `<time>2020</time> – <time>2024</time>`). Single dates are an abbreviated month and year where the month is known ("Jan 2024", "Mar 2022"), with the full value in `datetime` ("2024-01"); work experience and education stay years-only.
 - Straight quotes and apostrophes (' ") in visible text, as typed. Markdown doesn't curl them.
 - No mention of read.cv anywhere.
 - Placeholder content still to replace is listed in `PLAN.md`. Until a destination exists, render rows and cards as plain (not links).
@@ -345,7 +353,7 @@ Every page must pass axe (WCAG 2.2 AA + best practice) in light and dark, at 128
 
 - **`.md` for posts only.** A static endpoint `/writing/<slug>.md` per post, generated from the same MDX with custom components stripped; `<link rel="alternate" type="text/markdown">` on each post. Other pages have no `.md` version.
 - **Copy page** on posts copies the same Markdown.
-- **JSON-LD.** `Person` on Home (name, jobTitle, sameAs GitHub/LinkedIn/X, address country PT); `BlogPosting` on posts (author, datePublished, about/topic).
+- **JSON-LD.** `Person` on Home (name, jobTitle, sameAs GitHub/LinkedIn/X, `address` with `addressLocality` "Porto" and `addressCountry` "PT"); `BlogPosting` on posts (author, datePublished, about/topic).
 - **RSS** via `@astrojs/rss`, with the same posts as the Writing page (drafts only in `npm run dev`). Subscribe links straight to `/rss.xml`, in a new tab; the feed is not styled (browsers are removing XSLT). **Sitemap** via `@astrojs/sitemap`. **robots.txt** explicitly allows AI crawlers (GPTBot, ClaudeBot, PerplexityBot…).
 - **App icons and head:** `design/head.html`.
 

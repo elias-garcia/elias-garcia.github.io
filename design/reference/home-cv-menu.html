@@ -107,7 +107,7 @@ a:hover{color:var(--accent-c)}
 @keyframes palPop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
 .pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default;animation:palFade var(--dur) var(--ease) both}
 .ppanel{animation:palPop var(--dur) var(--ease-settle) both;transform-origin:top center}
-.pin{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:15px;color:var(--text);background:transparent;height:100%}
+.pin{padding:0;flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:15px;color:var(--text);background:transparent;height:100%}
 .pin::placeholder{color:var(--text-3)}
 .ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
 .pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
@@ -120,7 +120,7 @@ a:hover{color:var(--accent-c)}
 .pret{width:16px;font-size:13px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
 .popt.act .pret{opacity:1}
 mark.phl{background:var(--tint-strong);color:var(--text);border-radius:var(--r-sm);padding:0}
-.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:11px;color:var(--text-2);font-family:inherit}
+.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
 .pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
 .pclear:hover{background:var(--control-hover);color:var(--text)}
 @media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
@@ -254,6 +254,49 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
 
 /* tiles: 8px between the status line and the description, as on Projects (the tile grid rows are only 4px apart) */
 .tile .thead{padding-bottom:4px}
+
+/* Teaching: course rows. Rating: one neutral star, score and review count; the spoken version is in .vh */
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cmeta{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:13px;line-height:1.6;color:var(--text-3)}
+.crate,.crate-v{display:inline-flex;align-items:center;gap:4px}
+.crate svg{width:12px;height:12px;fill:var(--text);flex:none}
+.crate b{font-weight:500;color:var(--text)}
+@media (max-width: 639.98px){}
+.play{position:absolute;inset:0;margin:auto;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:color-mix(in oklch, var(--bg) 92%, transparent);border:1px solid var(--line);color:var(--text);backdrop-filter:blur(4px);transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.play svg{width:16px;height:16px;fill:currentColor;margin-left:2px}
+
+@media (max-width: 639.98px){}
+
+/* course rows: the usual list row, with media attached underneath. The attachment wraps exactly like its row (an empty 112px date column), so it always lines up with the text above it.
+   The attachment is a video preview: thumbnail with a play button, then what it is and where it goes; it spans the text column like a row of photos */
+.courses{list-style:none;margin:0;padding:0}
+.attach{display:flex;flex-wrap:wrap;column-gap:24px;margin-bottom:12px}
+.attach-gut{flex:0 0 112px}
+.attach-c{flex:1 1 300px;min-width:0}
+.lpc{display:flex;align-items:center;width:100%;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);overflow:hidden;color:inherit;text-decoration:none;transition:border-color var(--dur) var(--ease)}
+.lpc:hover,.lpc:focus-visible{border-color:var(--line-strong)}
+.lpc-img{position:relative;flex:none;width:calc((100% - 14px) / 3);aspect-ratio:3 / 2;background:var(--surface);border-right:1px solid var(--line)}
+.lpc-img img{display:block;width:100%;height:100%;object-fit:cover}
+.lpc .play{width:32px;height:32px}
+.lpc .play svg{width:12px;height:12px}
+.lpc:hover .play,.lpc:focus-visible .play{background:var(--text);color:var(--bg);border-color:var(--text)}
+.lpc-t{display:flex;flex-direction:column;gap:0;padding:0 16px;min-width:0}
+.lpc-title{font-size:14px;font-weight:500;line-height:1.35;color:var(--text)}
+.lpc-src{font-size:13px;line-height:1.6;color:var(--text-3)}
+.lpc:hover .lpc-title,.lpc:focus-visible .lpc-title{color:var(--accent-c)}
+
+/* attachments on list rows: every attachment image has one size and shape: a third of the text column (a slot in the row of three), 3:2.
+   Photos sit in a row of three (fewer stay left-aligned); the video preview's thumbnail fills the first slot, so it lines up with the photos */
+.list li > .attach{flex:1 1 100%;margin:8px 0 0}
+.photos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.photos img{display:block;width:100%;aspect-ratio:3 / 2;object-fit:cover;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
+
+
+/* work mode: plain grey text after the company name ("Polygon Labs · Remote", "Netex Learning · On-site, A Coruña"); no chips, icons or colour. The "·" has 8px each side; screen readers hear a comma */
+.wsep{margin:0 8px;color:var(--text-3)}
+
+.cmode{font-size:14px;font-weight:400;color:var(--text-3)}
+
 </style>
 </head><body>
 
@@ -287,7 +330,7 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
         </div>
         <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
           <h1 style="margin: 0; font-size: 20px; line-height: 1.35; font-weight: 600; letter-spacing: -0.01em">Elías García</h1>
-          <p style="margin: 0; color: var(--text-2)">Software engineer</p>
+          <p style="margin: 0; color: var(--text-2)">Software engineer in Porto, Portugal</p>
           <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px">
             <span class="cvwrap">
               <button class="button" type="button" aria-haspopup="menu" aria-expanded="true" aria-controls="cv-menu">Download CV<svg class="cvchev up" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4.5 6.5L8 10l3.5-3.5"></path></svg></button>
@@ -391,9 +434,9 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
         
           <li class="item job open">
             <button class="jobhead" aria-expanded="true">
-              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2024">2024</time>–Now</span>
+              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2024">2024</time> – Now</span>
               <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
-                <span style="font-weight: 500">Vesu</span>
+                <span><span style="font-weight: 500">Vesu</span><span class="cmode"><span class="wsep" aria-hidden="true">·</span><span class="vh">, </span>Remote</span></span>
                 <span style="font-size: 14px; color: var(--text-2)">Engineering Lead</span>
               </span>
               <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
@@ -423,9 +466,9 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
         
           <li class="item job ">
             <button class="jobhead" aria-expanded="false">
-              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2020">2020</time>–<time datetime="2024">2024</time></span>
+              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2020">2020</time> – <time datetime="2024">2024</time></span>
               <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
-                <span style="font-weight: 500">Polygon Labs</span>
+                <span><span style="font-weight: 500">Polygon Labs</span><span class="cmode"><span class="wsep" aria-hidden="true">·</span><span class="vh">, </span>Remote</span></span>
                 <span style="font-size: 14px; color: var(--text-2)">Staff Frontend Engineer → Tech Lead</span>
               </span>
               <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
@@ -453,9 +496,9 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
         
           <li class="item job ">
             <button class="jobhead" aria-expanded="false">
-              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2019">2019</time>–<time datetime="2020">2020</time></span>
+              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2019">2019</time> – <time datetime="2020">2020</time></span>
               <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
-                <span style="font-weight: 500">Nexiona</span>
+                <span><span style="font-weight: 500">Nexiona</span><span class="cmode"><span class="wsep" aria-hidden="true">·</span><span class="vh">, </span>Remote</span></span>
                 <span style="font-size: 14px; color: var(--text-2)">Senior Frontend Engineer</span>
               </span>
               <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
@@ -479,9 +522,9 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
         
           <li class="item job ">
             <button class="jobhead" aria-expanded="false">
-              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2018">2018</time>–<time datetime="2019">2019</time></span>
+              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2018">2018</time> – <time datetime="2019">2019</time></span>
               <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
-                <span style="font-weight: 500">Netex Learning</span>
+                <span><span style="font-weight: 500">Netex Learning</span><span class="cmode"><span class="wsep" aria-hidden="true">·</span><span class="vh">, </span>On-site, A Coruña</span></span>
                 <span style="font-size: 14px; color: var(--text-2)">Lead Frontend Engineer</span>
               </span>
               <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
@@ -507,9 +550,9 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
         
           <li class="item job ">
             <button class="jobhead" aria-expanded="false">
-              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2017">2017</time>–<time datetime="2018">2018</time></span>
+              <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2017">2017</time> – <time datetime="2018">2018</time></span>
               <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
-                <span style="font-weight: 500">Ágora Binaria</span>
+                <span><span style="font-weight: 500">Ágora Binaria</span><span class="cmode"><span class="wsep" aria-hidden="true">·</span><span class="vh">, </span>Hybrid, A Coruña</span></span>
                 <span style="font-size: 14px; color: var(--text-2)">Full-Stack Engineer</span>
               </span>
               <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
@@ -565,47 +608,65 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
     </section>
 
     <section id="speaking" aria-labelledby="speaking-h" style="display: flex; flex-direction: column; gap: 16px">
-      <h2 id="speaking-h" style="margin: 0; font-size: 14px; font-weight: 500">Speaking and teaching</h2>
-      <figure style="margin: 0; display: flex; flex-direction: column; gap: 8px">
-        <img src="../assets/speaking-lisbon-2023.jpg" alt="Elías on stage presenting a slide on traditional identity systems" style="width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: 35% 45%; border-radius: var(--r-lg); display: block; background: var(--control)">
-        <figcaption style="font-size: 13px; color: var(--text-3)">Explaining identity systems at the Polygon DevX Global Tour in Lisbon, 2023.</figcaption>
-      </figure>
+      <h2 id="speaking-h" style="margin: 0; font-size: 14px; font-weight: 500">Speaking</h2>
       <ul class="list" role="list" style="display: flex; flex-direction: column">
         <li style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
-          <time datetime="2024" style="flex: 0 0 112px; color: var(--text-3)">2024</time>
+          <time datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3)">Jan 2024</time>
           <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
             <span style="font-weight: 500">Preserving privacy with Polygon ID profiles</span>
             <span style="font-size: 14px; color: var(--text-2)">House of ZK, EthDenver</span>
           </span>
+          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c"><ul class="photos" role="list"><li><img src="../assets/talk-hozk.jpg" alt="Elías pointing at the Polygon ID identity state diagram while presenting at House of ZK, EthDenver 2024" loading="lazy"></li></ul></div></div>
         </li>
         <li style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
-          <time datetime="2024" style="flex: 0 0 112px; color: var(--text-3)">2024</time>
+          <time datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3)">Jan 2024</time>
           <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
             <span style="font-weight: 500">Getting started with Polygon ID</span>
             <span style="font-size: 14px; color: var(--text-2)">Polygon AggCave, EthDenver</span>
           </span>
+          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c"><ul class="photos" role="list"><li><img src="../assets/talk-aggcave.jpg" alt="Elías, holding a microphone, beside a fellow speaker presenting the main features of Polygon ID at the Polygon Aggregation Cave, EthDenver 2024" loading="lazy"></li></ul></div></div>
         </li>
         <li style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
-          <time datetime="2023" style="flex: 0 0 112px; color: var(--text-3)">2023</time>
+          <time datetime="2023-07" style="flex: 0 0 112px; color: var(--text-3)">Jul 2023</time>
           <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
             <span style="font-weight: 500">Issuing verifiable credentials with Polygon ID</span>
             <span style="font-size: 14px; color: var(--text-2)">Polygon DevX Global Tour, Lisbon</span>
           </span>
+          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c"><ul class="photos" role="list"><li><img src="../assets/talk-lisbon-slide.jpg" alt="Elías on stage presenting a slide on traditional identity systems at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></li><li><img src="../assets/talk-lisbon-panel.jpg" alt="Elías and two other speakers on stage at the Polygon DevX Global Tour in Lisbon, in front of a slide reading “Issuing Lens Verifiable Credentials using Polygon ID”" loading="lazy"></li><li><img src="../assets/talk-lisbon-group.jpg" alt="Elías with the speakers and organisers on stage at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></li></ul></div></div>
         </li>
-        <li><a class="item" href="https://balio.app/curso/defi/" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
-          <time datetime="2022" style="flex: 0 0 112px; color: var(--text-3)">2022</time>
-          <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
-            <span style="font-weight: 500">The DeFi revolution<svg class="ext" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></span>
-            <span style="font-size: 14px; color: var(--text-2); display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px"><span>Online course in Spanish, Balio</span><span aria-hidden="true">·</span><span>30 lessons</span></span>
-          </span>
-        </a></li>
       </ul>
     </section>
+
+    <section id="teaching" aria-labelledby="teaching-h" style="display: flex; flex-direction: column; gap: 16px">
+      <h2 id="teaching-h" style="margin: 0; font-size: 14px; font-weight: 500">Teaching</h2>
+      
+      <ul class="list courses" role="list">
+        <li class="crow">
+          <a class="item" href="https://balio.app/curso/defi/" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
+            <time datetime="2022-03" style="flex: 0 0 112px; color: var(--text-3)">Mar 2022</time>
+            <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+              <span style="display: flex; flex-direction: column">
+                <span style="font-weight: 500">The DeFi revolution<svg class="ext" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></span>
+                <span style="font-size: 14px; color: var(--text-2)">Online course in Spanish, Balio</span>
+              </span>
+              <p class="cmeta"><span class="crate"><span class="vh">Rated 4.7 out of 5 from 26 reviews.</span><span class="crate-v" aria-hidden="true"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 .9l1.55 3.17 3.5.5-2.53 2.47.6 3.48L6 8.88l-3.12 1.64.6-3.48L.95 4.57l3.5-.5z"></path></svg><b>4.7</b><span>(26 reviews)</span></span></span><span aria-hidden="true">·</span><span>30 lessons</span><span aria-hidden="true">·</span><span>2h 20m</span></p>
+            </span>
+          </a>
+          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c">
+            <a class="lpc" href="https://www.youtube.com/watch?v=FESgArXJBX0">
+              <span class="lpc-img"><img src="../assets/course-trailer.jpg" alt="" loading="lazy"><span class="play"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6a.6.6 0 0 0 .92.5l7.3-4.8a.6.6 0 0 0 0-1L5.92 2.7A.6.6 0 0 0 5 3.2z"></path></svg></span></span>
+              <span class="lpc-t"><span class="lpc-title">Watch the trailer</span><span class="lpc-src">YouTube<svg class="ext" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></span></span>
+            </a>
+          </div></div>
+        </li>
+      </ul>
+    </section>
+
 
     <section aria-labelledby="edu-h" style="display: flex; flex-direction: column; gap: 16px">
       <h2 id="edu-h" style="margin: 0; font-size: 14px; font-weight: 500">Education</h2>
       <div style="display: flex; flex-wrap: wrap; gap: 4px 24px">
-        <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2013">2013</time>–<time datetime="2017">2017</time></span>
+        <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2013">2013</time> – <time datetime="2017">2017</time></span>
         <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
           <span style="font-weight: 500">BSc Computer Science at University of A Coruña</span>
           <span style="font-size: 14px; color: var(--text-2)">Specialization in software engineering</span>
@@ -647,7 +708,7 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
         <svg viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: none"><path d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c)"></path><path d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: #000; opacity: 0.3"></path><path d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: #000; opacity: 0.3"></path><path d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: #000; opacity: 0.1"></path><path d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: #000; opacity: 0.1"></path></svg>
         Elías García, 2026
       </span>
-      <span class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums"><span><time datetime="11:46">11:46</time> in Portugal</span><span aria-hidden="true">·</span><span>same time as you</span></span>
+      <span class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums"><span><time datetime="17:43">17:43</time> in Portugal</span><span aria-hidden="true">·</span><span>same time as you</span></span>
     </div>
   </footer>
 

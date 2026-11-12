@@ -1,0 +1,129 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import { attachmentImage } from "../lib/attachment.ts";
+import { linkTarget } from "../lib/links.ts";
+import ExternalArrow from "./ExternalArrow.astro";
+
+type Props = {
+  video: CollectionEntry<"courses">["data"]["video"];
+};
+
+const { href, thumbnail, label, source } = Astro.props.video;
+---
+
+<a class="video" href={href} {...linkTarget(href)}>
+  <span class="thumbnail">
+    <Image
+      class="image"
+      src={thumbnail}
+      alt=""
+      widths={[...attachmentImage.widths]}
+      sizes={attachmentImage.sizes}
+      loading="lazy"
+    />
+    <span class="play" aria-hidden="true">
+      <svg viewBox="0 0 16 16">
+        <path d="M5 3.2v9.6a.6.6 0 0 0 .92.5l7.3-4.8a.6.6 0 0 0 0-1L5.92 2.7A.6.6 0 0 0 5 3.2z"></path>
+      </svg>
+    </span>
+  </span>
+  <span class="text">
+    <span class="label">{label}</span>
+    <span class="source">
+      {source}
+      <ExternalArrow href={href} />
+    </span>
+  </span>
+</a>
+
+<style>
+  .video {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    transition: border-color var(--dur) var(--ease);
+
+    &:is(:hover, :focus-visible) {
+      border-color: var(--line-strong);
+      color: inherit;
+    }
+  }
+
+  /* The size of a photo slot: a third of the text column, less the gaps
+     between slots. The card's own border is added back, so the thumbnail
+     lines up with the photos above it. */
+  .thumbnail {
+    position: relative;
+    flex: none;
+    inline-size: calc((100% + 2 * var(--hairline) - 2 * var(--space-2)) / 3);
+    aspect-ratio: 3 / 2;
+    border-inline-end: var(--hairline) solid var(--line);
+    background: var(--surface);
+  }
+
+  .image {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--play);
+    block-size: var(--play);
+    margin: auto;
+    border: var(--hairline) solid var(--line);
+    border-radius: 50%;
+    background: var(--play-bg);
+    color: var(--text);
+    backdrop-filter: var(--play-backdrop);
+    transition:
+      background var(--dur) var(--ease),
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+
+    .video:is(:hover, :focus-visible) & {
+      border-color: var(--text);
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    svg {
+      inline-size: var(--icon-md);
+      block-size: var(--icon-md);
+      fill: currentColor;
+    }
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    padding-inline: var(--space-4);
+  }
+
+  .label {
+    font-size: var(--text-small);
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-tight);
+    transition: color var(--dur) var(--ease);
+
+    .video:is(:hover, :focus-visible) & {
+      color: var(--accent);
+    }
+  }
+
+  .source {
+    color: var(--text-3);
+    font-size: var(--text-meta);
+  }
+</style>

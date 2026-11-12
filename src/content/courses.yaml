@@ -1,0 +1,17 @@
+the-defi-revolution:
+  date: 2022-03
+  title: The DeFi revolution
+  originalTitle: La revolución DeFi
+  where: Online course in Spanish, Balio
+  href: https://balio.app/curso/defi/
+  # As shown on balio.app when checked; update by hand.
+  rating:
+    score: 4.7
+    reviews: 26
+  lessons: 30
+  minutes: 140
+  video:
+    href: https://www.youtube.com/watch?v=FESgArXJBX0
+    thumbnail: ../assets/course-trailer.jpg
+    label: Watch the trailer
+    source: YouTube

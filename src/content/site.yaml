@@ -1,7 +1,7 @@
 profile:
   name: Elías García
   role: Software engineer
-  location: Portugal
+  location: Porto, Portugal
   timezone: Europe/Lisbon
   availability: Open to remote roles
   about:
@@ -20,7 +20,3 @@ profile:
     - label: X
       text: "@eliasgarciadev"
       href: https://x.com/eliasgarciadev
-  speakingPhoto:
-    src: ../assets/speaking-lisbon-2023.jpg
-    alt: Elías on stage presenting a slide on traditional identity systems
-    caption: Explaining identity systems at the Polygon DevX Global Tour in Lisbon, 2023.

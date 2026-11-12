@@ -1,0 +1,46 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import { attachmentImage } from "../lib/attachment.ts";
+
+type Props = {
+  photos: CollectionEntry<"talks">["data"]["photos"];
+};
+
+const { photos } = Astro.props;
+---
+
+<ul class="photos" role="list">
+  {photos.map(({ src, alt }) => (
+    <li>
+      <Image
+        class="photo"
+        src={src}
+        alt={alt}
+        widths={[...attachmentImage.widths]}
+        sizes={attachmentImage.sizes}
+        loading="lazy"
+      />
+    </li>
+  ))}
+</ul>
+
+<style>
+  /* Always three slots, so one or two photos keep the same size. */
+  .photos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  .photo {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 3 / 2;
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    object-fit: cover;
+  }
+</style>

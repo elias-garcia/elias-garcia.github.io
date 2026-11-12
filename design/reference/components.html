@@ -108,7 +108,7 @@ a:hover{color:var(--accent-c)}
 @keyframes palPop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
 .pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default;animation:palFade var(--dur) var(--ease) both}
 .ppanel{animation:palPop var(--dur) var(--ease-settle) both;transform-origin:top center}
-.pin{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:15px;color:var(--text);background:transparent;height:100%}
+.pin{padding:0;flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:15px;color:var(--text);background:transparent;height:100%}
 .pin::placeholder{color:var(--text-3)}
 .ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
 .pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
@@ -121,7 +121,7 @@ a:hover{color:var(--accent-c)}
 .pret{width:16px;font-size:13px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
 .popt.act .pret{opacity:1}
 mark.phl{background:var(--tint-strong);color:var(--text);border-radius:var(--r-sm);padding:0}
-.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:11px;color:var(--text-2);font-family:inherit}
+.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
 .pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
 .pclear:hover{background:var(--control-hover);color:var(--text)}
 @media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
@@ -275,7 +275,7 @@ a:hover{color:var(--accent-c)}
 .pret{width:16px;font-size:13px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
 .popt.act .pret{opacity:1}
 mark.phl{background:var(--tint-strong);color:var(--text);border-radius:var(--r-sm);padding:0}
-.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:11px;color:var(--text-2);font-family:inherit}
+.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
 .pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
 .pclear:hover{background:var(--control-hover);color:var(--text)}
 @media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
@@ -404,7 +404,7 @@ a:hover{color:var(--accent-c)}
 .pret{width:16px;font-size:13px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
 .popt.act .pret{opacity:1}
 mark.phl{background:var(--tint-strong);color:var(--text);border-radius:var(--r-sm);padding:0}
-.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:11px;color:var(--text-2);font-family:inherit}
+.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
 .pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
 .pclear:hover{background:var(--control-hover);color:var(--text)}
 @media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
@@ -466,7 +466,8 @@ html{scroll-padding-top:80px}
 .fact.links dd{display:flex;flex-wrap:wrap;gap:4px 16px}
 .factlink{color:var(--text);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px;transition:text-decoration-color var(--dur) var(--ease)}
 .factlink:hover,.factlink:focus-visible{text-decoration-color:currentColor}
-@media (max-width: 639.98px){.facts{grid-template-columns:1fr 1fr}.fact.links{grid-column:1 / -1}}
+/* facts below Tailwind sm: one fact per row, the label in a 112px column (like the date column of the lists), the value beside it on the same baseline */
+@media (max-width: 639.98px){.facts{grid-template-columns:minmax(0,1fr);gap:12px}.fact{flex-direction:row;align-items:baseline;gap:24px}.fact dt{flex:0 0 112px}.fact dd{min-width:0}}
 
 
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
@@ -561,7 +562,7 @@ a:hover{color:var(--accent-c)}
 .pret{width:16px;font-size:13px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
 .popt.act .pret{opacity:1}
 mark.phl{background:var(--tint-strong);color:var(--text);border-radius:var(--r-sm);padding:0}
-.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:11px;color:var(--text-2);font-family:inherit}
+.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
 .pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
 .pclear:hover{background:var(--control-hover);color:var(--text)}
 @media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
@@ -702,7 +703,7 @@ a:hover{color:var(--accent-c)}
 .pret{width:16px;font-size:13px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
 .popt.act .pret{opacity:1}
 mark.phl{background:var(--tint-strong);color:var(--text);border-radius:var(--r-sm);padding:0}
-.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:11px;color:var(--text-2);font-family:inherit}
+.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
 .pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
 .pclear:hover{background:var(--control-hover);color:var(--text)}
 @media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
@@ -780,7 +781,7 @@ html{scroll-padding-top:80px}
 .spec-u{margin:0;font-size:14px;color:var(--text-2)}
 .spec-w{margin:0;font-size:13px;color:var(--text-3)}
 .mdx{align-self:flex-start;margin-top:4px;font-size:12px;color:var(--text-2);background:var(--control);border-radius:var(--r-full);padding:4px 12px}
-.mdx code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11px}
+.mdx code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px}
 .demo{padding:24px 20px;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;min-width:0}
 .demo > *{min-width:0}
 .demo .row{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
@@ -866,6 +867,41 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 
 /* tiles: 8px between the status line and the description, as on Projects (the tile grid rows are only 4px apart) */
 .tile .thead{padding-bottom:4px}
+
+/* list row attachments (copied from Home): one per row, either 1–3 photos or one video preview */
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cmeta{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:13px;line-height:1.6;color:var(--text-3)}
+.crate,.crate-v{display:inline-flex;align-items:center;gap:4px}
+.crate svg{width:12px;height:12px;fill:var(--text);flex:none}
+.crate b{font-weight:500;color:var(--text)}
+.play{position:absolute;inset:0;margin:auto;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:color-mix(in oklch, var(--bg) 92%, transparent);border:1px solid var(--line);color:var(--text);backdrop-filter:blur(4px);transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.play svg{width:16px;height:16px;fill:currentColor;margin-left:2px}
+.courses{list-style:none;margin:0;padding:0}
+.attach{display:flex;flex-wrap:wrap;column-gap:24px;margin-bottom:12px}
+.attach-gut{flex:0 0 112px}
+.attach-c{flex:1 1 300px;min-width:0}
+.lpc{display:flex;align-items:center;width:100%;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);overflow:hidden;color:inherit;text-decoration:none;transition:border-color var(--dur) var(--ease)}
+.lpc:hover,.lpc:focus-visible{border-color:var(--line-strong)}
+.lpc-img{position:relative;flex:none;width:calc((100% - 14px) / 3);aspect-ratio:3 / 2;background:var(--surface);border-right:1px solid var(--line)}
+.lpc-img img{display:block;width:100%;height:100%;object-fit:cover}
+.lpc .play{width:32px;height:32px}
+.lpc .play svg{width:12px;height:12px}
+.lpc:hover .play,.lpc:focus-visible .play{background:var(--text);color:var(--bg);border-color:var(--text)}
+.lpc-t{display:flex;flex-direction:column;gap:0;padding:0 16px;min-width:0}
+.lpc-title{font-size:14px;font-weight:500;line-height:1.35;color:var(--text)}
+.lpc-src{font-size:13px;line-height:1.6;color:var(--text-3)}
+.lpc:hover .lpc-title,.lpc:focus-visible .lpc-title{color:var(--accent-c)}
+.list li > .attach{flex:1 1 100%;margin:8px 0 0}
+.photos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.photos img{display:block;width:100%;aspect-ratio:3 / 2;object-fit:cover;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
+
+
+/* emphasis inside spec text uses the type scale's 500, never bold 700 */
+.spec-u strong{font-weight:500;color:var(--text)}
+
+/* work mode on the company line (copied from Home) */
+.wsep{margin:0 8px;color:var(--text-3)}
+.cmode{font-size:14px;font-weight:400;color:var(--text-3)}
 </style>
 </head><body>
 <div class="site">
@@ -1017,21 +1053,69 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
   <section class="spec" aria-labelledby="c-row">
     <div class="spec-h">
       <h3 id="c-row">List row</h3>
-      <p class="spec-u">Date gutter of 112px, title, one muted line. No dividers; other rows step back on hover. A row is a link only if it has somewhere to go; otherwise it is a plain row with no hover.</p>
+      <p class="spec-u">Date gutter of 112px, title, one muted line. No dividers; other rows step back on hover. A row is a link only if it has somewhere to go; otherwise it is a plain row with no hover. A row can carry one attachment (see List row attachment).</p>
       <p class="spec-w">Used on: Home (work, writing, talks), Writing</p>
       <span class="mdx">MDX: <code>ul / li</code></span>
     </div>
     <div class="demo">
 <ul class="list" role="list" style="display: flex; flex-direction: column">
          <li><a class="item" href="#" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0"><time datetime="2026-11" style="flex: 0 0 112px; color: var(--text-3)">Nov 2026</time><span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column"><span style="font-weight: 500">Rebuilding this site</span><span style="font-size: 14px; color: var(--text-2)">Why it stayed one column, and how I spent the motion budget.</span></span></a></li>
-         <li style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0"><time datetime="2024" style="flex: 0 0 112px; color: var(--text-3)">2024</time><span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column"><span style="font-weight: 500">Preserving privacy with Polygon ID profiles</span><span style="font-size: 14px; color: var(--text-2)">House of ZK, EthDenver · plain row: no destination</span></span></li>
+         <li style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0"><time datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3)">Jan 2024</time><span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column"><span style="font-weight: 500">Preserving privacy with Polygon ID profiles</span><span style="font-size: 14px; color: var(--text-2)">House of ZK, EthDenver · plain row: no destination</span></span></li>
        </ul>
+    </div>
+  </section>
+  <section class="spec wide" aria-labelledby="c-attach">
+    <div class="spec-h">
+      <h3 id="c-attach">List row attachment</h3>
+      <p class="spec-u">Optional media under a list row’s text, starting exactly under the title (it wraps like the row: an empty 112px date column beside it, which drops away on phones together with the date). A row has at most one attachment, of one kind:</p>
+      <p class="spec-u"><strong>Photos</strong>: 1 to 3 images as 3:2 thumbnails, each a third of the text column, in a row of three (8px apart, 8px radius, hairline border); fewer stay left-aligned at the same size; never more than three. Every image has descriptive alt text. Not clickable for now. <strong>Video preview</strong>: exactly one bordered card spanning the full text column (the same width as a row of photos), with a thumbnail the same size and shape as a photo (a third of the column, 3:2) and a 32px play button centred on it, a label and its source with ↗, e.g. “Watch the trailer / YouTube ↗”. It is its own link, separate from the row’s link; it opens the video elsewhere and never embeds a player.</p>
+      <p class="spec-w">Used on: Home (Speaking: photos, Teaching: video preview)</p>
+    </div>
+    <div class="demo">
+      <div style="width: 100%; max-width: 640px; display: flex; flex-direction: column">
+      <ul class="list" role="list" style="display: flex; flex-direction: column; width: 100%; margin: 0; padding: 0; list-style: none">
+        <li style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
+          <time datetime="2023-07" style="flex: 0 0 112px; color: var(--text-3)">Jul 2023</time>
+          <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+            <span style="font-weight: 500">Issuing verifiable credentials with Polygon ID</span>
+            <span style="font-size: 14px; color: var(--text-2)">Polygon DevX Global Tour, Lisbon</span>
+          </span>
+          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c"><ul class="photos" role="list"><li><img src="../assets/talk-lisbon-slide.jpg" alt="Elías on stage presenting a slide on traditional identity systems at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></li></ul></div></div></li>
+        <li style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
+          <time datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3)">Jan 2024</time>
+          <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column">
+            <span style="font-weight: 500">Preserving privacy with Polygon ID profiles</span>
+            <span style="font-size: 14px; color: var(--text-2)">House of ZK, EthDenver</span>
+          </span>
+          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c"><ul class="photos" role="list"><li><img src="../assets/talk-hozk.jpg" alt="Elías pointing at the Polygon ID identity state diagram while presenting at House of ZK, EthDenver 2024" loading="lazy"></li><li><img src="../assets/talk-lisbon-panel.jpg" alt="Elías and two other speakers on stage at the Polygon DevX Global Tour in Lisbon, in front of a slide reading “Issuing Lens Verifiable Credentials using Polygon ID”" loading="lazy"></li><li><img src="../assets/talk-lisbon-slide.jpg" alt="Elías on stage presenting a slide on traditional identity systems at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></li></ul></div></div></li>
+      </ul>
+      <ul class="list courses" role="list" style="width: 100%">
+        <li class="crow">
+          <a class="item" href="https://balio.app/curso/defi/" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0">
+            <time datetime="2022-03" style="flex: 0 0 112px; color: var(--text-3)">Mar 2022</time>
+            <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+              <span style="display: flex; flex-direction: column">
+                <span style="font-weight: 500">The DeFi revolution<svg class="ext" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></span>
+                <span style="font-size: 14px; color: var(--text-2)">Online course in Spanish, Balio</span>
+              </span>
+              <p class="cmeta"><span class="crate"><span class="vh">Rated 4.7 out of 5 from 26 reviews.</span><span class="crate-v" aria-hidden="true"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 .9l1.55 3.17 3.5.5-2.53 2.47.6 3.48L6 8.88l-3.12 1.64.6-3.48L.95 4.57l3.5-.5z"></path></svg><b>4.7</b><span>(26 reviews)</span></span></span><span aria-hidden="true">·</span><span>30 lessons</span><span aria-hidden="true">·</span><span>2h 20m</span></p>
+            </span>
+          </a>
+          <div class="attach"><span class="attach-gut" aria-hidden="true"></span><div class="attach-c">
+            <a class="lpc" href="https://www.youtube.com/watch?v=FESgArXJBX0">
+              <span class="lpc-img"><img src="../assets/course-trailer.jpg" alt="" loading="lazy"><span class="play"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6a.6.6 0 0 0 .92.5l7.3-4.8a.6.6 0 0 0 0-1L5.92 2.7A.6.6 0 0 0 5 3.2z"></path></svg></span></span>
+              <span class="lpc-t"><span class="lpc-title">Watch the trailer</span><span class="lpc-src">YouTube<svg class="ext" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path></svg></span></span>
+            </a>
+          </div></div>
+        </li>
+      </ul>
+      </div>
     </div>
   </section>
   <section class="spec" aria-labelledby="c-job">
     <div class="spec-h">
       <h3 id="c-job">Expandable row</h3>
-      <p class="spec-u">A list row that opens to show bullets. On Home the current job (Vesu) is open on load and the rest are closed; + turns into × when open.</p>
+      <p class="spec-u">A list row that opens to show bullets. On Home the current job (Vesu) is open on load and the rest are closed; + turns into × when open. The company line carries the work mode in the role line’s grey 14px after a “·”: “Remote”, or the mode and city (“On-site, A Coruña”, “Hybrid, A Coruña”); plain text, no chips or icons. The first line is top-aligned: the date, the company and the 16px +/× share one 24px line, the icon centred in a 24px box, on desktop and on phones (where the date and icon share the first line).</p>
       <p class="spec-w">Used on: Home (work experience)</p>
       
     </div>
@@ -1039,8 +1123,8 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 <ul class="list" role="list" style="display: flex; flex-direction: column">
          <li class="item job open">
            <button class="jobhead" type="button" aria-expanded="true">
-             <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2024">2024</time>–Now</span>
-             <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column"><span style="font-weight: 500">Vesu</span><span style="font-size: 14px; color: var(--text-2)">Engineering Lead</span></span>
+             <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2024">2024</time> – Now</span>
+             <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column"><span><span style="font-weight: 500">Vesu</span><span class="cmode"><span class="wsep" aria-hidden="true">·</span><span class="vh">, </span>Remote</span></span><span style="font-size: 14px; color: var(--text-2)">Engineering Lead</span></span>
              <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
            </button>
            <div class="jobbody"><div style="min-height: 0; overflow: hidden"><div style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 0 0 20px"><span class="jobgut" style="flex: 0 0 112px"></span>
@@ -1049,8 +1133,8 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
          </li>
          <li class="item job">
            <button class="jobhead" type="button" aria-expanded="false">
-             <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2020">2020</time>–<time datetime="2024">2024</time></span>
-             <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column"><span style="font-weight: 500">Polygon Labs</span><span style="font-size: 14px; color: var(--text-2)">Staff Frontend Engineer → Tech Lead</span></span>
+             <span style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums"><time datetime="2020">2020</time> – <time datetime="2024">2024</time></span>
+             <span style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column"><span><span style="font-weight: 500">Polygon Labs</span><span class="cmode"><span class="wsep" aria-hidden="true">·</span><span class="vh">, </span>Remote</span></span><span style="font-size: 14px; color: var(--text-2)">Staff Frontend Engineer → Tech Lead</span></span>
              <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg>
            </button>
          </li>
@@ -1172,7 +1256,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
   <section class="spec wide" aria-labelledby="c-facts">
     <div class="spec-h">
       <h3 id="c-facts">Project facts</h3>
-      <p class="spec-u">Year · Status · Links in three equal columns. Links are named by destination and marked ↗.</p>
+      <p class="spec-u">Year · Status · Links in three equal columns. Below 640px, one fact per row: the 13px label in a 112px column (like the lists’ date column), the 14px value beside it on the same baseline, 12px between rows. Links are named by destination and marked ↗; when they don’t fit beside each other they wrap under the first.</p>
       <p class="spec-w">Used on: case studies</p>
       
     </div>

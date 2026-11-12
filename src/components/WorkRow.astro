@@ -1,5 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { workMode } from "../lib/content.ts";
+import VisuallyHidden from "./VisuallyHidden.astro";
 import Years from "./Years.astro";
 
 type Props = {
@@ -17,7 +19,16 @@ const { job, open } = Astro.props;
         <Years start={job.start} end={job.end} />
       </span>
       <span class="text">
-        <span class="company">{job.company}</span>
+        <span class="company-line">
+          <span class="company">{job.company}</span>
+          <span class="mode">
+            <span class="separator" aria-hidden="true">
+              ·
+            </span>
+            <VisuallyHidden>,</VisuallyHidden>
+            {workMode(job)}
+          </span>
+        </span>
         <span class="role">{job.role}</span>
       </span>
       <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
@@ -77,6 +88,23 @@ const { job, open } = Astro.props;
 
   .company {
     font-weight: var(--weight-medium);
+  }
+
+  /* Flex, so the markup's whitespace adds no space around the dot. */
+  .company-line,
+  .mode {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+  }
+
+  .mode {
+    color: var(--text-3);
+    font-size: var(--text-small);
+  }
+
+  .separator {
+    margin-inline: var(--space-2);
   }
 
   .role {

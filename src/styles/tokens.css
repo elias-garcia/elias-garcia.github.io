@@ -38,6 +38,12 @@
   --scrim: rgb(9 9 11 / 0.18); /* behind the search dialog */
   --header-bg: color-mix(in oklch, var(--bg) 82%, transparent);
   --header-backdrop: saturate(1.4) blur(12px);
+  --play-bg: color-mix(
+    in oklch,
+    var(--bg) 92%,
+    transparent
+  ); /* play button over a video thumbnail */
+  --play-backdrop: blur(4px);
   --logo-shade: #000000; /* folds in the logo mark, drawn at low opacity */
   --photo-brightness: 1; /* photos are dimmed in dark mode */
 
@@ -124,7 +130,7 @@
   --bar-h: 64px; /* header and footer (minimum) */
   --hit-area: 44px; /* touch target on coarse pointers */
   --icon-md: 16px;
-  --icon-sm: 12px; /* inline markers only: see-more chevron, external arrow */
+  --icon-sm: 12px; /* inline markers only: see-more chevron, external arrow, rating star */
   --menu-w: 320px; /* Download CV menu */
   --avatar: 104px; /* Home avatar */
   --avatar-sm: 80px; /* Home avatar on phones */
@@ -138,6 +144,7 @@
   --demo-label: 72px; /* label column in the easing demo */
   --runner: 16px; /* easing demo dot */
   --dot: 8px; /* availability and project status dots */
+  --play: 32px; /* play button on a video preview */
   --row-basis: 300px; /* text column next to the gutter; wraps below it when narrower */
   --nudge-sm: 1px; /* external arrow nudge and baseline offset */
   --nudge: 2px; /* see-more chevron nudge, tile lift */
