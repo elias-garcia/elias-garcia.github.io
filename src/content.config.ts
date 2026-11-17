@@ -73,6 +73,15 @@ const courses = defineCollection({
     }),
 });
 
+const cvFormats = defineCollection({
+  loader: file("src/content/cv-formats.yaml"),
+  schema: z.object({
+    label: z.string(),
+    keywords: z.array(z.string()).default([]),
+    description: z.string(),
+  }),
+});
+
 const education = defineCollection({
   loader: file("src/content/education.yaml"),
   schema: z.object({
@@ -134,14 +143,65 @@ const notFound = defineCollection({
   }),
 });
 
+const counts = z.object({
+  one: z.string().includes("{count}"),
+  other: z.string().includes("{count}"),
+});
+
+const search = defineCollection({
+  loader: file("src/content/search.yaml"),
+  schema: z.object({
+    button: z.string(),
+    shortcut: z.string(),
+    shortcutOther: z.string(),
+    dialog: z.string(),
+    input: z.string(),
+    clear: z.string(),
+    results: z.string(),
+    goTo: z.string(),
+    sections: z.record(z.string(), z.string()),
+    actions: z.string(),
+    email: z.string(),
+    cv: z.object({
+      title: z.string(),
+      line: z.string(),
+      placeholder: z.string(),
+      noMatch: z.string().includes("{query}"),
+      back: z.string(),
+    }),
+    rss: z.object({ title: z.string(), line: z.string() }),
+    noResults: z.object({
+      title: z.string().includes("{query}"),
+      hint: z.string(),
+    }),
+    topics: z.string(),
+    suggest: z.string(),
+    suggestion: z.object({
+      title: z.string().includes("{query}"),
+      line: z.string(),
+      subject: z.string().includes("{query}"),
+    }),
+    hints: z.object({
+      escape: z.string(),
+      move: z.string(),
+      open: z.string(),
+      back: z.string(),
+    }),
+    resultCount: counts,
+    postCount: counts,
+  }),
+});
+
 export const collections = {
   site,
   pages,
   notFound,
+  search,
   work,
   talks,
   courses,
   education,
+  cvFormats,
   writing,
   projects,
 };

@@ -41,9 +41,14 @@ The **zinc** and **indigo** palettes only, 14 tokens, each with a light and a da
 | `--text-3` | zinc-500 | zinc-400 | Dates, metadata, captions, placeholders |
 | `--accent` | indigo-600 | indigo-400 | Current page, selected chip, links in prose |
 | `--tint` | indigo-50 | indigo-950 | Selected chip, active search row |
-| `--tint-strong` | indigo-100 | indigo-900 | Search match highlight |
+| `--tint-strong` | indigo-100 | indigo-900 | Text selection (`::selection`) |
 | `--accent-line` | indigo-300 | indigo-700 | Underline under links in prose |
-| `--scrim` | zinc-950 at 18% | black at 55% | Behind the search dialog |
+| `--scrim` | zinc-950 at 18% | black at 55% | Behind the search dialog and the image viewer card |
+| `--viewer-bg` | black | black | Phone image viewer backdrop (the viewer is dark in both themes) |
+| `--viewer-text` | zinc-100 | zinc-100 | Phone viewer caption title, icons, active dot |
+| `--viewer-text-2` | zinc-400 | zinc-400 | Phone viewer caption meta (7.6:1 on black) |
+| `--viewer-control` | white at 12% | white at 12% | Phone viewer round buttons |
+| `--viewer-dot` | white at 32% | white at 32% | Phone viewer inactive dots (decorative) |
 
 Rules:
 - `--text-3` sits only on `--bg` or `--surface`, never on `--control` (4.4:1 in light mode, below AA).
@@ -97,7 +102,7 @@ A 4px grid. Every padding, margin, gap and offset is a multiple of 4. Only 1–2
 
 | Token | Value | Use |
 |---|---|---|
-| `--r-sm` | 4px | Search highlights, key hints, footnote markers, focus ring on text links |
+| `--r-sm` | 4px | Key hints, footnote markers, focus ring on text links |
 | `--r-md` | 8px | Icon tiles, menu and search rows |
 | `--r-lg` | 12px | Cards, previews, code blocks, menus, the search panel |
 | `--r-full` | 999px | Buttons, chips |
@@ -162,20 +167,23 @@ Icons always sit next to a text label, or carry an accessible name when alone. D
 | Home avatar | 104px desktop, 80px on phones |
 | Touch hit area | 44px on `pointer: coarse` for every link and control (visible size unchanged) |
 
-One breakpoint, **640px** (Tailwind's `sm`), and nothing else: no other media queries, no container queries. Phone rules apply below it (`width < 40rem`). Grids use explicit column counts per breakpoint, never `auto-fit`/`minmax` (that creates in-between column counts and orphaned items). Below 640px (phones, and narrow tablets or windows):
+One breakpoint, **640px** (Tailwind's `sm`), and nothing else: no other media queries. **One exception, by design:** photo attachments switch on their row's own width with a container query (`@container (width < 436px)`). 436px is exactly where the list row's flex-wrap moves the date above the title (112 + 24 + 300), so the photos change layout at the same moment as the row; a screen breakpoint can't express that, because a 600px window still has the date column. No other container queries. Phone rules apply below it (`width < 40rem`). Grids use explicit column counts per breakpoint, never `auto-fit`/`minmax` (that creates in-between column counts and orphaned items). Below 640px (phones, and narrow tablets or windows):
 - the header search shows only its icon (no "⌘K");
 - pages start 48px below the header instead of 80px;
 - the footer drops the offset ("· 5h ahead of you") and keeps one row;
 - the Home avatar is 80px and sits above the intro text, left-aligned with it; from 640px it is 104px beside the text;
 - work rows put the + beside the date and the company/role below, and an open row's bullets start under the company name (the empty 112px date column is dropped);
 - the post meta uses the short date ("Nov 9, 2026");
-- Home project tiles and Projects cards go to one per row with 16:7 previews, every card equal (see Components).
+- Home project tiles and Projects cards go to one per row with 16:7 previews, every card equal (see Components);
+- the image viewer becomes the full-screen dark viewer (see Image viewer → Phones).
+
+Talk photos follow the row, not the screen: full width with a sideways scroll on narrow rows (phones), the row of thumbnails wherever the date column fits (see List row attachment → Photos).
 
 ---
 
 ## 3. Components
 
-Each component appears exactly once in the design system. Live versions: `reference/components.html` (layout, actions, lists and cards, text and metadata) and `reference/components-2.html` (prose and search), with `screenshots/components.png` and `screenshots/components-2.png`.
+Each component appears exactly once in the design system. Live versions, split by purpose: `reference/components.html` (**interface**: layout, actions, search) and `reference/components-2.html` (**content**: lists and cards, text and metadata, prose), with `screenshots/components.png` and `screenshots/components-2.png`.
 
 ### Layout
 - **Header.** Sticky, 64px, translucent `--bg` with backdrop blur, hairline at the bottom. Logo (links Home) · Home · Projects · Writing · search button (magnifier + "⌘K", icon only on phones). The current section is `--accent` with a 1px underline; inside a case study or post, its parent (Projects/Writing) is current with `aria-current="true"`; on the page itself `aria-current="page"`. Same on every page.
@@ -195,6 +203,8 @@ Each component appears exactly once in the design system. Live versions: `refere
 - **List row.** 112px date gutter (`<time>` in `--text-3`), title 15/500, one 14px line in `--text-2`, 12px vertical padding, no dividers. Rows are `<li>` in a `<ul role="list">`. When one row is hovered, the other link rows fade to .45 (pointer devices only). The fade covers the whole list the row belongs to: on Writing that is every post across all year groups (the years are one list split by headings; scope the rule to the container of the year groups); on Home each section (Writing, Speaking, Teaching, Work) fades only its own rows. **A row is a link only if it has somewhere to go; otherwise it is a plain row**: not an `<a>`, no hover, not focusable.
 - **List row attachment.** Optional media under a list row's text, at most one per row, of one of two kinds. It starts exactly under the row's title: it wraps like the row, with an empty 112px date column beside it that drops away on phones together with the date. 12px from the text above and from the next row. Every attachment image has the same size and shape: a third of the text column (a slot in a row of three, 8px gaps), 3:2, `object-fit: cover`, 8px radius, hairline `--line` border, `--surface` behind it.
   - **Photos:** 1 to 3 images in a `<ul role="list">` grid of three columns; fewer stay left-aligned at the same size; never more than three. Every image has descriptive alt text. The talk photos ship pre-processed (1200×800, colour-corrected to match each other); don't re-crop them. Lazy-loaded. Each photo is a `<button>` wrapping the image (`aria-label` "Open photo 2 of 3: {talk title}", `cursor: zoom-in`, image at 88% opacity on hover) that opens the **image viewer** on that photo.
+    - **Narrow rows (phones):** when the row is narrower than 436px (the date sits above the title) the photos show full width in the page instead of as thumbnails. One photo fills the text column (3:2). Several sit in a sideways-scrolling strip: `display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 8px; overscroll-behavior-x: contain`, scrollbar hidden; each photo `flex: 0 0 calc(100% - 40px)` with `scroll-snap-align: start`, so the next one peeks 32px. The strip stays inside the text column (never bleeds into the page margins: that keeps it clear of the browser's edge-swipe back gesture and aligned with the text). The photos stay buttons (they are the strip's focusable content) and still open the viewer.
+    - **Rows with the date column (tablet, laptop):** the row of three thumbnails above, unchanged.
   - **Video preview:** exactly one bordered card spanning the full text column (`--r-lg`, `--bg`), a single link to the video, separate from the row's link. The thumbnail fills the first third (same size as a photo) with a 32px round play button centred on it (`--bg` at 92% with blur, `--line` border, 16px play icon); then the label (14/500, "Watch the trailer") and the source (13px `--text-3`, "YouTube" + ↗). Hover/focus: the card border goes `--line-strong`, the label turns `--accent`, the play button inverts (`--text` fill, `--bg` icon). It opens the video elsewhere and never embeds a player; no duration.
 - **Image viewer.** Opens from a photo attachment. A modal dialog, labelled "Photo 2 of 3: {talk title}", in the search palette's language:
   - **Card:** 720px wide (`min(720px, 100%)`), `--bg`, `--line` border, `--r-lg`, `--shadow-overlay`, over the `--scrim` backdrop (with 2px blur); the page behind doesn't scroll.
@@ -202,7 +212,10 @@ Each component appears exactly once in the design system. Live versions: `refere
   - **Controls:** 40px round buttons (`--bg` at 92% with blur, `--line` border, 16px icons with a 1.5px stroke; on hover `--line-strong` border and `--bg`): × in the photo's top-right corner, ‹ › centred on the photo's left and right edges.
   - **Behaviour:** focus moves to × on open, Tab cycles only inside the dialog, and on close focus returns to the thumbnail that opened it. Esc, ×, clicking the backdrop and a swipe down (more than 80px, more vertical than horizontal) close it; ← → and horizontal swipes (more than 50px) move, wrapping around. The count is `aria-live="polite"`. Without JavaScript the photos stay visible and the buttons do nothing.
   - **One photo:** no arrows, no count; ← → do nothing.
-  - **Phones (below 640px):** full screen on `--bg`, photo full width, caption below, no arrows (swipe) and no footer, × fixed top-right at 44px.
+  - **Phones (below 640px): the platform photo viewer, dark in both themes.** Full screen on `--viewer-bg` (no card, no blur), photo edge to edge (3:2, contained) centred in the space above the caption; caption at the bottom (title in `--viewer-text`, meta in `--viewer-text-2`, padded 24px 20px 0); then a row with ‹ and › (44px round, `--viewer-control` fill, `--viewer-text` icons, no border) at the ends and position dots between them (6px, 8px apart, `--viewer-dot`, the current one `--viewer-text`, `aria-hidden`; only with 2+ photos); bottom padding 16px + `env(safe-area-inset-bottom)`. × is 44px at the top right (8px in), same fill. No key-hint footer, no arrows on the photo.
+    - **Drag down to close:** the photo follows the finger (`translate: 0 <dy>`, no transition while dragging) and the backdrop fades with it (opacity `max(.4, 1 - dy/480)`); past 80px it closes, otherwise it springs back (250ms, `--ease-settle`). Lock the gesture's direction after 8px so a sideways swipe never moves it down. × stays as the non-gesture alternative (WCAG 2.5.7), and ‹ › as the alternative to swiping (WCAG 2.5.1). Reduced motion: no translate transition; the viewer fades in and out only.
+    - **Back gesture:** opening pushes a history entry and Back closes the viewer (users expect Back to close full-screen overlays); closing with × or Esc goes back in history, so it stays balanced.
+    - **Zoom:** pinch to zoom the photo; not drawn in the design.
   - **Motion:** the card fades and scales from 0.98 (250ms, `--ease-settle`), the backdrop fades (150ms); with reduced motion, a fade only.
   - **Image:** the same source as the thumbnail, at widths up to 1440 (2× the card).
 - **Course rating line.** Under a course's line: one 12px filled star in `--text`, the score (500, `--text`), the review count in `--text-3` ("4.7 (26 reviews)"), then "30 lessons · 2h 20m" with "·" separators, all 13px `--text-3`. The visible rating is `aria-hidden`; a visually hidden sentence carries it for screen readers: "Rated 4.7 out of 5 from 26 reviews." Never a row of yellow stars. The rating is a fixed value in the content, updated by hand.
@@ -278,16 +291,17 @@ On a highlighted line, comments switch to `--code-plain` (zinc-500 on indigo-50 
 - **Links and code in notes.** Notes can contain links and inline code; links are normal prose links (`--accent`, `--accent-line` underline, solid on hover) at the note size.
 - **In the build.** MDX with GitHub-flavoured footnotes (remark-gfm) already outputs this structure (references, a footnotes section, back links): restyle it to this spec, rename the section label to "Notes", and replace the "↩" text with the icon, through the MDX components map. No DPUB roles: Astro's attribute types don't allow them. The Copy page Markdown keeps standard `[^1]` footnotes.
 
-Custom MDX components: `<EasingDemo />` (two runners, linear vs ease-out, 600ms, Replay button), `<RoleburnHero caption="…" />` (the animated listings scan, decorative, `aria-hidden`, with its caption), `<Figure />`.
+Custom MDX components: `<EasingDemo />` (two runners, linear vs ease-out, 600ms, Replay button; each track clips its runner, otherwise the moved runners widen the page), `<RoleburnHero caption="…" />` (the animated listings scan, decorative, `aria-hidden`, with its caption), `<Figure />`.
 
 ### Search dialog (⌘K)
 - Opens with ⌘K / Ctrl+K and from the header button. The input resets the browser default padding (`padding: 0`); its row provides the spacing. A modal `role="dialog"` with `aria-modal="true"` with a 56px input row, a listbox of grouped results and a footer of key hints. **While open, the page behind does not scroll** (`html:has(.scrim) { overflow: hidden }` or equivalent).
 - **Empty state:** Go to (Home, Projects, Writing) and Actions (Send me an email, Download CV, Subscribe with RSS).
-- **Typed:** matches posts and projects; matching text highlighted with `--tint-strong`.
-- **Rows:** 32px icon tile, title, one line, meta on the right; the active row is `--tint` with a ↵ hint. ↑↓ move, ↵ opens, Esc closes.
-- **Nested choice:** "Download CV" shows › instead of ↵; Enter shows a crumb "Download CV" in the input and the same two formats (PDF / Markdown with descriptions and sizes). Esc or Backspace on an empty input goes back; a second Esc closes.
-- **No results:** a short message above the list ("No posts or projects about “x” yet" / "Try a topic I write about, or suggest this one."), then normal rows: **Topics** (each with its post count; Enter re-runs the search) and **Suggest** ("Suggest “x” as a post", opens an email with "Post idea: x" as subject). Footer shows "0 results". Never a dead end.
-- Index: a small JSON index built from the content collections at build time and fetched when the dialog first opens.
+- **Typed:** searches posts and projects, and **only what a result row shows: its title and its summary** (a post's description, a project's summary). Topics aren't searched (the Writing page filters by topic) and there are no hidden keywords. Every query word must match the start of a word in the title or summary ("ai" never matches inside "daily"; "agent" matches "agents"). Every match is highlighted, in the title and in the summary: `--accent` at weight 600, no background (`mark` reset to `background: none`). A background highlight was dropped: on the selected row it nearly disappeared against `--tint` (1.10:1 light, 1.40:1 dark). Accent text passes on both rows (light 6.46:1 on `--bg`, 5.78:1 on `--tint`; dark 6.36:1 and 5.12:1), and the weight change means the match doesn't rely on colour alone.
+- **Rows:** 32px icon tile, title (one line, ellipsis), then a second line in 12px `--text-2`, meta on the right; the active row is `--tint` with a ↵ hint. For posts and projects the second line is the summary, shown **in full** (it wraps; summaries are one sentence), so a match is never cut off, even on phones; Go to, Actions, Topics and Suggest rows keep their one-line description. ↑↓ move, ↵ opens, Esc closes.
+- **Nested choice:** "Download CV" shows › instead of ↵; Enter shows a crumb "Download CV" in the input, the placeholder "Choose a format" and the same two formats (PDF / Markdown with descriptions and sizes). It is a step, not a search: **both formats always stay listed**, and typing only moves the selection to the format whose name or keyword starts with what was typed ("p" or "pdf" → PDF; "m", "md" or "mark" → Markdown), with the typed letters highlighted like a match. If nothing matches, no row is selected, a quiet line appears above the list (13px `--text-3`, `role="status"`): "No format matches “x”. Backspace to go back.", and Enter does nothing. ↑ ↓ and the mouse still pick a row and take over from the typing. The footer count stays empty. Esc or Backspace on an empty input goes back; a second Esc closes.
+- **No results:** a short message above the list ("No posts or projects match “x”" / "Try a topic I write about, or suggest this one."), then normal rows: **Topics** (each with its post count; a link to that topic's page, `/writing/topics/<slug>`) and **Suggest** ("Suggest “x” as a post", opens an email with "Post idea: x" as subject). Footer shows "0 results". Never a dead end.
+- Index: a small JSON index built from the content collections at build time and carried in the page, so search works offline and never waits on a request: for each post and project its title, summary, URL and meta (date or status), and each topic with its post count and page. No full-text search.
+- Build: a native `<dialog>` opened with `showModal()` (modal, Esc and focus return come with it). The header button's shortcut reads "⌘K" on Apple's systems and "Ctrl K" elsewhere (set before the first render); both shortcuts work everywhere. Search needs JavaScript, so without it the button isn't shown.
 
 ### Key hint
 20px square, 12px text, `--line` border, `--r-sm`, never focusable: ↑ ↓ ↵ esc ← →. In a footer, keys that work together sit 4px apart as a group, and the group sits 8px before its label ("↑ ↓ to move"), so each key and label read as a pair.

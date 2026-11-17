@@ -58,6 +58,18 @@ export function isoMonth(date: Date): string {
   return date.toISOString().slice(0, 7);
 }
 
+const plural = new Intl.PluralRules(locale);
+
+// A count in words, from a content file's templates: "{count} posts".
+export function formatCount(
+  count: number,
+  templates: { readonly one: string; readonly other: string },
+): string {
+  const template =
+    plural.select(count) === "one" ? templates.one : templates.other;
+  return template.replace("{count}", () => String(count));
+}
+
 export function formatFileSize(bytes: number): string {
   return kilobytes.format(Math.max(1, Math.round(bytes / 1000))).toUpperCase();
 }

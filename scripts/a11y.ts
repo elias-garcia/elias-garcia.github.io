@@ -41,6 +41,35 @@ const states: Record<
       name: "second work row open",
       open: (page) => page.locator("details.job > summary").nth(1).click(),
     },
+    {
+      name: "search open",
+      open: (page) => page.click("[data-search-open]"),
+    },
+    {
+      name: "search with results",
+      open: async (page) => {
+        await page.fill("[data-search-input]", "a");
+        await page.locator('[data-results="posts"]:not([hidden])').waitFor();
+      },
+    },
+    {
+      name: "search with no results",
+      open: async (page) => {
+        await page.fill("[data-search-input]", "kubernetes");
+        await page.locator('[data-results="topics"]:not([hidden])').waitFor();
+      },
+    },
+    {
+      name: "search, Download CV formats",
+      open: async (page) => {
+        await page.fill("[data-search-input]", "");
+        await page.click('[data-action="cv"]');
+      },
+    },
+    {
+      name: "search, Download CV with no matching format",
+      open: (page) => page.fill("[data-search-input]", "x"),
+    },
   ],
 };
 

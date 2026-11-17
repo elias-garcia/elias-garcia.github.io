@@ -1,0 +1,63 @@
+---
+import CvFormatIcon from "./CvFormatIcon.astro";
+
+type Props = {
+  name:
+    | "go"
+    | "mail"
+    | "download"
+    | "rss"
+    | "post"
+    | "project"
+    | "topic"
+    | "pdf"
+    | "markdown";
+};
+
+const { name } = Astro.props;
+---
+
+{name === "pdf" || name === "markdown" ? (
+  <CvFormatIcon format={name} />
+) : (
+  <svg viewBox="0 0 16 16" aria-hidden="true">
+    {name === "go" && <path d="M3 8h10M9 4l4 4-4 4" />}
+    {name === "mail" && (
+      <>
+        <rect x="2" y="3.5" width="12" height="9" rx="1.5" />
+        <path d="M2.5 4.5L8 9l5.5-4.5" />
+      </>
+    )}
+    {name === "download" && <path d="M8 2.5v8M4.5 7L8 10.5 11.5 7M3 13.5h10" />}
+    {name === "rss" && (
+      <>
+        <path d="M3.5 3a9.5 9.5 0 0 1 9.5 9.5M3.5 7a5.5 5.5 0 0 1 5.5 5.5" />
+        <circle class="filled" cx="4" cy="12" r="1" />
+      </>
+    )}
+    {name === "post" && (
+      <>
+        <path d="M4 2.5h6l2.5 2.5v8.5h-8.5z" />
+        <path d="M6 8h4.5M6 10.5h3" />
+      </>
+    )}
+    {name === "project" && (
+      <>
+        <rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1" />
+        <rect x="9" y="2.5" width="4.5" height="4.5" rx="1" />
+        <rect x="2.5" y="9" width="4.5" height="4.5" rx="1" />
+        <rect x="9" y="9" width="4.5" height="4.5" rx="1" />
+      </>
+    )}
+    {name === "topic" && (
+      <path d="M6.5 2.5L5 13.5M11 2.5L9.5 13.5M3 6h10.5M2.5 10H13" />
+    )}
+  </svg>
+)}
+
+<style>
+  .filled {
+    fill: currentColor;
+    stroke: none;
+  }
+</style>

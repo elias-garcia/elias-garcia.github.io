@@ -1,6 +1,7 @@
 import { stat } from "node:fs/promises";
 import {
   getCourses,
+  getCvFormatCopy,
   getEducation,
   getProfile,
   getProjects,
@@ -8,7 +9,12 @@ import {
   getWork,
   workMode,
 } from "./content.ts";
-import { formatMinutes, formatMonthYear, formatYearRange } from "./format.ts";
+import {
+  formatFileSize,
+  formatMinutes,
+  formatMonthYear,
+  formatYearRange,
+} from "./format.ts";
 
 export async function renderCvMarkdown(): Promise<string> {
   const [profile, work, talks, courses, education, projects] =
@@ -78,7 +84,24 @@ export async function renderCvMarkdown(): Promise<string> {
     .concat("\n");
 }
 
-export async function getCvSizes() {
+export async function getCvFormats() {
+  const [sizes, pdf, markdown] = await Promise.all([
+    getCvSizes(),
+    getCvFormatCopy("pdf"),
+    getCvFormatCopy("markdown"),
+  ]);
+  return [
+    { ...pdf, href: "/cv.pdf", size: formatFileSize(sizes.pdf), icon: "pdf" },
+    {
+      ...markdown,
+      href: "/cv.md",
+      size: formatFileSize(sizes.markdown),
+      icon: "markdown",
+    },
+  ] as const;
+}
+
+async function getCvSizes() {
   const [pdf, markdown] = await Promise.all([
     // Relative to the project root, where Astro runs; bundling moves this module.
     stat("public/cv.pdf"),

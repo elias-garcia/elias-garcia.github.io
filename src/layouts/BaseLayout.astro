@@ -2,6 +2,7 @@
 import { Font } from "astro:assets";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import SearchDialog from "../components/SearchDialog.astro";
 import SkipLink from "../components/SkipLink.astro";
 import { getFeedTitle, getProfile } from "../lib/content.ts";
 import { toPath } from "../lib/navigation.ts";
@@ -57,6 +58,13 @@ const canonical = new URL(toPath(Astro.url.pathname), Astro.site);
     />
 
     <Font cssVariable="--font-sans" preload />
+    <script is:inline>
+      // The search shortcut is ⌘K on Apple's systems and Ctrl K elsewhere;
+      // set before the first render so the header button doesn't change.
+      if (!/Mac|iPhone|iPad|iPod/.test(navigator.platform)) {
+        document.documentElement.dataset.shortcut = "other";
+      }
+    </script>
     <slot name="head" />
   </head>
   <body>
@@ -70,6 +78,7 @@ const canonical = new URL(toPath(Astro.url.pathname), Astro.site);
       country={profile.country}
       timezone={profile.timezone}
     />
+    <SearchDialog />
   </body>
 </html>
 

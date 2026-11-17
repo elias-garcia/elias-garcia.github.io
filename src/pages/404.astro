@@ -6,7 +6,7 @@ import Section from "../components/Section.astro";
 import TextLink from "../components/TextLink.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getNotFoundPage, getProfile } from "../lib/content.ts";
-import { sections } from "../lib/navigation.ts";
+import { describeSections } from "../lib/navigation.ts";
 
 const [page, profile] = await Promise.all([getNotFoundPage(), getProfile()]);
 
@@ -15,21 +15,7 @@ if (email === undefined) {
   throw new Error("The profile has no `mailto:` contact for broken links.");
 }
 
-const suggestions = sections.map(({ label, href }) => {
-  const description = page.suggestions[href];
-  if (description === undefined) {
-    throw new Error(`\`not-found.yaml\` has no suggestion for \`${href}\`.`);
-  }
-  return { label, href, description };
-});
-const unused = Object.keys(page.suggestions).filter(
-  (path) => !sections.some(({ href }) => href === path),
-);
-if (unused.length > 0) {
-  throw new Error(
-    `\`not-found.yaml\` has suggestions for paths outside the navigation: ${unused.join(", ")}.`,
-  );
-}
+const suggestions = describeSections(page.suggestions, "not-found.yaml");
 
 const [beforeLink, afterLink] = page.report.split("{link}");
 ---

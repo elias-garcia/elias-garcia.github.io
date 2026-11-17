@@ -1,6 +1,7 @@
 ---
 import { currentState, sections } from "../lib/navigation.ts";
 import Logo from "./Logo.astro";
+import SearchButton from "./SearchButton.astro";
 
 type Props = {
   name: string;
@@ -30,6 +31,7 @@ const { pathname } = Astro.url;
           </li>
         ))}
       </ul>
+      <SearchButton />
     </nav>
   </div>
   {readingProgress && <div class="progress" aria-hidden="true" />}
@@ -96,6 +98,7 @@ const { pathname } = Astro.url;
     min-block-size: var(--hit-area);
   }
 
+  nav,
   .links {
     display: flex;
     align-items: center;

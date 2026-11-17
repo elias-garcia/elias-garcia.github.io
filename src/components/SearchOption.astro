@@ -1,0 +1,175 @@
+---
+import { linkTarget } from "../lib/links.ts";
+
+// A row in the search list. A link goes somewhere; without `href` the row is
+// an action the dialog's script handles (`action`). The icon is the slot.
+// Rows in a <template> start empty (a link row with an empty `href`); the
+// script fills the `data-` parts and the `href`.
+type Props = {
+  title?: string;
+  line?: string;
+  meta?: string;
+  href?: string;
+  download?: boolean;
+  action?: string;
+  keywords?: readonly string[];
+  more?: boolean;
+  // The line wraps instead of being cut off, so a match in it always shows.
+  fullLine?: boolean;
+};
+
+const {
+  title,
+  line,
+  meta,
+  href,
+  download = false,
+  action,
+  keywords,
+  more = false,
+  fullLine = false,
+} = Astro.props;
+const Row = href === undefined ? "div" : "a";
+---
+
+<Row
+  class="option"
+  role="option"
+  aria-selected="false"
+  tabindex="-1"
+  href={href}
+  download={download || undefined}
+  data-action={action}
+  data-keywords={keywords?.join(" ")}
+  {...(href === undefined ? {} : linkTarget(href))}
+>
+  <span class="tile" aria-hidden="true">
+    <slot />
+  </span>
+  <span class="text">
+    <span class="title" data-title>
+      {title}
+    </span>
+    <span class:list={["line", { full: fullLine }]} data-line>
+      {line}
+    </span>
+  </span>
+  <span class="meta" data-meta>
+    {meta}
+  </span>
+  <span class="hint" aria-hidden="true">
+    {more ? "›" : "↵"}
+  </span>
+</Row>
+
+<style>
+  .option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-block-size: var(--search-row-h);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--r-md);
+    color: var(--text);
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease);
+
+    &:hover {
+      color: var(--text);
+    }
+
+    &[aria-selected="true"] {
+      background: var(--tint);
+    }
+  }
+
+  .tile {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--control-h);
+    block-size: var(--control-h);
+    border-radius: var(--r-md);
+    background: var(--control);
+    color: var(--text-2);
+    transition:
+      background var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
+
+    [aria-selected="true"] & {
+      background: var(--bg);
+      color: var(--accent);
+    }
+
+    :global(svg) {
+      inline-size: var(--icon-md);
+      block-size: var(--icon-md);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  }
+
+  .text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-inline-size: 0;
+    line-height: var(--leading-tight);
+  }
+
+  .title,
+  .line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .title {
+    font-size: var(--text-small);
+  }
+
+  .line.full {
+    overflow: visible;
+    white-space: normal;
+  }
+
+  .line,
+  .meta {
+    color: var(--text-2);
+    font-size: var(--text-micro);
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .meta {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .hint {
+    inline-size: var(--icon-md);
+    color: var(--text-3);
+    font-size: var(--text-meta);
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease);
+
+    [aria-selected="true"] & {
+      opacity: 1;
+    }
+  }
+
+  /* Matches in what the visitor typed. Text, not a background: a background
+     all but disappears on the selected row's tint. The weight carries the
+     match without relying on colour. */
+  .option :global(mark) {
+    background: none;
+    color: var(--accent);
+    font-weight: var(--weight-semibold);
+  }
+</style>

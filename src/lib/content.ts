@@ -111,6 +111,16 @@ export async function getNotFoundPage() {
   return data;
 }
 
+export async function getCvFormatCopy(format: "pdf" | "markdown") {
+  const { data } = await requireEntry("cvFormats", format);
+  return data;
+}
+
+export async function getSearchCopy() {
+  const { data } = await requireEntry("search", "search");
+  return data;
+}
+
 export async function getFeedTitle(): Promise<string> {
   const [profile, page] = await Promise.all([getProfile(), getPage("writing")]);
   return `${profile.name}: ${page.title}`;

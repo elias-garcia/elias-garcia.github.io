@@ -1,25 +1,9 @@
 ---
-import { getCvSizes } from "../lib/cv.ts";
-import { formatFileSize } from "../lib/format.ts";
+import { getCvFormats } from "../lib/cv.ts";
 import Button from "./Button.astro";
+import CvFormatIcon from "./CvFormatIcon.astro";
 
-const sizes = await getCvSizes();
-const formats = [
-  {
-    label: "PDF",
-    href: "/cv.pdf",
-    size: formatFileSize(sizes.pdf),
-    description: "Formatted for reading, printing and sharing",
-    icon: "pdf",
-  },
-  {
-    label: "Markdown",
-    href: "/cv.md",
-    size: formatFileSize(sizes.markdown),
-    description: "Plain text for AI tools and agents",
-    icon: "markdown",
-  },
-] as const;
+const formats = await getCvFormats();
 ---
 
 <div class="download">
@@ -39,21 +23,7 @@ const formats = [
       <li>
         <a class="format" href={format.href} download>
           <span class="tile" aria-hidden="true">
-            {format.icon === "pdf" ? (
-              <svg viewBox="0 0 16 16">
-                <path d="M4 2.5h5.5L12 5v8.5H4z" />
-                <path d="M9.5 2.5V5H12" />
-                <path d="M6 9.5h4M6 11.5h2.5" />
-              </svg>
-            ) : (
-              <svg viewBox="0 0 16 16">
-                <rect x="1" y="3.5" width="14" height="9" rx="2" />
-                <path
-                  class="filled"
-                  d="M3.75 10.25v-4.5h1.25l1.25 1.75 1.25-1.75h1.25v4.5H7.5v-2.75l-1.25 1.6-1.25-1.6v2.75zM11.5 10.5l-1.9-2.15h1.2V5.75h1.4v2.6h1.2z"
-                />
-              </svg>
-            )}
+            <CvFormatIcon format={format.icon} />
           </span>
           <span class="text">
             <span class="title">
@@ -203,7 +173,7 @@ const formats = [
       color: var(--accent);
     }
 
-    svg {
+    :global(svg) {
       inline-size: var(--icon-md);
       block-size: var(--icon-md);
       fill: none;
@@ -211,11 +181,6 @@ const formats = [
       stroke-width: 1.5;
       stroke-linecap: round;
       stroke-linejoin: round;
-    }
-
-    .filled {
-      fill: currentColor;
-      stroke: none;
     }
   }
 

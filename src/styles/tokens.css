@@ -23,7 +23,7 @@
   /* ---- Accent: only for state (current page, selected chip, links in prose) ---- */
   --accent: #4f39f6; /* indigo-600 */
   --tint: #eef2ff; /* indigo-50: selected chip, active search row */
-  --tint-strong: #e0e7ff; /* indigo-100: search match highlight */
+  --tint-strong: #e0e7ff; /* indigo-100: text selection */
   --accent-line: #a3b3ff; /* indigo-300: underline under text links */
 
   /* ---- Code: minimal indigo syntax theme (every colour ≥4.5:1 on --surface) ---- */
@@ -36,6 +36,7 @@
   --code-highlight: #eef2ff; /* indigo-50: highlighted line background */
 
   --scrim: rgb(9 9 11 / 0.18); /* behind the search dialog */
+  --scrim-backdrop: blur(2px);
   --header-bg: color-mix(in oklch, var(--bg) 82%, transparent);
   --header-backdrop: saturate(1.4) blur(12px);
   --play-bg: color-mix(
@@ -92,7 +93,7 @@
   --space-24: 96px;
 
   /* ---- Radius ---- */
-  --r-sm: 4px; /* search highlights, key hints, footnote markers, focus ring on text links */
+  --r-sm: 4px; /* key hints, footnote markers, focus ring on text links */
   --r-md: 8px; /* icon tiles, menu and search rows */
   --r-lg: 12px; /* cards, previews, code blocks, menus, search panel */
   --r-full: 999px; /* buttons, chips */
@@ -159,6 +160,14 @@
   --underline-offset: 3px; /* text links and the post's topic link */
   --underline-strong: 2px; /* a text link's underline on hover and focus */
   --kbd-min: 20px; /* narrowest key hint */
+  --search-w: 560px; /* search panel */
+  --search-input-h: 56px; /* search input row */
+  --search-row-h: 48px; /* search result rows (minimum) */
+  --search-list-h: min(
+    440px,
+    100dvh - 220px
+  ); /* tallest result list, short of a small window */
+  --control-sm: 28px; /* small controls inside the search input row */
   --hero-row: 36px; /* listing rows in a case study hero */
   --hero-chip: 28px; /* chips in a case study hero */
   --hero-dim: 0.32; /* rejected listings in a case study hero */
