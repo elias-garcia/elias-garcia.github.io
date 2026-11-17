@@ -127,25 +127,59 @@ const pages = defineCollection({
   }),
 });
 
+// A content template that must hold each of these placeholders.
+const template = (...placeholders: readonly string[]) =>
+  z.string().superRefine((text, context) => {
+    for (const placeholder of placeholders) {
+      if (!text.includes(placeholder)) {
+        context.addIssue({
+          code: "custom",
+          message: `Missing the ${placeholder} placeholder.`,
+        });
+      }
+    }
+  });
+
 const notFound = defineCollection({
   loader: file("src/content/not-found.yaml"),
   schema: z.object({
     label: z.string(),
     title: z.string(),
     intro: z.string(),
-    introWithAddress: z.string().includes("{address}"),
+    introWithAddress: template("{address}"),
     suggestionsTitle: z.string(),
     suggestions: z.record(z.string(), z.string()),
-    report: z.string().includes("{link}"),
+    report: template("{link}"),
     reportLink: z.string(),
     reportSubject: z.string(),
-    reportBody: z.string().includes("{url}").includes("{referrer}"),
+    reportBody: template("{url}", "{referrer}"),
   }),
 });
 
 const counts = z.object({
-  one: z.string().includes("{count}"),
-  other: z.string().includes("{count}"),
+  one: template("{count}"),
+  other: template("{count}"),
+});
+
+const viewer = defineCollection({
+  loader: file("src/content/viewer.yaml"),
+  schema: z.object({
+    close: z.string(),
+    previous: z.string(),
+    next: z.string(),
+    open: template("{index}", "{count}", "{title}"),
+    openOne: template("{title}"),
+    label: template("{index}", "{count}", "{title}"),
+    labelOne: template("{title}"),
+    position: template("{index}", "{count}"),
+    hints: z.object({
+      previous: z.string(),
+      next: z.string(),
+      move: z.string(),
+      escape: z.string(),
+      close: z.string(),
+    }),
+  }),
 });
 
 const search = defineCollection({
@@ -166,20 +200,20 @@ const search = defineCollection({
       title: z.string(),
       line: z.string(),
       placeholder: z.string(),
-      noMatch: z.string().includes("{query}"),
+      noMatch: template("{query}"),
       back: z.string(),
     }),
     rss: z.object({ title: z.string(), line: z.string() }),
     noResults: z.object({
-      title: z.string().includes("{query}"),
+      title: template("{query}"),
       hint: z.string(),
     }),
     topics: z.string(),
     suggest: z.string(),
     suggestion: z.object({
-      title: z.string().includes("{query}"),
+      title: template("{query}"),
       line: z.string(),
-      subject: z.string().includes("{query}"),
+      subject: template("{query}"),
     }),
     hints: z.object({
       escape: z.string(),
@@ -197,6 +231,7 @@ export const collections = {
   pages,
   notFound,
   search,
+  viewer,
   work,
   talks,
   courses,

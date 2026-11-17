@@ -4,6 +4,7 @@ import avatar from "../assets/avatar.jpg";
 import CourseRating from "../components/CourseRating.astro";
 import DownloadCv from "../components/DownloadCv.astro";
 import ExternalArrow from "../components/ExternalArrow.astro";
+import ImageViewer from "../components/ImageViewer.astro";
 import List from "../components/List.astro";
 import ListRow from "../components/ListRow.astro";
 import PageTitle from "../components/PageTitle.astro";
@@ -117,7 +118,7 @@ const newestJob = work[0]?.id;
               {formatMonthYear(data.date)}
             </time>
             {data.where}
-            <RowPhotos slot="attachment" photos={data.photos} />
+            <RowPhotos slot="attachment" talk={data} />
           </ListRow>
         ))}
       </List>
@@ -167,6 +168,7 @@ const newestJob = work[0]?.id;
       </address>
     </Section>
   </div>
+  <ImageViewer />
 </BaseLayout>
 
 <style>

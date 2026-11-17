@@ -4,6 +4,7 @@ import { getPage, getProfile, getSearchCopy } from "../lib/content.ts";
 import { describeSections } from "../lib/navigation.ts";
 import { getSearchIndex } from "../lib/search.ts";
 import KeyHint from "./KeyHint.astro";
+import KeyHintGroup from "./KeyHintGroup.astro";
 import SearchIcon from "./SearchIcon.astro";
 import SearchOption from "./SearchOption.astro";
 import VisuallyHidden from "./VisuallyHidden.astro";
@@ -177,25 +178,14 @@ if (email === undefined) {
   </div>
 
   <div class="footer">
-    <span class="hint" aria-hidden="true">
-      <span class="keys">
-        <KeyHint>↑</KeyHint>
-        <KeyHint>↓</KeyHint>
-      </span>
-      {copy.hints.move}
-    </span>
-    <span class="hint" aria-hidden="true">
-      <span class="keys">
-        <KeyHint>↵</KeyHint>
-      </span>
-      {copy.hints.open}
-    </span>
-    <span class="hint" aria-hidden="true" hidden data-search-back-hint>
-      <span class="keys">
-        <KeyHint>{copy.hints.escape}</KeyHint>
-      </span>
-      {copy.hints.back}
-    </span>
+    <KeyHintGroup keys={["↑", "↓"]} label={copy.hints.move} />
+    <KeyHintGroup keys={["↵"]} label={copy.hints.open} />
+    <KeyHintGroup
+      keys={[copy.hints.escape]}
+      label={copy.hints.back}
+      hidden
+      data-search-back-hint
+    />
     <span class="count" role="status" data-search-count></span>
   </div>
 
@@ -217,6 +207,8 @@ if (email === undefined) {
 </dialog>
 
 <script>
+  import { fill } from "../lib/template.ts";
+
   type Entry = {
     title: string;
     line: string;
@@ -390,12 +382,6 @@ if (email === undefined) {
     const mark = document.createElement("mark");
     mark.textContent = characters.slice(0, last + 1).join("");
     return [mark, characters.slice(last + 1).join("")];
-  }
-
-  function fill(template: string, values: Record<string, string>): string {
-    return template.replace(/\{(\w+)\}/g, (placeholder, key: string) => {
-      return values[key] ?? placeholder;
-    });
   }
 
   const dialog = document.querySelector<HTMLDialogElement>("[data-search]");
@@ -796,31 +782,6 @@ if (email === undefined) {
       background: var(--scrim);
       backdrop-filter: var(--scrim-backdrop);
     }
-
-    @media (prefers-reduced-motion: no-preference) {
-      &[open] {
-        transform-origin: top center;
-        animation: search-in var(--dur) var(--ease-settle);
-      }
-
-      &[open]::backdrop {
-        animation: search-fade var(--dur) var(--ease);
-      }
-    }
-  }
-
-  @keyframes search-in {
-    from {
-      opacity: 0;
-      translate: 0 calc(-1 * var(--space-2));
-      scale: var(--press-scale);
-    }
-  }
-
-  @keyframes search-fade {
-    from {
-      opacity: 0;
-    }
   }
 
   /* The page behind a modal search doesn't scroll. */
@@ -938,21 +899,6 @@ if (email === undefined) {
     background: var(--surface);
     color: var(--text-3);
     font-size: var(--text-micro);
-  }
-
-  .hint {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-
-    &[hidden] {
-      display: none;
-    }
-  }
-
-  .keys {
-    display: inline-flex;
-    gap: var(--space-1);
   }
 
   .count {

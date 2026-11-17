@@ -113,6 +113,57 @@ p {
   }
 }
 
+/* ---- Modal dialogs (DESIGN.md §2.5): search and the image viewer ---- */
+
+/* Opening, a dialog fades in and grows slightly from its centre, over
+   --dialog-in (150ms, or what the dialog sets); with reduced motion it only
+   fades. The backdrop fades on the same curve. Closing, both fade out,
+   quicker. */
+dialog[open] {
+  transition: opacity var(--dialog-in, var(--dur)) var(--ease-settle);
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+dialog[open]::backdrop {
+  transition: opacity var(--dur) var(--ease-settle);
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  dialog[open] {
+    transition:
+      opacity var(--dialog-in, var(--dur)) var(--ease-settle),
+      scale var(--dialog-in, var(--dur)) var(--ease-settle);
+
+    @starting-style {
+      scale: var(--dialog-scale);
+    }
+  }
+}
+
+/* To fade out, a closing dialog stays in the top layer until it's done.
+   Without `overlay` it would fade out of place, so it closes at once. */
+@supports (overlay: auto) {
+  dialog,
+  dialog::backdrop {
+    transition:
+      opacity var(--dur-fast) var(--ease),
+      overlay var(--dur-fast) var(--ease) allow-discrete,
+      display var(--dur-fast) var(--ease) allow-discrete;
+  }
+
+  dialog:not([open]),
+  dialog:not([open])::backdrop {
+    opacity: 0;
+  }
+}
+
 /* ---- Page transitions (DESIGN.md §2.5) ---- */
 
 @media (prefers-reduced-motion: no-preference) {

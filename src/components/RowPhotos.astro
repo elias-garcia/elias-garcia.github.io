@@ -1,29 +1,78 @@
 ---
-import { Image } from "astro:assets";
+import { getImage, Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
-import { attachmentImage } from "../lib/attachment.ts";
+import { photoImage, viewerImage } from "../lib/attachment.ts";
+import { getViewerCopy } from "../lib/content.ts";
+import { formatMonthYear } from "../lib/format.ts";
+import { fill } from "../lib/template.ts";
 
+// A talk's photos. Each one is a button that opens the image viewer
+// (ImageViewer.astro), which reads the talk and the larger image from here.
 type Props = {
-  photos: CollectionEntry<"talks">["data"]["photos"];
+  talk: CollectionEntry<"talks">["data"];
 };
 
-const { photos } = Astro.props;
+const { talk } = Astro.props;
+const copy = await getViewerCopy();
+const count = talk.photos.length;
+const photos = await Promise.all(
+  talk.photos.map(async ({ src, alt }, index) => {
+    const large = await getImage({
+      src,
+      widths: [...viewerImage.widths],
+      sizes: viewerImage.sizes,
+    });
+    const label = fill(count === 1 ? copy.openOne : copy.open, {
+      index: String(index + 1),
+      count: String(count),
+      title: talk.title,
+    });
+    return { src, alt, large, label };
+  }),
+);
 ---
 
-<ul class="photos" role="list">
-  {photos.map(({ src, alt }) => (
+<ul
+  class="photos"
+  role="list"
+  data-viewer-talk={talk.title}
+  data-viewer-where={talk.where}
+  data-viewer-date={formatMonthYear(talk.date)}
+>
+  {photos.map(({ src, alt, large, label }) => (
     <li>
-      <Image
-        class="photo"
-        src={src}
-        alt={alt}
-        widths={[...attachmentImage.widths]}
-        sizes={attachmentImage.sizes}
-        loading="lazy"
-      />
+      <button
+        class="open"
+        type="button"
+        aria-label={label}
+        data-viewer-open
+        data-viewer-src={large.src}
+        data-viewer-srcset={large.srcSet.attribute}
+      >
+        <Image
+          class="photo"
+          src={src}
+          alt={alt}
+          widths={[...photoImage.widths]}
+          sizes={photoImage.sizes}
+          loading="lazy"
+        />
+      </button>
     </li>
   ))}
 </ul>
+
+<script>
+  // Tabbing to a photo that only peeks into the strip leaves it there, so
+  // bring the focused photo fully into view.
+  for (const photos of document.querySelectorAll("[data-viewer-talk]")) {
+    photos.addEventListener("focusin", (event) => {
+      if (event.target instanceof HTMLElement) {
+        event.target.scrollIntoView({ block: "nearest", inline: "start" });
+      }
+    });
+  }
+</script>
 
 <style>
   /* Always three slots, so one or two photos keep the same size. */
@@ -31,6 +80,49 @@ const { photos } = Astro.props;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-2);
+  }
+
+  /* Rows too narrow for the date column (ListRow wraps at 436px: the date
+     column, its gap and the text's basis) show the photos full width. Several
+     scroll sideways, the next one peeking in. */
+  @container attachment (width < 436px) {
+    .photos {
+      display: flex;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+
+      li {
+        flex: 0 0 calc(100% - var(--space-10));
+        scroll-snap-align: start;
+
+        &:only-child {
+          flex-basis: 100%;
+        }
+      }
+    }
+
+    /* Inside the photo, or the strip would clip it. On the image, because
+       the image would cover the button's. */
+    .open:focus-visible {
+      outline: none;
+
+      .photo {
+        outline: var(--focus-ring) solid var(--accent);
+        outline-offset: calc(-1 * var(--focus-ring));
+      }
+    }
+  }
+
+  .open {
+    display: block;
+    inline-size: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: var(--r-md);
+    background: none;
+    cursor: zoom-in;
   }
 
   .photo {
@@ -42,5 +134,13 @@ const { photos } = Astro.props;
     border-radius: var(--r-md);
     background: var(--surface);
     object-fit: cover;
+
+    @media (hover: hover) and (pointer: fine) {
+      transition: opacity var(--dur) var(--ease);
+
+      .open:hover & {
+        opacity: var(--photo-hover);
+      }
+    }
   }
 </style>

@@ -152,8 +152,11 @@ const Title = article ? "h3" : "span";
   }
 
   /* Media under the row's text. It wraps like the row, with an empty date
-     column, so it starts under the title and drops below with the date. */
+     column, so it starts under the title and drops below with the date. It
+     spans the row, so its contents can follow the row's wrap with a
+     container query. */
   .attachment {
+    container: attachment / inline-size;
     display: flex;
     flex-wrap: wrap;
     column-gap: var(--space-6);

@@ -42,8 +42,26 @@ const states: Record<
       open: (page) => page.locator("details.job > summary").nth(1).click(),
     },
     {
+      name: "image viewer open",
+      // The talk with several photos, so the arrows and the count show.
+      open: (page) =>
+        page
+          .locator("[data-viewer-talk]")
+          .filter({ has: page.locator("li + li") })
+          .locator("[data-viewer-open]")
+          .first()
+          .click(),
+    },
+    {
+      name: "image viewer, next photo",
+      open: (page) => page.keyboard.press("ArrowRight"),
+    },
+    {
       name: "search open",
-      open: (page) => page.click("[data-search-open]"),
+      open: async (page) => {
+        await page.keyboard.press("Escape");
+        await page.click("[data-search-open]");
+      },
     },
     {
       name: "search with results",

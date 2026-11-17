@@ -116,6 +116,11 @@ export async function getCvFormatCopy(format: "pdf" | "markdown") {
   return data;
 }
 
+export async function getViewerCopy() {
+  const { data } = await requireEntry("viewer", "viewer");
+  return data;
+}
+
 export async function getSearchCopy() {
   const { data } = await requireEntry("search", "search");
   return data;

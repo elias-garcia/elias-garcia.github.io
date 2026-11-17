@@ -35,16 +35,24 @@
   --code-punct: #71717b; /* zinc-500: punctuation, operators */
   --code-highlight: #eef2ff; /* indigo-50: highlighted line background */
 
-  --scrim: rgb(9 9 11 / 0.18); /* behind the search dialog */
+  /* Behind the search dialog and the image viewer card. */
+  --scrim: rgb(9 9 11 / 0.18);
   --scrim-backdrop: blur(2px);
   --header-bg: color-mix(in oklch, var(--bg) 82%, transparent);
   --header-backdrop: saturate(1.4) blur(12px);
-  --play-bg: color-mix(
+  --photo-control-bg: color-mix(
     in oklch,
     var(--bg) 92%,
     transparent
-  ); /* play button over a video thumbnail */
-  --play-backdrop: blur(4px);
+  ); /* round buttons over photos: video play, image viewer */
+  --photo-control-backdrop: blur(4px);
+
+  /* ---- Image viewer on phones: dark in both themes, so never redefined ---- */
+  --viewer-bg: #000000; /* full-screen backdrop */
+  --viewer-text: #f4f4f5; /* zinc-100: caption title, icons, active dot */
+  --viewer-text-2: #9f9fa9; /* zinc-400: caption meta (7.6:1 on black) */
+  --viewer-control: rgb(255 255 255 / 0.12); /* round buttons: ×, ‹, › */
+  --viewer-dot: rgb(255 255 255 / 0.32); /* inactive position dots */
   --logo-shade: #000000; /* folds in the logo mark, drawn at low opacity */
   --photo-brightness: 1; /* photos are dimmed in dark mode */
 
@@ -99,14 +107,16 @@
   --r-full: 999px; /* buttons, chips */
 
   /* ---- Motion: UI feedback never exceeds 250ms ---- */
-  --dur-fast: 100ms; /* press, search row highlight, old page fading out */
+  --dur-fast: 100ms; /* press, search row highlight, old page fading out, dialogs closing */
   --dur: 150ms; /* hover, colour/opacity, Download CV menu */
-  --dur-slow: 250ms; /* page entrance, expanding rows, underline growing */
+  --dur-slow: 250ms; /* page entrance, expanding rows, underline growing, image viewer card arriving */
   --ease: ease-out;
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1); /* things arriving */
   --row-fade: 0.45; /* other rows while one is hovered */
+  --photo-hover: 0.88; /* a photo button under the pointer */
   --press-scale: 0.97;
   --press-scale-tile: 0.99;
+  --dialog-scale: 0.98; /* a modal dialog arriving: search, image viewer */
   --dur-ping: 2.4s; /* availability dot, a slow loop */
   --ease-ping: cubic-bezier(0, 0, 0.2, 1);
   --entrance-offset: 6px;
@@ -117,11 +127,13 @@
   --ease-scan: cubic-bezier(0.45, 0, 0.55, 1); /* the scan's even sweep */
 
   /* ---- Elevation and layers ---- */
+  /* Things that float: search dialog, image viewer card, Download CV menu. */
   --shadow-overlay:
     0 1px 2px rgb(9 9 11 / 0.04), 0 16px 48px -12px rgb(9 9 11 / 0.24);
   --z-header: 10;
   --z-menu: 30;
   --z-dialog: 50;
+  --z-viewer-controls: 1; /* inside the image viewer: its buttons, above the photo */
   --z-skip: 100;
 
   /* ---- Fixed sizes ---- */
@@ -145,6 +157,7 @@
   --demo-label: 72px; /* label column in the easing demo */
   --runner: 16px; /* easing demo dot */
   --dot: 8px; /* availability and project status dots */
+  --dot-sm: 6px; /* image viewer position dots */
   --play: 32px; /* play button on a video preview */
   --row-basis: 300px; /* text column next to the gutter; wraps below it when narrower */
   --nudge-sm: 1px; /* external arrow nudge and baseline offset */
@@ -168,6 +181,8 @@
     100dvh - 220px
   ); /* tallest result list, short of a small window */
   --control-sm: 28px; /* small controls inside the search input row */
+  --viewer-w: 720px; /* image viewer card */
+  --viewer-button: 40px; /* round buttons on the image viewer card */
   --hero-row: 36px; /* listing rows in a case study hero */
   --hero-chip: 28px; /* chips in a case study hero */
   --hero-dim: 0.32; /* rejected listings in a case study hero */

@@ -1,0 +1,17 @@
+viewer:
+  close: Close
+  previous: Previous photo
+  next: Next photo
+  # {title} is the talk; {index} and {count} place the photo among the talk's
+  # photos. A talk with one photo uses the shorter versions.
+  open: "Open photo {index} of {count}: {title}"
+  openOne: "Open photo: {title}"
+  label: "Photo {index} of {count}: {title}"
+  labelOne: "Photo: {title}"
+  position: "{index} / {count}"
+  hints:
+    previous: ←
+    next: →
+    move: to move
+    escape: esc
+    close: to close

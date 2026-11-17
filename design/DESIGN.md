@@ -128,20 +128,22 @@ The motion system:
 4. **Touch.** Hover movement and list dimming run only on real pointers: wrap them in `@media (hover: hover) and (pointer: fine)`. A tap must never leave rows dimmed.
 5. **Within Writing.** Moving between `/writing` and its topic pages keeps the page in place: no page entrance, only the posts re-enter (the same fade and 6px rise, over 150ms). The previous page comes from the Navigation API; without it, the normal entrance plays.
 6. **In-page jumps.** Following a `#` link (heading anchors, footnote markers and back links, the skip link) scrolls smoothly: `@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth } }`. `scroll-padding-top` keeps the target clear of the sticky header, and footnote targets get their arrival tint.
-7. **Reduced motion.** Gentler, not zero: pages fade in over 150ms without moving; everything that moves becomes instant; the analog-style loops in illustrations stop.
+7. **Modal dialogs** (search, image viewer) share one motion. Opening: the dialog fades in and grows from 0.98 around its centre with `--ease-settle`, and the backdrop fades in (150ms) on the same curve. Search takes 150ms, because it's opened by keyboard all the time; the image viewer card takes 250ms, being larger. Closing: both fade out, quicker (100ms), without shrinking, where the browser supports `overlay` (elsewhere they close at once). Reduced motion: a fade only. Built once, as base styles for `<dialog>` in `global.css`; each dialog sets only its opening duration (`--dialog-in`).
+8. **Reduced motion.** Gentler, not zero: pages fade in over 150ms without moving; everything that moves becomes instant; the analog-style loops in illustrations stop.
 
 Deliberate exceptions: the Roleburn morph (400ms), the easing demo in the post (600ms), the footnote arrival highlight (2s), and the slow loops inside project illustrations.
 
 ### 2.6 Elevation and layers
 
-One shadow, `--shadow-overlay`, for things that float (search dialog, Download CV menu). Everything else is flat and separated by borders.
+One shadow, `--shadow-overlay`, for things that float (search dialog, image viewer card, Download CV menu). Everything else is flat and separated by borders.
 
 | Layer | z-index | Use |
 |---|---|---|
+| `--z-viewer-controls` | 1 | Image viewer buttons, above the photo |
 | content | 2, 5 | Local stacking inside a component |
 | `--z-header` | 10 | Sticky header, reading progress bar |
 | `--z-menu` | 30 | Download CV menu and its click-away layer |
-| `--z-dialog` | 50 | Search dialog and its backdrop |
+| `--z-dialog` | 50 | Search dialog, image viewer, and their backdrops |
 | `--z-skip` | 100 | Skip link |
 
 ### 2.7 Icons
@@ -210,14 +212,17 @@ Each component appears exactly once in the design system. Live versions, split b
   - **Card:** 720px wide (`min(720px, 100%)`), `--bg`, `--line` border, `--r-lg`, `--shadow-overlay`, over the `--scrim` backdrop (with 2px blur); the page behind doesn't scroll.
   - **Inside:** the photo on top (3:2, `object-fit: contain` on `--surface`, a hairline below it); the caption padded 16px 20px: talk title (15/500) and a meta line (13px `--text-3`): place · date · "2 / 3"; a 44px footer with key hints, "← → to move" and "esc to close" (12px `--text-3`).
   - **Controls:** 40px round buttons (`--bg` at 92% with blur, `--line` border, 16px icons with a 1.5px stroke; on hover `--line-strong` border and `--bg`): × in the photo's top-right corner, ‹ › centred on the photo's left and right edges.
-  - **Behaviour:** focus moves to × on open, Tab cycles only inside the dialog, and on close focus returns to the thumbnail that opened it. Esc, ×, clicking the backdrop and a swipe down (more than 80px, more vertical than horizontal) close it; ← → and horizontal swipes (more than 50px) move, wrapping around. The count is `aria-live="polite"`. Without JavaScript the photos stay visible and the buttons do nothing.
+  - **Behaviour:** focus moves to × on open, Tab moves through the dialog's controls (as a native modal does), and on close focus returns to the thumbnail that opened it. Esc, ×, clicking the backdrop and a swipe down (more than 80px, more vertical than horizontal) close it; ← → and horizontal swipes (more than 50px) move, wrapping around. The count is `aria-live="polite"`. Without JavaScript the photos stay visible and the buttons do nothing.
   - **One photo:** no arrows, no count; ← → do nothing.
   - **Phones (below 640px): the platform photo viewer, dark in both themes.** Full screen on `--viewer-bg` (no card, no blur), photo edge to edge (3:2, contained) centred in the space above the caption; caption at the bottom (title in `--viewer-text`, meta in `--viewer-text-2`, padded 24px 20px 0); then a row with ‹ and › (44px round, `--viewer-control` fill, `--viewer-text` icons, no border) at the ends and position dots between them (6px, 8px apart, `--viewer-dot`, the current one `--viewer-text`, `aria-hidden`; only with 2+ photos); bottom padding 16px + `env(safe-area-inset-bottom)`. × is 44px at the top right (8px in), same fill. No key-hint footer, no arrows on the photo.
     - **Drag down to close:** the photo follows the finger (`translate: 0 <dy>`, no transition while dragging) and the backdrop fades with it (opacity `max(.4, 1 - dy/480)`); past 80px it closes, otherwise it springs back (250ms, `--ease-settle`). Lock the gesture's direction after 8px so a sideways swipe never moves it down. × stays as the non-gesture alternative (WCAG 2.5.7), and ‹ › as the alternative to swiping (WCAG 2.5.1). Reduced motion: no translate transition; the viewer fades in and out only.
     - **Back gesture:** opening pushes a history entry and Back closes the viewer (users expect Back to close full-screen overlays); closing with × or Esc goes back in history, so it stays balanced.
-    - **Zoom:** pinch to zoom the photo; not drawn in the design.
-  - **Motion:** the card fades and scales from 0.98 (250ms, `--ease-settle`), the backdrop fades (150ms); with reduced motion, a fade only.
-  - **Image:** the same source as the thumbnail, at widths up to 1440 (2× the card).
+    - **Photo:** not dimmed in dark mode, unlike the page's photos: the viewer looks the same in both themes.
+    - **Zoom:** pinch to zoom the photo, up to 4×; not drawn in the design. The zoomed photo fills the space between the × and the caption, and no further: the caption and the buttons stay clear. While zoomed in, one finger pans the photo instead of swiping or dragging; moving to another photo or closing resets the zoom.
+  - **Motion:** the modal dialog motion (§2.5): the card fades and grows from 0.98 (250ms, `--ease-settle`), the backdrop fades (150ms); the phone viewer only fades (150ms). Closing fades out (100ms); after a drag down, from where it was dropped. With reduced motion, a fade only.
+  - **Short windows:** the card is never taller than the window less 24px each side; the photo shrinks (contained, on `--surface`) so the caption and the key hints stay on screen, as on a phone held sideways.
+  - **Image:** the same source as the thumbnail, at widths up to 1440 (2× the card), capped at the original's width.
+  - **Build:** a native `<dialog>` opened with `showModal()` and `closedby="any"` (click outside closes; a press and release outside where `closedby` isn't supported), as the search does. Back closes it on every screen, not only phones. Pinch zoom is Panzoom (`@panzoom/panzoom`), loaded the first time a photo opens.
 - **Course rating line.** Under a course's line: one 12px filled star in `--text`, the score (500, `--text`), the review count in `--text-3` ("4.7 (26 reviews)"), then "30 lessons · 2h 20m" with "·" separators, all 13px `--text-3`. The visible rating is `aria-hidden`; a visually hidden sentence carries it for screen readers: "Rated 4.7 out of 5 from 26 reviews." Never a row of yellow stars. The rating is a fixed value in the content, updated by hand.
 - **Expandable row (work experience).** A native `<details>` whose `<summary>` holds the date, company (500) + role, and a + icon that rotates to ×. The body's height animates open (250ms) where the browser supports it, and lists the bullets. Layout is a grid: `112px 1fr auto` on desktop; on phones `"date icon" / "text text"` so the + stays beside the date. Only one open at a time (the rows share a `name`). **The newest job is open on load**, the rest closed.
   - **Work mode:** the company line carries how the job was done, after the company name: a "·" (8px each side, `--text-3`) then the mode in 14px 400 `--text-3`: "Remote", or the mode and city ("On-site, A Coruña", "Hybrid, A Coruña"). Plain text: no chips, icons or colour. Screen readers get a visually hidden comma instead of the dot ("Polygon Labs, Remote").

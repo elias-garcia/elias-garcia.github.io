@@ -1,0 +1,39 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import KeyHint from "./KeyHint.astro";
+
+// Keys that work together, then what they do: "↑ ↓ to move". Hidden from
+// screen readers, like the keys: the controls say what they do.
+type Props = HTMLAttributes<"span"> & {
+  keys: readonly string[];
+  label: string;
+};
+
+const { keys, label, ...attributes } = Astro.props;
+---
+
+<span class="hint" aria-hidden="true" {...attributes}>
+  <span class="keys">
+    {keys.map((key) => (
+      <KeyHint>{key}</KeyHint>
+    ))}
+  </span>
+  {label}
+</span>
+
+<style>
+  .hint {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .keys {
+    display: inline-flex;
+    gap: var(--space-1);
+  }
+</style>
