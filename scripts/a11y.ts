@@ -134,6 +134,20 @@ async function check(page: Page, where: string): Promise<void> {
   }
 }
 
+// A step that throws (a timeout, say) stops the run, so name the page and
+// the step it stopped at.
+async function inStep<Result>(
+  where: string,
+  step: string,
+  run: () => Promise<Result>,
+): Promise<Result> {
+  try {
+    return await run();
+  } catch (error) {
+    throw new Error(`Stopped at ${where}, ${step}.`, { cause: error });
+  }
+}
+
 const failures: string[] = [];
 const server = await preview({ logLevel: "warn" });
 const origin = `http://localhost:${String(server.port)}`;
@@ -143,15 +157,16 @@ try {
   for (const path of await listPages()) {
     for (const width of widths) {
       for (const colorScheme of colorSchemes) {
-        const context = await browser.newContext({
-          viewport: { width, height: 800 },
-          colorScheme,
-        });
-        const page = await context.newPage();
-        const response = await page.goto(`${origin}${path}`, {
-          waitUntil: "load",
-        });
         const where = `${path} at ${String(width)}px, ${colorScheme}`;
+        const context = await inStep(where, "opening the page", () =>
+          browser.newContext({ viewport: { width, height: 800 }, colorScheme }),
+        );
+        const page = await inStep(where, "opening the page", () =>
+          context.newPage(),
+        );
+        const response = await inStep(where, "loading the page", () =>
+          page.goto(`${origin}${path}`, { waitUntil: "load" }),
+        );
         // The preview server serves every built page with 200, including /404.
         if (response?.status() !== 200) {
           failures.push(
@@ -159,26 +174,38 @@ try {
           );
         }
 
-        await check(page, where);
+        await inStep(where, "initial state", () => check(page, where));
         for (const state of states[path] ?? []) {
-          await state.open(page);
-          // Hover effects (like dimmed rows) are not part of the state.
-          await page.mouse.move(0, 0);
-          await check(page, `${where}, ${state.name}`);
+          await inStep(where, state.name, async () => {
+            await state.open(page);
+            // Hover effects (like dimmed rows) are not part of the state.
+            await page.mouse.move(0, 0);
+            await check(page, `${where}, ${state.name}`);
+          });
         }
 
-        await context.close();
+        await inStep(where, "closing the page", () => context.close());
       }
     }
   }
 } finally {
-  await browser.close();
-  await server.stop();
+  // Settled, not awaited one by one: an error in cleanup must not replace the
+  // error that stopped the run.
+  for (const result of await Promise.allSettled([
+    browser.close(),
+    server.stop(),
+  ])) {
+    if (result.status === "rejected") {
+      console.error("Cleanup failed:", result.reason);
+    }
+  }
+  // Printed here so the issues found before a step stopped the run aren't lost.
+  if (failures.length > 0) {
+    console.error(failures.join("\n"));
+    process.exitCode = 1;
+  }
 }
 
-if (failures.length > 0) {
-  console.error(failures.join("\n"));
-  process.exitCode = 1;
-} else {
+if (failures.length === 0) {
   console.log("No accessibility issues found.");
 }
