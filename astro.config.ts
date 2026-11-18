@@ -47,6 +47,10 @@ export default defineConfig({
       weights: ["400 600"],
       styles: ["normal"],
       fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
+      // Hides the text briefly while the font gets ready, then allows a swap
+      // for a few seconds: a cached font (moving between pages) draws without
+      // the fallback's shift, and a first visit still gets it.
+      display: "fallback",
     },
   ],
 });

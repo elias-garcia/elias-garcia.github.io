@@ -59,7 +59,7 @@ Rules:
 
 ### 2.2 Typography
 
-One family, **Instrument Sans** (Google Fonts, via Astro's Fonts API), weights 400 / 500 / 600 only. Code uses the system monospace stack.
+One family, **Instrument Sans** (Google Fonts, via Astro's Fonts API), weights 400 / 500 / 600 only, preloaded and loaded with `font-display: fallback`: a short wait for the font, then a metric-matched Arial, then the native stack (`ui-sans-serif, system-ui, sans-serif`). A cached font is ready within the short wait, so moving between pages doesn't shift the text. Code uses the system monospace stack.
 
 | Style | Size · weight · line height | Tracking | Use | Element |
 |---|---|---|---|---|
