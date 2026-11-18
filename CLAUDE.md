@@ -52,7 +52,7 @@ src/
   lib/          # TypeScript utilities
   styles/       # tokens.css, global.css
   content.config.ts
-public/         # files served as-is (icons, manifest, cv.pdf, robots.txt)
+public/         # files served as-is (icons, manifest, cv.pdf)
 design/         # design handoff (reference only)
 ```
 

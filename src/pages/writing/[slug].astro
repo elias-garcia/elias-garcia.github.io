@@ -10,9 +10,11 @@ import MetaLine from "../../components/MetaLine.astro";
 import { mdxComponents } from "../../components/mdx/index.ts";
 import Prose from "../../components/mdx/Prose.astro";
 import PreviousNext from "../../components/PreviousNext.astro";
+import StructuredData from "../../components/StructuredData.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
   getPage,
+  getPostCopy,
   getPosts,
   getProfile,
   getReadingMinutes,
@@ -20,6 +22,9 @@ import {
   topicLabel,
 } from "../../lib/content.ts";
 import { formatLongDate, formatMediumDate, isoDate } from "../../lib/format.ts";
+import { requireSite, toPath } from "../../lib/navigation.ts";
+import { fill } from "../../lib/template.ts";
+import { blogPosting } from "../../lib/structured-data.ts";
 
 export const getStaticPaths = (async () => {
   const posts = await getPosts();
@@ -40,18 +45,37 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { post, topics, previous, next } = Astro.props;
 const { title, description, date, topic } = post.data;
-const [{ Content }, minutes, profile, writing] = await Promise.all([
-  render(post),
-  getReadingMinutes(post),
-  getProfile(),
-  getPage("writing"),
-]);
+const [{ Content }, minutes, profile, writing, { readingTime }] =
+  await Promise.all([
+    render(post),
+    getReadingMinutes(post),
+    getProfile(),
+    getPage("writing"),
+    getPostCopy(),
+  ]);
 const label = topicLabel(topics, topic);
 const markdown = `/writing/${post.id}.md`;
+const shareImage = `/share/writing/${post.id}.png`;
+const siteUrl = requireSite(Astro.site, "structured data");
+const structuredData = blogPosting(
+  post,
+  label,
+  profile,
+  siteUrl,
+  new URL(toPath(Astro.url.pathname), siteUrl),
+  new URL(shareImage, siteUrl),
+);
 ---
 
-<BaseLayout title={title} description={description} readingProgress>
+<BaseLayout
+  title={title}
+  description={description}
+  readingProgress
+  shareImage={{ path: shareImage, alt: title }}
+  article={{ published: isoDate(date) }}
+>
   <link slot="head" rel="alternate" type="text/markdown" href={markdown} />
+  <StructuredData slot="head" data={structuredData} />
   <article class="post">
     <div class="top">
       <BackLink href="/writing" label={writing.title} />
@@ -85,7 +109,7 @@ const markdown = `/writing/${post.id}.md`;
               {label}
             </a>
           </MetaItem>
-          <MetaItem>{minutes} min read</MetaItem>
+          <MetaItem>{fill(readingTime, { minutes: String(minutes) })}</MetaItem>
         </MetaLine>
       </p>
     </header>

@@ -7,6 +7,7 @@ import {
   getTopics,
   topicLabel,
 } from "../lib/content.ts";
+import { requireSite } from "../lib/navigation.ts";
 
 export const GET: APIRoute = async ({ site }) => {
   const [title, page, posts] = await Promise.all([
@@ -14,14 +15,12 @@ export const GET: APIRoute = async ({ site }) => {
     getPage("writing"),
     getPosts(),
   ]);
-  if (site === undefined) {
-    throw new Error("Set `site` in astro.config.ts for the RSS feed.");
-  }
+  const siteUrl = requireSite(site, "the RSS feed");
   const topics = getTopics(posts);
   return rss({
     title,
     description: page.intro,
-    site,
+    site: siteUrl,
     trailingSlash: false,
     items: posts.map(({ id, data }) => ({
       title: data.title,

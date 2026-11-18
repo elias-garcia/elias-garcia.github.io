@@ -12,6 +12,17 @@ const monthYear = new Intl.DateTimeFormat(locale, {
   timeZone: "UTC",
 });
 
+const regions = new Intl.DisplayNames(locale, { type: "region" });
+
+// The country's name in English, from its ISO 3166 code.
+export function formatCountry(code: string): string {
+  const name = regions.of(code);
+  if (name === undefined) {
+    throw new Error(`No country name for "${code}".`);
+  }
+  return name;
+}
+
 const kilobytes = new Intl.NumberFormat(locale, {
   style: "unit",
   unit: "kilobyte",

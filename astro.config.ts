@@ -1,5 +1,6 @@
 import { satteri } from "@astrojs/markdown-satteri";
 import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
 import { transformerNotationHighlight } from "@shikijs/transformers";
 import { defineConfig, fontProviders } from "astro/config";
 import { mdastReadingTimePlugin } from "./src/lib/mdast-reading-time.ts";
@@ -30,7 +31,14 @@ export default defineConfig({
     layout: "constrained",
     responsiveStyles: true,
   },
-  integrations: [mdx()],
+  integrations: [
+    mdx(),
+    sitemap({
+      // The 404 page is served for missing addresses, not found by crawling.
+      filter: (page) => new URL(page).pathname !== "/404",
+      namespaces: { news: false, xhtml: false, image: false, video: false },
+    }),
+  ],
   fonts: [
     {
       provider: fontProviders.google(),

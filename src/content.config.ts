@@ -8,18 +8,34 @@ const link = z.object({
   href: z.url(),
 });
 
+// A content template that must hold each of these placeholders.
+const template = (...placeholders: readonly string[]) =>
+  z.string().superRefine((text, context) => {
+    for (const placeholder of placeholders) {
+      if (!text.includes(placeholder)) {
+        context.addIssue({
+          code: "custom",
+          message: `Missing the ${placeholder} placeholder.`,
+        });
+      }
+    }
+  });
+
 const site = defineCollection({
   loader: file("src/content/site.yaml"),
   schema: z.object({
     name: z.string(),
     role: z.string(),
     city: z.string(),
-    // The footer clock says the time "in {country}", where the timezone is.
-    country: z.string(),
+    // An ISO 3166 code ("PT"): the name comes from Intl. The footer clock says
+    // the time "in {country}", where the timezone is.
+    country: z.string().regex(/^[A-Z]{2}$/),
     timezone: z.string(),
     availability: z.string(),
     about: z.array(z.string()),
     contact: z.array(link.extend({ text: z.string() })),
+    // Every page's browser title but Home's, which is the name alone.
+    pageTitle: template("{page}", "{name}"),
   }),
 });
 
@@ -127,19 +143,6 @@ const pages = defineCollection({
   }),
 });
 
-// A content template that must hold each of these placeholders.
-const template = (...placeholders: readonly string[]) =>
-  z.string().superRefine((text, context) => {
-    for (const placeholder of placeholders) {
-      if (!text.includes(placeholder)) {
-        context.addIssue({
-          code: "custom",
-          message: `Missing the ${placeholder} placeholder.`,
-        });
-      }
-    }
-  });
-
 const notFound = defineCollection({
   loader: file("src/content/not-found.yaml"),
   schema: z.object({
@@ -159,6 +162,20 @@ const notFound = defineCollection({
 const counts = z.object({
   one: template("{count}"),
   other: template("{count}"),
+});
+
+const post = defineCollection({
+  loader: file("src/content/post.yaml"),
+  schema: z.object({
+    readingTime: template("{minutes}"),
+  }),
+});
+
+const share = defineCollection({
+  loader: file("src/content/share.yaml"),
+  schema: z.object({
+    sections: z.array(z.string()).nonempty(),
+  }),
 });
 
 const viewer = defineCollection({
@@ -232,6 +249,8 @@ export const collections = {
   notFound,
   search,
   viewer,
+  post,
+  share,
   work,
   talks,
   courses,

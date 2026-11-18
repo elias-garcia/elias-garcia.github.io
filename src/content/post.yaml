@@ -1,0 +1,3 @@
+post:
+  # A post's reading time: in its header, on Writing and on its share image.
+  readingTime: "{minutes} min read"

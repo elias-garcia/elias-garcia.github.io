@@ -1,5 +1,6 @@
 import type { APIRoute, GetStaticPaths, InferGetStaticPropsType } from "astro";
 import { getPosts } from "../../lib/content.ts";
+import { requireSite } from "../../lib/navigation.ts";
 import { renderPostMarkdown } from "../../lib/post-markdown.ts";
 
 export const getStaticPaths = (async () => {
@@ -10,10 +11,8 @@ export const getStaticPaths = (async () => {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 export const GET: APIRoute<Props> = async ({ props, site }) => {
-  if (site === undefined) {
-    throw new Error("Set `site` in astro.config.ts for the Markdown versions.");
-  }
-  return new Response(await renderPostMarkdown(props.post, site), {
+  const siteUrl = requireSite(site, "the Markdown versions");
+  return new Response(await renderPostMarkdown(props.post, siteUrl), {
     headers: { "Content-Type": "text/markdown; charset=utf-8" },
   });
 };

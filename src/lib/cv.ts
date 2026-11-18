@@ -10,6 +10,7 @@ import {
   workMode,
 } from "./content.ts";
 import {
+  formatCountry,
   formatFileSize,
   formatMinutes,
   formatMonthYear,
@@ -65,7 +66,7 @@ export async function renderCvMarkdown(): Promise<string> {
 
   return [
     `# ${profile.name}`,
-    `${profile.role} · ${profile.city}, ${profile.country} · ${profile.availability}`,
+    `${profile.role} · ${profile.city}, ${formatCountry(profile.country)} · ${profile.availability}`,
     contact,
     "## About",
     profile.about.join("\n\n"),

@@ -27,6 +27,15 @@ export function describeSections(
   });
 }
 
+// The deployed site's URL (`site` in astro.config.ts), which absolute links
+// need. `use` says what needed it, in the error.
+export function requireSite(site: URL | undefined, use: string): URL {
+  if (site === undefined) {
+    throw new Error(`Set \`site\` in astro.config.ts for ${use}.`);
+  }
+  return site;
+}
+
 export function toPath(pathname: string): string {
   const path = pathname
     .replace(/\.html$/, "")

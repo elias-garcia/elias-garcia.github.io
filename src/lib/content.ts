@@ -116,6 +116,16 @@ export async function getCvFormatCopy(format: "pdf" | "markdown") {
   return data;
 }
 
+export async function getPostCopy() {
+  const { data } = await requireEntry("post", "post");
+  return data;
+}
+
+export async function getShareCopy() {
+  const { data } = await requireEntry("share", "share");
+  return data;
+}
+
 export async function getViewerCopy() {
   const { data } = await requireEntry("viewer", "viewer");
   return data;

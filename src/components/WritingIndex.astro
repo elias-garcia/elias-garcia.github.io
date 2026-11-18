@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import {
+  getPostCopy,
   getReadingMinutes,
   getTopics,
   topicLabel,
@@ -8,6 +9,7 @@ import {
 } from "../lib/content.ts";
 import { formatMonthDay, isoDate } from "../lib/format.ts";
 import { linkTarget, newTabNote } from "../lib/links.ts";
+import { fill } from "../lib/template.ts";
 import Button from "./Button.astro";
 import Chip from "./Chip.astro";
 import List from "./List.astro";
@@ -35,6 +37,7 @@ const rows = await Promise.all(
     minutes: await getReadingMinutes(post),
   })),
 );
+const { readingTime } = await getPostCopy();
 const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
 ---
 
@@ -84,7 +87,9 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
               {post.data.description}
               <MetaLine slot="meta">
                 <MetaItem>{topicLabel(topics, post.data.topic)}</MetaItem>
-                <MetaItem>{minutes} min read</MetaItem>
+                <MetaItem>
+                  {fill(readingTime, { minutes: String(minutes) })}
+                </MetaItem>
               </MetaLine>
             </ListRow>
           ))}

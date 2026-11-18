@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import { getImage, Image } from "astro:assets";
 import avatar from "../assets/avatar.jpg";
 import CourseRating from "../components/CourseRating.astro";
 import DownloadCv from "../components/DownloadCv.astro";
@@ -12,6 +12,7 @@ import PreviewMorph from "../components/PreviewMorph.astro";
 import ProjectTile from "../components/ProjectTile.astro";
 import RowPhotos from "../components/RowPhotos.astro";
 import Section from "../components/Section.astro";
+import StructuredData from "../components/StructuredData.astro";
 import SeeMore from "../components/SeeMore.astro";
 import VideoPreview from "../components/VideoPreview.astro";
 import WorkRow from "../components/WorkRow.astro";
@@ -26,8 +27,10 @@ import {
   getTalks,
   getWork,
 } from "../lib/content.ts";
-import { formatMonthYear, isoMonth } from "../lib/format.ts";
+import { formatCountry, formatMonthYear, isoMonth } from "../lib/format.ts";
 import { linkTarget } from "../lib/links.ts";
+import { requireSite } from "../lib/navigation.ts";
+import { person, website } from "../lib/structured-data.ts";
 
 const [profile, projects, work, posts, talks, courses, education] =
   await Promise.all([
@@ -40,11 +43,17 @@ const [profile, projects, work, posts, talks, courses, education] =
     getEducation(),
   ]);
 const [description = profile.role] = profile.about;
+const siteUrl = requireSite(Astro.site, "structured data");
+const portrait = await getImage({ src: avatar, width: 400 });
+const site = website(profile, siteUrl);
+const structuredData = person(profile, siteUrl, new URL(portrait.src, siteUrl));
 const newestJob = work[0]?.id;
 ---
 
 <BaseLayout title={profile.name} description={description}>
   <PreviewMorph slot="head" />
+  <StructuredData slot="head" data={site} />
+  <StructuredData slot="head" data={structuredData} />
   <div class="home">
     <header class="intro">
       <div class="identity">
@@ -60,7 +69,7 @@ const newestJob = work[0]?.id;
         <div class="who">
           <PageTitle>{profile.name}</PageTitle>
           <p class="role">
-            {profile.role} in {profile.city}, {profile.country}
+            {profile.role} in {profile.city}, {formatCountry(profile.country)}
           </p>
           <div class="actions">
             <DownloadCv />
