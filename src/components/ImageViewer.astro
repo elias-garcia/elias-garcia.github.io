@@ -506,8 +506,8 @@ const copy = await getViewerCopy();
     /* Not only while open: a closing viewer keeps its layout while it fades
        out. */
     flex-direction: column;
-    /* The card is larger than the search panel, so it arrives a little
-       slower (global.css: modal dialogs). */
+    /* Larger than the search panel, and on phones the whole screen, so it
+       arrives a little slower (global.css: modal dialogs). */
     --dialog-in: var(--dur-slow);
 
     &[open] {
@@ -679,8 +679,6 @@ const copy = await getViewerCopy();
          zoom. */
       touch-action: none;
 
-      --dialog-in: var(--dur);
-
       &[data-dragging] {
         background: transparent;
       }
@@ -707,13 +705,13 @@ const copy = await getViewerCopy();
     @media (prefers-reduced-motion: no-preference) {
       .viewer[open]:not([data-dragging]) {
         transition:
-          opacity var(--dialog-in) var(--ease-settle),
+          opacity var(--dialog-in) var(--ease),
           translate var(--dur-slow) var(--ease-settle);
       }
 
       .viewer[open]:not([data-dragging])::backdrop {
         transition:
-          opacity var(--dur) var(--ease-settle),
+          opacity var(--dialog-in) var(--ease),
           background-color var(--dur-slow) var(--ease-settle);
       }
     }

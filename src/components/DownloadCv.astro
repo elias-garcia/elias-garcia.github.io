@@ -110,29 +110,41 @@ const formats = await getCvFormats();
 
     /* Column direction stays on while the menu animates closed. */
     flex-direction: column;
+    transform-origin: top left;
 
-    &:popover-open {
-      display: flex;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-      transform-origin: top left;
+    /* The overlay motion (DESIGN.md §2.5). Closing: a quick fade. To fade
+       out, a closing popover stays in the top layer until it's done; without
+       `overlay` it would fade out of place, so it closes at once. */
+    @supports (overlay: auto) {
       transition:
-        opacity var(--dur) var(--ease),
-        scale var(--dur) var(--ease),
-        display var(--dur),
-        overlay var(--dur);
-      transition-behavior: allow-discrete;
+        opacity var(--dur-fast) var(--ease),
+        display var(--dur-fast) allow-discrete,
+        overlay var(--dur-fast) allow-discrete;
 
       &:not(:popover-open) {
         opacity: 0;
-        scale: var(--press-scale);
       }
+    }
+
+    /* Opening: a fade, and from the button it grows slightly; with reduced
+       motion only the fade. */
+    &:popover-open {
+      display: flex;
+      transition: opacity var(--dur) var(--ease);
 
       @starting-style {
-        &:popover-open {
-          opacity: 0;
-          scale: var(--press-scale);
+        opacity: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      &:popover-open {
+        transition:
+          opacity var(--dur) var(--ease),
+          scale var(--dur) var(--ease-settle);
+
+        @starting-style {
+          scale: var(--overlay-scale);
         }
       }
     }

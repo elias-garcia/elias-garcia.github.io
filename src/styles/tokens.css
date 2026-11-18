@@ -107,16 +107,17 @@
   --r-full: 999px; /* buttons, chips */
 
   /* ---- Motion: UI feedback never exceeds 250ms ---- */
-  --dur-fast: 100ms; /* press, search row highlight, old page fading out, dialogs closing */
-  --dur: 150ms; /* hover, colour/opacity, Download CV menu */
-  --dur-slow: 250ms; /* page entrance, expanding rows, underline growing, image viewer card arriving */
+  --dur-fast: 100ms; /* press, search row highlight, old page fading out, overlays closing */
+  --dur: 150ms; /* hover, colour/opacity, small overlays opening */
+  --dur-slow: 250ms; /* page entrance, expanding rows, underline growing, image viewer opening */
   --ease: ease-out;
-  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1); /* things arriving */
+  /* Things arriving and moving; not an overlay's fade. */
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
   --row-fade: 0.45; /* other rows while one is hovered */
   --photo-hover: 0.88; /* a photo button under the pointer */
   --press-scale: 0.97;
   --press-scale-tile: 0.99;
-  --dialog-scale: 0.98; /* a modal dialog arriving: search, image viewer */
+  --overlay-scale: 0.97; /* an overlay arriving: the Download CV menu, dialogs */
   --dur-ping: 2.4s; /* availability dot, a slow loop */
   --ease-ping: cubic-bezier(0, 0, 0.2, 1);
   --entrance-offset: 6px;
@@ -125,6 +126,12 @@
   --dur-morph: 400ms; /* a project preview morphing into its case study hero, a deliberate exception */
   --dur-scan: 6s; /* a case study hero's scan, a slow loop */
   --ease-scan: cubic-bezier(0.45, 0, 0.55, 1); /* the scan's even sweep */
+  --dur-sweep: 3s; /* a project preview's radar sweep, a slow loop */
+  --dur-travel: 2.4s; /* a project preview's dot crossing its steps, a slow loop */
+  /* The dot pausing at each step. */
+  --ease-travel: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-preview-scan: 2.8s; /* a project preview's chart scan line, a slow loop */
+  --ease-preview-scan: ease-in-out; /* the scan line slowing at each end */
 
   /* ---- Elevation and layers ---- */
   /* Things that float: search dialog, image viewer card, Download CV menu. */

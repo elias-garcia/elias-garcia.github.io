@@ -113,22 +113,15 @@ p {
   }
 }
 
-/* ---- Modal dialogs (DESIGN.md §2.5): search and the image viewer ---- */
+/* ---- Modal dialogs (DESIGN.md §2.5, overlays): search, image viewer ---- */
 
-/* Opening, a dialog fades in and grows slightly from its centre, over
-   --dialog-in (150ms, or what the dialog sets); with reduced motion it only
-   fades. The backdrop fades on the same curve. Closing, both fade out,
-   quicker. */
-dialog[open] {
-  transition: opacity var(--dialog-in, var(--dur)) var(--ease-settle);
-
-  @starting-style {
-    opacity: 0;
-  }
-}
-
+/* Opening, a dialog and its backdrop fade in over --dialog-in (150ms, or what
+   the dialog sets), and the dialog grows slightly from its centre. The fade
+   eases out; the growth settles. With reduced motion it only fades. Closing,
+   both fade out, quicker. */
+dialog[open],
 dialog[open]::backdrop {
-  transition: opacity var(--dur) var(--ease-settle);
+  transition: opacity var(--dialog-in, var(--dur)) var(--ease);
 
   @starting-style {
     opacity: 0;
@@ -138,11 +131,11 @@ dialog[open]::backdrop {
 @media (prefers-reduced-motion: no-preference) {
   dialog[open] {
     transition:
-      opacity var(--dialog-in, var(--dur)) var(--ease-settle),
+      opacity var(--dialog-in, var(--dur)) var(--ease),
       scale var(--dialog-in, var(--dur)) var(--ease-settle);
 
     @starting-style {
-      scale: var(--dialog-scale);
+      scale: var(--overlay-scale);
     }
   }
 }

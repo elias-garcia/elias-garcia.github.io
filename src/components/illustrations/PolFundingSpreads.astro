@@ -37,7 +37,8 @@
     stroke-width: 1;
 
     @media (prefers-reduced-motion: no-preference) {
-      animation: scan 2.8s ease-in-out infinite alternate;
+      animation: scan var(--dur-preview-scan) var(--ease-preview-scan) infinite
+        alternate;
     }
   }
 
