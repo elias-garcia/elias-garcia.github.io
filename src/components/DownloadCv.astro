@@ -38,13 +38,33 @@ const formats = await getCvFormats();
 </div>
 
 <script>
+  import { closeTopLayer, isClosing, stopClosing } from "../lib/top-layer.ts";
+
   const menu = document.querySelector<HTMLElement>("[data-cv-formats]");
   const button = document.querySelector<HTMLElement>("[data-cv-button]");
 
   if (menu !== null && button !== null) {
     const close = () => {
-      menu.hidePopover();
+      void closeTopLayer(menu, () => {
+        menu.hidePopover();
+      });
     };
+
+    // The button closes the menu with its fade too, instead of the popover's
+    // own toggle, which can't wait for it; pressed during the fade, it keeps
+    // the menu open. A tap outside still closes it at once where CSS can't
+    // fade it out (DESIGN.md §2.5).
+    button.addEventListener("click", (event) => {
+      if (!menu.matches(":popover-open")) {
+        return;
+      }
+      event.preventDefault();
+      if (isClosing(menu)) {
+        stopClosing(menu);
+      } else {
+        close();
+      }
+    });
 
     // A download doesn't leave the page, so choosing a format closes the menu.
     menu.addEventListener("click", ({ target }) => {
@@ -103,7 +123,7 @@ const formats = await getCvFormats();
   .chevron {
     margin-inline-end: calc(-1 * var(--space-1));
 
-    :global(.button:has(+ .formats:popover-open)) & {
+    :global(.button:has(+ .formats:popover-open:not([data-closing]))) & {
       rotate: 180deg;
     }
 
@@ -136,25 +156,11 @@ const formats = await getCvFormats();
     flex-direction: column;
     transform-origin: top left;
 
-    /* The overlay motion (DESIGN.md §2.5). Closing: a quick fade. To fade
-       out, a closing popover stays in the top layer until it's done; without
-       `overlay` it would fade out of place, so it closes at once. */
-    @supports (overlay: auto) {
-      transition:
-        opacity var(--dur-fast) var(--ease),
-        display var(--dur-fast) allow-discrete,
-        overlay var(--dur-fast) allow-discrete;
-
-      &:not(:popover-open) {
-        opacity: 0;
-      }
-    }
-
-    /* Opening: a fade, and from the button it grows slightly; with reduced
-       motion only the fade. */
+    /* The overlay motion (DESIGN.md §2.5). Opening: a fade, and from the
+       button it grows slightly; with reduced motion only the fade. */
     &:popover-open {
       display: flex;
-      transition: opacity var(--dur) var(--ease);
+      transition: opacity var(--dur-slow) var(--ease);
 
       @starting-style {
         opacity: 0;
@@ -164,13 +170,33 @@ const formats = await getCvFormats();
     @media (prefers-reduced-motion: no-preference) {
       &:popover-open {
         transition:
-          opacity var(--dur) var(--ease),
-          scale var(--dur) var(--ease-settle);
+          opacity var(--dur-slow) var(--ease),
+          scale var(--dur-slow) var(--ease-settle);
 
         @starting-style {
           scale: var(--overlay-scale);
         }
       }
+    }
+
+    /* Closing: a quicker fade. Where a closing popover can stay in the top
+       layer until it's done (`overlay`), CSS fades it out by itself... */
+    @supports (overlay: auto) {
+      transition-property: opacity, display, overlay;
+      transition-duration: var(--dur);
+      transition-timing-function: var(--ease);
+      transition-behavior: allow-discrete;
+
+      &:not(:popover-open) {
+        opacity: 0;
+      }
+    }
+
+    /* ...elsewhere, src/lib/top-layer.ts fades it out while it's still open,
+       then closes it. */
+    &:popover-open[data-closing] {
+      opacity: 0;
+      transition: opacity var(--dur) var(--ease);
     }
   }
 

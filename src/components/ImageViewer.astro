@@ -114,6 +114,7 @@ const copy = await getViewerCopy();
 <script>
   import type { PanzoomObject } from "@panzoom/panzoom";
   import { fill } from "../lib/template.ts";
+  import { closeTopLayer, fadeOnCloseRequests } from "../lib/top-layer.ts";
 
   type Copy = { label: string; labelOne: string; position: string };
 
@@ -267,6 +268,12 @@ const copy = await getViewerCopy();
       dialog.style.removeProperty("--backdrop-fade");
     };
 
+    const close = () => {
+      void closeTopLayer(dialog, () => {
+        dialog.close();
+      });
+    };
+
     const open = (button: HTMLButtonElement) => {
       const talk = button.closest<HTMLElement>("[data-viewer-talk]");
       if (talk === null) {
@@ -352,7 +359,7 @@ const copy = await getViewerCopy();
         // The visitor went Back (or forward): the entry is no longer ours.
         ownsEntry = false;
         if (dialog.open) {
-          dialog.close();
+          close();
         } else if (isViewerEntry(history.state)) {
           // Forward onto the entry of a viewer that's closed: step off it, or
           // the next Back would do nothing visible.
@@ -375,7 +382,7 @@ const copy = await getViewerCopy();
         return;
       }
       if (event.target.closest("[data-viewer-close]")) {
-        dialog.close();
+        close();
       } else if (event.target.closest("[data-viewer-previous]")) {
         move(-1);
       } else if (event.target.closest("[data-viewer-next]")) {
@@ -402,10 +409,12 @@ const copy = await getViewerCopy();
       });
       dialog.addEventListener("pointerup", (event) => {
         if (pressedOutside && outside(event)) {
-          dialog.close();
+          close();
         }
       });
     }
+
+    fadeOnCloseRequests(dialog);
 
     dialog.addEventListener("keydown", (event) => {
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
@@ -472,7 +481,7 @@ const copy = await getViewerCopy();
       const x = touch.clientX - start.x;
       const y = touch.clientY - start.y;
       if (start.lock === "y" && y > dragToClose) {
-        dialog.close();
+        close();
         return;
       }
       // Springs back.
@@ -506,9 +515,6 @@ const copy = await getViewerCopy();
     /* Not only while open: a closing viewer keeps its layout while it fades
        out. */
     flex-direction: column;
-    /* Larger than the search panel, and on phones the whole screen, so it
-       arrives a little slower (global.css: modal dialogs). */
-    --dialog-in: var(--dur-slow);
 
     &[open] {
       display: flex;
@@ -697,22 +703,29 @@ const copy = await getViewerCopy();
 
     /* The viewer and the backdrop follow the finger exactly, then spring
        back. Closing after a drag fades out from where the finger left it. */
-    .viewer[open][data-dragging],
-    .viewer[open][data-dragging]::backdrop {
+    .viewer[open][data-dragging]:not([data-closing]),
+    .viewer[open][data-dragging]:not([data-closing])::backdrop {
       transition: none;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      .viewer[open]:not([data-dragging]) {
+      .viewer[open]:not([data-dragging], [data-closing]) {
         transition:
-          opacity var(--dialog-in) var(--ease),
+          opacity var(--dur-slow) var(--ease),
           translate var(--dur-slow) var(--ease-settle);
       }
 
-      .viewer[open]:not([data-dragging])::backdrop {
+      .viewer[open]:not([data-dragging], [data-closing])::backdrop {
         transition:
-          opacity var(--dialog-in) var(--ease),
+          opacity var(--dur-slow) var(--ease),
           background-color var(--dur-slow) var(--ease-settle);
+      }
+
+      /* Closed while springing back after a drag: the spring finishes. */
+      .viewer[open][data-closing]:not([data-dragging]) {
+        transition:
+          opacity var(--dur) var(--ease),
+          translate var(--dur-slow) var(--ease-settle);
       }
     }
 

@@ -115,13 +115,12 @@ p {
 
 /* ---- Modal dialogs (DESIGN.md §2.5, overlays): search, image viewer ---- */
 
-/* Opening, a dialog and its backdrop fade in over --dialog-in (150ms, or what
-   the dialog sets), and the dialog grows slightly from its centre. The fade
-   eases out; the growth settles. With reduced motion it only fades. Closing,
-   both fade out, quicker. */
+/* Opening, a dialog and its backdrop fade in, and the dialog grows slightly
+   from its centre. The fade eases out; the growth settles. With reduced
+   motion it only fades. */
 dialog[open],
 dialog[open]::backdrop {
-  transition: opacity var(--dialog-in, var(--dur)) var(--ease);
+  transition: opacity var(--dur-slow) var(--ease);
 
   @starting-style {
     opacity: 0;
@@ -131,8 +130,8 @@ dialog[open]::backdrop {
 @media (prefers-reduced-motion: no-preference) {
   dialog[open] {
     transition:
-      opacity var(--dialog-in, var(--dur)) var(--ease),
-      scale var(--dialog-in, var(--dur)) var(--ease-settle);
+      opacity var(--dur-slow) var(--ease),
+      scale var(--dur-slow) var(--ease-settle);
 
     @starting-style {
       scale: var(--overlay-scale);
@@ -140,21 +139,29 @@ dialog[open]::backdrop {
   }
 }
 
-/* To fade out, a closing dialog stays in the top layer until it's done.
-   Without `overlay` it would fade out of place, so it closes at once. */
+/* Closing, both fade out, quicker. Where a closing dialog can stay in the
+   top layer until it's done (`overlay`), CSS fades it out by itself. */
 @supports (overlay: auto) {
   dialog,
   dialog::backdrop {
-    transition:
-      opacity var(--dur-fast) var(--ease),
-      overlay var(--dur-fast) var(--ease) allow-discrete,
-      display var(--dur-fast) var(--ease) allow-discrete;
+    transition-property: opacity, overlay, display;
+    transition-duration: var(--dur);
+    transition-timing-function: var(--ease);
+    transition-behavior: allow-discrete;
   }
 
   dialog:not([open]),
   dialog:not([open])::backdrop {
     opacity: 0;
   }
+}
+
+/* Elsewhere, src/lib/top-layer.ts fades it out while it's still open, then
+   closes it. */
+dialog[open][data-closing],
+dialog[open][data-closing]::backdrop {
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
 }
 
 /* ---- Page transitions (DESIGN.md §2.5) ---- */

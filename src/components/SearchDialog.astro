@@ -208,6 +208,12 @@ if (email === undefined) {
 
 <script>
   import { fill } from "../lib/template.ts";
+  import {
+    closeTopLayer,
+    fadeOnCloseRequests,
+    isClosing,
+    stopClosing,
+  } from "../lib/top-layer.ts";
 
   type Entry = {
     title: string;
@@ -661,8 +667,16 @@ if (email === undefined) {
       input.focus();
     };
 
+    const close = () => {
+      void closeTopLayer(dialog, () => {
+        dialog.close();
+      });
+    };
+
     const open = () => {
       if (dialog.open) {
+        // Opened again while it fades out: it stays open.
+        stopClosing(dialog);
         return;
       }
       input.value = "";
@@ -674,8 +688,8 @@ if (email === undefined) {
     document.addEventListener("keydown", (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
-        if (dialog.open) {
-          dialog.close();
+        if (dialog.open && !isClosing(dialog)) {
+          close();
         } else {
           open();
         }
@@ -728,8 +742,9 @@ if (email === undefined) {
         return;
       }
       if (option instanceof HTMLAnchorElement) {
-        // The link does its own thing; the dialog steps out of the way.
-        dialog.close();
+        // The link does its own thing; the dialog steps out of the way. A
+        // download or a new tab leaves the visitor here, so it fades out.
+        close();
         return;
       }
       activate(option);
@@ -758,9 +773,11 @@ if (email === undefined) {
     // A click on the backdrop lands on the dialog itself.
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog) {
-        dialog.close();
+        close();
       }
     });
+
+    fadeOnCloseRequests(dialog);
   }
 </script>
 

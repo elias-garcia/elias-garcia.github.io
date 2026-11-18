@@ -107,9 +107,9 @@
   --r-full: 999px; /* buttons, chips */
 
   /* ---- Motion: UI feedback never exceeds 250ms ---- */
-  --dur-fast: 100ms; /* press, search row highlight, old page fading out, overlays closing */
-  --dur: 150ms; /* hover, colour/opacity, small overlays opening */
-  --dur-slow: 250ms; /* page entrance, expanding rows, underline growing, image viewer opening */
+  --dur-fast: 100ms; /* press, search row highlight, old page fading out */
+  --dur: 150ms; /* hover, colour/opacity, overlays closing */
+  --dur-slow: 250ms; /* page entrance, expanding rows, underline growing, overlays opening */
   --ease: ease-out;
   /* Things arriving and moving; not an overlay's fade. */
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);

@@ -115,9 +115,9 @@ Three durations, two curves. Interface feedback never takes longer than 250ms.
 
 | Token | Value | Use |
 |---|---|---|
-| `--dur-fast` | 100ms | Press feedback, search row highlight, overlays closing |
-| `--dur` | 150ms | Hover, colour and opacity, small overlays opening (Download CV menu, search) |
-| `--dur-slow` | 250ms | Page entrance, expanding rows, underline growing, the image viewer opening |
+| `--dur-fast` | 100ms | Press feedback, search row highlight |
+| `--dur` | 150ms | Hover, colour and opacity, overlays closing |
+| `--dur-slow` | 250ms | Page entrance, expanding rows, underline growing, overlays opening |
 | `--ease` | ease-out | Default for everything |
 | `--ease-settle` | cubic-bezier(.22, 1, .36, 1) | Things arriving and moving: the page, overlays growing, expanding rows (not an overlay's fade) |
 
@@ -128,7 +128,7 @@ The motion system:
 4. **Touch.** Hover movement and list dimming run only on real pointers: wrap them in `@media (hover: hover) and (pointer: fine)`. A tap must never leave rows dimmed.
 5. **Within Writing.** Moving between `/writing` and its topic pages keeps the page in place: no page entrance, only the posts re-enter (the same fade and 6px rise, over 150ms). The previous page comes from the Navigation API; without it, the normal entrance plays.
 6. **In-page jumps.** Following a `#` link (heading anchors, footnote markers and back links, the skip link) scrolls smoothly: `@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth } }`. `scroll-padding-top` keeps the target clear of the sticky header, and footnote targets get their arrival tint.
-7. **Overlays** (the Download CV menu, search, the image viewer) share one motion. Opening: a fade with `--ease`, and growing from 0.97 (`--overlay-scale`) with `--ease-settle`: the menu from its button, the dialogs from their centre; a dialog's backdrop fades with it. Small overlays take 150ms (menu, search, which people open all the time); the image viewer takes 250ms, being larger (on phones it fills the screen). Closing: a 100ms fade, no shrink, where the browser supports `overlay` (elsewhere they close at once). Reduced motion: the fades only. An overlay's fade eases out evenly, so it shows even on a phone; `--ease-settle` front-loads so much that an overlay fading on it reads as a cut. Dialogs share it as base styles for `<dialog>` in `global.css`, each setting only its opening duration (`--dialog-in`).
+7. **Overlays** (the Download CV menu, search, the image viewer) share one motion, the same on every screen. Opening (250ms): a fade with `--ease`, and growing from 0.97 (`--overlay-scale`) with `--ease-settle`: the menu from its button, the dialogs from their centre; a dialog's backdrop fades with it. Closing (150ms, about 60% of the opening): a fade with `--ease`, no shrink. Reduced motion: the fades only. 150ms openings read as instant on a phone, and an overlay's fade on `--ease-settle` front-loads so much that it reads as a cut, so fades ease out evenly. Where a closing overlay can stay in the top layer until its fade is done (`overlay`, Chrome), CSS fades it out alone; elsewhere (Safari, Firefox) `src/lib/top-layer.ts` fades it out while it's still open (`data-closing`), then closes it. Only a tap outside the Download CV menu, or Esc on it, closes it at once there: a popover's own light dismiss can't wait for a fade. Dialogs share the motion as base styles for `<dialog>` in `global.css`.
 8. **Reduced motion.** Gentler, not zero: pages fade in over 150ms without moving; everything that moves becomes instant; the analog-style loops in illustrations stop.
 
 Deliberate exceptions: the Roleburn morph (400ms), the easing demo in the post (600ms), the footnote arrival highlight (2s), and the slow loops inside project illustrations.
@@ -219,7 +219,7 @@ Each component appears exactly once in the design system. Live versions, split b
     - **Back gesture:** opening pushes a history entry and Back closes the viewer (users expect Back to close full-screen overlays); closing with × or Esc goes back in history, so it stays balanced.
     - **Photo:** not dimmed in dark mode, unlike the page's photos: the viewer looks the same in both themes.
     - **Zoom:** pinch to zoom the photo, up to 4×; not drawn in the design. The zoomed photo fills the space between the × and the caption, and no further: the caption and the buttons stay clear. While zoomed in, one finger pans the photo instead of swiping or dragging; moving to another photo or closing resets the zoom.
-  - **Motion:** the overlay motion (§2.5): the card fades and grows from 0.97 over 250ms with its backdrop; the phone viewer only fades (250ms). Closing fades out (100ms); after a drag down, from where it was dropped. With reduced motion, a fade only.
+  - **Motion:** the overlay motion (§2.5): the card fades and grows from 0.97 over 250ms with its backdrop; the phone viewer only fades (250ms). Closing fades out (150ms); after a drag down, from where it was dropped. With reduced motion, a fade only.
   - **Short windows:** the card is never taller than the window less 24px each side; the photo shrinks (contained, on `--surface`) so the caption and the key hints stay on screen, as on a phone held sideways.
   - **Image:** the same source as the thumbnail, at widths up to 1440 (2× the card), capped at the original's width.
   - **Build:** a native `<dialog>` opened with `showModal()` and `closedby="any"` (click outside closes; a press and release outside where `closedby` isn't supported), as the search does. Back closes it on every screen, not only phones. Pinch zoom is Panzoom (`@panzoom/panzoom`), loaded the first time a photo opens.
