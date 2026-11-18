@@ -64,11 +64,21 @@ const photos = await Promise.all(
 
 <script>
   // Tabbing to a photo that only peeks into the strip leaves it there, so
-  // bring the focused photo fully into view.
+  // slide the strip to the focused photo. Only for keyboard focus: a mouse
+  // press focuses the photo before the click lands, and sliding then would
+  // move it out from under the pointer. Only the strip: scrolling the page
+  // too would jump it whenever a photo sits under the sticky header.
   for (const photos of document.querySelectorAll("[data-viewer-talk]")) {
     photos.addEventListener("focusin", (event) => {
-      if (event.target instanceof HTMLElement) {
-        event.target.scrollIntoView({ block: "nearest", inline: "start" });
+      if (
+        event.target instanceof HTMLElement &&
+        event.target.matches(":focus-visible")
+      ) {
+        photos.scrollBy({
+          left:
+            event.target.getBoundingClientRect().left -
+            photos.getBoundingClientRect().left,
+        });
       }
     });
   }

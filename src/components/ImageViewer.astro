@@ -343,8 +343,9 @@ const copy = await getViewerCopy();
         history.back();
       }
       // Safari doesn't focus a button on click, so the browser can't return
-      // focus to it.
-      opener?.focus();
+      // focus to it. The page stays where it was, even with the photo under
+      // the sticky header.
+      opener?.focus({ preventScroll: true });
     });
 
     addEventListener("popstate", () => {
