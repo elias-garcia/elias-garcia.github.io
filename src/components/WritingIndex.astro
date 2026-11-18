@@ -1,15 +1,13 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import {
-  getPostCopy,
-  getReadingMinutes,
+  getReadingTime,
   getTopics,
   topicLabel,
   type Topic,
 } from "../lib/content.ts";
 import { formatMonthDay, isoDate } from "../lib/format.ts";
 import { linkTarget, newTabNote } from "../lib/links.ts";
-import { fill } from "../lib/template.ts";
 import Button from "./Button.astro";
 import Chip from "./Chip.astro";
 import List from "./List.astro";
@@ -34,10 +32,9 @@ const shown =
 const rows = await Promise.all(
   shown.map(async (post) => ({
     post,
-    minutes: await getReadingMinutes(post),
+    readingTime: await getReadingTime(post),
   })),
 );
-const { readingTime } = await getPostCopy();
 const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
 ---
 
@@ -74,7 +71,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
       <section class="year" aria-labelledby={`year-${String(year)}`}>
         <h2 id={`year-${String(year)}`}>{year}</h2>
         <List>
-          {yearRows.map(({ post, minutes }) => (
+          {yearRows.map(({ post, readingTime }) => (
             <ListRow
               title={post.data.title}
               href={`/writing/${post.id}`}
@@ -87,9 +84,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
               {post.data.description}
               <MetaLine slot="meta">
                 <MetaItem>{topicLabel(topics, post.data.topic)}</MetaItem>
-                <MetaItem>
-                  {fill(readingTime, { minutes: String(minutes) })}
-                </MetaItem>
+                <MetaItem>{readingTime}</MetaItem>
               </MetaLine>
             </ListRow>
           ))}

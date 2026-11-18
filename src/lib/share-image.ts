@@ -11,20 +11,20 @@ import sharp from "sharp";
 export const shareImageSize = { width: 1200, height: 630 } as const;
 
 type Style = Record<string, string | number>;
-type Element = {
+type SatoriElement = {
   type: string;
-  props: { style?: Style; src?: string; children?: (Element | string)[] };
+  props: { style?: Style; src?: string; children?: (SatoriElement | string)[] };
 };
 
 function element(
   type: string,
   style: Style,
-  ...children: (Element | string)[]
-): Element {
+  ...children: (SatoriElement | string)[]
+): SatoriElement {
   return { type, props: { style, children } };
 }
 
-function image(src: string, style: Style): Element {
+function image(src: string, style: Style): SatoriElement {
   return { type: "img", props: { src, style } };
 }
 
@@ -79,7 +79,7 @@ async function fonts() {
 type Colours = Awaited<ReturnType<typeof lightColours>>;
 
 // Items separated by dots, 16px apart: "Projects · Writing · Speaking".
-function dotted(items: readonly string[], colours: Colours): Element {
+function dotted(items: readonly string[], colours: Colours): SatoriElement {
   return element(
     "div",
     { display: "flex", alignItems: "center", gap: 16, color: colours.text2 },
@@ -95,7 +95,7 @@ function dotted(items: readonly string[], colours: Colours): Element {
 }
 
 async function render(
-  content: (colours: Colours, logo: Element) => Element[],
+  content: (colours: Colours, logo: SatoriElement) => SatoriElement[],
 ): Promise<Buffer> {
   const [colours, logoSrc, fontData] = await Promise.all([
     lightColours(),
@@ -128,7 +128,7 @@ function footer(
   details: readonly string[],
   domain: string,
   colours: Colours,
-): Element {
+): SatoriElement {
   return element(
     "div",
     {

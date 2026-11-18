@@ -7,6 +7,7 @@ import {
 } from "astro:content";
 import { z } from "astro/zod";
 import { compareText } from "./format.ts";
+import { fill } from "./template.ts";
 
 async function requireEntry<Collection extends CollectionKey>(
   collection: Collection,
@@ -116,7 +117,7 @@ export async function getCvFormatCopy(format: "pdf" | "markdown") {
   return data;
 }
 
-export async function getPostCopy() {
+async function getPostCopy() {
   const { data } = await requireEntry("post", "post");
   return data;
 }
@@ -143,11 +144,17 @@ export async function getFeedTitle(): Promise<string> {
 
 const readingTime = z.object({ minutesRead: z.number() });
 
-export async function getReadingMinutes(
+// "4 min read": a post's reading time, as its header, Writing and its share
+// image show it.
+export async function getReadingTime(
   post: CollectionEntry<"writing">,
-): Promise<number> {
-  const { remarkPluginFrontmatter } = await render(post);
-  return readingTime.parse(remarkPluginFrontmatter).minutesRead;
+): Promise<string> {
+  const [{ remarkPluginFrontmatter }, copy] = await Promise.all([
+    render(post),
+    getPostCopy(),
+  ]);
+  const minutes = readingTime.parse(remarkPluginFrontmatter).minutesRead;
+  return fill(copy.readingTime, { minutes: String(minutes) });
 }
 
 export type Topic = {

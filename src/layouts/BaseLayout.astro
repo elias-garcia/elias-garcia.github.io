@@ -7,7 +7,7 @@ import SearchDialog from "../components/SearchDialog.astro";
 import SkipLink from "../components/SkipLink.astro";
 import { getFeedTitle, getProfile } from "../lib/content.ts";
 import { formatCountry } from "../lib/format.ts";
-import { toPath } from "../lib/navigation.ts";
+import { requireSite, toPath } from "../lib/navigation.ts";
 import { shareImageSize } from "../lib/share-image.ts";
 import { fill } from "../lib/template.ts";
 import "../styles/global.css";
@@ -31,7 +31,8 @@ const {
 } = Astro.props;
 const [profile, feedTitle] = await Promise.all([getProfile(), getFeedTitle()]);
 const path = toPath(Astro.url.pathname);
-const canonical = new URL(path, Astro.site);
+const siteUrl = requireSite(Astro.site, "canonical and share image URLs");
+const canonical = new URL(path, siteUrl);
 // The page first, then the site; Home is the site, so its title stands
 // alone. Social cards show the site's name on their own, so they get the
 // page alone.
@@ -39,8 +40,8 @@ const documentTitle =
   path === "/"
     ? title
     : fill(profile.pageTitle, { page: title, name: profile.name });
-// Its script only exists on Vercel deployments: elsewhere (dev, preview,
-// Lighthouse) it would be a missing file.
+// Its script only exists on Vercel deployments (previews included):
+// elsewhere (astro dev, astro preview, Lighthouse) it would be a missing file.
 const onVercel = process.env.VERCEL === "1";
 const shareImage = pageShareImage ?? {
   path: "/share/site.png",
@@ -67,7 +68,7 @@ const shareImage = pageShareImage ?? {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:image" content={new URL(shareImage.path, Astro.site)} />
+    <meta property="og:image" content={new URL(shareImage.path, siteUrl)} />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content={String(shareImageSize.width)} />
     <meta property="og:image:height" content={String(shareImageSize.height)} />

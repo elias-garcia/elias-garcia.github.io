@@ -12,7 +12,11 @@ const monthYear = new Intl.DateTimeFormat(locale, {
   timeZone: "UTC",
 });
 
-const regions = new Intl.DisplayNames(locale, { type: "region" });
+// No fallback: an unknown code gives no name, instead of the code itself.
+const regions = new Intl.DisplayNames(locale, {
+  type: "region",
+  fallback: "none",
+});
 
 // The country's name in English, from its ISO 3166 code.
 export function formatCountry(code: string): string {

@@ -14,16 +14,14 @@ import StructuredData from "../../components/StructuredData.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
   getPage,
-  getPostCopy,
   getPosts,
   getProfile,
-  getReadingMinutes,
+  getReadingTime,
   getTopics,
   topicLabel,
 } from "../../lib/content.ts";
 import { formatLongDate, formatMediumDate, isoDate } from "../../lib/format.ts";
 import { requireSite, toPath } from "../../lib/navigation.ts";
-import { fill } from "../../lib/template.ts";
 import { blogPosting } from "../../lib/structured-data.ts";
 
 export const getStaticPaths = (async () => {
@@ -45,14 +43,12 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { post, topics, previous, next } = Astro.props;
 const { title, description, date, topic } = post.data;
-const [{ Content }, minutes, profile, writing, { readingTime }] =
-  await Promise.all([
-    render(post),
-    getReadingMinutes(post),
-    getProfile(),
-    getPage("writing"),
-    getPostCopy(),
-  ]);
+const [{ Content }, readingTime, profile, writing] = await Promise.all([
+  render(post),
+  getReadingTime(post),
+  getProfile(),
+  getPage("writing"),
+]);
 const label = topicLabel(topics, topic);
 const markdown = `/writing/${post.id}.md`;
 const shareImage = `/share/writing/${post.id}.png`;
@@ -109,7 +105,7 @@ const structuredData = blogPosting(
               {label}
             </a>
           </MetaItem>
-          <MetaItem>{fill(readingTime, { minutes: String(minutes) })}</MetaItem>
+          <MetaItem>{readingTime}</MetaItem>
         </MetaLine>
       </p>
     </header>

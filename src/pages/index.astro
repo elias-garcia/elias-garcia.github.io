@@ -12,8 +12,8 @@ import PreviewMorph from "../components/PreviewMorph.astro";
 import ProjectTile from "../components/ProjectTile.astro";
 import RowPhotos from "../components/RowPhotos.astro";
 import Section from "../components/Section.astro";
-import StructuredData from "../components/StructuredData.astro";
 import SeeMore from "../components/SeeMore.astro";
+import StructuredData from "../components/StructuredData.astro";
 import VideoPreview from "../components/VideoPreview.astro";
 import WorkRow from "../components/WorkRow.astro";
 import Years from "../components/Years.astro";
@@ -45,15 +45,15 @@ const [profile, projects, work, posts, talks, courses, education] =
 const [description = profile.role] = profile.about;
 const siteUrl = requireSite(Astro.site, "structured data");
 const portrait = await getImage({ src: avatar, width: 400 });
-const site = website(profile, siteUrl);
-const structuredData = person(profile, siteUrl, new URL(portrait.src, siteUrl));
+const websiteData = website(profile, siteUrl);
+const personData = person(profile, siteUrl, new URL(portrait.src, siteUrl));
 const newestJob = work[0]?.id;
 ---
 
 <BaseLayout title={profile.name} description={description}>
   <PreviewMorph slot="head" />
-  <StructuredData slot="head" data={site} />
-  <StructuredData slot="head" data={structuredData} />
+  <StructuredData slot="head" data={websiteData} />
+  <StructuredData slot="head" data={personData} />
   <div class="home">
     <header class="intro">
       <div class="identity">
