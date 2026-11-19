@@ -15,6 +15,7 @@ import ListRow from "./ListRow.astro";
 import MetaItem from "./MetaItem.astro";
 import MetaLine from "./MetaLine.astro";
 import PageIntro from "./PageIntro.astro";
+import Section from "./Section.astro";
 import VisuallyHidden from "./VisuallyHidden.astro";
 
 type Props = {
@@ -68,8 +69,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
 
   <div class="years">
     {[...years].map(([year, yearRows]) => (
-      <section class="year" aria-labelledby={`year-${String(year)}`}>
-        <h2 id={`year-${String(year)}`}>{year}</h2>
+      <Section id={`year-${String(year)}`} title={String(year)}>
         <List>
           {yearRows.map(({ post, readingTime }) => (
             <ListRow
@@ -89,7 +89,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
             </ListRow>
           ))}
         </List>
-      </section>
+      </Section>
     ))}
   </div>
 </div>
@@ -111,7 +111,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
   .years {
     display: flex;
     flex-direction: column;
-    gap: var(--space-10);
+    gap: var(--space-8);
   }
 
   /* The year groups read as one list: hovering a post quiets all the others,
@@ -127,17 +127,6 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
   @media (prefers-reduced-motion: no-preference) {
     :global(:root[data-in-place]) .years {
       animation: page-in var(--dur) var(--ease-settle) backwards;
-    }
-  }
-
-  .year {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-
-    h2 {
-      font-size: var(--text-small);
-      font-weight: var(--weight-medium);
     }
   }
 </style>

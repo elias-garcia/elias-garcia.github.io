@@ -109,7 +109,6 @@ const { job, open } = Astro.props;
 
   .role {
     color: var(--text-2);
-    font-size: var(--text-small);
   }
 
   .icon {
@@ -136,9 +135,9 @@ const { job, open } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    padding: 0 0 var(--space-5) calc(var(--gutter) + var(--space-6));
+    padding: 0 0 var(--space-4) calc(var(--gutter) + var(--space-6));
     color: var(--text-2);
-    font-size: var(--text-small);
+    line-height: var(--leading-body);
 
     @media (width < 40rem) {
       padding-inline-start: 0;
@@ -151,7 +150,8 @@ const { job, open } = Astro.props;
       &::before {
         content: "";
         position: absolute;
-        inset-block-start: var(--space-2);
+        /* Centred on the first line. */
+        inset-block-start: calc((1lh - var(--space-1)) / 2);
         inset-inline-start: 0;
         inline-size: var(--space-1);
         block-size: var(--space-1);

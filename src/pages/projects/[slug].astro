@@ -35,17 +35,19 @@ const [{ Content }, projects] = await Promise.all([
 
 <BaseLayout title={title} description={description}>
   <article class="case-study">
-    <div class="top">
-      <BackLink href="/projects" label={projects.title} />
-      <header class="intro">
-        <DisplayTitle>{title}</DisplayTitle>
-        <p class="lead">{description}</p>
-      </header>
-      <ProjectFacts year={year} status={status} links={links} />
+    <div class="reading">
+      <div class="top">
+        <BackLink href="/projects" label={projects.title} />
+        <header class="intro">
+          <DisplayTitle>{title}</DisplayTitle>
+          <p class="lead">{description}</p>
+        </header>
+        <ProjectFacts year={year} status={status} links={links} />
+      </div>
+      <Prose>
+        <Content components={mdxComponents} />
+      </Prose>
     </div>
-    <Prose>
-      <Content components={mdxComponents} />
-    </Prose>
     <PreviousNext
       name="More projects"
       previous={
@@ -70,6 +72,12 @@ const [{ Content }, projects] = await Promise.all([
   .case-study {
     display: flex;
     flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  .reading {
+    display: flex;
+    flex-direction: column;
     gap: var(--space-12);
   }
 
@@ -82,11 +90,11 @@ const [{ Content }, projects] = await Promise.all([
   .intro {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
 
   .lead {
     color: var(--text-2);
-    font-size: var(--text-heading);
+    font-size: var(--text-subtitle);
   }
 </style>

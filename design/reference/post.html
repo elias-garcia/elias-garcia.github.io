@@ -2,6 +2,13 @@
 <title>Rebuilding this site — Elías García</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap">
 <style>
+:root{--space-page:64px;--space-section:80px;--space-footer:96px}
+.site main p:not([class]):not([style*="font-size"]){line-height:1.6}
+@media (max-width: 639.98px){:root{--space-page:32px;--space-section:64px;--space-footer:64px}}
+
+:root{--fs-display:32px}
+@media (max-width: 639.98px){:root{--fs-display:28px}}
+/* type scale: 12 · 14 · 16 · 18 · 20 · 24 · 32 (28 on phones, display only). Line heights 1 · 1.2 · 1.35 · 1.5 · 1.7 */
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
    text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
@@ -10,7 +17,7 @@
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
 a:hover{color:var(--accent-c)}
-.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
@@ -25,11 +32,11 @@ a:hover{color:var(--accent-c)}
 .progress{transform-origin:0 50%;transform:scaleX(0)}
 @supports (animation-timeline: scroll()){.progress{animation:grow linear both;animation-timeline:scroll(root block)}}
 
-.body p{margin:0;font-size:16px;line-height:1.75;color:var(--text-2);text-wrap:pretty}
+.body p{margin:0;font-size:16px;line-height:1.6;color:var(--text-2);text-wrap:pretty}
 /* links inside prose: indigo text with a soft underline that is always there, so they read as links without hover or colour */
 .body p a:not(.fn){color:var(--accent-c);text-decoration:underline;text-decoration-color:var(--accent-line);text-decoration-thickness:1px;text-underline-offset:3px;transition:text-decoration-color var(--dur) var(--ease),text-decoration-thickness var(--dur) var(--ease)}
 .body p a:not(.fn):hover,.body p a:not(.fn):focus-visible{color:var(--accent-c);text-decoration-color:var(--accent-c);text-decoration-thickness:2px}
-.h{position:relative;margin:0;font-size:18px;font-weight:600;letter-spacing:-0.01em;line-height:1.35}
+.h{position:relative;margin:0;font-size:24px;font-weight:600;letter-spacing:-0.01em;line-height:1.35}
 .h .anchor{position:absolute;left:-24px;top:0;width:20px;color:var(--text-3);font-weight:500;opacity:0;transition:opacity var(--dur) var(--ease)}
 .h:hover .anchor,.h .anchor:focus-visible{opacity:1}
 
@@ -45,7 +52,7 @@ a:hover{color:var(--accent-c)}
 .go .runner{transform:translateX(calc(100% - 32px))}
 .reset .runner{transition:none !important}
 /* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
-.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:13px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
 .button:hover{background:var(--control-hover);color:var(--text)}
 .button:active{transform:scale(.97)}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
@@ -62,7 +69,7 @@ a:hover{color:var(--accent-c)}
 .more:hover svg{transform:translateX(2px)}
 @media (prefers-reduced-motion:reduce){.runner{transition:none !important}.progress{animation:none !important}}
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:13px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
 .kbd:hover{border-color:var(--line-strong);color:var(--text)}
 .kbd:active{transform:scale(.97)}
 
@@ -71,7 +78,7 @@ a:hover{color:var(--accent-c)}
 @keyframes palPop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
 .pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default;animation:palFade var(--dur) var(--ease) both}
 .ppanel{animation:palPop var(--dur) var(--ease-settle) both;transform-origin:top center}
-.pin{padding:0;flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:15px;color:var(--text);background:transparent;height:100%}
+.pin{padding:0;flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:16px;color:var(--text);background:transparent;height:100%}
 .pin::placeholder{color:var(--text-3)}
 .ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
 .pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
@@ -81,7 +88,7 @@ a:hover{color:var(--accent-c)}
 .pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease)}
 .popt.act .pic{background:var(--bg);color:var(--accent-c)}
 .pic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.pret{width:16px;font-size:13px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
+.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
 .popt.act .pret{opacity:1}
 mark.phl{background:none;color:var(--accent-c);font-weight:600;padding:0}
 .pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
@@ -130,7 +137,7 @@ html{scroll-padding-top:80px}
 .kbd{width:36px;padding:0;justify-content:center}
 .kbd span{display:none}
 .nav{gap:16px !important}
-.site > main{padding-top:48px !important}
+.site > main{padding-top:var(--space-page) !important}
 }
 
 /* topic in the post header: metadata that links to the Writing list, filtered */
@@ -143,7 +150,7 @@ html{scroll-padding-top:80px}
 @media (max-width: 639.98px){.dlong{display:none}.dshort{display:inline}}
 
 /* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
-.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:13px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
 .pcrumb:hover{background:var(--control-hover);color:var(--text)}
 .pret{text-align:center}
 
@@ -164,10 +171,10 @@ html:has(.pscrim){overflow:hidden}
 
 /* footnotes: markers link to a Notes section at the end; ↩ returns to the marker. Arriving at a note, or back at its marker, briefly lights it up */
 .fn{text-decoration:none}
-.notes{position:relative;margin-top:40px;padding-top:24px;display:flex;flex-direction:column;gap:12px}
+.notes{position:relative;margin-top:48px;padding-top:24px;display:flex;flex-direction:column;gap:12px}
 .notes::before{content:"";position:absolute;top:0;left:0;width:64px;height:1px;background:var(--line)}
-.notes h2{margin:0;font-size:14px;line-height:1.35;font-weight:500;color:var(--text)}
-.notes ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:14px;line-height:1.6;color:var(--text-2)}
+.notes h2{margin:0;font-size:20px;line-height:1.35;font-weight:600;color:var(--text)}
+.notes ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:14px;line-height:1.5;color:var(--text-2)}
 .notes li::marker{color:var(--text-3);font-variant-numeric:tabular-nums}
 .notes li{margin-left:-8px;padding:4px 8px;border-radius:var(--r-md)}
 .backref{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;margin:-4px 0 -4px 4px;vertical-align:middle;color:var(--text-3);border-radius:var(--r-sm);transition:color var(--dur) var(--ease),background var(--dur) var(--ease)}
@@ -182,19 +189,19 @@ html:has(.pscrim){overflow:hidden}
 @media (prefers-reduced-motion:reduce){.notes li:target{animation:none;background:var(--tint)}.fn:target{animation:none;background:var(--accent);color:var(--bg)}}
 
 /* ---- prose: every Markdown element ---- */
-.body h3{margin:0;font-size:16px;line-height:1.35;font-weight:600;color:var(--text)}
-.body h4{margin:0;font-size:15px;line-height:1.35;font-weight:600;color:var(--text)}
+.body h3{margin:0;font-size:20px;line-height:1.35;font-weight:600;color:var(--text)}
+.body h4{margin:0;font-size:16px;line-height:1.35;font-weight:600;color:var(--text)}
 .body strong{font-weight:600;color:var(--text)}
 .body em{font-style:italic}
 .body del{color:var(--text-3)}
 .body :not(pre) > code{padding:0 4px;border-radius:var(--r-sm);background:var(--control);color:var(--text);font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.875em}
-.body kbd{display:inline-block;min-width:20px;padding:0 4px;border:1px solid var(--line);border-bottom-width:2px;border-radius:var(--r-sm);background:var(--bg);color:var(--text);font:inherit;font-size:13px;line-height:1.35;text-align:center}
-.body > ul,.body > ol,.body li > ul,.body li > ol{margin:0;padding-left:24px;display:flex;flex-direction:column;gap:4px;font-size:16px;line-height:1.75;color:var(--text-2)}
+.body kbd{display:inline-block;min-width:20px;padding:0 4px;border:1px solid var(--line);border-bottom-width:2px;border-radius:var(--r-sm);background:var(--bg);color:var(--text);font:inherit;font-size:14px;line-height:1.35;text-align:center}
+.body > ul,.body > ol,.body li > ul,.body li > ol{margin:0;padding-left:24px;display:flex;flex-direction:column;gap:8px;font-size:16px;line-height:1.6;color:var(--text-2)}
 .body > ul,.body li > ul{list-style:none}
 .body > ul > li,.body li > ul > li{position:relative}
 .body > ul > li::before,.body li > ul > li::before{content:"";position:absolute;left:-16px;top:12px;width:4px;height:4px;border-radius:50%;background:var(--text-3)}
 .body > ol > li::marker{color:var(--text-3);font-variant-numeric:tabular-nums}
-.body li ul,.body li ol{margin-top:4px}
+.body li ul,.body li ol{margin-top:8px}
 .body li ul > li::before{background:transparent;box-shadow:inset 0 0 0 1px var(--text-3)}
 .body ul.tasks{padding-left:0}
 .body ul.tasks > li{display:flex;align-items:flex-start;gap:12px}
@@ -209,26 +216,26 @@ html:has(.pscrim){overflow:hidden}
 .body hr{border:0;height:24px;margin:0;display:flex;align-items:center;justify-content:center}
 .body hr::before{content:"· · ·";color:var(--text-3);letter-spacing:8px}
 .tablewrap{overflow-x:auto;border-radius:var(--r-lg);border:1px solid var(--line)}
-.body table{width:max-content;min-width:100%;border-collapse:collapse;font-size:14px;line-height:1.6}
-.body th{padding:8px 16px;text-align:left;font-size:13px;font-weight:500;color:var(--text-3);background:var(--surface);border-bottom:1px solid var(--line);white-space:nowrap}
+.body table{width:max-content;min-width:100%;border-collapse:collapse;font-size:14px;line-height:1.5}
+.body th{padding:8px 16px;text-align:left;font-size:14px;font-weight:500;color:var(--text-3);background:var(--surface);border-bottom:1px solid var(--line);white-space:nowrap}
 .body td{padding:8px 16px;color:var(--text-2);border-top:1px solid var(--line);vertical-align:top}
 .body tr:first-child td{border-top:0}
 .body td.num,.body th.num{text-align:right;font-variant-numeric:tabular-nums}
 .body details{border:1px solid var(--line);border-radius:var(--r-lg)}
-.body summary{display:flex;align-items:center;gap:8px;padding:12px 16px;font-size:15px;font-weight:500;color:var(--text);cursor:pointer;list-style:none;border-radius:var(--r-lg)}
+.body summary{display:flex;align-items:center;gap:8px;padding:12px 16px;font-size:16px;font-weight:500;color:var(--text);cursor:pointer;list-style:none;border-radius:var(--r-lg)}
 .body summary::-webkit-details-marker{display:none}
 .body summary svg{width:16px;height:16px;flex:none;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur-slow) var(--ease-settle)}
 .body details[open] summary svg{transform:rotate(90deg)}
 .body details > div{padding:0 16px 16px 40px;display:flex;flex-direction:column;gap:12px}
-.body details p{font-size:15px;line-height:1.6}
+.body details p{font-size:16px;line-height:1.5}
 .callout{display:flex;flex-direction:column;gap:4px;padding:16px 20px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line)}
-.callout strong{font-size:13px;font-weight:500;color:var(--text)}
-.callout p{font-size:15px !important;line-height:1.6 !important}
+.callout strong{font-size:14px;font-weight:500;color:var(--text)}
+.callout p{font-size:16px !important;line-height:1.6 !important}
 /* ---- code blocks: language label + copy, minimal indigo syntax theme ---- */
 .codeblock{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);overflow:hidden}
 .codeblock .code-h{display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 8px 0 16px;border-bottom:1px solid var(--line)}
 .codeblock .lang{font-size:12px;font-weight:500;color:var(--text-3)}
-.codeblock pre{margin:0;padding:16px 0;overflow-x:auto;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:13px;line-height:1.75;color:var(--code-plain)}
+.codeblock pre{margin:0;padding:16px 0;overflow-x:auto;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:14px;line-height:1.7;color:var(--code-plain)}
 .codeblock code{display:block;min-width:max-content}
 .codeblock .line{display:block;padding:0 20px}
 .codeblock .line:empty::after{content:"\200b"}
@@ -256,6 +263,20 @@ html:has(.pscrim){overflow:hidden}
 .body details::details-content{height:0;overflow:clip;transition:height var(--dur-slow) var(--ease-settle),content-visibility var(--dur-slow) var(--ease-settle) allow-discrete}
 .body details[open]::details-content{height:auto}
 @media (prefers-reduced-motion:reduce){.body details::details-content{transition:none}}
+
+/* prose rhythm: a heading sits closer to its text than to what came before it */
+.body > h2.h + *{margin-top:0}
+.body > h3{margin-top:16px}.body > h3 + *{margin-top:-4px}
+.body > h4{margin-top:8px}.body > h4 + *{margin-top:-8px}
+.body > figure,.body > .codeblock,.body > .tablewrap,.body > .callout,.body > details{margin-top:8px;margin-bottom:8px}
+/* a boxed block keeps one gap, not two: 24 to the next block, and a heading after it keeps its own 48 / 32 / 24 */
+.body > :is(figure,.codeblock,.tablewrap,.callout,details) + :is(figure,.codeblock,.tablewrap,.callout,details){margin-top:0}
+.body > :is(figure,.codeblock,.tablewrap,.callout,details) + h2.h{margin-top:24px !important}
+.body > :is(figure,.codeblock,.tablewrap,.callout,details) + h3{margin-top:8px}
+.body > :is(figure,.codeblock,.tablewrap,.callout,details) + h4{margin-top:0}
+.prose > section:not(:first-child){margin-top:24px}
+.prose section > pre{margin-top:8px !important}
+.prose section > p + p{margin-top:0}
 </style>
 </head><body>
 <div data-dc-tpl="3" class="site" style="--accent: #4F39F6; min-height: 100vh; background: var(--bg);">
@@ -267,7 +288,7 @@ html:has(.pscrim){overflow:hidden}
       <a data-dc-tpl="7" href="Main.dc.html" aria-label="Elías García, home" style="display: flex; align-items: center; height: 44px;">
         <svg data-dc-tpl="8" viewBox="0 0 35.44 60" width="16.54" height="28" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="9" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="10" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="11" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="12" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="13" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
       </a>
-      <nav data-dc-tpl="14" class="nav" aria-label="Main" style="display: flex; align-items: center; gap: 24px; font-size: 14px;">
+      <nav data-dc-tpl="14" class="nav" aria-label="Main" style="display: flex; align-items: center; gap: 24px; font-size: 16px;">
         <a data-dc-tpl="15" href="Main.dc.html">Home</a>
         <a data-dc-tpl="16" href="ProjectsIndex.dc.html">Projects</a>
         <a data-dc-tpl="17" href="Writing.dc.html" aria-current="true">Writing</a>
@@ -280,8 +301,8 @@ html:has(.pscrim){overflow:hidden}
     <div data-dc-tpl="23" class="progress" aria-hidden="true" style="position: absolute; left: 0px; right: 0px; bottom: -1px; height: 2px; background: var(--accent);"></div>
   </header>
 
-  <main data-dc-tpl="24" id="content" style="max-width: 688px; margin: 0px auto; padding: 80px 24px 0px;">
-    <article data-dc-tpl="25" class="body" style="display: flex; flex-direction: column; gap: 24px;">
+  <main data-dc-tpl="24" id="content" style="max-width: 688px; margin: 0px auto; padding: var(--space-page) 24px 0;">
+    <article data-dc-tpl="25" class="body" style="display: flex; flex-direction: column; gap: 16px;">
 
       <div data-dc-tpl="26" style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
         <a data-dc-tpl="27" href="Writing.dc.html" style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-2); height: 32px;">
@@ -290,8 +311,8 @@ html:has(.pscrim){overflow:hidden}
         <button data-dc-tpl="30" class="button" aria-label="Copy page as Markdown" aria-live="polite"><svg data-dc-tpl="31" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><rect data-dc-tpl="32" x="1" y="3.5" width="14" height="9" rx="2" style="fill: none; stroke: currentcolor; stroke-width: 1.5;"></rect><path data-dc-tpl="33" d="M3.75 10.25v-4.5h1.25l1.25 1.75 1.25-1.75h1.25v4.5H7.5v-2.75l-1.25 1.6-1.25-1.6v2.75zM11.5 10.5l-1.9-2.15h1.2V5.75h1.4v2.6h1.2z" style="fill: currentcolor; stroke: none;"></path></svg><span class="sc-interp">Copy page</span></button>
       </div>
 
-      <header data-dc-tpl="34" style="display: flex; flex-direction: column; gap: 12px; padding-bottom: 12px;">
-        <h1 data-dc-tpl="35" style="margin: 0px; font-size: 28px; line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; text-wrap: balance;">Rebuilding this site</h1>
+      <header data-dc-tpl="34" style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px; padding-bottom: 16px;">
+        <h1 data-dc-tpl="35" style="margin: 0px; font-size: var(--fs-display); line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; text-wrap: balance;">Rebuilding this site</h1>
         <div data-dc-tpl="36" class="meta" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 14px; color: var(--text-3);">
             <time data-dc-tpl="37" datetime="2026-11-09"><span data-dc-tpl="38" class="dlong">November 9, 2026</span><span data-dc-tpl="39" class="dshort">Nov 9, 2026</span></time>
             <span data-dc-tpl="40" class="grp"><span data-dc-tpl="41" aria-hidden="true">·</span><a data-dc-tpl="42" class="topiclink" href="Writing.dc.html" aria-label="More posts about Design engineering">Design engineering</a></span>
@@ -302,26 +323,26 @@ html:has(.pscrim){overflow:hidden}
       <p data-dc-tpl="46">For a few years my site was a hosted profile: one column, small type, dates in the margin, nothing to configure. When the service shut down, I exported my profile and never quite replaced it.</p>
       <p data-dc-tpl="47">This site is the replacement. I wanted to keep what that profile got right, and add the two things it never gave me: room to write up projects properly, and a blog.</p>
 
-      <h2 data-dc-tpl="48" id="kept" class="h" style="margin-top: 24px;"><a data-dc-tpl="49" class="anchor" href="#kept" aria-label="Link to this section">#</a>What I kept</h2>
+      <h2 data-dc-tpl="48" id="kept" class="h" style="margin-top: 32px;"><a data-dc-tpl="49" class="anchor" href="#kept" aria-label="Link to this section">#</a>What I kept</h2>
       <p data-dc-tpl="50">One column, about 640 pixels wide. Dates live in a left gutter, so a whole career scans in a second. One typeface. Grey for context, black for the thing itself. No cards, unless the content is something you can open.</p>
 
-      <h2 data-dc-tpl="51" id="motion" class="h" style="margin-top: 24px;"><a data-dc-tpl="52" class="anchor" href="#motion" aria-label="Link to this section">#</a>Spending the motion budget</h2>
+      <h2 data-dc-tpl="51" id="motion" class="h" style="margin-top: 32px;"><a data-dc-tpl="52" class="anchor" href="#motion" aria-label="Link to this section">#</a>Spending the motion budget</h2>
       <p data-dc-tpl="53">I wanted the site to feel crafted without feeling busy, so motion follows a few rules.<a data-dc-tpl="54" class="fn" id="ref-1" href="#note-1" role="doc-noteref" aria-label="Note 1">1</a> Pages arrive in one quick motion. Everything else responds to something you did, and interface feedback stays under 300 milliseconds.</p>
       <p data-dc-tpl="55">Easing does most of the work. Things entering the screen use ease-out: they arrive fast and settle, which reads as responsive. Linear is for things that never stop, like a spinner. Press replay and compare.</p>
 
       <figure data-dc-tpl="56" style="margin: 8px 0px; display: flex; flex-direction: column; gap: 16px; padding: 20px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--bg);">
         <div data-dc-tpl="57" class="go" style="display: flex; flex-direction: column; gap: 12px;">
           <div data-dc-tpl="58" style="display: flex; align-items: center; gap: 16px;">
-            <span data-dc-tpl="59" style="flex: 0 0 72px; font-size: 13px; color: var(--text-3);">linear</span>
+            <span data-dc-tpl="59" style="flex: 0 0 72px; font-size: 14px; color: var(--text-3);">linear</span>
             <div data-dc-tpl="60" class="track lin" style="flex: 1 1 0%;"><div data-dc-tpl="61" class="runner"><span data-dc-tpl="62" class="d" style="background: var(--text-3);"></span></div></div>
           </div>
           <div data-dc-tpl="63" style="display: flex; align-items: center; gap: 16px;">
-            <span data-dc-tpl="64" style="flex: 0 0 72px; font-size: 13px; color: var(--text-3);">ease-out</span>
+            <span data-dc-tpl="64" style="flex: 0 0 72px; font-size: 14px; color: var(--text-3);">ease-out</span>
             <div data-dc-tpl="65" class="track out" style="flex: 1 1 0%;"><div data-dc-tpl="66" class="runner"><span data-dc-tpl="67" class="d" style="background: var(--accent);"></span></div></div>
           </div>
         </div>
         <div data-dc-tpl="68" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
-          <figcaption data-dc-tpl="69" style="font-size: 13px; color: var(--text-3);">Same distance, same 600 ms. Only the curve changes.</figcaption>
+          <figcaption data-dc-tpl="69" style="font-size: 14px; color: var(--text-3);">Same distance, same 600 ms. Only the curve changes.</figcaption>
           <button data-dc-tpl="70" class="button">Replay</button>
         </div>
       </figure>
@@ -333,10 +354,10 @@ html:has(.pscrim){overflow:hidden}
         <pre data-dc-tpl="77" tabindex="0" role="region" aria-label="CSS for the page entrance"><code data-dc-tpl="78"><span data-dc-tpl="79" class="line"><span data-dc-tpl="80" class="tk-c">/* the page arrives as one piece */</span></span><span data-dc-tpl="81" class="line"><span data-dc-tpl="82" class="tk-k">@keyframes</span> <span data-dc-tpl="83" class="tk-n">page-in</span> <span data-dc-tpl="84" class="tk-p">{</span></span><span data-dc-tpl="85" class="line">  <span data-dc-tpl="86" class="tk-n">from</span> <span data-dc-tpl="87" class="tk-p">{</span> <span data-dc-tpl="88" class="tk-n">opacity</span><span data-dc-tpl="89" class="tk-p">:</span> <span data-dc-tpl="90" class="tk-s">0</span><span data-dc-tpl="91" class="tk-p">;</span> <span data-dc-tpl="92" class="tk-n">transform</span><span data-dc-tpl="93" class="tk-p">:</span> translateY<span data-dc-tpl="94" class="tk-p">(</span><span data-dc-tpl="95" class="tk-s">6px</span><span data-dc-tpl="96" class="tk-p">)</span><span data-dc-tpl="97" class="tk-p">;</span> <span data-dc-tpl="98" class="tk-p">}</span></span><span data-dc-tpl="99" class="line"><span data-dc-tpl="100" class="tk-p">}</span></span><span data-dc-tpl="101" class="line"><span data-dc-tpl="102" class="tk-k">@keyframes</span> <span data-dc-tpl="103" class="tk-n">page-fade</span> <span data-dc-tpl="104" class="tk-p">{</span></span><span data-dc-tpl="105" class="line">  <span data-dc-tpl="106" class="tk-n">from</span> <span data-dc-tpl="107" class="tk-p">{</span> <span data-dc-tpl="108" class="tk-n">opacity</span><span data-dc-tpl="109" class="tk-p">:</span> <span data-dc-tpl="110" class="tk-s">0</span><span data-dc-tpl="111" class="tk-p">;</span> <span data-dc-tpl="112" class="tk-p">}</span></span><span data-dc-tpl="113" class="line"><span data-dc-tpl="114" class="tk-p">}</span></span><span data-dc-tpl="115" class="line"><span data-dc-tpl="116" class="tk-n">main</span> <span data-dc-tpl="117" class="tk-p">{</span></span><span data-dc-tpl="118" class="line">  <span data-dc-tpl="119" class="tk-n">animation</span><span data-dc-tpl="120" class="tk-p">:</span> page-in <span data-dc-tpl="121" class="tk-s">250ms</span> cubic-bezier<span data-dc-tpl="122" class="tk-p">(</span><span data-dc-tpl="123" class="tk-s">.22</span><span data-dc-tpl="124" class="tk-p">,</span> <span data-dc-tpl="125" class="tk-s">1</span><span data-dc-tpl="126" class="tk-p">,</span> <span data-dc-tpl="127" class="tk-s">.36</span><span data-dc-tpl="128" class="tk-p">,</span> <span data-dc-tpl="129" class="tk-s">1</span><span data-dc-tpl="130" class="tk-p">)</span> backwards<span data-dc-tpl="131" class="tk-p">;</span></span><span data-dc-tpl="132" class="line"><span data-dc-tpl="133" class="tk-p">}</span></span><span data-dc-tpl="134" class="line"><span data-dc-tpl="135" class="tk-k">@view-transition</span> <span data-dc-tpl="136" class="tk-p">{</span> <span data-dc-tpl="137" class="tk-n">navigation</span><span data-dc-tpl="138" class="tk-p">:</span> auto<span data-dc-tpl="139" class="tk-p">;</span> <span data-dc-tpl="140" class="tk-p">}</span></span><span data-dc-tpl="141" class="line"><span data-dc-tpl="142" class="tk-c">/* reduced motion: still a fade, just no movement */</span></span><span data-dc-tpl="143" class="line"><span data-dc-tpl="144" class="tk-k">@media</span> <span data-dc-tpl="145" class="tk-p">(</span><span data-dc-tpl="146" class="tk-n">prefers-reduced-motion</span><span data-dc-tpl="147" class="tk-p">:</span> reduce<span data-dc-tpl="148" class="tk-p">)</span> <span data-dc-tpl="149" class="tk-p">{</span></span><span data-dc-tpl="150" class="line">  <span data-dc-tpl="151" class="tk-n">main</span> <span data-dc-tpl="152" class="tk-p">{</span> <span data-dc-tpl="153" class="tk-n">animation</span><span data-dc-tpl="154" class="tk-p">:</span> page-fade <span data-dc-tpl="155" class="tk-s">150ms</span> ease-out backwards<span data-dc-tpl="156" class="tk-p">;</span> <span data-dc-tpl="157" class="tk-p">}</span></span><span data-dc-tpl="158" class="line"><span data-dc-tpl="159" class="tk-p">}</span></span></code></pre>
       </div>
 
-      <h2 data-dc-tpl="160" id="details" class="h" style="margin-top: 24px;"><a data-dc-tpl="161" class="anchor" href="#details" aria-label="Link to this section">#</a>Details you only notice when they’re missing</h2>
+      <h2 data-dc-tpl="160" id="details" class="h" style="margin-top: 32px;"><a data-dc-tpl="161" class="anchor" href="#details" aria-label="Link to this section">#</a>Details you only notice when they’re missing</h2>
       <p data-dc-tpl="162">Hover any list and the other rows step back. Search is one keystroke away on every page. The header knows how far you’ve read. None of it is necessary, and all of it is the kind of detail I care about in product work.</p>
 
-      <h2 data-dc-tpl="163" id="next" class="h" style="margin-top: 24px;"><a data-dc-tpl="164" class="anchor" href="#next" aria-label="Link to this section">#</a>What’s next</h2>
+      <h2 data-dc-tpl="163" id="next" class="h" style="margin-top: 32px;"><a data-dc-tpl="164" class="anchor" href="#next" aria-label="Link to this section">#</a>What’s next</h2>
       <p data-dc-tpl="165">Proper write-ups for the projects, and notes on what I’m building with AI agents. If there’s something you’d like me to write about, <a data-dc-tpl="166" href="mailto:eliasgarciadev@gmail.com">send me an email</a>.</p>
 
       <section data-dc-tpl="167" class="notes" role="doc-endnotes" aria-labelledby="notes-h">
@@ -347,19 +368,19 @@ html:has(.pscrim){overflow:hidden}
         </ol>
       </section>
 
-      <footer data-dc-tpl="179" style="margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+      <footer data-dc-tpl="179" style="margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
         <div data-dc-tpl="180" style="display: flex; align-items: center; gap: 12px;">
           <img data-dc-tpl="181" src="../assets/avatar.jpg" alt="" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block;">
           <address data-dc-tpl="182" style="font-style: normal; display: flex; flex-direction: column; line-height: 1.35;">
             <a data-dc-tpl="183" href="Main.dc.html" rel="author" style="font-weight: 500; font-size: 14px;">Elías García</a>
-            <span data-dc-tpl="184" style="font-size: 13px; color: var(--text-3);">Software engineer</span>
+            <span data-dc-tpl="184" style="font-size: 14px; color: var(--text-3);">Software engineer</span>
           </address>
         </div>
       </footer>
 
-      <nav data-dc-tpl="185" aria-label="More posts" style="margin-top: 8px;">
+      <nav data-dc-tpl="185" aria-label="More posts" style="margin-top: 16px;">
         <a data-dc-tpl="186" class="pn prev" href="#" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-lg);">
-          <span data-dc-tpl="187" style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-3);"><svg data-dc-tpl="188" viewBox="0 0 16 16" aria-hidden="true"><path data-dc-tpl="189" d="M10 3.5L5.5 8l4.5 4.5"></path></svg>Previous post</span>
+          <span data-dc-tpl="187" style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-3);"><svg data-dc-tpl="188" viewBox="0 0 16 16" aria-hidden="true"><path data-dc-tpl="189" d="M10 3.5L5.5 8l4.5 4.5"></path></svg>Previous post</span>
           <span data-dc-tpl="190" style="font-weight: 500;">A job radar made of markdown files</span>
         </a>
       </nav>
@@ -367,13 +388,13 @@ html:has(.pscrim){overflow:hidden}
     </article>
   </main>
 
-  <footer data-dc-tpl="191" style="margin-top: 96px; border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);">
-    <div data-dc-tpl="192" style="max-width: 688px; margin: 0px auto; padding: 12px 24px; min-height: 64px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-3);">
+  <footer data-dc-tpl="191" style="margin-top: var(--space-footer); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);">
+    <div data-dc-tpl="192" style="max-width: 688px; margin: 0px auto; padding: 12px 24px; min-height: 64px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: 14px; color: var(--text-3);">
       <span data-dc-tpl="193" style="display: flex; align-items: center; gap: 12px;">
         <svg data-dc-tpl="194" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="195" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="196" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="197" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="198" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="199" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
         Elías García, 2026
       </span>
-      <span data-dc-tpl="200" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="201"><time data-dc-tpl="202" datetime="20:34"><span class="sc-interp">20:34</span></time> in Portugal</span><span data-dc-tpl="203" aria-hidden="true">·</span><span data-dc-tpl="204"><span class="sc-interp">1h behind you</span></span></span>
+      <span data-dc-tpl="200" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="201"><time data-dc-tpl="202" datetime="16:46"><span class="sc-interp">16:46</span></time> in Portugal</span><span data-dc-tpl="203" aria-hidden="true">·</span><span data-dc-tpl="204"><span class="sc-interp">1h behind you</span></span></span>
     </div>
   </footer>
 

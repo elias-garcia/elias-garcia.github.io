@@ -3,7 +3,13 @@ import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import WritingInPlace from "../../../components/WritingInPlace.astro";
 import WritingIndex from "../../../components/WritingIndex.astro";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { getPage, getPosts, getTopics } from "../../../lib/content.ts";
+import {
+  getPage,
+  getPosts,
+  getProfile,
+  getTopics,
+} from "../../../lib/content.ts";
+import { fill } from "../../../lib/template.ts";
 
 export const getStaticPaths = (async () => {
   const posts = await getPosts();
@@ -16,14 +22,18 @@ export const getStaticPaths = (async () => {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { topic, posts } = Astro.props;
-const [page, topicPage] = await Promise.all([
+const [page, topicPage, profile] = await Promise.all([
   getPage("writing"),
   getPage("writing-topic"),
+  getProfile(),
 ]);
-const fill = (text: string) => text.replaceAll("{topic}", topic.label);
+const values = { topic: topic.label, name: profile.name };
 ---
 
-<BaseLayout title={fill(topicPage.title)} description={fill(topicPage.intro)}>
+<BaseLayout
+  title={fill(topicPage.title, values)}
+  description={fill(topicPage.intro, values)}
+>
   <WritingInPlace slot="head" />
   <WritingIndex page={page} posts={posts} topic={topic} />
 </BaseLayout>

@@ -73,68 +73,91 @@ const structuredData = blogPosting(
   <link slot="head" rel="alternate" type="text/markdown" href={markdown} />
   <StructuredData slot="head" data={structuredData} />
   <article class="post">
-    <div class="top">
-      <BackLink href="/writing" label={writing.title} />
-      <CopyButton label="Copy page" name="Copy page as Markdown" url={markdown}>
-        <svg viewBox="0 0 16 16" aria-hidden="true">
-          <rect x="1" y="3.5" width="14" height="9" rx="2"></rect>
-          <path
-            d="M3.75 10.25v-4.5h1.25l1.25 1.75 1.25-1.75h1.25v4.5H7.5v-2.75l-1.25 1.6-1.25-1.6v2.75zM11.5 10.5l-1.9-2.15h1.2V5.75h1.4v2.6h1.2z"
-            fill="currentColor"
-            stroke="none"
-          ></path>
-        </svg>
-      </CopyButton>
+    <div class="reading">
+      <div class="head">
+        <div class="top">
+          <BackLink href="/writing" label={writing.title} />
+          <CopyButton
+            label="Copy page"
+            name="Copy page as Markdown"
+            url={markdown}
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <rect x="1" y="3.5" width="14" height="9" rx="2"></rect>
+              <path
+                d="M3.75 10.25v-4.5h1.25l1.25 1.75 1.25-1.75h1.25v4.5H7.5v-2.75l-1.25 1.6-1.25-1.6v2.75zM11.5 10.5l-1.9-2.15h1.2V5.75h1.4v2.6h1.2z"
+                fill="currentColor"
+                stroke="none"
+              ></path>
+            </svg>
+          </CopyButton>
+        </div>
+        <header class="intro">
+          <DisplayTitle>{title}</DisplayTitle>
+          <p class="meta">
+            <MetaLine>
+              <MetaItem>
+                <time datetime={isoDate(date)}>
+                  <span class="long">{formatLongDate(date)}</span>
+                  <span class="short">{formatMediumDate(date)}</span>
+                </time>
+              </MetaItem>
+              <MetaItem>
+                <a
+                  class="topic"
+                  href={`/writing/topics/${topic.slug}`}
+                  aria-label={`More posts about ${label}`}
+                >
+                  {label}
+                </a>
+              </MetaItem>
+              <MetaItem>{readingTime}</MetaItem>
+            </MetaLine>
+          </p>
+        </header>
+      </div>
+      <Prose>
+        <Content components={mdxComponents} />
+      </Prose>
     </div>
-    <header class="intro">
-      <DisplayTitle>{title}</DisplayTitle>
-      <p class="meta">
-        <MetaLine>
-          <MetaItem>
-            <time datetime={isoDate(date)}>
-              <span class="long">{formatLongDate(date)}</span>
-              <span class="short">{formatMediumDate(date)}</span>
-            </time>
-          </MetaItem>
-          <MetaItem>
-            <a
-              class="topic"
-              href={`/writing/topics/${topic.slug}`}
-              aria-label={`More posts about ${label}`}
-            >
-              {label}
-            </a>
-          </MetaItem>
-          <MetaItem>{readingTime}</MetaItem>
-        </MetaLine>
-      </p>
-    </header>
-    <Prose>
-      <Content components={mdxComponents} />
-    </Prose>
-    <AuthorFooter name={profile.name} role={profile.role} />
-    <PreviousNext
-      name="More posts"
-      previous={
-        previous && {
-          href: `/writing/${previous.id}`,
-          title: previous.data.title,
-          label: "Previous post",
+    <div class="end">
+      <AuthorFooter name={profile.name} role={profile.role} />
+      <PreviousNext
+        name="More posts"
+        previous={
+          previous && {
+            href: `/writing/${previous.id}`,
+            title: previous.data.title,
+            label: "Previous post",
+          }
         }
-      }
-      next={
-        next && {
-          href: `/writing/${next.id}`,
-          title: next.data.title,
-          label: "Next post",
+        next={
+          next && {
+            href: `/writing/${next.id}`,
+            title: next.data.title,
+            label: "Next post",
+          }
         }
-      }
-    />
+      />
+    </div>
   </article>
 </BaseLayout>
 
 <style>
   .post {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  .reading,
+  .end {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .head {
     display: flex;
     flex-direction: column;
     gap: var(--space-6);
@@ -151,7 +174,6 @@ const structuredData = blogPosting(
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    padding-block-end: var(--space-3);
   }
 
   .meta {

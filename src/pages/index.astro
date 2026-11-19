@@ -80,12 +80,11 @@ const newestJob = work[0]?.id;
           </div>
         </div>
       </div>
-      <div class="about">
-        <h2>About</h2>
+      <Section id="about" title="About">
         {profile.about.map((paragraph) => (
-          <p>{paragraph}</p>
+          <p class="about">{paragraph}</p>
         ))}
-      </div>
+      </Section>
     </header>
 
     <Section id="projects" title="Projects">
@@ -184,7 +183,7 @@ const newestJob = work[0]?.id;
   .home {
     display: flex;
     flex-direction: column;
-    gap: var(--space-18);
+    gap: var(--space-section);
   }
 
   .intro {
@@ -227,6 +226,7 @@ const newestJob = work[0]?.id;
 
   .role {
     color: var(--text-2);
+    line-height: var(--leading-body);
   }
 
   .actions {
@@ -243,7 +243,7 @@ const newestJob = work[0]?.id;
     min-block-size: var(--control-h);
     padding-inline: var(--space-1);
     color: var(--text-2);
-    font-size: var(--text-meta);
+    font-size: var(--text-small);
   }
 
   .dot {
@@ -279,25 +279,14 @@ const newestJob = work[0]?.id;
   }
 
   .about {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-
-    h2 {
-      font-size: var(--text-small);
-      font-weight: var(--weight-medium);
-    }
-
-    p {
-      max-inline-size: var(--measure);
-      color: var(--text-2);
-    }
+    color: var(--text-2);
+    line-height: var(--leading-body);
   }
 
   .tiles {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-1) var(--space-5);
+    gap: var(--space-8) var(--space-6);
 
     @media (width >= 40rem) {
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -315,7 +304,7 @@ const newestJob = work[0]?.id;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-1) var(--space-6);
-    min-block-size: var(--space-9);
+    min-block-size: var(--contact-row);
 
     dt {
       flex: 0 0 var(--gutter);

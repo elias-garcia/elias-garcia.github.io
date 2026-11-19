@@ -34,7 +34,7 @@ const copy = await getSearchCopy();
     border-radius: var(--r-md);
     background: var(--bg);
     color: var(--text-2);
-    font-size: var(--text-meta);
+    font-size: var(--text-small);
     cursor: pointer;
     transition:
       border-color var(--dur) var(--ease),
@@ -62,7 +62,7 @@ const copy = await getSearchCopy();
     }
 
     @media (width < 40rem) {
-      inline-size: var(--space-9);
+      inline-size: var(--search-button-sm);
       padding: 0;
     }
   }

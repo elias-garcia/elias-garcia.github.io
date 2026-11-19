@@ -128,10 +128,6 @@ const Row = href === undefined ? "div" : "a";
     white-space: nowrap;
   }
 
-  .title {
-    font-size: var(--text-small);
-  }
-
   .line.full {
     overflow: visible;
     white-space: normal;
@@ -140,7 +136,7 @@ const Row = href === undefined ? "div" : "a";
   .line,
   .meta {
     color: var(--text-2);
-    font-size: var(--text-micro);
+    font-size: var(--text-small);
 
     &:empty {
       display: none;
@@ -155,7 +151,7 @@ const Row = href === undefined ? "div" : "a";
   .hint {
     inline-size: var(--icon-md);
     color: var(--text-3);
-    font-size: var(--text-meta);
+    font-size: var(--text-small);
     opacity: 0;
     transition: opacity var(--dur-fast) var(--ease);
 

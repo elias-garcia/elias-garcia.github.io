@@ -59,44 +59,66 @@ Rules:
 
 ### 2.2 Typography
 
-One family, **Instrument Sans** (Google Fonts, via Astro's Fonts API), weights 400 / 500 / 600 only, preloaded and loaded with `font-display: fallback`: a short wait for the font, then a metric-matched Arial, then the native stack (`ui-sans-serif, system-ui, sans-serif`). A cached font is ready within the short wait, so moving between pages doesn't shift the text. Code uses the system monospace stack.
+One family, **Instrument Sans** (Google Fonts, via Astro's Fonts API), weights 400 / 500 / 600 only, preloaded and loaded with `font-display: fallback`: a short wait for the font, then a metric-matched Arial, then the native stack (`ui-sans-serif, system-ui, sans-serif`). A cached font is ready within the short wait, so moving between pages doesn't shift the text. Code uses the system monospace stack. Sizes are set in rem (16px = 1rem); this spec writes px.
+
+**The rule: 16px for everything you read or navigate with, on every page.** Paragraphs, titles, the lines under them, dates, job bullets and the header menu are all 16. Hierarchy comes from **colour and weight first** (`--text` 500 for titles, `--text-2` for the line under them, `--text-3` for dates), as on read.cv; size steps in only for page titles and inside posts. **14 is only for facts and compact controls.** Six sizes: **32, 24, 20, 16, 14, 12** (a 1.25 scale from the base). There is no 18.
 
 | Style | Size · weight · line height | Tracking | Use | Element |
 |---|---|---|---|---|
-| Display | 28 · 600 · 1.2 | −0.02em | Post and case study titles; the "404" label on the 404 page (`--text-3`, `aria-hidden`) | `h1`; `p` (404 label) |
-| Page title | 20 · 600 · 1.35 | −0.01em | Home name, Projects, Writing, 404 | `h1` |
-| Heading | 18 · 600 · 1.35 | −0.01em | Section headings in posts and case studies | `h2` |
-| Lead | 18 · 400 · 1.6 | 0 | Case study intro | `p` |
-| Long-form | 16 · 400 · 1.75 | 0 | Post and case study paragraphs | `p` |
-| Body | 15 · 400/500 · 1.6 | 0 | Default text; list and card titles at 500 (1.35) | `p`, `h3` |
-| Small | 14 · 400/500 · 1.6 | 0 | Descriptions; section labels at 500 | `p`, `h2` |
-| Meta | 13 · 400 · 1.6 | 0 | Dates, captions, buttons, chips, footer | `time`, `figcaption` |
-| Micro | 12 · 400/500 · 1.35 | 0 | Chip counts, footnote markers, key hints, menu descriptions | `span` |
-| Code | 13 · 400 · 1.75 | 0 | Code blocks | `pre`, `code` |
+| Display | 32 (28 below `sm`) · 600 · 1.2 | −0.02em | Post and case study titles; the "404" label on the 404 page (`--text-3`, `aria-hidden`) | `h1`; `p` (404 label) |
+| Title | 24 · 600 · 1.35 | −0.01em | `h2` in posts and case studies | `h2` |
+| Subtitle | 20 · 600 / 400 · 1.35 | −0.01em at 600 | Page titles (Home name, Projects, Writing, 404); `h3` and the Notes heading in posts; the case study intro (400, line height 1.5) | `h1`, `h3`, `p` |
+| Body | 16 · 400 · 1.6 | 0 | All running text, on every page: post and case study paragraphs and lists, job bullets, About, page intros, callout text | `p`, `li` |
+| Label | 16 · 500 / 600 · 1.5 | 0 | Section headings on Home, Writing, Projects and 404 (500, `--text`); item, tile and card titles (500, line height 1.35); `h4` in posts (600); the header menu and the search input and result titles (400) | `h2`, `h3`, `h4`, `a` |
+| Second line | 16 · 400 · 1.5 | 0 | The `--text-2` line under a title: job role, post and project summaries, talk venue, course provider. Dates in the left column are the same size in `--text-3` | `span`, `time` |
+| Small | 14 · 400 / 500 · 1.5 | 0 | Facts and compact controls only: status and metadata lines, captions, buttons, chips, "All posts" / "View project" links, back links, footer, tables, notes, search summaries and meta | `span`, `time` |
+| Micro | 12 · 400 / 500 · 1.35 | 0 | Chip counts, footnote markers, key hints, Download CV menu sizes and descriptions, search group labels, code language label | `span` |
+| Code | 14 · 400 · 1.7 | 0 | Code blocks (system monospace) | `pre`, `code` |
+
+Body, Label and Second line are all `--text-body`; they differ only in weight, colour and line height.
 
 Nothing a visitor reads is below 12px. Labels inside the decorative project illustrations (9–11px, one 22px number) are part of the drawings and hidden from screen readers.
 
-Line heights are exactly five: 1 (single-line controls), 1.2, 1.35, 1.6, 1.75.
+Line heights: 1 (single-line controls), 1.2 (display), 1.35 (headings and titles), 1.5 (single lines and small text), 1.6 (body), 1.7 (code).
+
+The display size is a token, so it changes in one place: `--text-display: 2rem`, `1.75rem` below `sm` (`tokens.css`).
+
+**Line length.** The 640px text column is the measure, and it stays 640: at 16px a post line holds 85–91 characters, the top of the 45–90 range USWDS gives for running text. Don't widen the column (720px would put posts at about 100 characters) and don't add a `max-width` in `ch`: `ch` is the width of a "0", 10.9px at 16px in Instrument Sans, so 62ch would be wider than the column and never apply. On phones lines run about 40 characters.
 
 ### 2.3 Spacing
 
-A 4px grid. Every padding, margin, gap and offset is a multiple of 4. Only 1–2px hairlines sit off the grid.
+Ten steps on a 4px grid, each with a job. Space follows **proximity**: a heading sits closer to its own content than to what came before it, and the gap grows with the size of the break. Section headings are the size of the text, so **the space above them does the separating**. 20px is only for padding inside boxed components (code lines, captions, demos, callouts), never between blocks. Only 1–2px hairlines sit off the grid.
 
-| Value | Typical use |
+| Value | Use |
 |---|---|
-| 4 | Title to the line below it, icon to label |
-| 8 | Gaps inside controls; metadata dot gaps |
-| 12 | List row padding, chip gaps, footer bar padding |
-| 16 | Card and menu padding, gaps between cards |
-| 20 | Prose block padding, facts row padding |
-| 24 | Page side padding, gap after the 112px gutter, avatar to intro text |
-| 32 | Between a page intro and its list (Home, Projects, Writing) |
-| 40 | Between a post and its author footer |
-| 48 | Top of every page on phones |
-| 56 | Bottom padding of pages |
-| 72 | Between Home sections |
-| 80 | Top of every page (desktop) |
-| 96 | Above the footer |
+| 4 | Title to its meta line, icon to label |
+| 8 | Page title to its intro; `h4` to its text; between list items in posts; gaps inside controls; metadata dot gaps |
+| 12 | Row padding; a display title to its subtitle; `h3` to its text; chip gaps |
+| 16 | Paragraph to paragraph; section heading to its content; `h2` to its text; card and menu padding |
+| 24 | Around figures, code blocks and tables in posts; back link to title; intro to the topic chips; page side padding; column gaps |
+| 32 | Page header to its content; above an `h3`; between Writing years; between project tiles on phones |
+| 48 | Above an `h2` in posts and case studies |
+| 64 | Top of every page (desktop); before a post's Notes and author footer; between sections and above the footer on phones |
+| 80 | Between sections (desktop) |
+| 96 | Above the footer (desktop) |
+
+**Page rhythm.** Three page-level gaps step down on phones. They are tokens (`tokens.css`), so every page shares them:
+
+| Token | Desktop | Below `sm` | Use |
+|---|---|---|---|
+| `--space-page` | 64 | 32 | Top padding of `main`, under the header |
+| `--space-section` | 80 | 64 | Between Home sections |
+| `--space-footer` | 96 | 64 | Above the footer |
+
+**Where each gap comes from** (measured between boxes):
+
+- **Home:** `main` is a flex column with `gap: var(--space-section)`. The intro header is a column with 32 between the name block and About; About is a 16-gap column (heading, then two paragraphs 16 apart). Every section is a flex column with `gap: 16px` between its heading row and its content, and the heading has no margins. List rows keep their 12px padding, so the first title sits 28 below the heading.
+- **Writing and topic pages:** intro block (title, 8, text) then 24 to the topic chips; 32 to the list; year groups 32 apart, each a 16-gap column (year heading, then rows).
+- **Projects, 404:** title, 8, intro; 32 to the content. 404 sections use the same 16 heading gap as Home.
+- **Post header:** back link and Copy page, 24, title, 12, metadata line, 32, first paragraph.
+- **Case study header:** back link, 24, title, 12, intro (20px), 24, the facts (16px padding between their two hairlines); then 48 to the illustration and 48 to the first heading.
+- **Prose** (posts, case studies, the prose test post `src/content/writing/prose.mdx`): see §3 Prose.
+- **Project tiles on phones:** 32 between tiles (the last one adds nothing below it).
 
 ### 2.4 Radius
 
@@ -171,7 +193,8 @@ Icons always sit next to a text label, or carry an accessible name when alone. D
 
 One breakpoint, **640px** (Tailwind's `sm`), and nothing else: no other media queries. **One exception, by design:** photo attachments switch on their row's own width with a container query (`@container (width < 436px)`). 436px is exactly where the list row's flex-wrap moves the date above the title (112 + 24 + 300), so the photos change layout at the same moment as the row; a screen breakpoint can't express that, because a 600px window still has the date column. No other container queries. Phone rules apply below it (`width < 40rem`). Grids use explicit column counts per breakpoint, never `auto-fit`/`minmax` (that creates in-between column counts and orphaned items). Below 640px (phones, and narrow tablets or windows):
 - the header search shows only its icon (no "⌘K");
-- pages start 48px below the header instead of 80px;
+- the page-rhythm tokens step down (§2.3): pages start 32px below the header instead of 64, sections sit 64 apart instead of 80, and the footer 64 below the content instead of 96;
+- the display title is 28px instead of 32 (`--text-display`);
 - the footer drops the offset ("· 5h ahead of you") and keeps one row;
 - the Home avatar is 80px and sits above the intro text, left-aligned with it; from 640px it is 104px beside the text;
 - work rows put the + beside the date and the company/role below, and an open row's bullets start under the company name (the empty 112px date column is dropped);
@@ -188,29 +211,29 @@ Talk photos follow the row, not the screen: full width with a sideways scroll on
 Each component appears exactly once in the design system. Live versions, split by purpose: `reference/components.html` (**interface**: layout, actions, search) and `reference/components-2.html` (**content**: lists and cards, text and metadata, prose), with `screenshots/components.png` and `screenshots/components-2.png`.
 
 ### Layout
-- **Header.** Sticky, 64px, translucent `--bg` with backdrop blur, hairline at the bottom. Logo (links Home) · Home · Projects · Writing · search button (magnifier + "⌘K", icon only on phones). The current section is `--accent` with a 1px underline; inside a case study or post, its parent (Projects/Writing) is current with `aria-current="true"`; on the page itself `aria-current="page"`. Same on every page.
-- **Footer.** Mirrors the header: 64px bar, hairline on top, content centred; grows only if the two halves wrap. Left: logo + "Elías García, 2026". Right: `<time>12:09</time> in Portugal · 5h ahead of you`. 96px above it; at the bottom of the window on short pages (the body is a flex column with `min-block-size: 100dvh`, `main` flexes).
+- **Header.** Sticky, 64px, translucent `--bg` with backdrop blur, hairline at the bottom. Logo (links Home) · Home · Projects · Writing (16px, the base size) · search button (magnifier + "⌘K", icon only on phones). The current section is `--accent` with a 1px underline; inside a case study or post, its parent (Projects/Writing) is current with `aria-current="true"`; on the page itself `aria-current="page"`. Same on every page.
+- **Footer.** Mirrors the header: 64px bar, hairline on top, content centred; grows only if the two halves wrap. Left: logo + "Elías García, 2026". Right: `<time>12:09</time> in Portugal · 5h ahead of you`. `--space-footer` above it (96, 64 on phones); at the bottom of the window on short pages (the body is a flex column with `min-block-size: 100dvh`, `main` flexes).
 - **Footer clock.** Portugal time via `Intl.DateTimeFormat(…, { timeZone: 'Europe/Lisbon' })`, refreshed every 30s. The offset compares with the visitor's clock, rounded to 15 minutes: "same time as you", "5h ahead of you", "5h 30m behind you". The HTML ships with "Portugal" only; the script adds the time and offset. Hidden on phones.
 - **Skip link.** "Skip to content", hidden until the first Tab, then a dark pill at the top left; jumps to `#content`, the same on every page.
 
 ### Actions
-- **Button.** The only action component. 32px, `--control` fill, `--r-full`, 13px label in `--text-2`, optional 16px icon, 8px gap, 12px side padding. Hover `--control-hover`; press scale .97. Never indigo. On a grey surface (the code block) its fill turns `--bg`. Uses: Download CV, Subscribe (Writing), Copy page (posts), Replay and Copy (inside posts).
-- **Menu button: Download CV.** Label + chevron (no leading icon); the chevron rotates 180° while open. Opens a 320px menu under the button (`--r-lg`, `--shadow-overlay`), with the overlay motion (§2.5): it grows from the button. Two links in the search-row style: **PDF · 120 KB**, "Formatted for reading, printing and sharing" and **Markdown · 4 KB**, "Plain text for AI tools and agents". It is a short list of links in a popover, not a `role="menu"`: Tab moves through the links. Esc or choosing a format closes it and returns focus to the button; a click outside or tabbing past the last link closes it and leaves focus where the visitor moved it. It also closes as soon as the page scrolls (it would drift from its button and cover the sticky header), except while focus is in the menu, so tabbing through it keeps it open; a mouse wheel always closes it. File sizes are computed at build time.
+- **Button.** The only action component. 32px, `--control` fill, `--r-full`, 14px label in `--text-2`, optional 16px icon, 8px gap, 12px side padding. Hover `--control-hover`; press scale .97. Never indigo. On a grey surface (the code block) its fill turns `--bg`. Uses: Download CV, Subscribe (Writing), Copy page (posts), Replay and Copy (inside posts).
+- **Menu button: Download CV.** Label + chevron (no leading icon); the chevron rotates 180° while open. Opens a 320px menu under the button (`--r-lg`, `--shadow-overlay`), with the overlay motion (§2.5): it grows from the button. Two links laid out like search rows (icon tile, title, one description line) but at the **compact-control sizes**, because the menu hangs off a 14px button: format name 14, size 12 `--text-3`, description 12 `--text-2`: **PDF · 120 KB**, "Formatted for reading, printing and sharing" and **Markdown · 4 KB**, "Plain text for AI tools and agents". It is a short list of links in a popover, not a `role="menu"`: Tab moves through the links. Esc or choosing a format closes it and returns focus to the button; a click outside or tabbing past the last link closes it and leaves focus where the visitor moved it. It also closes as soon as the page scrolls (it would drift from its button and cover the sticky header), except while focus is in the menu, so tabbing through it keeps it open; a mouse wheel always closes it. File sizes are computed at build time.
 - **Chip.** A set of links that filters a list (Writing topics), each to its own page. 32px, `--control`, label + count badge. Selected (`aria-current="page"`): `--tint` fill, `--accent` label, count badge `--accent` fill with `--bg` text. Never alone, never for actions. "All" first, selected on `/writing`.
 - **See-more link.** Muted 14px text + 12px chevron; on hover the text darkens, an underline grows left→right and the chevron nudges 2px. Only for pages inside the site ("All projects", "All posts").
 - **Back link + Copy page.** Top of posts: "‹ Writing" on the left, **Copy page** button on the right with the Markdown mark icon; label changes to "Copied" for 1.5s; `aria-label="Copy page as Markdown"`. Copies the post's Markdown (generate it at build time from the MDX).
 - **External-link arrow.** A 12px arrow icon (`M4.5 3.5h4v4M8.5 3.5l-5 5`), 4px after the word, `--text-3` stroke, link colour on hover and a 1px up-right nudge (pointer devices only). Only on standalone links that leave the site: contact rows, the course row, project facts. Links inside prose never get it. Screen readers hear the link text, plus "(opens in a new tab)" when the link opens one.
 
 ### Lists and cards
-- **List row.** 112px date gutter (`<time>` in `--text-3`), title 15/500, one 14px line in `--text-2`, 12px vertical padding, no dividers. Rows are `<li>` in a `<ul role="list">`. When one row is hovered, the other link rows fade to .45 (pointer devices only). The fade covers the whole list the row belongs to: on Writing that is every post across all year groups (the years are one list split by headings; scope the rule to the container of the year groups); on Home each section (Writing, Speaking, Teaching, Work) fades only its own rows. **A row is a link only if it has somewhere to go; otherwise it is a plain row**: not an `<a>`, no hover, not focusable.
+- **List row.** 112px date gutter (`<time>` in `--text-3`), title 16/500, one second line at 16 in `--text-2`, 12px vertical padding, no dividers. Rows are `<li>` in a `<ul role="list">`. When one row is hovered, the other link rows fade to .45 (pointer devices only). The fade covers the whole list the row belongs to: on Writing that is every post across all year groups (the years are one list split by headings; scope the rule to the container of the year groups); on Home each section (Writing, Speaking, Teaching, Work) fades only its own rows. **A row is a link only if it has somewhere to go; otherwise it is a plain row**: not an `<a>`, no hover, not focusable.
 - **List row attachment.** Optional media under a list row's text, at most one per row, of one of two kinds. It starts exactly under the row's title: it wraps like the row, with an empty 112px date column beside it that drops away on phones together with the date. 12px from the text above and from the next row. Every attachment image has the same size and shape: a third of the text column (a slot in a row of three, 8px gaps), 3:2, `object-fit: cover`, 8px radius, hairline `--line` border, `--surface` behind it.
   - **Photos:** 1 to 3 images in a `<ul role="list">` grid of three columns; fewer stay left-aligned at the same size; never more than three. Every image has descriptive alt text. The talk photos ship pre-processed (1200×800, colour-corrected to match each other); don't re-crop them. Lazy-loaded. Each photo is a `<button>` wrapping the image (`aria-label` "Open photo 2 of 3: {talk title}", `cursor: zoom-in`, image at 88% opacity on hover) that opens the **image viewer** on that photo.
     - **Narrow rows (phones):** when the row is narrower than 436px (the date sits above the title) the photos show full width in the page instead of as thumbnails. One photo fills the text column (3:2). Several sit in a sideways-scrolling strip: `display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 8px; overscroll-behavior-x: contain`, scrollbar hidden; each photo `flex: 0 0 calc(100% - 40px)` with `scroll-snap-align: start`, so the next one peeks 32px. The strip stays inside the text column (never bleeds into the page margins: that keeps it clear of the browser's edge-swipe back gesture and aligned with the text). The photos stay buttons (they are the strip's focusable content) and still open the viewer.
     - **Rows with the date column (tablet, laptop):** the row of three thumbnails above, unchanged.
-  - **Video preview:** exactly one bordered card spanning the full text column (`--r-lg`, `--bg`), a single link to the video, separate from the row's link. The thumbnail fills the first third (same size as a photo) with a 32px round play button centred on it (`--bg` at 92% with blur, `--line` border, 16px play icon); then the label (14/500, "Watch the trailer") and the source (13px `--text-3`, "YouTube" + ↗). Hover/focus: the card border goes `--line-strong`, the label turns `--accent`, the play button inverts (`--text` fill, `--bg` icon). It opens the video elsewhere and never embeds a player; no duration.
+  - **Video preview:** exactly one bordered card spanning the full text column (`--r-lg`, `--bg`), a single link to the video, separate from the row's link. The thumbnail fills the first third (same size as a photo) with a 32px round play button centred on it (`--bg` at 92% with blur, `--line` border, 16px play icon); then the label (14/500, "Watch the trailer") and the source (14px `--text-3`, "YouTube" + ↗). Hover/focus: the card border goes `--line-strong`, the label turns `--accent`, the play button inverts (`--text` fill, `--bg` icon). It opens the video elsewhere and never embeds a player; no duration.
 - **Image viewer.** Opens from a photo attachment. A modal dialog, labelled "Photo 2 of 3: {talk title}", in the search palette's language:
   - **Card:** 720px wide (`min(720px, 100%)`), `--bg`, `--line` border, `--r-lg`, `--shadow-overlay`, over the `--scrim` backdrop (with 2px blur); the page behind doesn't scroll.
-  - **Inside:** the photo on top (3:2, `object-fit: contain` on `--surface`, a hairline below it); the caption padded 16px 20px: talk title (15/500) and a meta line (13px `--text-3`): place · date · "2 / 3"; a 44px footer with key hints, "← → to move" and "esc to close" (12px `--text-3`).
+  - **Inside:** the photo on top (3:2, `object-fit: contain` on `--surface`, a hairline below it); the caption padded 16px 20px: talk title (16/500) and a meta line (14px `--text-3`): place · date · "2 / 3"; a 44px footer with key hints, "← → to move" and "esc to close" (12px `--text-3`).
   - **Controls:** 40px round buttons (`--bg` at 92% with blur, `--line` border, 16px icons with a 1.5px stroke; on hover `--line-strong` border and `--bg`): × in the photo's top-right corner, ‹ › centred on the photo's left and right edges.
   - **Behaviour:** focus moves to × on open, Tab moves through the dialog's controls (as a native modal does), and on close focus returns to the thumbnail that opened it. Esc, ×, clicking the backdrop and a swipe down (more than 80px, more vertical than horizontal) close it; ← → and horizontal swipes (more than 50px) move, wrapping around. The count is `aria-live="polite"`. Without JavaScript the photos stay visible and the buttons do nothing.
   - **One photo:** no arrows, no count; ← → do nothing.
@@ -223,54 +246,56 @@ Each component appears exactly once in the design system. Live versions, split b
   - **Short windows:** the card is never taller than the window less 24px each side; the photo shrinks (contained, on `--surface`) so the caption and the key hints stay on screen, as on a phone held sideways.
   - **Image:** the same source as the thumbnail, at widths up to 1440 (2× the card), capped at the original's width.
   - **Build:** a native `<dialog>` opened with `showModal()` and `closedby="any"` (click outside closes; a press and release outside where `closedby` isn't supported), as the search does. Back closes it on every screen, not only phones. Pinch zoom is Panzoom (`@panzoom/panzoom`), loaded the first time a photo opens.
-- **Course rating line.** Under a course's line: one 12px filled star in `--text`, the score (500, `--text`), the review count in `--text-3` ("4.7 (26 reviews)"), then "30 lessons · 2h 20m" with "·" separators, all 13px `--text-3`. The visible rating is `aria-hidden`; a visually hidden sentence carries it for screen readers: "Rated 4.7 out of 5 from 26 reviews." Never a row of yellow stars. The rating is a fixed value in the content, updated by hand.
-- **Expandable row (work experience).** A native `<details>` whose `<summary>` holds the date, company (500) + role, and a + icon that rotates to ×. The body's height animates open (250ms) where the browser supports it, and lists the bullets. Layout is a grid: `112px 1fr auto` on desktop; on phones `"date icon" / "text text"` so the + stays beside the date. Only one open at a time (the rows share a `name`). **The newest job is open on load**, the rest closed.
+- **Course rating line.** Under a course's line: one 12px filled star in `--text`, the score (500, `--text`), the review count in `--text-3` ("4.7 (26 reviews)"), then "30 lessons · 2h 20m" with "·" separators, all 14px `--text-3`. The visible rating is `aria-hidden`; a visually hidden sentence carries it for screen readers: "Rated 4.7 out of 5 from 26 reviews." Never a row of yellow stars. The rating is a fixed value in the content, updated by hand.
+- **Expandable row (work experience).** A native `<details>` whose `<summary>` holds the date, company (500) + role, and a + icon that rotates to ×. The body's height animates open (250ms) where the browser supports it, and lists the bullets (16/1.6 `--text-2`, 8px apart, 16px of padding below the last one). Layout is a grid: `112px 1fr auto` on desktop; on phones `"date icon" / "text text"` so the + stays beside the date. Only one open at a time (the rows share a `name`). **The newest job is open on load**, the rest closed.
   - **Work mode:** the company line carries how the job was done, after the company name: a "·" (8px each side, `--text-3`) then the mode in 14px 400 `--text-3`: "Remote", or the mode and city ("On-site, A Coruña", "Hybrid, A Coruña"). Plain text: no chips, icons or colour. Screen readers get a visually hidden comma instead of the dot ("Polygon Labs, Remote").
-  - **First-line alignment:** the head is a grid aligned to the start; the date and the company share 15px / 24px; the 16px +/× sits in the first line and is centred on it, so all three share the first line's centre. On phones the date and the icon share the first line the same way. Never centre the icon against the whole two-line head.
+  - **First-line alignment:** the head is a grid aligned to the start; the date and the company share 16px / 24px; the 16px +/× sits in the first line and is centred on it, so all three share the first line's centre. On phones the date and the icon share the first line the same way. Never centre the icon against the whole two-line head.
 - **Project tile (Home).** Preview (`--surface`, `--line` border, `--r-lg`, nothing on top of it), then the title (`h3`), the project status line, and one line of description. One per row with a 16:7 preview below 640px, three in a row with 4:3 from 640px; never two columns. `grid-template-rows: subgrid` keeps titles aligned. Lifts 2px on hover (pointer only).
 - **Project card (Projects).** One link per card (the whole card). Preview with nothing on top of it, then the title row, the project status line, the description. No stack/tags line.
-  - **Title row (from 640px):** title (`h2`) on the left, the label **"View project"** (13px, `--text-2`) with a 12px chevron (`M4.5 3l3 3-3 3`) on the right, on one line; the label is styled text inside the card link, never a separate link. Same label on every card.
+  - **Title row (from 640px):** title (`h2`) on the left, the label **"View project"** (14px, `--text-2`) with a 12px chevron (`M4.5 3l3 3-3 3`) on the right, on one line; the label is styled text inside the card link, never a separate link. Same label on every card.
   - **Hover and keyboard focus:** title and label turn `--accent` together (the card is a link, so it follows the site-wide link hover) and the chevron slides 2px right (150ms, `--ease-settle`), like the see-more links. Pointer devices only for the movement; still with reduced motion.
   - **Phones (below 640px):** the label and chevron are hidden; the title has the whole row and the card itself is the link.
-  - **Grid:** one column below 640px, two from 640px. From 640px, with an odd count the first card spans both columns (featured: 18px title, 16:7 preview, wider illustration); pairs use 4:3 previews. Below 640px every card is equal: one per row, 16:7 previews, 15px titles, and the featured card's wider illustration is scaled to match the others.
-- **Project status.** A line directly under the project title (4px below it, 8px above the description): 13px `--text-3`, the stage, a separator dot, the year, e.g. "In progress · 2026", "Experiment · 2026". Only an in-progress project gets an 8px `--accent` dot before the text (`aria-hidden`), and it never pulses: pulsing is reserved for "Open to remote roles". The text carries the meaning. Used on Home tiles and Projects cards; previews have no status pill.
+  - **Grid:** one column below 640px, two from 640px. From 640px, with an odd count the first card spans both columns (featured: 16:7 preview, wider illustration; its title is 16/500 like every other card, and descriptions are 16 `--text-2`); pairs use 4:3 previews. Below 640px every card is equal: one per row, 16:7 previews, 16px titles, and the featured card's wider illustration is scaled to match the others.
+- **Project status.** A line directly under the project title (4px below it, 8px above the description): 14px `--text-3`, the stage, a separator dot, the year, e.g. "In progress · 2026", "Experiment · 2026". Only an in-progress project gets an 8px `--accent` dot before the text (`aria-hidden`), and it never pulses: pulsing is reserved for "Open to remote roles". The text carries the meaning. Used on Home tiles and Projects cards; previews have no status pill.
 - **Previous / next card.** Bordered, `--r-lg`; the chevron sits on the side it leads to. In a `<nav aria-label="More posts">` (or "More projects").
 
 ### Text and metadata
-- **Page intro.** The `<header>` that opens Projects, Writing and the 404: optionally a label 4px above the title ("404"), the page title, optionally with an action on its right (Subscribe on Writing), and one paragraph in `--text-2` 8px below, across the full text column (no narrower measure). Anything else in the intro, like the Writing topic chips, sits 20px below.
+- **Page intro.** The `<header>` that opens Projects, Writing and the 404: optionally a label 4px above the title ("404"), the page title, optionally with an action on its right (Subscribe on Writing), and one paragraph in `--text-2` 8px below, across the full text column (no narrower measure). Anything else in the intro, like the Writing topic chips, sits 24px below.
 - **Metadata line.** Items separated by a dot: each dot is its own `aria-hidden` element with an 8px gap on each side (never a dot between plain spaces). On wrapping, a dot stays with the item after it, so a line never ends on a dot. Post header: "November 9, 2026 · Design engineering · 4 min read"; the topic links to its Writing topic page (`/writing/topics/<slug>`).
-- **Project facts.** `<dl>`: **Year · Status · Links** in three equal columns between two hairlines; below 640px one fact per row: the 13px label in a 112px column (like the lists' date column) and the 14px value beside it on the same baseline, 24px apart, 12px between rows; links that don't fit wrap under the first, still in the value column. Links are named by destination ("Website", "GitHub", "npm"), product first, code second, with the external arrow; none → "Not public yet" in `--text-3`.
+- **Project facts.** `<dl>`: **Year · Status · Links** in three equal columns between two hairlines; below 640px one fact per row: the 14px label in a 112px column (like the lists' date column) and the 14px value beside it on the same baseline, 24px apart, 12px between rows; links that don't fit wrap under the first, still in the value column. Links are named by destination ("Website", "GitHub", "npm"), product first, code second, with the external arrow; none → "Not public yet" in `--text-3`.
 - **Author footer.** Ends every post: 40px photo, name (`rel="author"`, links Home) and role, inside the article's `<footer>` / `<address>`.
 
 ### Prose (MDX mapping)
 Every element a Markdown or MDX post can produce. Live versions of all of them: `reference/prose.html` (and the phone screenshots); its MDX source is the draft post `src/content/writing/prose.mdx`, at `/writing/prose` in `npm run dev` only. Use it to check every element whenever styles change.
 
+**Rhythm.** 16px between blocks (paragraphs, lists, quotes, the thematic break): one blank line at the 16px body size. Headings sit closer to their own text than to what came before them: `h2` 48 above / 16 below, `h3` 32 / 12, `h4` 24 / 8. Boxed and media blocks (figures, code blocks, tables, the easing demo, callouts, details) get 24 above and below. A heading's space below wins over the next block's space above. Spacing never adds up: two boxed blocks in a row sit 24 apart, and a heading after a boxed block keeps its own 48 / 32 / 24 (vertical margins collapse). After the last block, the Notes and the author footer each start 64 below, then the previous/next links 32 below. The case study uses the same rhythm.
+
 | Markdown | Style |
 |---|---|
-| `## h2` | Heading: 18/600, an extra 24px above (on top of the paragraph gap); a `#` anchor link appears on hover and on keyboard focus, 24px to the left |
-| `### h3` | 16/600 `--text` (the text size, set apart by weight) |
-| `#### h4` | 15/600 `--text`. No deeper levels |
-| `p` | 16/1.75 `--text-2`, `text-wrap: pretty`; 24px between blocks |
+| `## h2` | Title style: 24/600 `--text`; 48px above, 16px below; a `#` anchor link appears on hover and on keyboard focus, 24px to the left |
+| `### h3` | Subtitle: 20/600 `--text`; 32px above, 12px below |
+| `#### h4` | 16/600 `--text` (the text size, set apart by weight); 24px above, 8px below. No deeper levels |
+| `p` | 16/1.6 `--text-2`, `text-wrap: pretty`; 16px between blocks |
 | `**strong**` / `*em*` / `~~del~~` | 600 in `--text` / italic / `--text-3` with line-through |
 | `[a](…)` | Prose link: `--accent`, 1px `--accent-line` underline at 3px offset; solid and 2px on hover/focus. No external arrow, even for external links |
 | `` `code` `` | 0.875em mono, `--text` on `--control`, `--r-sm`, 0 4px padding. It always takes the size of where it sits (0.875em of a heading or a note). Inside a link it takes the link colour (`color: inherit`) and keeps the underline. |
-| `<kbd>` | 13px, `--bg`, 1px `--line` border with a 2px bottom, `--r-sm`, min-width 20px |
-| `- list` | 24px indent, 4px round dot in `--text-3`; nested lists get a hollow dot; 4px between items; two levels max |
+| `<kbd>` | 14px, `--bg`, 1px `--line` border with a 2px bottom, `--r-sm`, min-width 20px |
+| `- list` | 24px indent, 4px round dot in `--text-3`; nested lists get a hollow dot; 8px between items (and above a nested list); two levels max |
 | `1. list` | Same indent, numbers in `--text-3` with tabular figures |
 | `- [x] task` | No dot; a drawn 16px box (`--line-strong` border, `--r-sm`); checked = `--accent` fill with a `--bg` tick and the item text in `--text-3`. Never use the browser's faded disabled checkbox |
 | `> quote` | 2px `--line-strong` rule on the left, 20px indent, same text style (no italics, no colour); an optional source line in 14px `--text-3`. The source sits outside the quote, as the HTML spec asks: `<Quote source="…">` around the Markdown quote renders `figure > blockquote + figcaption` |
 | `---` | Thematic break: no line, three spaced dots `· · ·` in `--text-3`, centred, 24px tall |
-| image | `<figure>`: full column width, `--r-lg`, 1px `--line` border; caption 13px `--text-3` 8px below |
-| table | Inside a bordered `--r-lg` box that scrolls sideways (`overflow-x: auto`, focusable region with a label). Table `width: max-content; min-width: 100%` so cells never wrap mid-word on phones. Header cells 13/500 `--text-3` on `--surface`; body 14/1.6 `--text-2`; row hairlines in `--line`; numeric columns right-aligned with tabular figures |
+| image | `<figure>`: full column width, `--r-lg`, 1px `--line` border; caption 14px `--text-3` 8px below |
+| table | Inside a bordered `--r-lg` box that scrolls sideways (`overflow-x: auto`, focusable region with a label). Table `width: max-content; min-width: 100%` so cells never wrap mid-word on phones. Header cells 14/500 `--text-3` on `--surface`; body 14/1.5 `--text-2`; row hairlines in `--line`; numeric columns right-aligned with tabular figures |
 | ` ```lang ` | Code block, below |
 | footnote `[^1]` | See "Footnotes" below: a linked marker and a Notes section at the end of the article, with back links |
 | `ul` / `ol` in Notes | The Notes list keeps its own 14px style: scope list styles to lists in the article text (`.body > ul`, `.body li > ul`…), not every list |
 
 MDX-only components, for the occasional post that needs them:
-- **Callout** (`<Note>`): `--surface`, 1px `--line` border, `--r-lg`, 16px 20px padding; a 13/500 label ("Note") over 15/1.6 text. Grey, never indigo.
-- **Details** (`<details>`): bordered `--r-lg` box; summary 15/500 with a 16px chevron; content indented to the text. Opening and closing animate the height with the expanding-row motion (250ms, `--ease-settle`) and the chevron turns 90° in step. Use the native element with `interpolate-size: allow-keywords` and a transition on `::details-content` (height and `content-visibility … allow-discrete`); browsers without support open instantly, and reduced motion disables it.
+- **Callout** (`<Note>`): `--surface`, 1px `--line` border, `--r-lg`, 16px 20px padding; a 14/500 label ("Note") over 16/1.6 text. Grey, never indigo.
+- **Details** (`<details>`): bordered `--r-lg` box; summary 16/500 with a 16px chevron; content indented to the text. Opening and closing animate the height with the expanding-row motion (250ms, `--ease-settle`) and the chevron turns 90° in step. Use the native element with `interpolate-size: allow-keywords` and a transition on `::details-content` (height and `content-visibility … allow-discrete`); browsers without support open instantly, and reduced motion disables it.
 
-**Code blocks.** A bordered block (`--line`, `--r-lg`) on `--surface` with a 48px header bar: the language on the left (12/500 `--text-3`, the code fence's name as written, e.g. `ts`) and the Copy button on the right (fill `--bg` on the grey surface). Code below: 13/1.75 mono, 16px vertical padding, 20px per line horizontally, horizontal scroll inside the block (focusable region with a label). Blank lines keep their height.
+**Code blocks.** A bordered block (`--line`, `--r-lg`) on `--surface` with a 48px header bar: the language on the left (12/500 `--text-3`, the code fence's name as written, e.g. `ts`) and the Copy button on the right (fill `--bg` on the grey surface). Code below: 14/1.7 mono, 16px vertical padding, 20px per line horizontally, horizontal scroll inside the block (focusable region with a label). Blank lines keep their height.
 
 **Syntax theme: minimal indigo.** Mostly neutral; indigo marks keywords and values. Every colour is at least 4.5:1 on `--surface` in both themes (indigo-500 is excluded: 4.4 / 3.9).
 
@@ -289,7 +314,7 @@ On a highlighted line, comments switch to `--code-plain` (zinc-500 on indigo-50 
 **Footnotes.** No popovers: a footnote is a link to its note, and every note links back.
 
 - **Marker.** A link (`<a href="#note-1" id="ref-1" aria-label="Note 1">1</a>`) placed straight after the word or punctuation it belongs to (after all punctuation except a dash), with only a 4px margin-left: the boxed equivalent of the typographic "no space before a note number". 20px, `--r-sm`, `--control` fill, 12px/600 `--text-2`. Hover and focus: `--accent` fill with `--bg` text (6.5:1), no underline. Exclude it from the prose-link style (`.body p a:not(.fn)`), or it inherits indigo text and becomes unreadable on hover.
-- **Notes section.** After the last paragraph and before the author footer: `<section aria-labelledby="notes-h">` with a 14/500 "Notes" label and an `<ol>` (14px/1.6, `--text-2`, numbers in `--text-3`). Above it, a short footnote rule: 64px × 1px in `--line`, 40px below the article, then 24px to the label (a full-width line would compete with the author footer's line just below).
+- **Notes section.** After the last paragraph and before the author footer: `<section aria-labelledby="notes-h">` with a 20/600 "Notes" heading and an `<ol>` (14px/1.5, `--text-2`, numbers in `--text-3`). Above it, a short footnote rule: 64px × 1px in `--line`, 64px below the article, then 24px to the heading (a full-width line would compete with the author footer's line just below).
 - **Back link.** Each note ends with a return link (`aria-label="Back to reference 1"`): a 12px icon in a 24×24px target (WCAG 2.5.8), `--r-sm`, `--text-3`; on hover and focus `--accent` with a `--control` background. 4px margin-left (after the normal word space), so the hover square starts about 7px from the text and the icon about 13px; negative vertical margin keeps the line height unchanged.
 - **Scrolling.** Both directions scroll smoothly (see Motion, in-page jumps). Notes land below the sticky header (`scroll-padding-top`); markers land a third of the way down the screen (`.fn { scroll-margin-top: 30vh }`) so the sentence before them is visible.
 - **Arrival.** The note you jump to is tinted `--tint`, fading out over 2s. A marker you return to lights up in its hover colours (`--accent` fill, `--bg` text) and fades back to normal over 2s. With reduced motion the scroll is instant and both stay highlighted.
@@ -301,9 +326,9 @@ Custom MDX components: `<EasingDemo />` (two runners, linear vs ease-out, 600ms,
 ### Search dialog (⌘K)
 - Opens with ⌘K / Ctrl+K and from the header button. The input resets the browser default padding (`padding: 0`); its row provides the spacing. A modal `role="dialog"` with `aria-modal="true"` with a 56px input row, a listbox of grouped results and a footer of key hints. **While open, the page behind does not scroll** (`html:has(.scrim) { overflow: hidden }` or equivalent).
 - **Empty state:** Go to (Home, Projects, Writing) and Actions (Send me an email, Download CV, Subscribe with RSS).
-- **Typed:** searches posts and projects, and **only what a result row shows: its title and its summary** (a post's description, a project's summary). Topics aren't searched (the Writing page filters by topic) and there are no hidden keywords. Every query word must match the start of a word in the title or summary ("ai" never matches inside "daily"; "agent" matches "agents"). Every match is highlighted, in the title and in the summary: `--accent` at weight 600, no background (`mark` reset to `background: none`). A background highlight was dropped: on the selected row it nearly disappeared against `--tint` (1.10:1 light, 1.40:1 dark). Accent text passes on both rows (light 6.46:1 on `--bg`, 5.78:1 on `--tint`; dark 6.36:1 and 5.12:1), and the weight change means the match doesn't rely on colour alone.
-- **Rows:** 32px icon tile, title (one line, ellipsis), then a second line in 12px `--text-2`, meta on the right; the active row is `--tint` with a ↵ hint. For posts and projects the second line is the summary, shown **in full** (it wraps; summaries are one sentence), so a match is never cut off, even on phones; Go to, Actions, Topics and Suggest rows keep their one-line description. ↑↓ move, ↵ opens, Esc closes.
-- **Nested choice:** "Download CV" shows › instead of ↵; Enter shows a crumb "Download CV" in the input, the placeholder "Choose a format" and the same two formats (PDF / Markdown with descriptions and sizes). It is a step, not a search: **both formats always stay listed**, and typing only moves the selection to the format whose name or keyword starts with what was typed ("p" or "pdf" → PDF; "m", "md" or "mark" → Markdown), with the typed letters highlighted like a match. If nothing matches, no row is selected, a quiet line appears above the list (13px `--text-3`, `role="status"`): "No format matches “x”. Backspace to go back.", and Enter does nothing. ↑ ↓ and the mouse still pick a row and take over from the typing. The footer count stays empty. Esc or Backspace on an empty input goes back; a second Esc closes.
+- **Typed:** searches posts and projects, and **only what a result row shows: its title and its summary** (a post's description, a project's summary). Topics aren't searched (each topic has its own page, linked from the Writing chips and from No results) and there are no hidden keywords. Every query word must match the start of a word in the title or summary ("ai" never matches inside "daily"; "agent" matches "agents"). Every match is highlighted, in the title and in the summary: `--accent` at weight 600, no background (`mark` reset to `background: none`). A background highlight was dropped: on the selected row it nearly disappeared against `--tint` (1.10:1 light, 1.40:1 dark). Accent text passes on both rows (light 6.46:1 on `--bg`, 5.78:1 on `--tint`; dark 6.36:1 and 5.12:1), and the weight change means the match doesn't rely on colour alone.
+- **Rows:** 32px icon tile, title (16px, one line, ellipsis), then a second line in 14px `--text-2`, meta (14px) on the right; the active row is `--tint` with a ↵ hint. For posts and projects the second line is the summary, shown **in full** (it wraps; summaries are one sentence), so a match is never cut off, even on phones; Go to, Actions, Topics and Suggest rows keep their one-line description. ↑↓ move, ↵ opens, Esc closes.
+- **Nested choice:** "Download CV" shows › instead of ↵; Enter shows a crumb "Download CV" in the input, the placeholder "Choose a format" and the same two formats (PDF / Markdown with descriptions and sizes). It is a step, not a search: **both formats always stay listed**, and typing only moves the selection to the format whose name or keyword starts with what was typed ("p" or "pdf" → PDF; "m", "md" or "mark" → Markdown), with the typed letters highlighted like a match. If nothing matches, no row is selected, a quiet line appears above the list (14px `--text-3`, `role="status"`): "No format matches “x”. Backspace to go back.", and Enter does nothing. ↑ ↓ and the mouse still pick a row and take over from the typing. The footer count stays empty. Esc or Backspace on an empty input goes back; a second Esc closes.
 - **No results:** a short message above the list ("No posts or projects match “x”" / "Try a topic I write about, or suggest this one."), then normal rows: **Topics** (each with its post count; a link to that topic's page, `/writing/topics/<slug>`) and **Suggest** ("Suggest “x” as a post", opens an email with "Post idea: x" as subject). Footer shows "0 results". Never a dead end.
 - Index: a small JSON index built from the content collections at build time and carried in the page, so search works offline and never waits on a request: for each post and project its title, summary, URL and meta (date or status), and each topic with its post count and page. No full-text search.
 - Build: a native `<dialog>` opened with `showModal()` (modal, Esc and focus return come with it). The header button's shortcut reads "⌘K" on Apple's systems and "Ctrl K" elsewhere (set before the first render); both shortcuts work everywhere. Search needs JavaScript, so without it the button isn't shown.
@@ -328,7 +353,7 @@ Screenshots for each: `screenshots/<page>.{desktop,phone}.{light,dark}.png`.
 8. **Education.** One plain row.
 9. **Contact.** `<address>` with a `<dl>`: Email, GitHub, LinkedIn, X, each value a link with the arrow.
 
-Sections are `<section aria-labelledby>` with 14/500 `h2` labels, 72px apart; the intro is a `<header>`.
+Sections are `<section aria-labelledby>` with `h2` headings at the text size (16/500, `--text`), `--space-section` apart (80, 64 on phones); the intro is a `<header>`. The space above a heading and its place at the left edge mark the section; don't make the headings bigger.
 
 ### Projects (`/projects`)
 Intro (title, one line), then the card grid: one per row on phones, two per row from 640px with the first spanning both when the count is odd. Order: projects in progress first, then the rest; each group by year, newest first, then by title. Every card shows "View project ›" on the title row (from 640px).
@@ -336,15 +361,15 @@ Intro (title, one line), then the card grid: one per row on phones, two per row 
 ### Case study (`/projects/roleburn`)
 Back link "‹ Projects", title (display) and lead (the project's description, full column width), project facts, the hero illustration (it morphs from the Projects or Home preview), then the article: Why I built it, How it works (with a folder-tree code block and a placeholder figure), What's next. Previous/next at the end ("Previous", "Next") moves between projects that have a case study, in the Projects order.
 
-### Writing (`/writing`)
-Intro with **Subscribe** (RSS icon + label) on the right of the title; topic chips (All, AI, DeFi, Design engineering, with counts); posts grouped by year (`h2`), each an `<article>` in an `<li>` with `<time>`, `h3` title link, description, and "Topic · N min read" (the topic is plain text, not a link, because the row is already a link). Each topic is its own static page, `/writing/topics/<slug>` (e.g. `/writing/topics/ai`), built from the posts: the same page with that chip selected and only its posts, so filtered views are shareable and work without JavaScript. The chips are links in a `nav`; choosing one is a page change, with the usual page transition.
+### Writing (`/writing`) and topic pages (`/writing/topics/<slug>`)
+Intro with **Subscribe** (RSS icon + label) on the right of the title; topic chips (All, AI, DeFi, Design engineering, with counts); posts grouped by year (`h2`), each an `<article>` in an `<li>` with `<time>`, `h3` title link, description, and "Topic · N min read" (the topic is plain text, not a link, because the row is already a link). Each topic is its own static page, `/writing/topics/<slug>` (e.g. `/writing/topics/ai`), built from the posts: the same page with that chip selected and only its posts, so filtered views are shareable and work without JavaScript. The chips are links in a `nav`; choosing one is a page change where the intro stays and only the posts re-enter (§2.5). A topic page's `<title>` is "AI · Writing · Elías García" and its description "Posts about AI by Elías García".
 
 ### Post (`/writing/<slug>`)
 Back link + Copy page, title (display), metadata line, then the article (max 640px, long-form text), a reading-progress bar under the header (scroll-driven animation where supported), the author footer and previous/next.
 
 ### 404
-- **Header:** the page intro. "404" at Display size (28 · 600 · 1.2, −0.02em, tabular figures) in `--text-3`, `aria-hidden`; 4px below it the page title `h1` "Page not found" (20 · 600), whose accessible text is "404: Page not found" (a visually hidden "404: " before it); 8px below, one sentence in `--text-2`, full width like the other intros: "There's nothing at **{address}**. It may have moved, or the address has a typo." The address is the requested path (`location.pathname`) in `--text` 500, allowed to break after "/" (`<wbr>` after each slash). Without JavaScript, or when the path is empty, the sentence reads "There's nothing at this address." instead.
-- **Try one of these:** 32px below, an `h2` "Try one of these" (14 · 500) and three list rows: Home, Projects, Writing, each with its one-line description. From 640px, the path ("/", "/projects", "/writing") sits in the 112px date column as a visual hint, `aria-hidden`; below 640px the path and its column are hidden, so each row is title and description only.
+- **Header:** the page intro. "404" at Display size (32, 28 on phones · 600 · 1.2, −0.02em, tabular figures) in `--text-3`, `aria-hidden`; 4px below it the page title `h1` "Page not found" (20 · 600), whose accessible text is "404: Page not found" (a visually hidden "404: " before it); 8px below, one sentence in `--text-2`, full width like the other intros: "There's nothing at **{address}**. It may have moved, or the address has a typo." The address is the requested path (`location.pathname`) in `--text` 500, allowed to break after "/" (`<wbr>` after each slash). Without JavaScript, or when the path is empty, the sentence reads "There's nothing at this address." instead.
+- **Try one of these:** 32px below, an `h2` "Try one of these" (16 · 500) and three list rows: Home, Projects, Writing, each with its one-line description. From 640px, the path ("/", "/projects", "/writing") sits in the 112px date column as a visual hint, `aria-hidden`; below 640px the path and its column are hidden, so each row is title and description only.
 - **Report line:** 32px below, "Followed a link here? **Email me** and I'll fix it." The link is a `mailto:` with subject "Broken link: {address}" and body "I followed a link to {full URL} from: {document.referrer, or nothing}", both URL-encoded. Without JavaScript the subject is "Broken link".
 - **Build:** the page returns a real **404 status** (`src/pages/404.astro`, which the host serves for unknown paths; never a redirect to Home, never a 200). Browser title "Page not found · Elías García", like the other pages' titles (§7). 404s are logged by the site's analytics: its page views record the requested path and the referrer. No separate search on the page: the header search (⌘K) is enough.
 

@@ -46,7 +46,7 @@ const { year, status, links } = Astro.props;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-3);
-    padding-block: var(--space-5);
+    padding-block: var(--space-4);
     border-block: var(--hairline) solid var(--line);
 
     @media (width >= 40rem) {
@@ -71,7 +71,7 @@ const { year, status, links } = Astro.props;
   dt {
     flex: 0 0 var(--gutter);
     color: var(--text-3);
-    font-size: var(--text-meta);
+    font-size: var(--text-small);
 
     @media (width >= 40rem) {
       flex-basis: auto;
