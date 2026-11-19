@@ -547,7 +547,10 @@ const copy = await getViewerCopy();
     min-block-size: 0;
   }
 
+  /* Content box, so the bottom hairline doesn't take a pixel from the 3:2
+     photo, which would leave the photo narrower than the frame. */
   .frame {
+    box-sizing: content-box;
     min-block-size: 0;
     aspect-ratio: 3 / 2;
     overflow: hidden;
