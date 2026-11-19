@@ -24,6 +24,7 @@ One page per step. Each step builds the components that page needs (DESIGN.md §
     - The header no longer shifts when moving between pages in Safari (the nav drew in the fallback font for a frame): the font is `font-display: fallback`.
     - Every overlay opens over 250ms and fades out over 150ms, in Safari and Firefox too (`src/lib/top-layer.ts`). Check that search, the menu and the viewer visibly fade in and out on an iPhone.
     - Opening or closing a photo no longer moves the page when the photo sits under the sticky header (the strip's focus handling scrolled the page).
+    - The image viewer grows out of the tapped photo and shrinks back into the one on screen, and on phones the photos slide with the finger. Check both on an iPhone and an Android phone, and that a swipe never also scrolls or zooms the page.
     - Still to check: on Android, Back closes the image viewer once and the next Back leaves the page (Back is a close request there, and the viewer also adds a history entry).
 15. **Final pass.** Chrome sometimes skips the page transition into the Roleburn case study (and now and then into a post) with an `InvalidStateError` and no script in the stack: about 1 in 5 clicks on the Projects card, the same from search. The page loads fine; find out why the transition is aborted. Compare every page with its screenshots in both themes and both widths, in `npm run dev` so draft posts show. Tab through each page with the keyboard. Run the accessibility check once against a build that includes drafts.
 

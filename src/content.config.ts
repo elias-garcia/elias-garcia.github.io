@@ -64,7 +64,7 @@ const talks = defineCollection({
       title: z.string(),
       where: z.string(),
       photos: z
-        .array(z.object({ src: image(), alt: z.string() }))
+        .array(z.object({ src: image(), full: image(), alt: z.string() }))
         .min(1)
         .max(3),
     }),

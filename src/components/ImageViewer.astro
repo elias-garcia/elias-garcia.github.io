@@ -32,7 +32,9 @@ const copy = await getViewerCopy();
 
   <figure class="figure">
     <div class="stage">
-      <div class="frame" data-viewer-frame data-sizes={viewerImage.sizes}></div>
+      <div class="frame" data-viewer-frame data-sizes={viewerImage.sizes}>
+        <div class="track" data-viewer-track></div>
+      </div>
       <button
         class="control arrow previous"
         type="button"
@@ -112,9 +114,14 @@ const copy = await getViewerCopy();
 </dialog>
 
 <script>
+  import type createPanzoom from "@panzoom/panzoom";
   import type { PanzoomObject } from "@panzoom/panzoom";
   import { fill } from "../lib/template.ts";
-  import { closeTopLayer, fadeOnCloseRequests } from "../lib/top-layer.ts";
+  import {
+    closeTopLayer,
+    fadeOnCloseRequests,
+    isClosing,
+  } from "../lib/top-layer.ts";
 
   type Copy = { label: string; labelOne: string; position: string };
 
@@ -144,12 +151,17 @@ const copy = await getViewerCopy();
   const lockAfter = 8;
   const swipeToMove = 50;
   const dragToClose = 80;
+  // Swiping past the first or last photo moves the row this much of the way.
+  const resistance = 1 / 3;
   // How far a drag down goes before the backdrop is at its faintest.
   const fadeDistance = 480;
   const faintest = 0.4;
+  // The smallest the viewer starts from, for a tiny thumbnail.
+  const smallestScale = 0.2;
 
   const dialog = document.querySelector<HTMLDialogElement>("[data-viewer]");
   const frame = dialog?.querySelector<HTMLElement>("[data-viewer-frame]");
+  const track = dialog?.querySelector<HTMLElement>("[data-viewer-track]");
   const title = dialog?.querySelector<HTMLElement>("[data-viewer-title]");
   const where = dialog?.querySelector<HTMLElement>("[data-viewer-where]");
   const date = dialog?.querySelector<HTMLElement>("[data-viewer-date]");
@@ -160,6 +172,7 @@ const copy = await getViewerCopy();
   if (
     dialog &&
     frame &&
+    track &&
     title &&
     where &&
     date &&
@@ -168,12 +181,17 @@ const copy = await getViewerCopy();
     isCopy(copy)
   ) {
     const phone = matchMedia("(width < 40rem)");
-    const image = document.createElement("img");
-    image.className = "image";
-    image.sizes = frame.dataset.sizes ?? "";
-    frame.append(image);
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const tokens = getComputedStyle(document.documentElement);
+    // In milliseconds; the build may write a token in seconds.
+    const duration = (token: string) => {
+      const value = tokens.getPropertyValue(token).trim();
+      const amount = Number.parseFloat(value);
+      return value.endsWith("ms") ? amount : amount * 1000;
+    };
 
     let photos: HTMLButtonElement[] = [];
+    let images: HTMLImageElement[] = [];
     let opener: HTMLButtonElement | undefined;
     let current = 0;
     // The viewer adds a history entry when it opens, so Back closes it.
@@ -182,18 +200,24 @@ const copy = await getViewerCopy();
     let ownsEntry = false;
     let goingBack = false;
     let talkTitle = "";
-    let zoom: PanzoomObject | undefined;
+    let resize: Animation | undefined;
+    let panzoom: typeof createPanzoom | undefined;
+    const zooms = new Map<HTMLImageElement, PanzoomObject>();
+
+    // On phones the photos sit in a row that slides; elsewhere, and with
+    // reduced motion, they're stacked and crossfade.
+    const slides = () => phone.matches && !reducedMotion.matches;
 
     // Panzoom only loads once a photo is opened, and only pinch-zooms: one
     // finger moves between photos or drags the viewer closed unless the
     // photo is zoomed in.
-    const loadZoom = async () => {
-      if (zoom !== undefined) {
+    const zoomable = (image: HTMLImageElement) => {
+      if (panzoom === undefined || zooms.has(image)) {
         return;
       }
-      try {
-        const { default: Panzoom } = await import("@panzoom/panzoom");
-        zoom ??= Panzoom(image, {
+      zooms.set(
+        image,
+        panzoom(image, {
           minScale: 1,
           maxScale: 4,
           contain: "outside",
@@ -202,35 +226,40 @@ const copy = await getViewerCopy();
           // The stylesheet decides: the card clips a zoomed photo, the phone
           // viewer lets it fill the screen.
           overflow: "",
-        });
+        }),
+      );
+    };
+
+    const loadZoom = async () => {
+      try {
+        panzoom ??= (await import("@panzoom/panzoom")).default;
       } catch {
         // Zoom is an extra: if Panzoom can't load (offline, say), the photo
         // doesn't zoom, and the next photo opened tries again.
+        return;
+      }
+      const image = images[current];
+      if (dialog.open && image !== undefined) {
+        zoomable(image);
       }
     };
 
-    const zoomedIn = () => (zoom?.getScale() ?? 1) > 1;
+    const zoomedIn = () => {
+      const image = images[current];
+      return image !== undefined && (zooms.get(image)?.getScale() ?? 1) > 1;
+    };
 
-    const show = (index: number) => {
-      current = (index + photos.length) % photos.length;
-      const photo = photos[current];
-      if (photo === undefined) {
+    const wrap = (index: number) => (index + photos.length) % photos.length;
+
+    // Swaps the thumbnail for the larger photo once it's ready, once.
+    const loading = new WeakSet<HTMLImageElement>();
+    const load = (index: number) => {
+      const photo = photos[index];
+      const image = images[index];
+      if (photo === undefined || image === undefined || loading.has(image)) {
         return;
       }
-      zoom?.reset({ animate: false });
-      const thumbnail = photo.querySelector("img");
-      image.alt = thumbnail?.alt ?? "";
-      // An image keeps showing its last picture until the next one loads, so
-      // show the thumbnail, already on the page, until the larger photo is
-      // ready. A thumbnail that hasn't loaded yet (it's lazy) shows nothing.
-      const placeholder = thumbnail?.currentSrc ?? "";
-      image.removeAttribute("srcset");
-      if (placeholder === "") {
-        image.removeAttribute("src");
-      } else {
-        image.src = placeholder;
-      }
-      image.hidden = placeholder === "";
+      loading.add(image);
       const large = new Image();
       large.sizes = image.sizes;
       large.srcset = photo.dataset.viewerSrcset ?? "";
@@ -241,12 +270,68 @@ const copy = await getViewerCopy();
           // Failed to load: swapping in shows the broken image's alt text.
         })
         .finally(() => {
-          if (photos[current] === photo) {
+          if (images[index] === image) {
             image.srcset = large.srcset;
             image.src = large.src;
             image.hidden = false;
           }
         });
+    };
+
+    // One slide per photo of the talk. Each shows its thumbnail, already on
+    // the page, until the larger photo loads; a thumbnail that hasn't loaded
+    // yet (it's lazy) shows nothing.
+    const buildSlides = () => {
+      for (const zoom of zooms.values()) {
+        zoom.destroy();
+      }
+      zooms.clear();
+      images = photos.map((photo) => {
+        const thumbnail = photo.querySelector("img");
+        const image = document.createElement("img");
+        image.className = "image";
+        image.sizes = frame.dataset.sizes ?? "";
+        image.alt = thumbnail?.alt ?? "";
+        const placeholder = thumbnail?.currentSrc ?? "";
+        if (placeholder !== "") {
+          image.src = placeholder;
+        }
+        image.hidden = placeholder === "";
+        return image;
+      });
+      track.replaceChildren(
+        ...images.map((image) => {
+          const slide = document.createElement("div");
+          slide.className = "slide";
+          slide.append(image);
+          return slide;
+        }),
+      );
+    };
+
+    const show = (index: number) => {
+      const previous = images[current];
+      if (previous !== undefined) {
+        zooms.get(previous)?.reset({ animate: false });
+      }
+      current = wrap(index);
+      for (const [index, slide] of [...track.children].entries()) {
+        slide.classList.toggle("current", index === current);
+        slide.setAttribute("aria-hidden", String(index !== current));
+      }
+      track.style.setProperty("--index", String(current));
+      // The photo on screen, then its neighbours, ready to move to.
+      for (const index of new Set([
+        current,
+        wrap(current + 1),
+        wrap(current - 1),
+      ])) {
+        load(index);
+      }
+      const image = images[current];
+      if (dialog.open && image !== undefined) {
+        zoomable(image);
+      }
       const values = {
         index: String(current + 1),
         count: String(photos.length),
@@ -262,13 +347,78 @@ const copy = await getViewerCopy();
       }
     };
 
+    // The viewer grows out of a photo's thumbnail and shrinks back into it:
+    // the scale is the thumbnail's width over the viewer's, around its
+    // centre.
+    const scaleFrom = (photo: HTMLButtonElement | undefined) => {
+      const thumbnail = photo?.querySelector("img");
+      if (thumbnail === null || thumbnail === undefined) {
+        return undefined;
+      }
+      resize?.cancel();
+      const box = dialog.getBoundingClientRect();
+      const from = thumbnail.getBoundingClientRect();
+      dialog.style.transformOrigin = `${String(from.left + from.width / 2 - box.left)}px ${String(from.top + from.height / 2 - box.top)}px`;
+      return Math.max(smallestScale, Math.min(1, from.width / box.width));
+    };
+
+    const grow = () => {
+      const scale = reducedMotion.matches ? undefined : scaleFrom(opener);
+      if (scale !== undefined) {
+        resize = dialog.animate([{ scale: String(scale) }, { scale: "1" }], {
+          duration: duration("--dur-slow"),
+          easing: tokens.getPropertyValue("--ease-settle").trim(),
+        });
+      }
+    };
+
+    // A thumbnail scrolled out of its strip (on phones) is no place to
+    // shrink into.
+    const inStrip = (photo: HTMLButtonElement | undefined) => {
+      const strip = photo?.closest("[data-viewer-talk]");
+      if (photo === undefined || strip === null || strip === undefined) {
+        return false;
+      }
+      const box = photo.getBoundingClientRect();
+      const bounds = strip.getBoundingClientRect();
+      return box.left >= bounds.left - 1 && box.right <= bounds.right + 1;
+    };
+
+    // Into the thumbnail of the photo on screen, which may not be the one
+    // that opened the viewer, or else the one that did. Only once: a second
+    // close request during the fade leaves it be. The viewer's fade is the
+    // stylesheet's.
+    const shrink = () => {
+      if (reducedMotion.matches || isClosing(dialog)) {
+        return;
+      }
+      const photo = photos[current];
+      const scale = scaleFrom(inStrip(photo) ? photo : opener);
+      if (scale !== undefined) {
+        resize = dialog.animate([{ scale: "1" }, { scale: String(scale) }], {
+          duration: duration("--dur"),
+          easing: tokens.getPropertyValue("--ease").trim(),
+          fill: "forwards",
+        });
+      }
+    };
+
     const endDrag = () => {
       delete dialog.dataset.dragging;
       dialog.style.removeProperty("--drag");
       dialog.style.removeProperty("--backdrop-fade");
     };
 
-    const close = () => {
+    const endSwipe = () => {
+      delete dialog.dataset.swiping;
+      track.style.removeProperty("--swipe");
+    };
+
+    // Dragged down to close, the viewer leaves from where it was dropped.
+    const close = ({ dragged = false } = {}) => {
+      if (!dragged) {
+        shrink();
+      }
       void closeTopLayer(dialog, () => {
         dialog.close();
       });
@@ -280,9 +430,11 @@ const copy = await getViewerCopy();
         return;
       }
       opener = button;
-      // A drag that closed the viewer last time stays until now, so the
-      // viewer could fade out from where it was dropped.
+      // The last close's shrink and drag stay until now, so the viewer could
+      // fade out where it ended.
+      resize?.cancel();
       endDrag();
+      endSwipe();
       photos = [
         ...talk.querySelectorAll<HTMLButtonElement>("[data-viewer-open]"),
       ];
@@ -302,8 +454,10 @@ const copy = await getViewerCopy();
           return dot;
         }),
       );
+      buildSlides();
       show(photos.indexOf(button));
       dialog.showModal();
+      grow();
       // Back closes the viewer, as it does other full-screen overlays. Reopened
       // before the last close was handled, it keeps that entry; if the last
       // close's Back is still on its way, the new entry waits for it.
@@ -328,13 +482,29 @@ const copy = await getViewerCopy();
       );
     };
 
+    // Past the first or last photo, the row resists.
+    const atEnd = (distance: number) =>
+      (current === 0 && distance > 0) ||
+      (current === photos.length - 1 && distance < 0);
+
+    const setSwipe = (distance: number) => {
+      dialog.dataset.swiping = "";
+      track.style.setProperty(
+        "--swipe",
+        `${String(atEnd(distance) ? distance * resistance : distance)}px`,
+      );
+    };
+
     // The close event arrives a moment after the viewer closes, so it may
     // find the viewer open again.
     dialog.addEventListener("close", () => {
       if (dialog.open) {
         return;
       }
-      zoom?.reset({ animate: false });
+      const image = images[current];
+      if (image !== undefined) {
+        zooms.get(image)?.reset({ animate: false });
+      }
       // Closed some other way than Back: take back the history entry, so the
       // next Back leaves the page as expected.
       if (ownsEntry) {
@@ -415,6 +585,8 @@ const copy = await getViewerCopy();
       });
     }
 
+    // Esc and a click outside shrink it too.
+    dialog.addEventListener("cancel", shrink);
     fadeOnCloseRequests(dialog);
 
     dialog.addEventListener("keydown", (event) => {
@@ -425,20 +597,24 @@ const copy = await getViewerCopy();
     });
 
     // One finger: swipe sideways to move, drag down to close. On phones the
-    // viewer follows the finger down. The direction locks after a few pixels,
-    // so a sideways swipe never moves it down.
+    // photos and the viewer follow the finger. The direction locks after a
+    // few pixels, so a sideways swipe never moves the viewer down.
     let gesture: { x: number; y: number; lock?: "x" | "y" } | undefined;
+
+    const cancelGesture = () => {
+      gesture = undefined;
+      endDrag();
+      endSwipe();
+    };
 
     dialog.addEventListener(
       "touchstart",
       (event) => {
         const touch = event.touches[0];
-        gesture =
-          event.touches.length === 1 && touch !== undefined && !zoomedIn()
-            ? { x: touch.clientX, y: touch.clientY }
-            : undefined;
-        if (gesture === undefined) {
-          endDrag();
+        if (event.touches.length === 1 && touch !== undefined && !zoomedIn()) {
+          gesture = { x: touch.clientX, y: touch.clientY };
+        } else {
+          cancelGesture();
         }
       },
       { passive: true },
@@ -452,8 +628,7 @@ const copy = await getViewerCopy();
           return;
         }
         if (event.touches.length > 1 || zoomedIn()) {
-          gesture = undefined;
-          endDrag();
+          cancelGesture();
           return;
         }
         const x = touch.clientX - gesture.x;
@@ -467,6 +642,8 @@ const copy = await getViewerCopy();
         if (gesture.lock === "y" && phone.matches) {
           dialog.dataset.dragging = "";
           setDrag(Math.max(0, y));
+        } else if (gesture.lock === "x" && slides() && photos.length > 1) {
+          setSwipe(x);
         }
       },
       { passive: true },
@@ -482,29 +659,36 @@ const copy = await getViewerCopy();
       const x = touch.clientX - start.x;
       const y = touch.clientY - start.y;
       if (start.lock === "y" && y > dragToClose) {
-        close();
+        // Only a phone's viewer follows the finger down.
+        close({ dragged: phone.matches });
         return;
       }
-      // Springs back.
+      // Settles on the next photo, or springs back.
       endDrag();
-      if (start.lock === "x" && Math.abs(x) > swipeToMove) {
+      endSwipe();
+      if (start.lock === "x" && Math.abs(x) > swipeToMove && !atEnd(x)) {
         move(x < 0 ? 1 : -1);
       }
     });
 
-    dialog.addEventListener("touchcancel", () => {
-      gesture = undefined;
-      endDrag();
-    });
+    dialog.addEventListener("touchcancel", cancelGesture);
   }
 </script>
 
 <style>
+  /* A share of the window, between a floor (where it fits) and a cap, and
+     never so tall that the caption and the key hints leave the screen. The
+     same size for every photo. */
   .viewer {
-    inline-size: min(var(--viewer-w), 100% - 2 * var(--space-6));
+    inline-size: min(
+      var(--viewer-w),
+      max(
+        var(--viewer-share),
+        min(100% - 2 * var(--space-6), var(--viewer-min))
+      ),
+      (100dvh - var(--viewer-chrome)) * 3 / 2
+    );
     max-inline-size: none;
-    /* In a short window the photo shrinks, so the caption and the key hints
-       stay on screen. */
     max-block-size: calc(100% - 2 * var(--space-6));
     padding: 0;
     overflow: hidden;
@@ -524,6 +708,14 @@ const copy = await getViewerCopy();
     &::backdrop {
       background: var(--scrim);
       backdrop-filter: var(--scrim-backdrop);
+    }
+  }
+
+  /* It grows out of the photo that opened it (the script), so it only fades
+     in here. */
+  @media (prefers-reduced-motion: no-preference) {
+    .viewer[open] {
+      transition: opacity var(--dur-slow) var(--ease);
     }
   }
 
@@ -556,12 +748,33 @@ const copy = await getViewerCopy();
     overflow: hidden;
     border-block-end: var(--hairline) solid var(--line);
     background: var(--surface);
+  }
+
+  /* The photos are stacked and crossfade; on phones they slide (below).
+     Each one fills the 3:2 frame, cropped if it's another shape. */
+  .track {
+    display: grid;
+    block-size: 100%;
+
+    :global(.slide) {
+      grid-area: 1 / 1;
+      min-inline-size: 0;
+      min-block-size: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur) var(--ease);
+    }
+
+    :global(.slide.current) {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     :global(.image) {
       display: block;
       inline-size: 100%;
       block-size: 100%;
-      object-fit: contain;
+      object-fit: cover;
     }
   }
 
@@ -755,10 +968,31 @@ const copy = await getViewerCopy();
       overflow: visible;
       border: 0;
       background: transparent;
+    }
 
-      /* The same in both themes: not dimmed like the page's photos. */
-      :global(.image) {
-        filter: none;
+    /* The same in both themes: not dimmed like the page's photos. */
+    .track :global(.image) {
+      filter: none;
+    }
+
+    /* Side by side, following the finger while swiping (the stage clips
+       the neighbours), then settling. */
+    @media (prefers-reduced-motion: no-preference) {
+      .track {
+        display: flex;
+        translate: calc(var(--index, 0) * -100% + var(--swipe, 0px)) 0;
+        transition: translate var(--dur-slow) var(--ease-settle);
+
+        :global(.slide) {
+          flex: none;
+          inline-size: 100%;
+          opacity: 1;
+          transition: none;
+        }
+      }
+
+      .viewer[data-swiping] .track {
+        transition: none;
       }
     }
 

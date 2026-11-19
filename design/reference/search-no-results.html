@@ -314,7 +314,12 @@ html:has(.vwrap){overflow:hidden}
 .vdlg{position:relative;outline:none;animation:vwIn var(--dur-slow) var(--ease-settle) both}
 @keyframes vwIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
 .vfig{margin:0;display:flex;flex-direction:column}
-.vimg{display:block;width:100%;height:100%;object-fit:contain}
+.vimg{display:block;width:100%;height:100%;object-fit:cover}
+/* every photo of the talk sits in the frame. Desktop: stacked, the current one fades in. Phones: side by side, the row follows the finger */
+.vimgbox{position:relative;overflow:hidden}
+.vtrack{position:absolute;inset:0}
+.vslide{position:absolute;inset:0;opacity:0;transition:opacity var(--dur) var(--ease)}
+.vslide.on{opacity:1}
 .vcap{display:flex;flex-direction:column;gap:2px;min-width:0}
 .vtitle{font-size:16px;font-weight:500;line-height:1.35;color:var(--text)}
 .vmeta{display:flex;flex-wrap:wrap;column-gap:8px;font-size:14px;line-height:1.5;color:var(--text-3)}
@@ -324,12 +329,13 @@ html:has(.vwrap){overflow:hidden}
 .vbtn:hover{border-color:var(--line-strong);background:var(--bg)}
 /* the viewer is a card in the search palette's language: the photo on top of a bordered card, caption below, a footer with key hints */
 .vw-card .vscrim{background:var(--scrim);backdrop-filter:blur(2px)}
-.vw-card .vdlg{width:min(720px,100%);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);overflow:hidden}
+.vw-card{--vw-w:min(840px, max(70vw, min(100vw - 48px, 560px)), calc((100vh - 176px) * 1.5))}
+.vw-card .vdlg{width:var(--vw-w);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);overflow:hidden}
 .vw-card .vimgbox{aspect-ratio:3 / 2;background:var(--surface);border-bottom:1px solid var(--line)}
 .vw-card .vcap{padding:16px 20px}
 .vw-card .vclose{top:12px;right:12px}
-.vw-card .vprev{left:12px;top:calc((min(720px,100vw - 48px) * 2 / 3) / 2);margin-top:-20px}
-.vw-card .vnext{right:12px;top:calc((min(720px,100vw - 48px) * 2 / 3) / 2);margin-top:-20px}
+.vw-card .vprev{left:12px;top:calc(var(--vw-w) / 3);margin-top:-20px}
+.vw-card .vnext{right:12px;top:calc(var(--vw-w) / 3);margin-top:-20px}
 .vfoot{display:flex;justify-content:space-between;gap:16px;height:44px;align-items:center;padding:0 20px;border-top:1px solid var(--line);font-size:12px;color:var(--text-3)}
 .vfoot > span{display:inline-flex;align-items:center;gap:8px}
 .vkeys{display:inline-flex;gap:4px}
@@ -355,6 +361,9 @@ html:has(.vwrap){overflow:hidden}
 .vdots{display:flex;gap:8px}
 .vdot{width:6px;height:6px;border-radius:50%;background:var(--viewer-dot);transition:background var(--dur) var(--ease)}
 .vdot.on{background:var(--viewer-text)}
+.vtrack{display:flex;translate:calc(var(--vi) * -100% + var(--vdx, 0px)) 0;transition:translate var(--dur-slow) var(--ease-settle)}
+.vwrap.dragx .vtrack{transition:none}
+.vslide{position:relative;inset:auto;flex:0 0 100%;opacity:1;transition:none}
 }
 /* photo attachments, narrow rows: when the row is too narrow for the date column (the same 436px at which the date moves above the title),
    the photos show full width in the page instead of as thumbnails; several scroll sideways inside the text column with the next one peeking.
@@ -366,7 +375,7 @@ html:has(.vwrap){overflow:hidden}
 .photos > li{flex:0 0 calc(100% - 40px);scroll-snap-align:start}
 .photos > li:only-child{flex-basis:100%}
 }
-@media (prefers-reduced-motion:reduce){.vdlg{animation:palFade var(--dur) var(--ease) both;transition:none}.vscrim{animation:none}}
+@media (prefers-reduced-motion:reduce){.vdlg{animation:palFade var(--dur) var(--ease) both;transition:none}.vscrim{animation:none}.vtrack{display:block !important;translate:none !important;transition:none !important}.vslide{position:absolute !important;inset:0 !important;flex:none !important;opacity:0 !important;transition:opacity var(--dur) var(--ease) !important}.vslide.on{opacity:1 !important}}
 </style>
 </head><body>
 <div data-dc-tpl="3" class="site" style="--accent: #4F39F6; min-height: 100vh; background: var(--bg);">
@@ -765,7 +774,7 @@ html:has(.vwrap){overflow:hidden}
         <svg data-dc-tpl="314" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="315" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="316" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="317" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="318" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="319" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
         Elías García, 2026
       </span>
-      <span data-dc-tpl="320" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="321"><time data-dc-tpl="322" datetime="16:45"><span class="sc-interp">16:45</span></time> in Portugal</span><span data-dc-tpl="323" aria-hidden="true">·</span><span data-dc-tpl="324"><span class="sc-interp">1h behind you</span></span></span>
+      <span data-dc-tpl="320" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="321"><time data-dc-tpl="322" datetime="17:01"><span class="sc-interp">17:01</span></time> in Portugal</span><span data-dc-tpl="323" aria-hidden="true">·</span><span data-dc-tpl="324"><span class="sc-interp">1h behind you</span></span></span>
     </div>
   </footer>
 
@@ -774,82 +783,82 @@ html:has(.vwrap){overflow:hidden}
 
   
   
-    <div data-dc-tpl="371" style="position: fixed; inset: 0px; z-index: var(--z-dialog); display: flex; justify-content: center; align-items: flex-start; padding: 96px 16px 0px;">
-      <button data-dc-tpl="372" class="pscrim" aria-label="Close search"></button>
-      <div data-dc-tpl="373" class="ppanel" role="dialog" aria-label="Search" style="position: relative; width: 100%; max-width: 560px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-overlay); overflow: hidden;">
-        <label data-dc-tpl="374" style="display: flex; align-items: center; gap: 12px; padding: 0px 16px; height: 56px; border-bottom: 1px solid var(--line);">
-          <svg data-dc-tpl="375" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" style="fill: none; stroke: var(--text-3); stroke-width: 1.5; flex: 0 0 auto;"><circle data-dc-tpl="376" cx="7" cy="7" r="4.5"></circle><path data-dc-tpl="377" d="M10.5 10.5L14 14"></path></svg>
-          <span data-dc-tpl="378" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px);">Search posts and projects</span>
+    <div data-dc-tpl="373" style="position: fixed; inset: 0px; z-index: var(--z-dialog); display: flex; justify-content: center; align-items: flex-start; padding: 96px 16px 0px;">
+      <button data-dc-tpl="374" class="pscrim" aria-label="Close search"></button>
+      <div data-dc-tpl="375" class="ppanel" role="dialog" aria-label="Search" style="position: relative; width: 100%; max-width: 560px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-overlay); overflow: hidden;">
+        <label data-dc-tpl="376" style="display: flex; align-items: center; gap: 12px; padding: 0px 16px; height: 56px; border-bottom: 1px solid var(--line);">
+          <svg data-dc-tpl="377" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" style="fill: none; stroke: var(--text-3); stroke-width: 1.5; flex: 0 0 auto;"><circle data-dc-tpl="378" cx="7" cy="7" r="4.5"></circle><path data-dc-tpl="379" d="M10.5 10.5L14 14"></path></svg>
+          <span data-dc-tpl="380" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px);">Search posts and projects</span>
           
-          <input data-dc-tpl="381" class="pin" type="text" placeholder="Search posts and projects" role="combobox" aria-expanded="true" aria-controls="pal-list" aria-activedescendant="pal-0" autocomplete="off" value="kubernetes">
-          <button data-dc-tpl="383" class="pclear">Clear</button>
-          <span data-dc-tpl="384" class="pk">esc</span>
+          <input data-dc-tpl="383" class="pin" type="text" placeholder="Search posts and projects" role="combobox" aria-expanded="true" aria-controls="pal-list" aria-activedescendant="pal-0" autocomplete="off" value="kubernetes">
+          <button data-dc-tpl="385" class="pclear">Clear</button>
+          <span data-dc-tpl="386" class="pk">esc</span>
         </label>
         
-          <div data-dc-tpl="386" role="status" style="padding: 16px 16px 4px; display: flex; flex-direction: column; gap: 4px;">
-            <span data-dc-tpl="387" style="font-weight: 500;">No posts or projects match “<span class="sc-interp">kubernetes</span>”</span>
-            <span data-dc-tpl="388" style="font-size: 14px; color: var(--text-3);">Try a topic I write about, or suggest this one.</span>
+          <div data-dc-tpl="388" role="status" style="padding: 16px 16px 4px; display: flex; flex-direction: column; gap: 4px;">
+            <span data-dc-tpl="389" style="font-weight: 500;">No posts or projects match “<span class="sc-interp">kubernetes</span>”</span>
+            <span data-dc-tpl="390" style="font-size: 14px; color: var(--text-3);">Try a topic I write about, or suggest this one.</span>
           </div>
         
         
-        <div data-dc-tpl="391" id="pal-list" role="listbox" aria-label="Results" style="max-height: min(440px, -220px + 100vh); overflow-y: auto; scrollbar-width: thin; padding: 4px 8px 8px;">
+        <div data-dc-tpl="393" id="pal-list" role="listbox" aria-label="Results" style="max-height: min(440px, -220px + 100vh); overflow-y: auto; scrollbar-width: thin; padding: 4px 8px 8px;">
           
-            <div data-dc-tpl="393" role="group" aria-label="Topics">
-              <div data-dc-tpl="394" class="pgrp"><span class="sc-interp">Topics</span></div>
+            <div data-dc-tpl="395" role="group" aria-label="Topics">
+              <div data-dc-tpl="396" class="pgrp"><span class="sc-interp">Topics</span></div>
               
-                <a data-dc-tpl="396" class="popt act" id="pal-0" role="option" aria-selected="true" href="Writing.dc.html">
-                  <span data-dc-tpl="397" class="pic" aria-hidden="true"><svg data-dc-tpl="428" viewBox="0 0 16 16" aria-hidden="true"><path data-dc-tpl="429" d="M6.5 2.5L5 13.5M11 2.5L9.5 13.5M3 6h10.5M2.5 10H13"></path></svg></span>
-                  <span data-dc-tpl="444" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="445" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="450"><span class="sc-interp">AI</span></span></span>
+                <a data-dc-tpl="398" class="popt act" id="pal-0" role="option" aria-selected="true" href="Writing.dc.html">
+                  <span data-dc-tpl="399" class="pic" aria-hidden="true"><svg data-dc-tpl="430" viewBox="0 0 16 16" aria-hidden="true"><path data-dc-tpl="431" d="M6.5 2.5L5 13.5M11 2.5L9.5 13.5M3 6h10.5M2.5 10H13"></path></svg></span>
+                  <span data-dc-tpl="446" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="447" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="452"><span class="sc-interp">AI</span></span></span>
                     
                   </span>
-                  <span data-dc-tpl="458" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">3 posts</span></span>
-                  <span data-dc-tpl="459" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="460" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">3 posts</span></span>
+                  <span data-dc-tpl="461" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
-                <a data-dc-tpl="396" class="popt " id="pal-1" role="option" aria-selected="false" href="Writing.dc.html">
-                  <span data-dc-tpl="397" class="pic" aria-hidden="true"><svg data-dc-tpl="428" viewBox="0 0 16 16" aria-hidden="true"><path data-dc-tpl="429" d="M6.5 2.5L5 13.5M11 2.5L9.5 13.5M3 6h10.5M2.5 10H13"></path></svg></span>
-                  <span data-dc-tpl="444" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="445" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="450"><span class="sc-interp">DeFi</span></span></span>
+                <a data-dc-tpl="398" class="popt " id="pal-1" role="option" aria-selected="false" href="Writing.dc.html">
+                  <span data-dc-tpl="399" class="pic" aria-hidden="true"><svg data-dc-tpl="430" viewBox="0 0 16 16" aria-hidden="true"><path data-dc-tpl="431" d="M6.5 2.5L5 13.5M11 2.5L9.5 13.5M3 6h10.5M2.5 10H13"></path></svg></span>
+                  <span data-dc-tpl="446" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="447" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="452"><span class="sc-interp">DeFi</span></span></span>
                     
                   </span>
-                  <span data-dc-tpl="458" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">1 post</span></span>
-                  <span data-dc-tpl="459" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="460" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">1 post</span></span>
+                  <span data-dc-tpl="461" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
-                <a data-dc-tpl="396" class="popt " id="pal-2" role="option" aria-selected="false" href="Writing.dc.html">
-                  <span data-dc-tpl="397" class="pic" aria-hidden="true"><svg data-dc-tpl="428" viewBox="0 0 16 16" aria-hidden="true"><path data-dc-tpl="429" d="M6.5 2.5L5 13.5M11 2.5L9.5 13.5M3 6h10.5M2.5 10H13"></path></svg></span>
-                  <span data-dc-tpl="444" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="445" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="450"><span class="sc-interp">Design engineering</span></span></span>
+                <a data-dc-tpl="398" class="popt " id="pal-2" role="option" aria-selected="false" href="Writing.dc.html">
+                  <span data-dc-tpl="399" class="pic" aria-hidden="true"><svg data-dc-tpl="430" viewBox="0 0 16 16" aria-hidden="true"><path data-dc-tpl="431" d="M6.5 2.5L5 13.5M11 2.5L9.5 13.5M3 6h10.5M2.5 10H13"></path></svg></span>
+                  <span data-dc-tpl="446" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="447" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="452"><span class="sc-interp">Design engineering</span></span></span>
                     
                   </span>
-                  <span data-dc-tpl="458" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">1 post</span></span>
-                  <span data-dc-tpl="459" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="460" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">1 post</span></span>
+                  <span data-dc-tpl="461" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
             </div>
           
-            <div data-dc-tpl="393" role="group" aria-label="Suggest">
-              <div data-dc-tpl="394" class="pgrp"><span class="sc-interp">Suggest</span></div>
+            <div data-dc-tpl="395" role="group" aria-label="Suggest">
+              <div data-dc-tpl="396" class="pgrp"><span class="sc-interp">Suggest</span></div>
               
-                <a data-dc-tpl="396" class="popt " id="pal-3" role="option" aria-selected="false" href="mailto:eliasgarciadev@gmail.com?subject=Post%20idea%3A%20kubernetes">
-                  <span data-dc-tpl="397" class="pic" aria-hidden="true"><svg data-dc-tpl="431" viewBox="0 0 16 16" aria-hidden="true"><rect data-dc-tpl="432" x="2" y="3.5" width="12" height="9" rx="1.5"></rect><path data-dc-tpl="433" d="M2.5 4.5L8 9l5.5-4.5"></path></svg></span>
-                  <span data-dc-tpl="444" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="445" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="450"><span class="sc-interp">Suggest “</span></span><mark data-dc-tpl="448" class="phl"><span class="sc-interp">kubernetes</span></mark><span data-dc-tpl="450"><span class="sc-interp">” as a post</span></span></span>
-                    <span data-dc-tpl="452" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="457"><span class="sc-interp">Opens your email app</span></span></span>
+                <a data-dc-tpl="398" class="popt " id="pal-3" role="option" aria-selected="false" href="mailto:eliasgarciadev@gmail.com?subject=Post%20idea%3A%20kubernetes">
+                  <span data-dc-tpl="399" class="pic" aria-hidden="true"><svg data-dc-tpl="433" viewBox="0 0 16 16" aria-hidden="true"><rect data-dc-tpl="434" x="2" y="3.5" width="12" height="9" rx="1.5"></rect><path data-dc-tpl="435" d="M2.5 4.5L8 9l5.5-4.5"></path></svg></span>
+                  <span data-dc-tpl="446" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="447" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="452"><span class="sc-interp">Suggest “</span></span><mark data-dc-tpl="450" class="phl"><span class="sc-interp">kubernetes</span></mark><span data-dc-tpl="452"><span class="sc-interp">” as a post</span></span></span>
+                    <span data-dc-tpl="454" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="459"><span class="sc-interp">Opens your email app</span></span></span>
                   </span>
-                  <span data-dc-tpl="458" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
-                  <span data-dc-tpl="459" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="460" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
+                  <span data-dc-tpl="461" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
             </div>
           
         </div>
-        <div data-dc-tpl="460" style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--surface); font-size: 12px; color: var(--text-3);">
-          <span data-dc-tpl="461" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="462" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="463" class="pk">↑</span><span data-dc-tpl="464" class="pk">↓</span></span>to move</span>
-          <span data-dc-tpl="465" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="466" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="467" class="pk">↵</span></span>to open</span>
+        <div data-dc-tpl="462" style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--surface); font-size: 12px; color: var(--text-3);">
+          <span data-dc-tpl="463" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="464" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="465" class="pk">↑</span><span data-dc-tpl="466" class="pk">↓</span></span>to move</span>
+          <span data-dc-tpl="467" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="468" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="469" class="pk">↵</span></span>to open</span>
           
-          <span data-dc-tpl="472" style="margin-left: auto; font-variant-numeric: tabular-nums;"><span class="sc-interp">0 results</span></span>
+          <span data-dc-tpl="474" style="margin-left: auto; font-variant-numeric: tabular-nums;"><span class="sc-interp">0 results</span></span>
         </div>
       </div>
     </div>

@@ -1,10 +1,12 @@
-# Each talk has one to three photos, already cropped to 3:2.
+# Each talk has one to three photos: `src` already cropped to 3:2 for the
+# page, `full` the uncropped original for the image viewer.
 polygon-id-profiles:
   date: 2024-01
   title: Preserving privacy with Polygon ID profiles
   where: House of ZK, EthDenver
   photos:
     - src: ../assets/talk-hozk.jpg
+      full: ../assets/talk-hozk-full.jpg
       alt: Elías pointing at the Polygon ID identity state diagram while presenting at House of ZK, EthDenver 2024
 
 getting-started-with-polygon-id:
@@ -13,6 +15,7 @@ getting-started-with-polygon-id:
   where: Polygon AggCave, EthDenver
   photos:
     - src: ../assets/talk-aggcave.jpg
+      full: ../assets/talk-aggcave-full.jpg
       alt: Elías, holding a microphone, beside a fellow speaker presenting the main features of Polygon ID at the Polygon Aggregation Cave, EthDenver 2024
 
 # Photos by babypro.art.
@@ -22,8 +25,11 @@ issuing-verifiable-credentials:
   where: Polygon DevX Global Tour, Lisbon
   photos:
     - src: ../assets/talk-lisbon-slide.jpg
+      full: ../assets/talk-lisbon-slide-full.jpg
       alt: Elías on stage presenting a slide on traditional identity systems at the Polygon DevX Global Tour in Lisbon, 2023
     - src: ../assets/talk-lisbon-panel.jpg
+      full: ../assets/talk-lisbon-panel-full.jpg
       alt: Elías and two other speakers on stage at the Polygon DevX Global Tour in Lisbon, in front of a slide reading “Issuing Lens Verifiable Credentials using Polygon ID”
     - src: ../assets/talk-lisbon-group.jpg
+      full: ../assets/talk-lisbon-group-full.jpg
       alt: Elías with the speakers and organisers on stage at the Polygon DevX Global Tour in Lisbon, 2023

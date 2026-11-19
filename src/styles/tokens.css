@@ -188,7 +188,10 @@
     100dvh - 220px
   ); /* tallest result list, short of a small window */
   --control-sm: 28px; /* small controls inside the search input row */
-  --viewer-w: 720px; /* image viewer card */
+  --viewer-w: 840px; /* image viewer card, at most: wider, the talk photos would look soft */
+  --viewer-min: 560px; /* image viewer card, at least, where the window fits it */
+  --viewer-share: 70%; /* image viewer card: its share of the window */
+  --viewer-chrome: 176px; /* image viewer card around the photo: page padding, caption, key hints */
   --viewer-button: 40px; /* round buttons on the image viewer card */
   --contact-row: 36px; /* Home contact rows (minimum) */
   --search-button-sm: 36px; /* the header's search button on phones, icon only */

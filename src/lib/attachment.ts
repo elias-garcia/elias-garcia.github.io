@@ -13,9 +13,9 @@ export const photoImage = {
   sizes: `(width < 484px) calc(100vw - 3rem), ${attachmentImage.sizes}`,
 } as const;
 
-// A talk photo in the image viewer: the 720px card, or the full width of a
-// phone.
+// A talk photo in the image viewer: the card, at most 840px, or the full
+// width of a phone. Widths past the original's are left out.
 export const viewerImage = {
-  widths: [720, 1080, 1440],
-  sizes: "(width < 40rem) 100vw, 720px",
+  widths: [840, 1280, 1680, 2520],
+  sizes: "(width < 40rem) 100vw, 840px",
 } as const;

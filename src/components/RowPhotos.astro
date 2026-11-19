@@ -16,9 +16,9 @@ const { talk } = Astro.props;
 const copy = await getViewerCopy();
 const count = talk.photos.length;
 const photos = await Promise.all(
-  talk.photos.map(async ({ src, alt }, index) => {
+  talk.photos.map(async ({ src, full, alt }, index) => {
     const large = await getImage({
-      src,
+      src: full,
       widths: [...viewerImage.widths],
       sizes: viewerImage.sizes,
     });
