@@ -232,6 +232,14 @@ if (email === undefined) {
 <script>
   import { hasStrings, isRecord } from "../lib/guards.ts";
   import type { SearchEntry, SearchIndex, SearchTopic } from "../lib/search.ts";
+  import {
+    fold,
+    markMatches,
+    markStart,
+    matches,
+    words,
+    type Segment,
+  } from "../lib/search-match.ts";
   import { fill } from "../lib/template.ts";
 
   type Counts = { one: string; other: string };
@@ -274,99 +282,14 @@ if (email === undefined) {
     );
   }
 
-  // Lower case without accents, keeping each character's position in the
-  // original text, so a match can be highlighted where it was typed.
-  function fold(text: string): { folded: string; positions: number[] } {
-    let folded = "";
-    const positions: number[] = [];
-    for (const [index, character] of [...text].entries()) {
-      const simple = character
-        .normalize("NFD")
-        .replace(/\p{M}/gu, "")
-        .toLowerCase();
-      folded += simple;
-      positions.push(...Array.from(simple, () => index));
+  // A run of text, in a <mark> where it matches what was typed.
+  function toNode({ text, marked }: Segment): Node {
+    if (!marked) {
+      return document.createTextNode(text);
     }
-    return { folded, positions };
-  }
-
-  function words(query: string): string[] {
-    return fold(query).folded.split(/\s+/).filter(Boolean);
-  }
-
-  // Where the term starts a word in the folded text. Matching inside words
-  // would find "ai" in "daily".
-  function wordStarts(folded: string, term: string): number[] {
-    const starts: number[] = [];
-    let start = folded.indexOf(term);
-    while (start !== -1) {
-      if (!/[\p{L}\p{N}]/u.test(folded.charAt(start - 1))) {
-        starts.push(start);
-      }
-      start = folded.indexOf(term, start + 1);
-    }
-    return starts;
-  }
-
-  function matches(entry: SearchEntry, terms: readonly string[]): boolean {
-    const { folded } = fold(`${entry.title} ${entry.line}`);
-    return terms.every((term) => wordStarts(folded, term).length > 0);
-  }
-
-  // The text, with every word start that matches a term in a <mark>.
-  function highlight(text: string, terms: readonly string[]): Node[] {
-    const characters = [...text];
-    const { folded, positions } = fold(text);
-    const marked = Array.from(characters, () => false);
-    for (const term of terms) {
-      for (const start of wordStarts(folded, term)) {
-        for (let index = start; index < start + term.length; index += 1) {
-          const position = positions[index];
-          if (position !== undefined) {
-            marked[position] = true;
-          }
-        }
-      }
-    }
-    const nodes: Node[] = [];
-    let run = "";
-    let inMark = false;
-    const flush = () => {
-      if (run === "") {
-        return;
-      }
-      if (inMark) {
-        const mark = document.createElement("mark");
-        mark.textContent = run;
-        nodes.push(mark);
-      } else {
-        nodes.push(document.createTextNode(run));
-      }
-      run = "";
-    };
-    for (const [index, character] of characters.entries()) {
-      const isMarked = marked[index] ?? false;
-      if (isMarked !== inMark) {
-        flush();
-        inMark = isMarked;
-      }
-      run += character;
-    }
-    flush();
-    return nodes;
-  }
-
-  // The text with its start in a <mark>, when it starts with the term.
-  function highlightStart(text: string, term: string): (Node | string)[] {
-    const { folded, positions } = fold(text);
-    const last = positions[term.length - 1];
-    if (last === undefined || !folded.startsWith(term)) {
-      return [text];
-    }
-    const characters = [...text];
     const mark = document.createElement("mark");
-    mark.textContent = characters.slice(0, last + 1).join("");
-    return [mark, characters.slice(last + 1).join("")];
+    mark.textContent = text;
+    return mark;
   }
 
   const announceAfter = 500;
@@ -558,7 +481,9 @@ if (email === undefined) {
             match = position;
           }
           title?.replaceChildren(
-            ...(position === match ? highlightStart(label, term) : [label]),
+            ...(position === match
+              ? markStart(label, term).map(toNode)
+              : [label]),
           );
         }
         showView("cv");
@@ -584,14 +509,17 @@ if (email === undefined) {
       }
 
       const terms = words(query);
-      const posts = index.posts.filter((entry) => matches(entry, terms));
-      const projects = index.projects.filter((entry) => matches(entry, terms));
+      // A query matches only what a row shows: its title and its line.
+      const found = (entry: SearchEntry) =>
+        matches(`${entry.title} ${entry.line}`, terms);
+      const posts = index.posts.filter(found);
+      const projects = index.projects.filter(found);
       const total = posts.length + projects.length;
       const toRow = (kind: "posts" | "projects") => (entry: SearchEntry) =>
         row(
           kind,
-          highlight(entry.title, terms),
-          highlight(entry.line, terms),
+          markMatches(entry.title, terms).map(toNode),
+          markMatches(entry.line, terms).map(toNode),
           entry.meta,
           entry.href,
         );
