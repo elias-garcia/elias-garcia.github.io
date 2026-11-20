@@ -164,7 +164,7 @@ Deliberate exceptions, each explanatory rather than interface feedback: the Role
 
 ### 2.6 Elevation and layers
 
-One shadow, `--shadow-overlay`, for things that float (search dialog, image viewer card, Download CV menu). Everything else is flat and separated by borders.
+One shadow, `--shadow-overlay`, for things that float (search dialog, image viewer card, Download CV menu). Everything else is flat and separated by borders. The two dialogs share one shell, the base `dialog` style: hairline border, `--r-lg`, `--bg`, the shadow, the `--scrim` backdrop with its blur, and a page behind that doesn't scroll.
 
 | Layer | z-index | Use |
 |---|---|---|
@@ -442,7 +442,7 @@ Every page must pass axe (WCAG 2.2 AA + best practice) in light and dark, at 128
 - Landmarks: one `<header>`, `<nav aria-label="Main">`, `<main id="content">`, `<footer>`, and nothing else on most pages. A `<section>` with a name becomes a `region` landmark, so the sections on Home, Writing and the 404 carry no `aria-labelledby`: people move through them by their `h2` headings, and nine named regions would bury the four landmarks that matter. Work experience needs none either: its rows are native `<details>`. Named on purpose: a post's Notes (one per post), and the scrollable code blocks and tables (focusable so the keyboard can scroll them, and anything focusable needs a role and a name). One `h1` per page, no skipped heading levels.
 - Lists are `<ul role="list">` (role keeps semantics in Safari with `list-style: none`). Dates are `<time>`. Contact is `<address>` + `<dl>`. Page intros are `<header>` inside `main`, not labelled sections.
 - Every interactive element is a real `<a>`, `<button>` or `<summary>`; the Download CV button opens its popover with `popovertarget` and `aria-controls`; the selected chip has `aria-current="page"`; the search uses `role="dialog"`, `aria-modal`, a combobox input and `aria-activedescendant`. Its result count and messages are announced by one hidden status region half a second after typing stops, not on every key; a click outside closes it (`closedby="any"`, with a click listener where that isn't supported); and Enter that only confirms an input method's composition never opens a result.
-- Visible focus: 2px `--accent` outline, 3px offset, following the element's shape (text links get `--r-sm`).
+- Visible focus: 2px `--accent` outline, 3px offset, following the element's shape: every link gets `--r-sm` by default (a base style), and a link with its own shape (a button, a chip, a card) keeps that shape.
 - Touch: 44px hit areas on `pointer: coarse` without changing visuals.
 - Decorative illustrations are `aria-hidden`; their captions describe them. Rejected listings fading in the Roleburn hero are exempt decorative text.
 - Scrollable code blocks are focusable regions with a label.

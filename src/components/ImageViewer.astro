@@ -933,15 +933,7 @@ const copy = await getViewerCopy();
       ),
       (100dvh - var(--viewer-chrome)) * 3 / 2
     );
-    max-inline-size: none;
     max-block-size: calc(100% - 2 * var(--space-6));
-    padding: 0;
-    overflow: hidden;
-    border: var(--hairline) solid var(--line);
-    border-radius: var(--r-lg);
-    background: var(--bg);
-    color: var(--text);
-    box-shadow: var(--shadow-overlay);
     /* Not only while open: a closing viewer keeps its layout while it fades
        out. */
     flex-direction: column;
@@ -954,11 +946,6 @@ const copy = await getViewerCopy();
     &:focus,
     &:focus-visible {
       outline: none;
-    }
-
-    &::backdrop {
-      background: var(--scrim);
-      backdrop-filter: var(--scrim-backdrop);
     }
   }
 
@@ -1036,12 +1023,6 @@ const copy = await getViewerCopy();
   :global(:root[data-viewer-travel="closing"]::view-transition-old(root)) {
     z-index: var(--z-viewer-closing);
     animation: page-out var(--dur) var(--ease-settle) both;
-  }
-
-  /* The page behind a modal viewer doesn't scroll, or pull to refresh. */
-  :global(html:has(.viewer[open])) {
-    overflow: hidden;
-    overscroll-behavior: none;
   }
 
   .figure {

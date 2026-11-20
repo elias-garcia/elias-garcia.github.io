@@ -828,27 +828,8 @@ if (email === undefined) {
     --control-sm: 28px;
 
     inline-size: min(var(--search-w), 100% - 2 * var(--space-4));
-    max-inline-size: none;
     max-block-size: none;
     margin: var(--space-24) auto auto;
-    padding: 0;
-    overflow: hidden;
-    border: var(--hairline) solid var(--line);
-    border-radius: var(--r-lg);
-    background: var(--bg);
-    color: var(--text);
-    box-shadow: var(--shadow-overlay);
-
-    &::backdrop {
-      background: var(--scrim);
-      backdrop-filter: var(--scrim-backdrop);
-    }
-  }
-
-  /* The page behind a modal search doesn't scroll, or pull to refresh. */
-  :global(html:has(.search[open])) {
-    overflow: hidden;
-    overscroll-behavior: none;
   }
 
   .input-row {

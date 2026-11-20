@@ -85,11 +85,41 @@ a {
   text-decoration: none;
   transition: color var(--dur) var(--ease);
 
+  /* The focus ring follows this; a link with its own shape (a button, a
+     card) sets its own radius. */
+  &:focus-visible {
+    border-radius: var(--r-sm);
+  }
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       color: var(--accent);
     }
   }
+}
+
+/* ---- Dialogs: the search and the image viewer (DESIGN.md §2.6) ---- */
+
+dialog {
+  max-inline-size: none;
+  padding: 0;
+  overflow: hidden;
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: var(--shadow-overlay);
+
+  &::backdrop {
+    background: var(--scrim);
+    backdrop-filter: var(--scrim-backdrop);
+  }
+}
+
+/* The page behind a modal dialog doesn't scroll, or pull to refresh. */
+html:has(dialog:modal) {
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 /* ---- Touch (DESIGN.md §2.9) ---- */
