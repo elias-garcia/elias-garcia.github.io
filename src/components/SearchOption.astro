@@ -39,6 +39,7 @@ const Row = href === undefined ? "div" : "a";
   tabindex="-1"
   href={href}
   download={download || undefined}
+  data-astro-prefetch={download ? "false" : undefined}
   data-action={action}
   data-keywords={keywords?.join(" ")}
   {...(href === undefined ? {} : linkTarget(href))}

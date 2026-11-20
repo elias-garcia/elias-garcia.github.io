@@ -455,6 +455,7 @@ Every page must pass axe (WCAG 2.2 AA + best practice) in light and dark, at 128
 
 ## 8. Build notes
 
+- **Prefetch:** Astro's `prefetch` with `prefetchAll`: hovering or focusing a link to another page of the site loads it ahead of the click (on a slow connection or with data saver, only on press). Downloads and links that open in a new tab opt out (`data-astro-prefetch="false"`).
 - **Security headers and CSP:** only the site's own scripts and styles run. Astro's `security.csp` writes each page's policy as a `<meta>` with the hashes of its scripts and styles (`default-src 'self'`, no objects, no `<base>`, no form targets; stylesheets and `<style>` elements only from the site, and inline `style` attributes allowed for the code blocks' colours). Astro warns on every start that Shiki's inline styles don't work with a CSP; with style attributes allowed they do, and the warning can't be turned off. `vercel.json` sends what a `<meta>` can't: `frame-ancestors 'none'` with `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy` and `Cross-Origin-Opener-Policy`. Anything loaded from another origin (an embed, a script, an image) is blocked until the policy allows it. The policy isn't applied in `npm run dev`.
 - **Code highlighting:** built-in Shiki with the minimal indigo theme in `src/lib/shiki-theme.ts` (see Code blocks above).
 - **Download CV:** link the menu items to `/cv.pdf` and `/cv.md`; generate `/cv.md` at build time from the content and compute both sizes at build time.

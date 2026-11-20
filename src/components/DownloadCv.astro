@@ -21,7 +21,12 @@ const formats = await getCvFormats();
   <ul class="formats" id="cv-formats" popover role="list" data-cv-formats>
     {formats.map((format) => (
       <li>
-        <a class="format" href={format.href} download>
+        <a
+          class="format"
+          href={format.href}
+          download
+          data-astro-prefetch="false"
+        >
           <span class="tile" aria-hidden="true">
             <CvFormatIcon format={format.icon} />
           </span>

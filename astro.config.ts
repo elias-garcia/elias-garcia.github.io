@@ -31,6 +31,9 @@ export default defineConfig({
     layout: "constrained",
     responsiveStyles: true,
   },
+  // Hovering or focusing a link to another page of the site loads it ahead
+  // of the click. Downloads and links that open in a new tab opt out.
+  prefetch: { prefetchAll: true },
   // Only this site's own scripts and styles run: Astro adds the hashes of
   // the ones it processes to a <meta> policy at the end of each page's
   // <head>. `is:inline` code isn't hashed, so it only runs from <head>,

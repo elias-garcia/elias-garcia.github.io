@@ -11,9 +11,15 @@ export function opensNewTab(href: string | undefined): boolean {
   );
 }
 
+// A link that opens in a new tab isn't loaded ahead of the click either:
+// Astro's prefetch skips other sites by itself, but not this site's feed.
 export function linkTarget(href: string | undefined) {
   return opensNewTab(href)
-    ? { target: "_blank", rel: "noopener noreferrer" }
+    ? {
+        target: "_blank",
+        rel: "noopener noreferrer",
+        "data-astro-prefetch": "false",
+      }
     : {};
 }
 
