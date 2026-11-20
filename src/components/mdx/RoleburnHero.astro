@@ -87,6 +87,17 @@ const matches = listings.filter(({ match }) => match).length;
 
 <style>
   .hero {
+    /* One cycle: the scan line and the listings' fading share it. */
+    --dur-scan: 6s;
+    --ease-scan: cubic-bezier(0.45, 0, 0.55, 1);
+    /* The scan line, above the listings it sweeps. */
+    --z-scan: 1;
+    --hero-row: 36px;
+    --hero-chip: 28px;
+    /* Rejected listings. */
+    --hero-dim: 0.32;
+    --scan-glow: 0 0 0 4px var(--tint), 0 8px 24px -4px var(--accent);
+
     display: flex;
     flex-direction: column;
     gap: var(--space-3);

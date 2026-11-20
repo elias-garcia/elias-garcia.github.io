@@ -823,6 +823,13 @@ if (email === undefined) {
 
 <style>
   .search {
+    --search-w: 560px;
+    --search-input-h: 56px;
+    /* The tallest result list, short of a small window. */
+    --search-list-h: min(440px, 100dvh - 220px);
+    /* The small controls in the input row: Clear and the crumb. */
+    --control-sm: 28px;
+
     inline-size: min(var(--search-w), 100% - 2 * var(--space-4));
     max-inline-size: none;
     max-block-size: none;

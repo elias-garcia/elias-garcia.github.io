@@ -921,6 +921,19 @@ const copy = await getViewerCopy();
      never so tall that the caption and the key hints leave the screen. The
      same size for every photo. */
   .viewer {
+    --viewer-scale: 0.98;
+    /* The buttons, above the photo. */
+    --z-viewer-controls: 1;
+    --dot-sm: 6px;
+    /* At most: wider, the talk photos would look soft. */
+    --viewer-w: 840px;
+    /* At least, where the window fits it. */
+    --viewer-min: 560px;
+    --viewer-share: 70%;
+    /* Around the photo: page padding, caption, key hints. */
+    --viewer-chrome: 176px;
+    --viewer-button: 40px;
+
     inline-size: min(
       var(--viewer-w),
       max(

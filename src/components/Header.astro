@@ -39,6 +39,9 @@ const { pathname } = Astro.url;
 
 <style>
   .header {
+    --header-backdrop: saturate(1.4) blur(12px);
+    --progress-h: 2px;
+
     position: sticky;
     inset-block-start: 0;
     z-index: var(--z-header);

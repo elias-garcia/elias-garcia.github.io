@@ -47,6 +47,11 @@ const curves = ["linear", "ease-out"] as const;
   /* The caption is the figure's last child, as figcaption must be; the grid
      puts Replay beside it, or under it on phones. */
   .demo {
+    /* Longer than interface motion on purpose: the demo is what's being read. */
+    --dur-demo: 600ms;
+    --demo-label: 72px;
+    --runner: 16px;
+
     display: grid;
     grid-template-areas:
       "runs runs"

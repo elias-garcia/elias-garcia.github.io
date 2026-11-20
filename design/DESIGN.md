@@ -5,7 +5,7 @@ This is the source of truth for the site's design. It was produced in Claude Des
 **How to use this package**
 
 - `design/DESIGN.md` (this file): what to build and the rules it follows.
-- `src/styles/tokens.css`: every colour, radius, motion and layer value. Never retype values.
+- `src/styles/tokens.css`: the shared system: every colour, the type and spacing scales, radii, motion, layers and the sizes more than one component uses. Never retype those values. A value only one component uses (the image viewer's card sizes, a footnote marker's size, an illustration's loop) is a custom property at the top of that component's styles, named and commented there.
 - `design/reference/*.html`: static renders of every approved page and state, with the real CSS. Open them in a browser to compare, and read their CSS for exact details. They are reference, not source: rebuild them as Astro components rather than copying markup. Interactive behaviour (search, menus, filters) is described in this document because the static files cannot run it.
 - `design/screenshots/`: every page at 1280px and 390px, in light and dark, plus the interactive states. Use them to check your output visually.
 - `design/assets/`: logo, avatar, talk photos, the course trailer thumbnail, share images (originals; the site uses copies in `src/assets/`). `design/head.html`: the `<head>` tags for every page (viewport, colour scheme, app icons, which live in `public/`).
@@ -168,12 +168,12 @@ One shadow, `--shadow-overlay`, for things that float (search dialog, image view
 
 | Layer | z-index | Use |
 |---|---|---|
-| `--z-viewer-controls` | 1 | Image viewer buttons, above the photo |
-| content | 2, 5 | Local stacking inside a component |
+| content | 1 | Local stacking inside a component, declared there (the image viewer's buttons above the photo, a case study hero's scan line) |
+| `--z-viewer-closing` | 1 | The old page above the new one while a photo travels back into its thumbnail |
 | `--z-header` | 10 | Sticky header, reading progress bar |
-| `--z-menu` | 30 | Download CV menu and its click-away layer |
-| `--z-dialog` | 50 | Search dialog, image viewer, and their backdrops |
 | `--z-skip` | 100 | Skip link |
+
+The search dialog, the image viewer and the Download CV menu sit in the browser's top layer (a modal `<dialog>`, a popover), above everything, so they need no z-index.
 
 ### 2.7 Icons
 
@@ -344,6 +344,8 @@ MDX-only components, for the occasional post that needs them:
 | `--code-comment` | zinc-500, italic | zinc-400, italic | Comments |
 | `--code-punct` | zinc-500 | zinc-400 | Punctuation and operators |
 | `--code-highlight` | indigo-50 | indigo-950 | Highlighted lines, with a 2px `--accent` rule on the left |
+
+All but `--code-literal` are the text, accent and tint colours under another name (`--text-2`, `--accent`, `--text`, `--text-3`, `--tint`), so they are defined once, as aliases.
 
 On a highlighted line, comments switch to `--code-plain` (zinc-500 on indigo-50 falls below 4.5:1). Implementation: `src/lib/shiki-theme.ts`, a Shiki theme that maps token scopes straight to the code tokens; `CodeBlock` styles lines and highlights. Highlight lines in posts with `// [!code highlight]` via `transformerNotationHighlight`. The language label comes from the code fence's language (Astro adds `data-language` to `pre`); map `pre` to a `CodeBlock` component that renders the header bar.
 

@@ -4,6 +4,19 @@
 
 <style>
   .prose {
+    /* A note or marker you arrive at lights up, then fades. */
+    --dur-flash: 2s;
+    --marker: 20px;
+    /* Footnote markers sit just above the baseline. */
+    --marker-lift: 2px;
+    /* A marker you return to lands a third of the way down. */
+    --marker-scroll: 30vh;
+    /* The smallest target (WCAG 2.5.8): the footnote back link. */
+    --target-sm: 24px;
+    --rule-short: 64px;
+    /* Inline code, relative to the text around it. */
+    --code-inline: 0.875em;
+
     & :global(p) {
       color: var(--text-2);
       line-height: var(--leading-body);

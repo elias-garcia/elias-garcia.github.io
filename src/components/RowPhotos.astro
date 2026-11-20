@@ -88,6 +88,10 @@ const photos = await Promise.all(
 <style>
   /* Always three slots, so one or two photos keep the same size. */
   .photos {
+    --photo-hover: 0.88;
+    /* Room left for the next photo in the strip: the 8px gap plus a 32px peek. */
+    --photo-peek: 40px;
+
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-2);
