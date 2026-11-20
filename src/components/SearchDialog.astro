@@ -56,6 +56,8 @@ if (email === undefined) {
       aria-autocomplete="list"
       autocomplete="off"
       spellcheck="false"
+      autocapitalize="none"
+      autocorrect="off"
       enterkeyhint="go"
       placeholder={copy.input}
       data-placeholder={copy.input}
@@ -208,12 +210,6 @@ if (email === undefined) {
 
 <script>
   import { fill } from "../lib/template.ts";
-  import {
-    closeTopLayer,
-    fadeOnCloseRequests,
-    isClosing,
-    stopClosing,
-  } from "../lib/top-layer.ts";
 
   type Entry = {
     title: string;
@@ -668,15 +664,11 @@ if (email === undefined) {
     };
 
     const close = () => {
-      void closeTopLayer(dialog, () => {
-        dialog.close();
-      });
+      dialog.close();
     };
 
     const open = () => {
       if (dialog.open) {
-        // Opened again while it fades out: it stays open.
-        stopClosing(dialog);
         return;
       }
       input.value = "";
@@ -688,7 +680,7 @@ if (email === undefined) {
     document.addEventListener("keydown", (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
-        if (dialog.open && !isClosing(dialog)) {
+        if (dialog.open) {
           close();
         } else {
           open();
@@ -742,8 +734,8 @@ if (email === undefined) {
         return;
       }
       if (option instanceof HTMLAnchorElement) {
-        // The link does its own thing; the dialog steps out of the way. A
-        // download or a new tab leaves the visitor here, so it fades out.
+        // The link does its own thing; the dialog steps out of the way, as
+        // a download or a new tab leaves the visitor here.
         close();
         return;
       }
@@ -776,8 +768,6 @@ if (email === undefined) {
         close();
       }
     });
-
-    fadeOnCloseRequests(dialog);
   }
 </script>
 
@@ -801,9 +791,10 @@ if (email === undefined) {
     }
   }
 
-  /* The page behind a modal search doesn't scroll. */
+  /* The page behind a modal search doesn't scroll, or pull to refresh. */
   :global(html:has(.search[open])) {
     overflow: hidden;
+    overscroll-behavior: none;
   }
 
   .input-row {
@@ -847,26 +838,49 @@ if (email === undefined) {
     background: var(--control);
     color: var(--text-2);
     cursor: pointer;
-    transition:
-      background var(--dur) var(--ease),
-      color var(--dur) var(--ease);
 
-    &:hover {
-      background: var(--control-hover);
-      color: var(--text);
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: var(--control-hover);
+        color: var(--text);
+      }
     }
   }
 
+  /* The crumb highlights at once, like the rows (DESIGN.md §2.5); only its
+     press moves. */
   .crumb {
     padding-inline: var(--space-3);
     border-radius: var(--r-full);
     font-size: var(--text-small);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: scale var(--dur) var(--ease-settle);
+
+      &:active {
+        scale: var(--press-scale);
+      }
+    }
   }
 
   .clear {
     padding-inline: var(--space-2);
     border-radius: var(--r-md);
     font-size: var(--text-micro);
+    transition:
+      background var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        background var(--dur) var(--ease),
+        color var(--dur) var(--ease),
+        scale var(--dur) var(--ease-settle);
+
+      &:active {
+        scale: var(--press-scale);
+      }
+    }
   }
 
   /* The status region has no box of its own: empty, it stays rendered, since
@@ -897,6 +911,7 @@ if (email === undefined) {
   .list {
     max-block-size: var(--search-list-h);
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: var(--space-1) var(--space-2) var(--space-2);
     scrollbar-width: thin;
   }

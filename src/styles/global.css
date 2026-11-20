@@ -45,6 +45,8 @@ img:not([src$=".svg"]) {
 /* ---- Base ---- */
 
 html {
+  /* Every tappable thing has its own press state instead (DESIGN.md §2.9). */
+  -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   /* Anchor targets stop below the sticky header, not under it. */
@@ -64,7 +66,9 @@ html {
 }
 
 body {
-  min-block-size: 100dvh;
+  /* The smallest viewport: on phones, 100vh is taller than the screen while
+     the address bar shows. */
+  min-block-size: 100svh;
   display: flex;
   flex-direction: column;
   background: var(--bg);
@@ -81,8 +85,46 @@ a {
   text-decoration: none;
   transition: color var(--dur) var(--ease);
 
-  &:hover {
-    color: var(--accent);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--accent);
+    }
+  }
+}
+
+/* ---- Touch (DESIGN.md §2.9) ---- */
+
+/* Links and controls don't wait for a possible double-tap zoom. */
+:where(a, button, summary, label, [role="button"]) {
+  touch-action: manipulation;
+}
+
+/* A long press doesn't select a control's label. Text content stays
+   selectable. */
+:where(button, summary, [role="button"]) {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* On touch screens a pressed text link dims at once and, with no opacity
+   transition of its own, comes back at once, so a tap shows before the next
+   page arrives. Buttons, chips and cards have their own press, rows dim and
+   fade back (ListRow, SearchOption and the Download CV formats), a heading's
+   # link isn't shown on touch, and the skip link keeps its slide. */
+@media (hover: none), (pointer: coarse) {
+  a:not(
+      .button,
+      .chip,
+      .tile,
+      .card,
+      .video,
+      .title-link,
+      .option,
+      .format,
+      .anchor,
+      .skip
+    ):active {
+    opacity: var(--press-dim);
   }
 }
 
@@ -113,57 +155,6 @@ p {
   }
 }
 
-/* ---- Modal dialogs (DESIGN.md §2.5, overlays): search, image viewer ---- */
-
-/* Opening, a dialog and its backdrop fade in, and the dialog grows slightly
-   from its centre. The fade eases out; the growth settles. With reduced
-   motion it only fades. */
-dialog[open],
-dialog[open]::backdrop {
-  transition: opacity var(--dur-slow) var(--ease);
-
-  @starting-style {
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  dialog[open] {
-    transition:
-      opacity var(--dur-slow) var(--ease),
-      scale var(--dur-slow) var(--ease-settle);
-
-    @starting-style {
-      scale: var(--overlay-scale);
-    }
-  }
-}
-
-/* Closing, both fade out, quicker. Where a closing dialog can stay in the
-   top layer until it's done (`overlay`), CSS fades it out by itself. */
-@supports (overlay: auto) {
-  dialog,
-  dialog::backdrop {
-    transition-property: opacity, overlay, display;
-    transition-duration: var(--dur);
-    transition-timing-function: var(--ease);
-    transition-behavior: allow-discrete;
-  }
-
-  dialog:not([open]),
-  dialog:not([open])::backdrop {
-    opacity: 0;
-  }
-}
-
-/* Elsewhere, src/lib/top-layer.ts fades it out while it's still open, then
-   closes it. */
-dialog[open][data-closing],
-dialog[open][data-closing]::backdrop {
-  opacity: 0;
-  transition: opacity var(--dur) var(--ease);
-}
-
 /* ---- Page transitions (DESIGN.md §2.5) ---- */
 
 @media (prefers-reduced-motion: no-preference) {
@@ -173,7 +164,7 @@ dialog[open][data-closing]::backdrop {
 }
 
 ::view-transition-old(root) {
-  animation: page-out var(--dur-fast) var(--ease) both;
+  animation: page-out var(--dur-fast) var(--ease-settle) both;
 }
 
 ::view-transition-new(root) {
@@ -189,7 +180,7 @@ dialog[open][data-closing]::backdrop {
 }
 
 ::view-transition-old(roleburn-preview):only-child {
-  animation: page-out var(--dur-fast) var(--ease) both;
+  animation: page-out var(--dur-fast) var(--ease-settle) both;
 }
 
 ::view-transition-new(roleburn-preview):only-child {

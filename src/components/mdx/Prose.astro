@@ -427,8 +427,10 @@
       }
     }
 
-    &:hover :global(.anchor) {
-      opacity: 1;
+    @media (hover: hover) and (pointer: fine) {
+      &:hover :global(.anchor) {
+        opacity: 1;
+      }
     }
   }
 
@@ -456,10 +458,16 @@
       background var(--dur) var(--ease),
       color var(--dur) var(--ease);
 
-    &:hover,
     &:focus-visible {
       background: var(--accent);
       color: var(--bg);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: var(--accent);
+        color: var(--bg);
+      }
     }
 
     &:target {
@@ -570,10 +578,16 @@
         color var(--dur) var(--ease),
         background var(--dur) var(--ease);
 
-      &:hover,
       &:focus-visible {
         background: var(--control);
         color: var(--accent);
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          background: var(--control);
+          color: var(--accent);
+        }
       }
 
       & :global(svg) {

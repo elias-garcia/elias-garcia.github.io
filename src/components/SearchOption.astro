@@ -72,14 +72,26 @@ const Row = href === undefined ? "div" : "a";
     border-radius: var(--r-md);
     color: var(--text);
     cursor: pointer;
-    transition: background var(--dur-fast) var(--ease);
 
-    &:hover {
-      color: var(--text);
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: var(--text);
+      }
     }
 
     &[aria-selected="true"] {
       background: var(--tint);
+    }
+
+    /* Pressed on a touch screen, a row dims like the page's links, whether
+       it's a link or an action (DESIGN.md §2.9). */
+    @media (hover: none), (pointer: coarse) {
+      transition: opacity var(--dur) var(--ease-settle);
+
+      &:active {
+        opacity: var(--press-dim);
+        transition: none;
+      }
     }
   }
 
@@ -93,9 +105,6 @@ const Row = href === undefined ? "div" : "a";
     border-radius: var(--r-md);
     background: var(--control);
     color: var(--text-2);
-    transition:
-      background var(--dur-fast) var(--ease),
-      color var(--dur-fast) var(--ease);
 
     [aria-selected="true"] & {
       background: var(--bg);
@@ -153,7 +162,6 @@ const Row = href === undefined ? "div" : "a";
     color: var(--text-3);
     font-size: var(--text-small);
     opacity: 0;
-    transition: opacity var(--dur-fast) var(--ease);
 
     [aria-selected="true"] & {
       opacity: 1;

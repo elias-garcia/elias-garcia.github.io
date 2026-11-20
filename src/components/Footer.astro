@@ -109,13 +109,14 @@ const { name, country, timezone } = Astro.props;
   .footer {
     flex-shrink: 0;
     margin-block-start: var(--space-footer);
+    padding-block-end: env(safe-area-inset-bottom, 0px);
     border-block-start: var(--hairline) solid var(--line);
     color: var(--text-3);
     font-size: var(--text-small);
     animation: page-in var(--dur-slow) var(--ease-settle) backwards;
 
     @media (prefers-reduced-motion: reduce) {
-      animation: page-fade var(--dur) var(--ease) backwards;
+      animation: page-fade var(--dur) var(--ease-settle) backwards;
     }
 
     :global(:root[data-in-place]) & {
@@ -132,7 +133,7 @@ const { name, country, timezone } = Astro.props;
     max-inline-size: var(--column);
     min-block-size: var(--bar-h);
     margin-inline: auto;
-    padding: var(--space-3) var(--space-6);
+    padding: var(--space-3) var(--page-end) var(--space-3) var(--page-start);
   }
 
   .owner {

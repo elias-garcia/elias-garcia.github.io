@@ -122,11 +122,4 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
       opacity: var(--row-fade);
     }
   }
-
-  /* Switching topics keeps the page in place: only the posts re-enter. */
-  @media (prefers-reduced-motion: no-preference) {
-    :global(:root[data-in-place]) .years {
-      animation: page-in var(--dur) var(--ease-settle) backwards;
-    }
-  }
 </style>

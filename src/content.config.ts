@@ -64,7 +64,7 @@ const talks = defineCollection({
       title: z.string(),
       where: z.string(),
       photos: z
-        .array(z.object({ src: image(), full: image(), alt: z.string() }))
+        .array(z.object({ src: image(), alt: z.string() }))
         .min(1)
         .max(3),
     }),
@@ -168,6 +168,12 @@ const post = defineCollection({
   loader: file("src/content/post.yaml"),
   schema: z.object({
     readingTime: template("{minutes}"),
+    copyPage: z.string(),
+    copyPageName: z.string(),
+    copyCode: z.string(),
+    codeName: template("{language}"),
+    copyCodeName: template("{language}"),
+    copied: z.string(),
   }),
 });
 

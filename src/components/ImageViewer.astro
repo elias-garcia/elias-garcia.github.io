@@ -117,11 +117,7 @@ const copy = await getViewerCopy();
   import type createPanzoom from "@panzoom/panzoom";
   import type { PanzoomObject } from "@panzoom/panzoom";
   import { fill } from "../lib/template.ts";
-  import {
-    closeTopLayer,
-    fadeOnCloseRequests,
-    isClosing,
-  } from "../lib/top-layer.ts";
+  import { closeTopLayer, isClosing } from "../lib/top-layer.ts";
 
   type Copy = { label: string; labelOne: string; position: string };
 
@@ -151,13 +147,22 @@ const copy = await getViewerCopy();
   const lockAfter = 8;
   const swipeToMove = 50;
   const dragToClose = 80;
-  // Swiping past the first or last photo moves the row this much of the way.
-  const resistance = 1 / 3;
+  // A shorter gesture still counts if it's a flick: this fast, in pixels per
+  // millisecond, over at least this distance.
+  const flickSpeed = 0.11;
+  const flickDistance = 16;
+  // Past the first or last photo, and dragging the viewer up, the photo
+  // follows less the further the finger goes.
+  const edgeFriction = 120;
+  const upFriction = 60;
   // How far a drag down goes before the backdrop is at its faintest.
   const fadeDistance = 480;
   const faintest = 0.4;
-  // The smallest the viewer starts from, for a tiny thumbnail.
-  const smallestScale = 0.2;
+  // The name the photo travels under between its thumbnail and the viewer.
+  const travelName = "viewer-photo";
+
+  const damp = (distance: number, friction: number) =>
+    distance / (1 + Math.abs(distance) / friction);
 
   const dialog = document.querySelector<HTMLDialogElement>("[data-viewer]");
   const frame = dialog?.querySelector<HTMLElement>("[data-viewer-frame]");
@@ -180,17 +185,12 @@ const copy = await getViewerCopy();
     dots &&
     isCopy(copy)
   ) {
+    const root = document.documentElement;
     const phone = matchMedia("(width < 40rem)");
     const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-    const tokens = getComputedStyle(document.documentElement);
-    // In milliseconds; the build may write a token in seconds.
-    const duration = (token: string) => {
-      const value = tokens.getPropertyValue(token).trim();
-      const amount = Number.parseFloat(value);
-      return value.endsWith("ms") ? amount : amount * 1000;
-    };
 
     let photos: HTMLButtonElement[] = [];
+    let slides: HTMLElement[] = [];
     let images: HTMLImageElement[] = [];
     let opener: HTMLButtonElement | undefined;
     let current = 0;
@@ -200,13 +200,34 @@ const copy = await getViewerCopy();
     let ownsEntry = false;
     let goingBack = false;
     let talkTitle = "";
-    let resize: Animation | undefined;
+    let travel: ViewTransition | undefined;
+    // The photos the current travel has named.
+    let travelling: HTMLImageElement[] = [];
+    // Puts a photo moved past the end of the row for a wrap back in its
+    // place, at once.
+    let unwrap: (() => void) | undefined;
     let panzoom: typeof createPanzoom | undefined;
     const zooms = new Map<HTMLImageElement, PanzoomObject>();
 
     // On phones the photos sit in a row that slides; elsewhere, and with
     // reduced motion, they're stacked and crossfade.
-    const slides = () => phone.matches && !reducedMotion.matches;
+    const sliding = () => phone.matches && !reducedMotion.matches;
+
+    // Nothing done from the keyboard animates (DESIGN.md §2.5). With the
+    // viewer's transitions off, the change is made and laid out before they
+    // come back, so none of them starts.
+    const instantly = (change: () => void) => {
+      dialog.dataset.instant = "";
+      change();
+      dialog.getBoundingClientRect();
+      delete dialog.dataset.instant;
+    };
+
+    const settleWrap = () => {
+      const settle = unwrap;
+      unwrap = undefined;
+      settle?.();
+    };
 
     // Panzoom only loads once a photo is opened, and only pinch-zooms: one
     // finger moves between photos or drags the viewer closed unless the
@@ -251,7 +272,8 @@ const copy = await getViewerCopy();
 
     const wrap = (index: number) => (index + photos.length) % photos.length;
 
-    // Swaps the thumbnail for the larger photo once it's ready, once.
+    // Swaps the thumbnail for the larger photo once it's ready, once, and
+    // decodes it ahead, so the first slide to it doesn't stall.
     const loading = new WeakSet<HTMLImageElement>();
     const load = (index: number) => {
       const photo = photos[index];
@@ -270,17 +292,21 @@ const copy = await getViewerCopy();
           // Failed to load: swapping in shows the broken image's alt text.
         })
         .finally(() => {
-          if (images[index] === image) {
-            image.srcset = large.srcset;
-            image.src = large.src;
-            image.hidden = false;
+          if (images[index] !== image) {
+            return;
           }
+          image.srcset = large.srcset;
+          image.src = large.src;
+          image.hidden = false;
+          image.decode().catch(() => {
+            // It's drawn when it's needed instead.
+          });
         });
     };
 
     // One slide per photo of the talk. Each shows its thumbnail, already on
-    // the page, until the larger photo loads; a thumbnail that hasn't loaded
-    // yet (it's lazy) shows nothing.
+    // the page and the same crop of the same file, until the larger photo
+    // loads; a thumbnail that hasn't loaded yet (it's lazy) shows nothing.
     const buildSlides = () => {
       for (const zoom of zooms.values()) {
         zoom.destroy();
@@ -299,27 +325,27 @@ const copy = await getViewerCopy();
         image.hidden = placeholder === "";
         return image;
       });
-      track.replaceChildren(
-        ...images.map((image) => {
-          const slide = document.createElement("div");
-          slide.className = "slide";
-          slide.append(image);
-          return slide;
-        }),
-      );
+      slides = images.map((image) => {
+        const slide = document.createElement("div");
+        slide.className = "slide";
+        slide.append(image);
+        return slide;
+      });
+      track.replaceChildren(...slides);
     };
 
-    const show = (index: number) => {
+    // `at`: where the row stands, if not at the photo (a wrap's last step).
+    const show = (index: number, at?: number) => {
       const previous = images[current];
       if (previous !== undefined) {
         zooms.get(previous)?.reset({ animate: false });
       }
       current = wrap(index);
-      for (const [index, slide] of [...track.children].entries()) {
+      for (const [index, slide] of slides.entries()) {
         slide.classList.toggle("current", index === current);
         slide.setAttribute("aria-hidden", String(index !== current));
       }
-      track.style.setProperty("--index", String(current));
+      track.style.setProperty("--track-index", String(at ?? current));
       // The photo on screen, then its neighbours, ready to move to.
       for (const index of new Set([
         current,
@@ -347,33 +373,54 @@ const copy = await getViewerCopy();
       }
     };
 
-    // The viewer grows out of a photo's thumbnail and shrinks back into it:
-    // the scale is the thumbnail's width over the viewer's, around its
-    // centre.
-    const scaleFrom = (photo: HTMLButtonElement | undefined) => {
-      const thumbnail = photo?.querySelector("img");
-      if (thumbnail === null || thumbnail === undefined) {
-        return undefined;
-      }
-      resize?.cancel();
-      const box = dialog.getBoundingClientRect();
-      const from = thumbnail.getBoundingClientRect();
-      dialog.style.transformOrigin = `${String(from.left + from.width / 2 - box.left)}px ${String(from.top + from.height / 2 - box.top)}px`;
-      return Math.max(smallestScale, Math.min(1, from.width / box.width));
-    };
+    // Opening and closing, the photo travels between its thumbnail and the
+    // frame: one view transition name, passed from one to the other as the
+    // viewer changes. The card and the backdrop fade around it. Without view
+    // transitions, or with reduced motion, they only fade.
+    const canTravel = () =>
+      "startViewTransition" in document && !reducedMotion.matches;
 
-    const grow = () => {
-      const scale = reducedMotion.matches ? undefined : scaleFrom(opener);
-      if (scale !== undefined) {
-        resize = dialog.animate([{ scale: String(scale) }, { scale: "1" }], {
-          duration: duration("--dur-slow"),
-          easing: tokens.getPropertyValue("--ease-settle").trim(),
-        });
-      }
+    const travelBetween = (
+      from: HTMLImageElement,
+      change: () => HTMLImageElement | undefined,
+      closing: boolean,
+    ) => {
+      travel?.skipTransition();
+      root.dataset.viewerTravel = closing ? "closing" : "opening";
+      from.style.viewTransitionName = travelName;
+      const named = [from];
+      const transition = document.startViewTransition(async () => {
+        from.style.removeProperty("view-transition-name");
+        const to = change();
+        if (to !== undefined) {
+          named.push(to);
+          to.style.viewTransitionName = travelName;
+          // Drawn before the transition shows it.
+          await to.decode().catch(() => undefined);
+        }
+      });
+      travel = transition;
+      travelling = named;
+      // A travel cut short by a newer one leaves the names that one uses:
+      // the newer one may have named the same photo already.
+      const done = () => {
+        const current = travel === transition;
+        for (const photo of named) {
+          if (current || !travelling.includes(photo)) {
+            photo.style.removeProperty("view-transition-name");
+          }
+        }
+        if (current) {
+          travel = undefined;
+          travelling = [];
+          delete root.dataset.viewerTravel;
+        }
+      };
+      void transition.finished.then(done, done);
     };
 
     // A thumbnail scrolled out of its strip (on phones) is no place to
-    // shrink into.
+    // travel back to.
     const inStrip = (photo: HTMLButtonElement | undefined) => {
       const strip = photo?.closest("[data-viewer-talk]");
       if (photo === undefined || strip === null || strip === undefined) {
@@ -384,57 +431,119 @@ const copy = await getViewerCopy();
       return box.left >= bounds.left - 1 && box.right <= bounds.right + 1;
     };
 
-    // Into the thumbnail of the photo on screen, which may not be the one
-    // that opened the viewer, or else the one that did. Only once: a second
-    // close request during the fade leaves it be. The viewer's fade is the
-    // stylesheet's.
-    const shrink = () => {
-      if (reducedMotion.matches || isClosing(dialog)) {
+    // On phones the status bar turns as dark as the viewer while it's open,
+    // like a native photo viewer's, and back when it closes.
+    const statusBar = new Map<HTMLMetaElement, string>();
+    const darkenStatusBar = () => {
+      if (!phone.matches) {
         return;
       }
-      const photo = photos[current];
-      const scale = scaleFrom(inStrip(photo) ? photo : opener);
-      if (scale !== undefined) {
-        resize = dialog.animate([{ scale: "1" }, { scale: String(scale) }], {
-          duration: duration("--dur"),
-          easing: tokens.getPropertyValue("--ease").trim(),
-          fill: "forwards",
-        });
+      const dark = getComputedStyle(root).getPropertyValue("--viewer-bg");
+      for (const meta of document.querySelectorAll<HTMLMetaElement>(
+        'meta[name="theme-color"]',
+      )) {
+        if (!statusBar.has(meta)) {
+          statusBar.set(meta, meta.content);
+        }
+        meta.content = dark.trim();
       }
     };
+    const restoreStatusBar = () => {
+      for (const [meta, color] of statusBar) {
+        meta.content = color;
+      }
+      statusBar.clear();
+    };
 
+    // Let go, it stays see-through until it has sprung back.
     const endDrag = () => {
+      if (dialog.dataset.dragging !== undefined) {
+        dialog.dataset.settling = "";
+      }
       delete dialog.dataset.dragging;
-      dialog.style.removeProperty("--drag");
+      dialog.style.removeProperty("translate");
       dialog.style.removeProperty("--backdrop-fade");
+      void Promise.allSettled(
+        dialog
+          .getAnimations()
+          .filter(
+            (animation) =>
+              animation instanceof CSSTransition &&
+              animation.transitionProperty === "translate",
+          )
+          .map((animation) => animation.finished),
+      ).then(() => {
+        if (dialog.dataset.dragging === undefined) {
+          delete dialog.dataset.settling;
+        }
+      });
     };
 
     const endSwipe = () => {
       delete dialog.dataset.swiping;
-      track.style.removeProperty("--swipe");
+      track.style.removeProperty("translate");
     };
 
-    // Dragged down to close, the viewer leaves from where it was dropped.
-    const close = ({ dragged = false } = {}) => {
-      if (!dragged) {
-        shrink();
+    // From the keyboard it closes at once. Dragged down, it carries on down
+    // as it fades. Otherwise the photo travels back into the thumbnail of the
+    // photo on screen, which may not be the one that opened the viewer.
+    const close = (how: "key" | "drag" | "pointer") => {
+      if (
+        !dialog.open ||
+        isClosing(dialog) ||
+        root.dataset.viewerTravel === "closing"
+      ) {
+        return;
       }
-      void closeTopLayer(dialog, () => {
+      travel?.skipTransition();
+      settleWrap();
+      const shut = () => {
         dialog.close();
-      });
+      };
+      if (how === "key") {
+        instantly(shut);
+        return;
+      }
+      if (how === "drag") {
+        delete dialog.dataset.dragging;
+        dialog.dataset.leaving = "";
+        // The stylesheet takes it on down from where it was dropped. With
+        // reduced motion it fades out there.
+        if (!reducedMotion.matches) {
+          dialog.style.removeProperty("translate");
+        }
+        void closeTopLayer(dialog, shut);
+        return;
+      }
+      const photo = photos[current];
+      const thumbnail = (inStrip(photo) ? photo : opener)?.querySelector("img");
+      const image = images[current];
+      if (canTravel() && thumbnail && image !== undefined) {
+        travelBetween(
+          image,
+          () => {
+            instantly(shut);
+            return thumbnail;
+          },
+          true,
+        );
+      } else {
+        void closeTopLayer(dialog, shut);
+      }
     };
 
-    const open = (button: HTMLButtonElement) => {
+    const open = (button: HTMLButtonElement, { key = false } = {}) => {
       const talk = button.closest<HTMLElement>("[data-viewer-talk]");
       if (talk === null) {
         return;
       }
+      travel?.skipTransition();
       opener = button;
-      // The last close's shrink and drag stay until now, so the viewer could
-      // fade out where it ended.
-      resize?.cancel();
+      // The last close's drag stays until now, so the viewer could leave
+      // from where it was dropped.
       endDrag();
       endSwipe();
+      delete dialog.dataset.leaving;
       photos = [
         ...talk.querySelectorAll<HTMLButtonElement>("[data-viewer-open]"),
       ];
@@ -456,8 +565,30 @@ const copy = await getViewerCopy();
       );
       buildSlides();
       show(photos.indexOf(button));
-      dialog.showModal();
-      grow();
+      const thumbnail = button.querySelector("img");
+      const reveal = () => {
+        dialog.showModal();
+        darkenStatusBar();
+        // The photo opened on can zoom straight away, once Panzoom is in.
+        const image = images[current];
+        if (image !== undefined) {
+          zoomable(image);
+        }
+      };
+      if (key) {
+        instantly(reveal);
+      } else if (canTravel() && thumbnail !== null) {
+        travelBetween(
+          thumbnail,
+          () => {
+            reveal();
+            return images[current];
+          },
+          false,
+        );
+      } else {
+        reveal();
+      }
       // Back closes the viewer, as it does other full-screen overlays. Reopened
       // before the last close was handled, it keeps that entry; if the last
       // close's Back is still on its way, the new entry waits for it.
@@ -468,31 +599,83 @@ const copy = await getViewerCopy();
       void loadZoom();
     };
 
-    const move = (step: number) => {
-      if (photos.length > 1) {
-        show(current + step);
+    // On phones, a wrap keeps sliding the way the button points: the photo
+    // it wraps to waits one step past the end of the row, the row slides one
+    // step, and both go back to their places at once, which changes nothing
+    // on screen.
+    const wrapAround = (index: number) => {
+      const target = wrap(index);
+      const slide = slides[target];
+      if (slide === undefined) {
+        return;
+      }
+      const past = index < 0 ? -1 : photos.length;
+      slide.style.translate = `${String((past - target) * 100)}% 0`;
+      show(target, past);
+      const settle = () => {
+        instantly(() => {
+          slide.style.removeProperty("translate");
+          track.style.setProperty("--track-index", String(current));
+        });
+      };
+      unwrap = settle;
+      void Promise.allSettled(
+        track.getAnimations().map((animation) => animation.finished),
+      ).then(() => {
+        if (unwrap === settle) {
+          settleWrap();
+        }
+      });
+    };
+
+    // A move during a wrap's slide finishes it, and happens at once too.
+    const move = (step: number, { key = false } = {}) => {
+      if (photos.length < 2) {
+        return;
+      }
+      const midWrap = unwrap !== undefined;
+      settleWrap();
+      const index = current + step;
+      if (key || midWrap) {
+        instantly(() => {
+          show(index);
+        });
+      } else if (sliding() && wrap(index) !== index) {
+        wrapAround(index);
+      } else {
+        show(index);
       }
     };
 
+    // Followed straight on the viewer: a variable on it would restyle every
+    // element inside on each touch move. The backdrop's fade is a property
+    // only the backdrop reads (it doesn't pass down to the viewer's
+    // contents).
     const setDrag = (distance: number) => {
-      dialog.style.setProperty("--drag", `${String(distance)}px`);
+      if (dialog.dataset.dragging === undefined) {
+        dialog.dataset.dragging = "";
+      }
+      const followed = distance >= 0 ? distance : damp(distance, upFriction);
+      dialog.style.translate = `0 ${String(followed)}px`;
       dialog.style.setProperty(
         "--backdrop-fade",
-        String(Math.max(faintest, 1 - distance / fadeDistance)),
+        String(Math.max(faintest, 1 - Math.max(0, distance) / fadeDistance)),
       );
     };
 
-    // Past the first or last photo, the row resists.
+    // Swipes stop at the first and last photo.
     const atEnd = (distance: number) =>
       (current === 0 && distance > 0) ||
       (current === photos.length - 1 && distance < 0);
 
     const setSwipe = (distance: number) => {
-      dialog.dataset.swiping = "";
-      track.style.setProperty(
-        "--swipe",
-        `${String(atEnd(distance) ? distance * resistance : distance)}px`,
-      );
+      if (dialog.dataset.swiping === undefined) {
+        dialog.dataset.swiping = "";
+      }
+      const followed = atEnd(distance)
+        ? damp(distance, edgeFriction)
+        : distance;
+      track.style.translate = `calc(${String(current * -100)}% + ${String(followed)}px) 0`;
     };
 
     // The close event arrives a moment after the viewer closes, so it may
@@ -501,6 +684,7 @@ const copy = await getViewerCopy();
       if (dialog.open) {
         return;
       }
+      restoreStatusBar();
       const image = images[current];
       if (image !== undefined) {
         zooms.get(image)?.reset({ animate: false });
@@ -530,7 +714,7 @@ const copy = await getViewerCopy();
         // The visitor went Back (or forward): the entry is no longer ours.
         ownsEntry = false;
         if (dialog.open) {
-          close();
+          close("pointer");
         } else if (isViewerEntry(history.state)) {
           // Forward onto the entry of a viewer that's closed: step off it, or
           // the next Back would do nothing visible.
@@ -540,11 +724,12 @@ const copy = await getViewerCopy();
       }
     });
 
+    // A click from Enter or Space has no pointer behind it (`detail` 0).
     for (const button of document.querySelectorAll<HTMLButtonElement>(
       "[data-viewer-open]",
     )) {
-      button.addEventListener("click", () => {
-        open(button);
+      button.addEventListener("click", (event) => {
+        open(button, { key: event.detail === 0 });
       });
     }
 
@@ -552,12 +737,13 @@ const copy = await getViewerCopy();
       if (!(event.target instanceof Element)) {
         return;
       }
+      const key = event.detail === 0;
       if (event.target.closest("[data-viewer-close]")) {
-        close();
+        close(key ? "key" : "pointer");
       } else if (event.target.closest("[data-viewer-previous]")) {
-        move(-1);
+        move(-1, { key });
       } else if (event.target.closest("[data-viewer-next]")) {
-        move(1);
+        move(1, { key });
       }
     });
 
@@ -580,26 +766,38 @@ const copy = await getViewerCopy();
       });
       dialog.addEventListener("pointerup", (event) => {
         if (pressedOutside && outside(event)) {
-          close();
+          close("pointer");
         }
       });
     }
 
-    // Esc and a click outside shrink it too.
-    dialog.addEventListener("cancel", shrink);
-    fadeOnCloseRequests(dialog);
+    // A click outside and Android's Back. Browsers only let a page hold back
+    // a close request after a user action, so without one the viewer closes
+    // at once.
+    dialog.addEventListener("cancel", (event) => {
+      if (event.cancelable) {
+        event.preventDefault();
+        close("pointer");
+      }
+    });
 
     dialog.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      if (event.key === "Escape") {
         event.preventDefault();
-        move(event.key === "ArrowLeft" ? -1 : 1);
+        close("key");
+      } else if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        event.preventDefault();
+        move(event.key === "ArrowLeft" ? -1 : 1, { key: true });
       }
     });
 
     // One finger: swipe sideways to move, drag down to close. On phones the
-    // photos and the viewer follow the finger. The direction locks after a
-    // few pixels, so a sideways swipe never moves the viewer down.
-    let gesture: { x: number; y: number; lock?: "x" | "y" } | undefined;
+    // photos and the viewer follow it. The direction locks after a few
+    // pixels, so a sideways swipe never moves the viewer down. A second
+    // finger (a pinch) lets go.
+    let gesture:
+      | { id: number; x: number; y: number; time: number; lock?: "x" | "y" }
+      | undefined;
 
     const cancelGesture = () => {
       gesture = undefined;
@@ -607,14 +805,22 @@ const copy = await getViewerCopy();
       endSwipe();
     };
 
+    const followed = (touches: TouchList) =>
+      [...touches].find((touch) => touch.identifier === gesture?.id);
+
     dialog.addEventListener(
       "touchstart",
       (event) => {
-        const touch = event.touches[0];
-        if (event.touches.length === 1 && touch !== undefined && !zoomedIn()) {
-          gesture = { x: touch.clientX, y: touch.clientY };
-        } else {
+        const touch = event.changedTouches[0];
+        if (event.touches.length > 1 || zoomedIn()) {
           cancelGesture();
+        } else if (touch !== undefined) {
+          gesture = {
+            id: touch.identifier,
+            x: touch.clientX,
+            y: touch.clientY,
+            time: event.timeStamp,
+          };
         }
       },
       { passive: true },
@@ -623,11 +829,11 @@ const copy = await getViewerCopy();
     dialog.addEventListener(
       "touchmove",
       (event) => {
-        const touch = event.touches[0];
+        const touch = followed(event.touches);
         if (gesture === undefined || touch === undefined) {
           return;
         }
-        if (event.touches.length > 1 || zoomedIn()) {
+        if (zoomedIn()) {
           cancelGesture();
           return;
         }
@@ -638,11 +844,12 @@ const copy = await getViewerCopy();
           Math.max(Math.abs(x), Math.abs(y)) > lockAfter
         ) {
           gesture.lock = Math.abs(y) > Math.abs(x) ? "y" : "x";
+          // A swipe during a wrap's slide finishes it first.
+          settleWrap();
         }
         if (gesture.lock === "y" && phone.matches) {
-          dialog.dataset.dragging = "";
-          setDrag(Math.max(0, y));
-        } else if (gesture.lock === "x" && slides() && photos.length > 1) {
+          setDrag(y);
+        } else if (gesture.lock === "x" && sliding() && photos.length > 1) {
           setSwipe(x);
         }
       },
@@ -650,23 +857,28 @@ const copy = await getViewerCopy();
     );
 
     dialog.addEventListener("touchend", (event) => {
-      const touch = event.changedTouches[0];
+      const touch = followed(event.changedTouches);
       const start = gesture;
-      gesture = undefined;
       if (start === undefined || touch === undefined) {
         return;
       }
+      gesture = undefined;
       const x = touch.clientX - start.x;
       const y = touch.clientY - start.y;
-      if (start.lock === "y" && y > dragToClose) {
+      const elapsed = Math.max(1, event.timeStamp - start.time);
+      const counts = (distance: number, enough: number) =>
+        Math.abs(distance) > enough ||
+        (Math.abs(distance) > flickDistance &&
+          Math.abs(distance) / elapsed > flickSpeed);
+      if (start.lock === "y" && y > 0 && counts(y, dragToClose)) {
         // Only a phone's viewer follows the finger down.
-        close({ dragged: phone.matches });
+        close(phone.matches ? "drag" : "pointer");
         return;
       }
       // Settles on the next photo, or springs back.
       endDrag();
       endSwipe();
-      if (start.lock === "x" && Math.abs(x) > swipeToMove && !atEnd(x)) {
+      if (start.lock === "x" && counts(x, swipeToMove) && !atEnd(x)) {
         move(x < 0 ? 1 : -1);
       }
     });
@@ -676,6 +888,14 @@ const copy = await getViewerCopy();
 </script>
 
 <style>
+  /* Registered so it doesn't pass down to the viewer's contents: only the
+     backdrop reads it. */
+  @property --backdrop-fade {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 1;
+  }
+
   /* A share of the window, between a floor (where it fits) and a cap, and
      never so tall that the caption and the key hints leave the screen. The
      same size for every photo. */
@@ -711,17 +931,86 @@ const copy = await getViewerCopy();
     }
   }
 
-  /* It grows out of the photo that opened it (the script), so it only fades
-     in here. */
-  @media (prefers-reduced-motion: no-preference) {
-    .viewer[open] {
-      transition: opacity var(--dur-slow) var(--ease);
+  /* Opening, the card fades in and grows slightly while the photo travels
+     into it (the script), and the backdrop fades in. With reduced motion
+     they only fade. */
+  .viewer[open] {
+    transition: opacity var(--dur-slow) var(--ease-settle);
+
+    @starting-style {
+      opacity: 0;
+    }
+
+    &::backdrop {
+      transition: opacity var(--dur) var(--ease-settle);
+
+      @starting-style {
+        opacity: 0;
+      }
     }
   }
 
-  /* The page behind a modal viewer doesn't scroll. */
+  @media (prefers-reduced-motion: no-preference) {
+    .viewer[open] {
+      transition:
+        opacity var(--dur-slow) var(--ease-settle),
+        scale var(--dur-slow) var(--ease-settle);
+
+      @starting-style {
+        scale: var(--viewer-scale);
+      }
+    }
+  }
+
+  /* Closing without the photo travelling, both fade out. Where a closing
+     dialog can stay in the top layer until it's done (`overlay`), CSS fades
+     it out by itself... */
+  @supports (overlay: auto) {
+    .viewer,
+    .viewer::backdrop {
+      transition-property: opacity, overlay, display;
+      transition-duration: var(--dur);
+      transition-timing-function: var(--ease-settle);
+      transition-behavior: allow-discrete;
+    }
+
+    .viewer:not([open]),
+    .viewer:not([open])::backdrop {
+      opacity: 0;
+    }
+  }
+
+  /* ...elsewhere, src/lib/top-layer.ts fades it out while it's still open,
+     then closes it. */
+  .viewer[data-closing],
+  .viewer[data-closing]::backdrop {
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease-settle);
+  }
+
+  /* The photo travelling between its thumbnail and the frame. */
+  :global(::view-transition-group(viewer-photo)) {
+    animation-duration: var(--dur-slow);
+    animation-timing-function: var(--ease-settle);
+  }
+
+  :global(
+    :root[data-viewer-travel="closing"]::view-transition-group(viewer-photo)
+  ) {
+    animation-duration: var(--dur);
+  }
+
+  /* Closing, the card and the backdrop are only in the old page: it fades
+     out above the new one, instead of under it as between pages. */
+  :global(:root[data-viewer-travel="closing"]::view-transition-old(root)) {
+    z-index: var(--z-viewer-closing);
+    animation: page-out var(--dur) var(--ease-settle) both;
+  }
+
+  /* The page behind a modal viewer doesn't scroll, or pull to refresh. */
   :global(html:has(.viewer[open])) {
     overflow: hidden;
+    overscroll-behavior: none;
   }
 
   .figure {
@@ -762,7 +1051,7 @@ const copy = await getViewerCopy();
       min-block-size: 0;
       opacity: 0;
       pointer-events: none;
-      transition: opacity var(--dur) var(--ease);
+      transition: opacity var(--dur) var(--ease-settle);
     }
 
     :global(.slide.current) {
@@ -826,9 +1115,22 @@ const copy = await getViewerCopy();
       border-color var(--dur) var(--ease),
       background var(--dur) var(--ease);
 
-    &:hover {
-      border-color: var(--line-strong);
-      background: var(--bg);
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        border-color var(--dur) var(--ease),
+        background var(--dur) var(--ease),
+        scale var(--dur) var(--ease-settle);
+
+      &:active {
+        scale: var(--press-scale);
+      }
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        border-color: var(--line-strong);
+        background: var(--bg);
+      }
     }
 
     svg {
@@ -888,7 +1190,9 @@ const copy = await getViewerCopy();
       block-size: 100%;
       max-block-size: none;
       margin: 0;
-      padding-block-end: calc(var(--space-4) + env(safe-area-inset-bottom));
+      padding-block-end: calc(
+        var(--space-4) + env(safe-area-inset-bottom, 0px)
+      );
       overflow: visible;
       border: 0;
       border-radius: 0;
@@ -897,53 +1201,65 @@ const copy = await getViewerCopy();
       background: var(--viewer-bg);
       color: var(--viewer-text);
       box-shadow: none;
-      translate: 0 var(--drag, 0);
       /* Every gesture here is the viewer's: no pull to refresh, no page
          zoom. */
       touch-action: none;
 
-      &[data-dragging] {
+      /* Dragged, springing back or leaving, it's see-through, so the
+         backdrop's fade shows above it. */
+      &[data-dragging],
+      &[data-settling],
+      &[data-leaving] {
         background: transparent;
       }
 
       /* Fading while dragged through its colour, so its opacity stays free
          for opening and closing. */
       &::backdrop {
+        --backdrop-fade: inherit;
+
         background: color-mix(
           in srgb,
-          var(--viewer-bg) calc(var(--backdrop-fade, 1) * 100%),
+          var(--viewer-bg) calc(var(--backdrop-fade) * 100%),
           transparent
         );
         backdrop-filter: none;
       }
     }
 
-    /* The viewer and the backdrop follow the finger exactly, then spring
-       back. Closing after a drag fades out from where the finger left it. */
-    .viewer[open][data-dragging]:not([data-closing]),
-    .viewer[open][data-dragging]:not([data-closing])::backdrop {
-      transition: none;
+    /* Let go, the viewer and the backdrop spring back. Dragged far enough,
+       the viewer carries on down as it fades out. */
+    @media (prefers-reduced-motion: no-preference) {
+      .viewer[open] {
+        transition:
+          opacity var(--dur-slow) var(--ease-settle),
+          scale var(--dur-slow) var(--ease-settle),
+          translate var(--dur-slow) var(--ease-settle);
+
+        &::backdrop {
+          transition:
+            opacity var(--dur) var(--ease-settle),
+            background-color var(--dur-slow) var(--ease-settle);
+        }
+      }
+
+      .viewer[data-leaving] {
+        translate: 0 100%;
+        transition:
+          opacity var(--dur) var(--ease-settle),
+          translate var(--dur) var(--ease-settle);
+
+        @supports (overlay: auto) {
+          transition-property: opacity, translate, overlay, display;
+          transition-behavior: allow-discrete;
+        }
+      }
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-      .viewer[open]:not([data-dragging], [data-closing]) {
-        transition:
-          opacity var(--dur-slow) var(--ease),
-          translate var(--dur-slow) var(--ease-settle);
-      }
-
-      .viewer[open]:not([data-dragging], [data-closing])::backdrop {
-        transition:
-          opacity var(--dur-slow) var(--ease),
-          background-color var(--dur-slow) var(--ease-settle);
-      }
-
-      /* Closed while springing back after a drag: the spring finishes. */
-      .viewer[open][data-closing]:not([data-dragging]) {
-        transition:
-          opacity var(--dur) var(--ease),
-          translate var(--dur-slow) var(--ease-settle);
-      }
+    /* Following the finger exactly. */
+    .viewer[data-dragging],
+    .viewer[data-dragging]::backdrop {
+      transition: none;
     }
 
     .figure {
@@ -980,7 +1296,7 @@ const copy = await getViewerCopy();
     @media (prefers-reduced-motion: no-preference) {
       .track {
         display: flex;
-        translate: calc(var(--index, 0) * -100% + var(--swipe, 0px)) 0;
+        translate: calc(var(--track-index, 0) * -100%) 0;
         transition: translate var(--dur-slow) var(--ease-settle);
 
         :global(.slide) {
@@ -1012,16 +1328,19 @@ const copy = await getViewerCopy();
       color: var(--viewer-text);
       backdrop-filter: none;
 
-      &:hover {
-        border-color: transparent;
-        background: var(--viewer-control);
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          border-color: transparent;
+          background: var(--viewer-control);
+        }
       }
     }
 
+    /* Clear of the status bar and a notch. */
     .close {
       position: fixed;
-      inset-block-start: var(--space-2);
-      inset-inline-end: var(--space-2);
+      inset-block-start: calc(var(--space-2) + env(safe-area-inset-top, 0px));
+      inset-inline-end: calc(var(--space-2) + env(safe-area-inset-right, 0px));
     }
 
     .arrow,
@@ -1036,10 +1355,14 @@ const copy = await getViewerCopy();
       align-items: center;
       justify-content: space-between;
       gap: var(--space-4);
-      padding: var(--space-2) var(--space-2) 0;
+      padding: var(--space-2)
+        calc(var(--space-2) + env(safe-area-inset-right, 0px)) 0
+        calc(var(--space-2) + env(safe-area-inset-left, 0px));
 
+      /* In the row, but still positioned: a touch target (global.css) has
+         to be laid out around its own button, not the row. */
       .control {
-        position: static;
+        position: relative;
       }
     }
 
@@ -1059,5 +1382,14 @@ const copy = await getViewerCopy();
         background: var(--viewer-text);
       }
     }
+  }
+
+  /* From the keyboard: nothing animates (the script). Last, to win over
+     every transition above. */
+  .viewer[data-instant],
+  .viewer[data-instant]::backdrop,
+  .viewer[data-instant] .track,
+  .viewer[data-instant] .track :global(.slide) {
+    transition: none;
   }
 </style>

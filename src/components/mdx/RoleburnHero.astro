@@ -33,7 +33,7 @@ const matches = listings.filter(({ match }) => match).length;
 ---
 
 <figure class="hero">
-  <div class="drawing" aria-hidden="true">
+  <div class="drawing" aria-hidden="true" data-hero-drawing>
     <div class="listings">
       <span class="scan"></span>
       {listings.map(({ title, place, match }) => (
@@ -64,6 +64,26 @@ const matches = listings.filter(({ match }) => match).length;
   </div>
   <figcaption>{caption}</figcaption>
 </figure>
+
+<script>
+  // The drawing runs one cycle when the page opens, then rests. Hovering it
+  // replays one, but never cuts a cycle short.
+  for (const drawing of document.querySelectorAll<HTMLElement>(
+    "[data-hero-drawing]",
+  )) {
+    drawing.addEventListener("pointerenter", (event) => {
+      if (event.pointerType !== "mouse") {
+        return;
+      }
+      const cycle = drawing.getAnimations({ subtree: true });
+      if (cycle.every((animation) => animation.playState === "finished")) {
+        for (const animation of cycle) {
+          animation.play();
+        }
+      }
+    });
+  }
+</script>
 
 <style>
   .hero {
@@ -204,11 +224,11 @@ const matches = listings.filter(({ match }) => match).length;
 
   @media (prefers-reduced-motion: no-preference) {
     .scan {
-      animation: scan var(--dur-scan) var(--ease-scan) infinite;
+      animation: scan var(--dur-scan) var(--ease-scan) both;
     }
 
     .listing {
-      animation: var(--dur-scan) var(--ease) infinite both;
+      animation: var(--dur-scan) var(--ease) both;
     }
 
     .match {

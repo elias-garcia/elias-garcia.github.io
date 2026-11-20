@@ -24,13 +24,17 @@ const { label, count, href, current } = Astro.props;
     background: var(--control);
     color: var(--text-2);
     font-size: var(--text-small);
+    -webkit-user-select: none;
+    user-select: none;
     transition:
       background var(--dur) var(--ease),
       color var(--dur) var(--ease);
 
-    &:hover {
-      background: var(--control-hover);
-      color: var(--text);
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: var(--control-hover);
+        color: var(--text);
+      }
     }
 
     &[aria-current="page"] {
@@ -43,7 +47,7 @@ const { label, count, href, current } = Astro.props;
       transition:
         background var(--dur) var(--ease),
         color var(--dur) var(--ease),
-        scale var(--dur-fast) var(--ease);
+        scale var(--dur) var(--ease-settle);
 
       &:active {
         scale: var(--press-scale);

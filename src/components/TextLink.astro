@@ -21,10 +21,16 @@ type Props = HTMLAttributes<"a">;
       text-decoration-color var(--dur) var(--ease),
       text-decoration-thickness var(--dur) var(--ease);
 
-    &:hover,
     &:focus-visible {
       text-decoration-color: var(--accent);
       text-decoration-thickness: var(--underline-strong);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: var(--underline-strong);
+      }
     }
 
     &:focus-visible {

@@ -7,7 +7,8 @@ import { formatMonthYear } from "../lib/format.ts";
 import { fill } from "../lib/template.ts";
 
 // A talk's photos. Each one is a button that opens the image viewer
-// (ImageViewer.astro), which reads the talk and the larger image from here.
+// (ImageViewer.astro), which reads the talk and a larger copy of the same
+// file from here.
 type Props = {
   talk: CollectionEntry<"talks">["data"];
 };
@@ -16,9 +17,9 @@ const { talk } = Astro.props;
 const copy = await getViewerCopy();
 const count = talk.photos.length;
 const photos = await Promise.all(
-  talk.photos.map(async ({ src, full, alt }, index) => {
+  talk.photos.map(async ({ src, alt }, index) => {
     const large = await getImage({
-      src: full,
+      src,
       widths: [...viewerImage.widths],
       sizes: viewerImage.sizes,
     });
@@ -140,6 +141,8 @@ const photos = await Promise.all(
     inline-size: 100%;
     block-size: auto;
     aspect-ratio: 3 / 2;
+    /* A long press opens the viewer's photo, not the browser's image menu. */
+    -webkit-touch-callout: none;
     border: var(--hairline) solid var(--line);
     border-radius: var(--r-md);
     background: var(--surface);

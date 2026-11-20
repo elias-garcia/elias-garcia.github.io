@@ -1,4 +1,9 @@
-<!-- App icons: put these files at the site root, then add to <head> -->
+<!-- Head tags for every page: put the icon files at the site root, then add this to <head>.
+     viewport-fit=cover lets the dark phone viewer and the page paint under the notch and home indicator;
+     the layout pads itself back out with env(safe-area-inset-*) (DESIGN.md §2.9). Never add
+     user-scalable=no or maximum-scale: zoom must keep working. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">

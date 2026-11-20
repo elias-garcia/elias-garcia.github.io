@@ -53,7 +53,14 @@ const shareImage = pageShareImage ?? {
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- viewport-fit: the page and the phone image viewer paint under a notch
+         and pad back out (DESIGN.md §2.9). interactive-widget: on Android the
+         keyboard resizes the search panel instead of covering it. Zoom is
+         never disabled. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
     <meta name="color-scheme" content="light dark" />
     <title>{documentTitle}</title>
     <meta name="description" content={description} />
@@ -121,6 +128,11 @@ const shareImage = pageShareImage ?? {
       timezone={profile.timezone}
     />
     <SearchDialog />
+    <script>
+      // iOS Safari only applies :active (the press states) under an element
+      // with a touchstart listener. Passive, so it never holds up scrolling.
+      document.addEventListener("touchstart", () => {}, { passive: true });
+    </script>
   </body>
 </html>
 
@@ -130,7 +142,7 @@ const shareImage = pageShareImage ?? {
     inline-size: 100%;
     max-inline-size: var(--column);
     margin-inline: auto;
-    padding: var(--space-page) var(--space-6) 0;
+    padding: var(--space-page) var(--page-end) 0 var(--page-start);
     animation: page-in var(--dur-slow) var(--ease-settle) backwards;
 
     :global(:root[data-in-place]) & {
@@ -138,7 +150,7 @@ const shareImage = pageShareImage ?? {
     }
 
     @media (prefers-reduced-motion: reduce) {
-      animation: page-fade var(--dur) var(--ease) backwards;
+      animation: page-fade var(--dur) var(--ease-settle) backwards;
     }
   }
 </style>

@@ -1,7 +1,17 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8">
+<!doctype html><html lang="en"><head>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta charset="utf-8">
 <title>Components — Elías García</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap">
 <style>
+/* phones: the platform layer. No grey tap flash (every control has its own :active), no double-tap delay,
+   controls aren't text you can long-press-select, and no font inflation in landscape */
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+a,button,summary,label,[role="button"]{touch-action:manipulation}
+button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user-select:none}
+.phbtn img{-webkit-touch-callout:none}
+/* touch: text links and rows dim while pressed (instantly), then fade back */
+@media (hover:none),(pointer:coarse){a:active:not(.button,.tile,.card,.pn,.lpc,.topic,.item a){opacity:.6}.list .item:has(a:active){opacity:.6;transition:none}}
+
 :root{--space-page:64px;--space-section:80px;--space-footer:96px}
 .site main p:not([class]):not([style*="font-size"]){line-height:1.6}
 @media (max-width: 639.98px){:root{--space-page:32px;--space-section:64px;--space-footer:64px}}
@@ -17,7 +27,7 @@
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
-a:hover{color:var(--accent-c)}
+@media (hover:hover) and (pointer:fine){a:hover{color:var(--accent-c)}}
 .site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
@@ -26,15 +36,15 @@ a:hover{color:var(--accent-c)}
 
 /* one orchestrated load moment */
 
-/* nav underline grows from the pointer side */
+/* nav underline fades in */
 .nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
-.nav a:hover{color:var(--text)}
-.nav a[aria-current],.nav a[aria-current]:hover{color:var(--accent-c)}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform var(--dur-slow) var(--ease-settle)}
-.nav a:hover::after,.nav a[aria-current]::after{transform:scaleX(1);transform-origin:left}
+@media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
+.nav a[aria-current]{color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent-c)}}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
-.kbd:hover{border-color:var(--line-strong);color:var(--text)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
 /* avatar crossfade by career era */
@@ -42,36 +52,43 @@ a:hover{color:var(--accent-c)}
 
 /* availability dot */
 .dot{position:relative;width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
-.dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:ping 2.4s cubic-bezier(0,0,.2,1) infinite}
+.dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:ping 2.4s cubic-bezier(0,0,.2,1) 1 both}
 @keyframes ping{0%{transform:scale(1);opacity:.45}80%,100%{transform:scale(2.6);opacity:0}}
 
 /* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
-.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
-.button:hover{background:var(--control-hover);color:var(--text)}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
 .button:active{transform:scale(.97)}
+/* copy buttons: both labels share one grid cell, so the button keeps the width of the longer one; they swap with a short blur crossfade */
+.sw{display:inline-grid;justify-items:center}
+.sw > span{grid-area:1 / 1;transition:opacity var(--dur) var(--ease-settle),filter var(--dur) var(--ease-settle),transform var(--dur) var(--ease-settle)}
+.sw-b,.done .sw-a{opacity:0;filter:blur(2px);transform:scale(.96)}
+.done .sw-b{opacity:1;filter:none;transform:none}
+@media (prefers-reduced-motion:reduce){.sw > span{filter:none !important;transform:none !important}}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .button svg circle{fill:currentColor;stroke:none}
 
 /* lists: hovering one row quiets the others */
 .list .item{transition:opacity var(--dur) var(--ease)}
-.list:has(.item:hover) .item:not(:hover){opacity:.45}
+@media (hover:hover) and (pointer:fine){.list:has(.item:hover) .item:not(:hover){opacity:.45}}
 
 /* jobs expand in place */
 .jobhead{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px 24px;width:100%;padding:12px 0;margin:0;background:none;border:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
-.jobbody{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--dur-slow) var(--ease-settle),opacity var(--dur) var(--ease)}
+.jobbody{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--dur-slow) var(--ease-settle),opacity var(--dur) var(--ease-settle)}
 .job.open .jobbody{grid-template-rows:1fr;opacity:1}
 .chev{width:16px;height:16px;margin-top:4px;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;transition:transform var(--dur-slow) var(--ease-settle),stroke var(--dur) var(--ease)}
-.jobhead:hover .chev{stroke:var(--text)}
+@media (hover:hover) and (pointer:fine){.jobhead:hover .chev{stroke:var(--text)}}
 .job.open .chev{transform:rotate(45deg)}
 
 /* project tiles: previews run only while hovered */
 /* "see more" links: same hover as the header nav, plus a small arrow that nudges */
 .more{display:inline-flex;align-items:center;gap:4px;font-size:14px;color:var(--text-2);transition:color var(--dur) var(--ease)}
-.more:hover{color:var(--text)}
-.more span{background-image:linear-gradient(currentColor,currentColor);background-size:0% 1px;background-repeat:no-repeat;background-position:0 100%;transition:background-size var(--dur-slow) var(--ease-settle)}
-.more:hover span{background-size:100% 1px}
+@media (hover:hover) and (pointer:fine){.more:hover{color:var(--text)}}
+.more span{position:relative}
+.more span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.more:hover span::after{opacity:1}}
 .more svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
-.more:hover svg{transform:translateX(2px)}
+@media (hover:hover) and (pointer:fine){.more:hover svg{transform:translateX(2px)}}
 /* tiles share rows (preview, title, description): a long title never pushes its neighbours out of line */
 .tiles .tile{display:grid;grid-template-rows:subgrid;grid-row:span 3;align-content:start}
 @media (max-width: 639.98px){.tiles .tile{padding-bottom:28px}.tiles > li:last-child .tile{padding-bottom:0}}
@@ -80,10 +97,10 @@ a:hover{color:var(--accent-c)}
 .tile .td{font-size:16px;color:var(--text-2);line-height:1.5}
 .st{position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:var(--r-full);background:color-mix(in oklch, var(--bg) 92%, transparent);border:1px solid var(--line);font-size:12px;color:var(--text-2);backdrop-filter:blur(4px)}
 .tile .pv{transition:transform var(--dur) var(--ease-settle),border-color var(--dur) var(--ease)}
-.tile:hover .pv{transform:translateY(-2px);border-color:var(--line-strong)}
+@media (hover:hover) and (pointer:fine){.tile:hover .pv{border-color:var(--line-strong)}}
 .tile:active .pv{transform:scale(.99)}
 .anim{animation-play-state:paused !important}
-.tile:hover .anim,.tile:focus-visible .anim{animation-play-state:running !important}
+.tile:focus-visible .anim{animation-play-state:running !important}@media (hover:hover) and (pointer:fine){.tile:hover .anim{animation-play-state:running !important}}
 .ill{width:100%;height:100%;display:block}
 .ring{fill:none;stroke:var(--line);stroke-width:1}
 .wedge{fill:var(--accent);opacity:.14}
@@ -113,26 +130,26 @@ a:hover{color:var(--accent-c)}
 
 /* search menu */
 @keyframes palFade{from{opacity:0}}
-@keyframes palPop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
-.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default;animation:palFade var(--dur) var(--ease) both}
-.ppanel{animation:palPop var(--dur) var(--ease-settle) both;transform-origin:top center}
+.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default}
+/* search opens and closes instantly: it is a keyboard shortcut */
 .pin{padding:0;flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:16px;color:var(--text);background:transparent;height:100%}
 .pin::placeholder{color:var(--text-3)}
 .ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
 .pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
-.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;transition:background var(--dur-fast) var(--ease)}
-.popt:hover{color:var(--text)}
+.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none}
+@media (hover:hover) and (pointer:fine){.popt:hover{color:var(--text)}}
 .popt.act{background:var(--tint)}
-.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease)}
+.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2)}
 .popt.act .pic{background:var(--bg);color:var(--accent-c)}
 .pic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
+.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0}
 .popt.act .pret{opacity:1}
 mark.phl{background:none;color:var(--accent-c);font-weight:600;padding:0}
 .pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
-.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
-.pclear:hover{background:var(--control-hover);color:var(--text)}
-@media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
+.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+.pclear:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.pclear:hover{background:var(--control-hover);color:var(--text)}}
+
 
 /* page entrance: the content arrives as one piece, fast; the header never moves */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
@@ -141,7 +158,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 /* between pages: the header stays put, the content cross-fades */
 @view-transition{navigation:auto}
 .site > header{view-transition-name:site-header}
-::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease) both}
+::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
 ::view-transition-group(roleburn-preview){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
@@ -161,15 +178,10 @@ img:not([src$=".svg"]){filter:brightness(.92)}
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:-60px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:top var(--dur) var(--ease)}
-.skip:focus{top:12px;color:var(--bg)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:translate var(--dur) var(--ease-settle)}
+.skip:focus{translate:0 0;color:var(--bg)}
+@media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
-@media (hover: none), (pointer: coarse){
-.list:has(.item:hover) .item:not(:hover){opacity:1}
-.tile:hover .pv,.card:hover .pv{transform:none;border-color:var(--line)}
-.more:hover svg,.card:hover .go svg,.pn:hover svg,.back:hover svg,.next:hover svg{transform:none}
-.more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
-}
 /* phones: search shows just the icon, and pages start closer to the top */
 @media (max-width: 639.98px){
 .kbd{width:36px;padding:0;justify-content:center}
@@ -179,8 +191,9 @@ html{scroll-padding-top:80px}
 }
 
 /* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
-.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
-.pcrumb:hover{background:var(--control-hover);color:var(--text)}
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+.pcrumb:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.pcrumb:hover{background:var(--control-hover);color:var(--text)}}
 .pret{text-align:center}
 
 /* Download CV: menu button. Same button, a chevron, and a small menu that explains each format */
@@ -188,16 +201,18 @@ html{scroll-padding-top:80px}
 .cvchev{margin-right:-4px;transition:transform var(--dur) var(--ease)}
 .cvchev.up{transform:rotate(180deg)}
 .cvscrim{position:fixed;inset:0;z-index:var(--z-menu);border:0;padding:0;background:transparent;cursor:default}
-.cvmenu{position:absolute;top:calc(100% + 8px);left:0;z-index:calc(var(--z-menu) + 1);width:320px;max-width:calc(100vw - 48px);display:flex;flex-direction:column;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);transform-origin:top left;animation:cvIn var(--dur) var(--ease)}
-@keyframes cvIn{from{opacity:0;transform:scale(.97) translateY(-4px)}}
-.cvitem{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;outline:none;transition:background var(--dur-fast) var(--ease)}
-.cvitem:hover,.cvitem:focus-visible{background:var(--tint)}
-.cvitem:hover .pic,.cvitem:focus-visible .pic{background:var(--bg);color:var(--accent-c)}
+.cvmenu{position:absolute;top:calc(100% + 8px);left:0;z-index:calc(var(--z-menu) + 1);width:320px;max-width:calc(100vw - 48px);display:flex;flex-direction:column;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);transform-origin:top left;transition:opacity var(--dur) var(--ease-settle),transform var(--dur) var(--ease-settle)}
+@starting-style{.cvmenu{opacity:0;transform:scale(.97) translateY(-4px)}}
+/* opened from the keyboard: the menu appears at once and the chevron flips at once */
+.cvmenu.kb,.cvchev.kb{transition:none}
+.cvitem{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;outline:none}
+.cvitem:focus-visible{background:var(--tint)}@media (hover:hover) and (pointer:fine){.cvitem:hover{background:var(--tint)}}
+.cvitem:focus-visible .pic{background:var(--bg);color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.cvitem:hover .pic{background:var(--bg);color:var(--accent-c)}}
 .cvtext{display:flex;flex-direction:column;gap:0;line-height:1.35;min-width:0}
 .cvtitle{font-size:14px}
 .cvsize{margin-left:4px;font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums}
 .cvdesc{font-size:12px;color:var(--text-2)}
-@media (prefers-reduced-motion:reduce){.cvmenu{animation:none}.cvchev{transition:none}}
+@media (prefers-reduced-motion:reduce){.cvmenu{transition:none}.cvchev{transition:none}}
 
 
 /* semantic lists keep the existing look: no bullets, no indent. role="list" keeps list semantics in Safari */
@@ -215,78 +230,77 @@ address{font-style:normal}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
-a:hover{color:var(--accent-c)}
+@media (hover:hover) and (pointer:fine){a:hover{color:var(--accent-c)}}
 .site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent-c);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
 .site p{text-wrap:pretty}
 .nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
-.nav a:hover{color:var(--text)}
-.nav a[aria-current],.nav a[aria-current]:hover{color:var(--accent-c)}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform var(--dur-slow) var(--ease-settle)}
-.nav a:hover::after,.nav a[aria-current]::after{transform:scaleX(1);transform-origin:left}
+@media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
+.nav a[aria-current]{color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent-c)}}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 
 
 /* topic chips: links to the topic pages (/writing/topics/ai). The Home pill: grey at rest, indigo for the current page */
 .topics{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.topic{display:inline-flex;align-items:center;gap:8px;height:32px;text-decoration:none;padding:0 8px 0 12px;border:0;border-radius:var(--r-full);background:var(--control);font:inherit;font-size:14px;color:var(--text-2);cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
-.topic:hover{background:var(--control-hover);color:var(--text)}
+.topic{display:inline-flex;align-items:center;gap:8px;height:32px;text-decoration:none;padding:0 8px 0 12px;border:0;border-radius:var(--r-full);background:var(--control);font:inherit;font-size:14px;color:var(--text-2);cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.topic:hover{background:var(--control-hover);color:var(--text)}}
 .topic:active{transform:scale(.97)}
-.topic[aria-current="page"],.topic[aria-current="page"]:hover{background:var(--tint);color:var(--accent-c);font-weight:500}
+.topic[aria-current="page"]{background:var(--tint);color:var(--accent-c);font-weight:500}@media (hover:hover) and (pointer:fine){.topic[aria-current="page"]:hover{background:var(--tint);color:var(--accent-c);font-weight:500}}
 .topic .c{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 8px;border-radius:var(--r-full);background:var(--bg);font-size:12px;font-weight:500;color:var(--text-2);font-variant-numeric:tabular-nums;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
 .topic[aria-current="page"] .c{background:var(--accent-c);color:var(--bg)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-/* list re-enters when the topic changes */
-@keyframes inA{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@keyframes inB{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.fa .enter{animation:inA var(--dur) var(--ease-settle) both}
-.fb .enter{animation:inB var(--dur) var(--ease-settle) both}
+
+
+
+
+
 
 /* rows: the title link covers the whole row; one row, one action */
 .list .item{transition:opacity var(--dur) var(--ease)}
-.list:has(.item:hover) .item:not(:hover){opacity:.45}
+@media (hover:hover) and (pointer:fine){.list:has(.item:hover) .item:not(:hover){opacity:.45}}
 .row{position:relative;display:flex;flex-wrap:wrap;gap:4px 24px;padding:12px 0}
 .gut{flex:0 0 112px;color:var(--text-3);font-variant-numeric:tabular-nums}
 .txt{flex:1 1 300px;min-width:0;display:flex;flex-direction:column}
 .ttl{font-weight:500;color:var(--text)}
 .ttl::after{content:"";position:absolute;inset:0}
-.ttl span{background-image:linear-gradient(currentColor,currentColor);background-size:0% 1px;background-repeat:no-repeat;background-position:0 100%;transition:background-size var(--dur-slow) var(--ease-settle)}
-.row:hover .ttl span{background-size:100% 1px}
+.ttl span{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:transparent;transition:text-decoration-color var(--dur) var(--ease)}
+@media (hover:hover) and (pointer:fine){.row:hover .ttl span{text-decoration-color:currentColor}}
 
 
 @media (prefers-reduced-motion:reduce){
-.fa .enter,.fb .enter{animation:none !important}
+
 .ttl span{transition:none}
 }
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
-.kbd:hover{border-color:var(--line-strong);color:var(--text)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
 /* search menu */
 @keyframes palFade{from{opacity:0}}
-@keyframes palPop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
-.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default;animation:palFade var(--dur) var(--ease) both}
-.ppanel{animation:palPop var(--dur) var(--ease-settle) both;transform-origin:top center}
+.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default}
+/* search opens and closes instantly: it is a keyboard shortcut */
 .pin{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:16px;color:var(--text);background:transparent;height:100%}
 .pin::placeholder{color:var(--text-3)}
 .ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
 .pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
-.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;transition:background var(--dur-fast) var(--ease)}
-.popt:hover{color:var(--text)}
+.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none}
+@media (hover:hover) and (pointer:fine){.popt:hover{color:var(--text)}}
 .popt.act{background:var(--tint)}
-.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease)}
+.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2)}
 .popt.act .pic{background:var(--bg);color:var(--accent-c)}
 .pic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
+.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0}
 .popt.act .pret{opacity:1}
 mark.phl{background:none;color:var(--accent-c);font-weight:600;padding:0}
 .pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
 .pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
-.pclear:hover{background:var(--control-hover);color:var(--text)}
-@media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
+@media (hover:hover) and (pointer:fine){.pclear:hover{background:var(--control-hover);color:var(--text)}}
+
 
 /* page entrance: the content arrives as one piece, fast; the header never moves */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
@@ -295,7 +309,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 /* between pages: the header stays put, the content cross-fades */
 @view-transition{navigation:auto}
 .site > header{view-transition-name:site-header}
-::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease) both}
+::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
 ::view-transition-group(roleburn-preview){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
@@ -305,8 +319,8 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 
 
 /* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
-.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
-.button:hover{background:var(--control-hover);color:var(--text)}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
 .button:active{transform:scale(.97)}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .button svg circle{fill:currentColor;stroke:none}
@@ -324,15 +338,10 @@ img:not([src$=".svg"]){filter:brightness(.92)}
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:-60px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:top var(--dur) var(--ease)}
-.skip:focus{top:12px;color:var(--bg)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:translate var(--dur) var(--ease-settle)}
+.skip:focus{translate:0 0;color:var(--bg)}
+@media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
-@media (hover: none), (pointer: coarse){
-.list:has(.item:hover) .item:not(:hover){opacity:1}
-.tile:hover .pv,.card:hover .pv{transform:none;border-color:var(--line)}
-.more:hover svg,.card:hover .go svg,.pn:hover svg,.back:hover svg,.next:hover svg{transform:none}
-.more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
-}
 /* phones: search shows just the icon, and pages start closer to the top */
 @media (max-width: 639.98px){
 .kbd{width:36px;padding:0;justify-content:center}
@@ -342,8 +351,8 @@ html{scroll-padding-top:80px}
 }
 
 /* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
-.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
-.pcrumb:hover{background:var(--control-hover);color:var(--text)}
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer}
+@media (hover:hover) and (pointer:fine){.pcrumb:hover{background:var(--control-hover);color:var(--text)}}
 .pret{text-align:center}
 
 /* semantic list + post titles as headings, same look */
@@ -358,64 +367,64 @@ ul.list{list-style:none;margin:0;padding:0}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
-a:hover{color:var(--accent-c)}
+@media (hover:hover) and (pointer:fine){a:hover{color:var(--accent-c)}}
 .site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
 .site p{text-wrap:pretty}
 .nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
-.nav a:hover{color:var(--text)}
-.nav a[aria-current],.nav a[aria-current]:hover{color:var(--accent-c)}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform var(--dur-slow) var(--ease-settle)}
-.nav a:hover::after,.nav a[aria-current]::after{transform:scaleX(1);transform-origin:left}
+@media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
+.nav a[aria-current]{color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent-c)}}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 .prose p{margin:0;font-size:16px;line-height:1.6;color:var(--text-2)}
 .prose h2{margin:0;font-size:24px;font-weight:600;letter-spacing:-0.01em;line-height:1.35}
 
 /* back link nudges toward where it goes */
 .back svg,.pn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
-.back:hover svg,.pn.prev:hover svg{transform:translateX(-2px)}
-.pn.next:hover svg{transform:translateX(2px)}
-.pn{transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease)}
-.pn:hover{border-color:var(--line-strong);background:var(--surface)}
+@media (hover:hover) and (pointer:fine){.back:hover svg,.pn.prev:hover svg{transform:translateX(-2px)}}
+@media (hover:hover) and (pointer:fine){.pn.next:hover svg{transform:translateX(2px)}}
+.pn{transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.pn:active{transform:scale(.99)}
+@media (hover:hover) and (pointer:fine){.pn:hover{border-color:var(--line-strong);background:var(--surface)}}
 
 /* hero radar: a scan line passes over incoming roles */
 @keyframes scanY{0%{transform:translateY(0);opacity:0}4%{opacity:1}60%{transform:translateY(352px);opacity:1}68%,100%{transform:translateY(352px);opacity:0}}
-.scanline{animation:scanY 6s cubic-bezier(.45,0,.55,1) infinite}
+.scanline{animation:scanY 6s cubic-bezier(.45,0,.55,1) 1 both}
 @keyframes lit{0%{background:var(--bg);border-color:var(--line)}4%,70%{background:var(--tint);border-color:var(--accent)}80%,100%{background:var(--bg);border-color:var(--line)}}
 @keyframes dim{0%{opacity:1}4%,70%{opacity:.32}80%,100%{opacity:1}}
-.role{animation-duration:6s;animation-iteration-count:infinite;animation-timing-function:ease-out;animation-fill-mode:both}
+.role{animation-duration:6s;animation-iteration-count:1;animation-timing-function:ease-out;animation-fill-mode:both}
 .role.m{animation-name:lit}
 .role.s{animation-name:dim}
 .chip{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:var(--r-full);border:1px solid var(--line);background:var(--bg);font-size:12px;color:var(--text-2)}
 @media (prefers-reduced-motion:reduce){.scanline,.role{animation:none !important}}
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
-.kbd:hover{border-color:var(--line-strong);color:var(--text)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
 /* search menu */
 @keyframes palFade{from{opacity:0}}
-@keyframes palPop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
-.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default;animation:palFade var(--dur) var(--ease) both}
-.ppanel{animation:palPop var(--dur) var(--ease-settle) both;transform-origin:top center}
+.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default}
+/* search opens and closes instantly: it is a keyboard shortcut */
 .pin{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:16px;color:var(--text);background:transparent;height:100%}
 .pin::placeholder{color:var(--text-3)}
 .ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
 .pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
-.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;transition:background var(--dur-fast) var(--ease)}
-.popt:hover{color:var(--text)}
+.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none}
+@media (hover:hover) and (pointer:fine){.popt:hover{color:var(--text)}}
 .popt.act{background:var(--tint)}
-.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease)}
+.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2)}
 .popt.act .pic{background:var(--bg);color:var(--accent-c)}
 .pic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
+.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0}
 .popt.act .pret{opacity:1}
 mark.phl{background:none;color:var(--accent-c);font-weight:600;padding:0}
 .pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
 .pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
-.pclear:hover{background:var(--control-hover);color:var(--text)}
-@media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
+@media (hover:hover) and (pointer:fine){.pclear:hover{background:var(--control-hover);color:var(--text)}}
+
 
 /* page entrance: the content arrives as one piece, fast; the header never moves */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
@@ -424,7 +433,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 /* between pages: the header stays put, the content cross-fades */
 @view-transition{navigation:auto}
 .site > header{view-transition-name:site-header}
-::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease) both}
+::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
 ::view-transition-group(roleburn-preview){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
@@ -444,15 +453,10 @@ img:not([src$=".svg"]){filter:brightness(.92)}
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:-60px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:top var(--dur) var(--ease)}
-.skip:focus{top:12px;color:var(--bg)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:translate var(--dur) var(--ease-settle)}
+.skip:focus{translate:0 0;color:var(--bg)}
+@media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
-@media (hover: none), (pointer: coarse){
-.list:has(.item:hover) .item:not(:hover){opacity:1}
-.tile:hover .pv,.card:hover .pv{transform:none;border-color:var(--line)}
-.more:hover svg,.card:hover .go svg,.pn:hover svg,.back:hover svg,.next:hover svg{transform:none}
-.more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
-}
 /* phones: search shows just the icon, and pages start closer to the top */
 @media (max-width: 639.98px){
 .kbd{width:36px;padding:0;justify-content:center}
@@ -462,8 +466,8 @@ html{scroll-padding-top:80px}
 }
 
 /* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
-.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
-.pcrumb:hover{background:var(--control-hover);color:var(--text)}
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer}
+@media (hover:hover) and (pointer:fine){.pcrumb:hover{background:var(--control-hover);color:var(--text)}}
 .pret{text-align:center}
 
 /* project facts: Year · Status · Links in three columns; below Tailwind sm (640px) Links takes the full width */
@@ -473,7 +477,7 @@ html{scroll-padding-top:80px}
 .fact dd{margin:0;font-size:14px}
 .fact.links dd{display:flex;flex-wrap:wrap;gap:4px 16px}
 .factlink{color:var(--text);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px;transition:text-decoration-color var(--dur) var(--ease)}
-.factlink:hover,.factlink:focus-visible{text-decoration-color:currentColor}
+.factlink:focus-visible{text-decoration-color:currentColor}@media (hover:hover) and (pointer:fine){.factlink:hover{text-decoration-color:currentColor}}
 /* facts below Tailwind sm: one fact per row, the label in a 112px column (like the date column of the lists), the value beside it on the same baseline */
 @media (max-width: 639.98px){.facts{grid-template-columns:minmax(0,1fr);gap:12px}.fact{flex-direction:row;align-items:baseline;gap:24px}.fact dt{flex:0 0 112px}.fact dd{min-width:0}}
 
@@ -485,17 +489,17 @@ html{scroll-padding-top:80px}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
-a:hover{color:var(--accent-c)}
+@media (hover:hover) and (pointer:fine){a:hover{color:var(--accent-c)}}
 .site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent-c);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
 .site p{text-wrap:pretty}
 .nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
-.nav a:hover{color:var(--text)}
-.nav a[aria-current],.nav a[aria-current]:hover{color:var(--accent-c)}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform var(--dur-slow) var(--ease-settle)}
-.nav a:hover::after,.nav a[aria-current]::after{transform:scaleX(1);transform-origin:left}
+@media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
+.nav a[aria-current]{color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent-c)}}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 
 
 /* grid: two columns, one on narrow screens; the newest spans when the count is odd */
@@ -511,16 +515,17 @@ a:hover{color:var(--accent-c)}
 .card .cm{margin-top:4px}
 .st{position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:var(--r-full);background:color-mix(in oklch, var(--bg) 92%, transparent);border:1px solid var(--line);font-size:12px;color:var(--text-2);backdrop-filter:blur(4px)}
 .card .pv{aspect-ratio:4 / 3;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);overflow:hidden;transition:transform var(--dur) var(--ease-settle),border-color var(--dur) var(--ease)}
-.card:hover .pv{transform:translateY(-2px);border-color:var(--line-strong)}
+@media (hover:hover) and (pointer:fine){.card:hover .pv{border-color:var(--line-strong)}}
 .card:active .pv{transform:scale(.99)}
 .card .go{font-size:14px;color:var(--text-2);display:inline-flex;align-items:center;gap:8px;transition:color var(--dur) var(--ease)}
-.card:hover .go{color:var(--text)}
-.card .go > span{background-image:linear-gradient(currentColor,currentColor);background-size:0% 1px;background-repeat:no-repeat;background-position:0 100%;transition:background-size var(--dur-slow) var(--ease-settle)}
-.card:hover .go > span{background-size:100% 1px}
+@media (hover:hover) and (pointer:fine){.card:hover .go{color:var(--text)}}
+.card .go > span{position:relative}
+.card .go > span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.card:hover .go > span::after{opacity:1}}
 .card .go svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
-.card:hover .go svg{transform:translateX(2px)}
+@media (hover:hover) and (pointer:fine){.card:hover .go svg{transform:translateX(2px)}}
 .anim{animation-play-state:paused !important}
-.card:hover .anim,.card:focus-visible .anim{animation-play-state:running !important}
+.card:focus-visible .anim{animation-play-state:running !important}@media (hover:hover) and (pointer:fine){.card:hover .anim{animation-play-state:running !important}}
 .ill{width:100%;height:100%;display:block}
 .ring{fill:none;stroke:var(--line);stroke-width:1}
 .wedge{fill:var(--accent-c);opacity:.14}
@@ -548,32 +553,31 @@ a:hover{color:var(--accent-c)}
 .card .pv{transition:none !important}
 }
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
-.kbd:hover{border-color:var(--line-strong);color:var(--text)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
 /* search menu */
 @keyframes palFade{from{opacity:0}}
-@keyframes palPop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
-.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default;animation:palFade var(--dur) var(--ease) both}
-.ppanel{animation:palPop var(--dur) var(--ease-settle) both;transform-origin:top center}
+.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default}
+/* search opens and closes instantly: it is a keyboard shortcut */
 .pin{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:16px;color:var(--text);background:transparent;height:100%}
 .pin::placeholder{color:var(--text-3)}
 .ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
 .pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
-.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;transition:background var(--dur-fast) var(--ease)}
-.popt:hover{color:var(--text)}
+.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none}
+@media (hover:hover) and (pointer:fine){.popt:hover{color:var(--text)}}
 .popt.act{background:var(--tint)}
-.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease)}
+.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2)}
 .popt.act .pic{background:var(--bg);color:var(--accent-c)}
 .pic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
+.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0}
 .popt.act .pret{opacity:1}
 mark.phl{background:none;color:var(--accent-c);font-weight:600;padding:0}
 .pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
 .pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
-.pclear:hover{background:var(--control-hover);color:var(--text)}
-@media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
+@media (hover:hover) and (pointer:fine){.pclear:hover{background:var(--control-hover);color:var(--text)}}
+
 
 /* page entrance: the content arrives as one piece, fast; the header never moves */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
@@ -582,7 +586,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 /* between pages: the header stays put, the content cross-fades */
 @view-transition{navigation:auto}
 .site > header{view-transition-name:site-header}
-::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease) both}
+::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
 ::view-transition-group(roleburn-preview){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
@@ -602,15 +606,10 @@ img:not([src$=".svg"]){filter:brightness(.92)}
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:-60px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:top var(--dur) var(--ease)}
-.skip:focus{top:12px;color:var(--bg)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:translate var(--dur) var(--ease-settle)}
+.skip:focus{translate:0 0;color:var(--bg)}
+@media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
-@media (hover: none), (pointer: coarse){
-.list:has(.item:hover) .item:not(:hover){opacity:1}
-.tile:hover .pv,.card:hover .pv{transform:none;border-color:var(--line)}
-.more:hover svg,.card:hover .go svg,.pn:hover svg,.back:hover svg,.next:hover svg{transform:none}
-.more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
-}
 /* phones: search shows just the icon, and pages start closer to the top */
 @media (max-width: 639.98px){
 .kbd{width:36px;padding:0;justify-content:center}
@@ -620,8 +619,8 @@ html{scroll-padding-top:80px}
 }
 
 /* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
-.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
-.pcrumb:hover{background:var(--control-hover);color:var(--text)}
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer}
+@media (hover:hover) and (pointer:fine){.pcrumb:hover{background:var(--control-hover);color:var(--text)}}
 .pret{text-align:center}
 
 /* semantic list keeps the grid: each item passes the card's rows through */
@@ -637,16 +636,16 @@ ul.grid > li.wide{grid-column:1 / -1}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
-a:hover{color:var(--accent-c)}
+@media (hover:hover) and (pointer:fine){a:hover{color:var(--accent-c)}}
 .site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
 .nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
-.nav a:hover{color:var(--text)}
-.nav a[aria-current],.nav a[aria-current]:hover{color:var(--accent-c)}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform var(--dur-slow) var(--ease-settle)}
-.nav a:hover::after,.nav a[aria-current]::after{transform:scaleX(1);transform-origin:left}
+@media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
+.nav a[aria-current]{color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent-c)}}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 
 /* reading progress, driven by scroll with no JavaScript */
 @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
@@ -656,13 +655,13 @@ a:hover{color:var(--accent-c)}
 .body p{margin:0;font-size:16px;line-height:1.6;color:var(--text-2);text-wrap:pretty}
 /* links inside prose: indigo text with a soft underline that is always there, so they read as links without hover or colour */
 .body p a{color:var(--accent-c);text-decoration:underline;text-decoration-color:var(--accent-line);text-decoration-thickness:1px;text-underline-offset:3px;transition:text-decoration-color var(--dur) var(--ease),text-decoration-thickness var(--dur) var(--ease)}
-.body p a:hover,.body p a:focus-visible{color:var(--accent-c);text-decoration-color:var(--accent-c);text-decoration-thickness:2px}
+.body p a:focus-visible{color:var(--accent-c);text-decoration-color:var(--accent-c);text-decoration-thickness:2px}@media (hover:hover) and (pointer:fine){.body p a:hover{color:var(--accent-c);text-decoration-color:var(--accent-c);text-decoration-thickness:2px}}
 .h{position:relative;margin:0;font-size:24px;font-weight:600;letter-spacing:-0.01em;line-height:1.35}
 .h .anchor{position:absolute;left:-24px;top:0;width:20px;color:var(--text-3);font-weight:500;opacity:0;transition:opacity var(--dur) var(--ease)}
-.h:hover .anchor,.h .anchor:focus-visible{opacity:1}
+.h .anchor:focus-visible{opacity:1}@media (hover:hover) and (pointer:fine){.h:hover .anchor{opacity:1}}
 
 .fn{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;margin-left:4px;padding:0 4px;border:0;border-radius:var(--r-sm);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;font-weight:600;line-height:1;vertical-align:2px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
-.fn:hover,.fn:focus-visible{background:var(--accent);color:var(--bg)}
+.fn:focus-visible{background:var(--accent);color:var(--bg)}@media (hover:hover) and (pointer:fine){.fn:hover{background:var(--accent);color:var(--bg)}}
 /* easing demo */
 .track{position:relative;height:32px;border-radius:var(--r-full);background:var(--control);overflow:hidden}
 .runner{position:absolute;inset:0;transform:translateX(0)}
@@ -672,49 +671,50 @@ a:hover{color:var(--accent-c)}
 .go .runner{transform:translateX(calc(100% - 32px))}
 .reset .runner{transition:none !important}
 /* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
-.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
-.button:hover{background:var(--control-hover);color:var(--text)}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
 .button:active{transform:scale(.97)}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .button svg circle{fill:currentColor;stroke:none}
 .pn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
-.pn.prev:hover svg{transform:translateX(-2px)}
-.pn{transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease)}
-.pn:hover{border-color:var(--line-strong);background:var(--surface)}
+@media (hover:hover) and (pointer:fine){.pn.prev:hover svg{transform:translateX(-2px)}}
+.pn{transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.pn:active{transform:scale(.99)}
+@media (hover:hover) and (pointer:fine){.pn:hover{border-color:var(--line-strong);background:var(--surface)}}
 .more{display:inline-flex;align-items:center;gap:4px;font-size:14px;color:var(--text-2);transition:color var(--dur) var(--ease)}
-.more:hover{color:var(--text)}
-.more span{background-image:linear-gradient(currentColor,currentColor);background-size:0% 1px;background-repeat:no-repeat;background-position:0 100%;transition:background-size var(--dur-slow) var(--ease-settle)}
-.more:hover span{background-size:100% 1px}
+@media (hover:hover) and (pointer:fine){.more:hover{color:var(--text)}}
+.more span{position:relative}
+.more span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.more:hover span::after{opacity:1}}
 .more svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
-.more:hover svg{transform:translateX(2px)}
+@media (hover:hover) and (pointer:fine){.more:hover svg{transform:translateX(2px)}}
 @media (prefers-reduced-motion:reduce){.runner{transition:none !important}.progress{animation:none !important}}
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
-.kbd:hover{border-color:var(--line-strong);color:var(--text)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
 /* search menu */
 @keyframes palFade{from{opacity:0}}
-@keyframes palPop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
-.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default;animation:palFade var(--dur) var(--ease) both}
-.ppanel{animation:palPop var(--dur) var(--ease-settle) both;transform-origin:top center}
+.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default}
+/* search opens and closes instantly: it is a keyboard shortcut */
 .pin{flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:16px;color:var(--text);background:transparent;height:100%}
 .pin::placeholder{color:var(--text-3)}
 .ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
 .pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
-.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;transition:background var(--dur-fast) var(--ease)}
-.popt:hover{color:var(--text)}
+.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none}
+@media (hover:hover) and (pointer:fine){.popt:hover{color:var(--text)}}
 .popt.act{background:var(--tint)}
-.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease)}
+.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2)}
 .popt.act .pic{background:var(--bg);color:var(--accent-c)}
 .pic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
+.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0}
 .popt.act .pret{opacity:1}
 mark.phl{background:none;color:var(--accent-c);font-weight:600;padding:0}
 .pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
 .pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
-.pclear:hover{background:var(--control-hover);color:var(--text)}
-@media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
+@media (hover:hover) and (pointer:fine){.pclear:hover{background:var(--control-hover);color:var(--text)}}
+
 
 /* page entrance: the content arrives as one piece, fast; the header never moves */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
@@ -723,7 +723,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 /* between pages: the header stays put, the content cross-fades */
 @view-transition{navigation:auto}
 .site > header{view-transition-name:site-header}
-::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease) both}
+::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
 ::view-transition-group(roleburn-preview){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
@@ -743,15 +743,10 @@ img:not([src$=".svg"]){filter:brightness(.92)}
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:-60px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:top var(--dur) var(--ease)}
-.skip:focus{top:12px;color:var(--bg)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:translate var(--dur) var(--ease-settle)}
+.skip:focus{translate:0 0;color:var(--bg)}
+@media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
-@media (hover: none), (pointer: coarse){
-.list:has(.item:hover) .item:not(:hover){opacity:1}
-.tile:hover .pv,.card:hover .pv{transform:none;border-color:var(--line)}
-.more:hover svg,.card:hover .go svg,.pn:hover svg,.back:hover svg,.next:hover svg{transform:none}
-.more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
-}
 /* phones: search shows just the icon, and pages start closer to the top */
 @media (max-width: 639.98px){
 .kbd{width:36px;padding:0;justify-content:center}
@@ -762,7 +757,7 @@ html{scroll-padding-top:80px}
 
 /* topic in the post header: metadata that links to the Writing list, filtered */
 .topiclink{color:var(--text-3);text-decoration:underline;text-decoration-color:transparent;text-underline-offset:3px;transition:color var(--dur) var(--ease),text-decoration-color var(--dur) var(--ease)}
-.topiclink:hover,.topiclink:focus-visible{color:var(--text);text-decoration-color:currentColor}
+.topiclink:focus-visible{color:var(--text);text-decoration-color:currentColor}@media (hover:hover) and (pointer:fine){.topiclink:hover{color:var(--text);text-decoration-color:currentColor}}
 
 /* post meta: each dot stays with the item after it, so a line never ends on a dot; phones use the short date */
 .meta .grp{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
@@ -770,8 +765,8 @@ html{scroll-padding-top:80px}
 @media (max-width: 639.98px){.dlong{display:none}.dshort{display:inline}}
 
 /* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
-.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
-.pcrumb:hover{background:var(--control-hover);color:var(--text)}
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer}
+@media (hover:hover) and (pointer:fine){.pcrumb:hover{background:var(--control-hover);color:var(--text)}}
 .pret{text-align:center}
 
 
@@ -820,9 +815,9 @@ html{scroll-padding-top:80px}
 
 /* external-link arrow: a 12px icon like the see-more chevron, quieter than the text, nudging toward where it goes */
 .ext{display:inline-block;width:12px;height:12px;margin-left:4px;vertical-align:-1px;flex:none;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
-a:hover .ext,a:focus-visible .ext{stroke:currentColor}
+a:focus-visible .ext{stroke:currentColor}@media (hover:hover) and (pointer:fine){a:hover .ext{stroke:currentColor}}
 @media (hover: hover) and (pointer: fine){a:hover .ext{transform:translate(1px,-1px)}}
-@media (prefers-reduced-motion:reduce){.ext{transition:none}a:hover .ext{transform:none}}
+@media (prefers-reduced-motion:reduce){.ext{transition:none}@media (hover:hover) and (pointer:fine){a:hover .ext{transform:none}}}
 
 /* ---- code blocks: language label + copy, minimal indigo syntax theme ---- */
 .codeblock{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);overflow:hidden}
@@ -871,7 +866,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .card:hover .garrow{transform:translateX(2px)}
 }
 @media (max-width: 639.98px){.trow .go{display:none}}
-@media (prefers-reduced-motion:reduce){.garrow{transition:none}.card:hover .garrow{transform:none}}
+@media (prefers-reduced-motion:reduce){.garrow{transition:none}@media (hover:hover) and (pointer:fine){.card:hover .garrow{transform:none}}}
 
 /* tiles: 8px between the status line and the description, as on Projects (the tile grid rows are only 4px apart) */
 .tile .thead{padding-bottom:4px}
@@ -888,17 +883,18 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .attach{display:flex;flex-wrap:wrap;column-gap:24px;margin-bottom:12px}
 .attach-gut{flex:0 0 112px}
 .attach-c{flex:1 1 300px;min-width:0}
-.lpc{display:flex;align-items:center;width:100%;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);overflow:hidden;color:inherit;text-decoration:none;transition:border-color var(--dur) var(--ease)}
-.lpc:hover,.lpc:focus-visible{border-color:var(--line-strong)}
+.lpc{display:flex;align-items:center;width:100%;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);overflow:hidden;color:inherit;text-decoration:none;transition:border-color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.lpc:active{transform:scale(.99)}
+.lpc:focus-visible{border-color:var(--line-strong)}@media (hover:hover) and (pointer:fine){.lpc:hover{border-color:var(--line-strong)}}
 .lpc-img{position:relative;flex:none;width:calc((100% - 14px) / 3);aspect-ratio:3 / 2;background:var(--surface);border-right:1px solid var(--line)}
 .lpc-img img{display:block;width:100%;height:100%;object-fit:cover}
 .lpc .play{width:32px;height:32px}
 .lpc .play svg{width:12px;height:12px}
-.lpc:hover .play,.lpc:focus-visible .play{background:var(--text);color:var(--bg);border-color:var(--text)}
+.lpc:focus-visible .play{background:var(--text);color:var(--bg);border-color:var(--text)}@media (hover:hover) and (pointer:fine){.lpc:hover .play{background:var(--text);color:var(--bg);border-color:var(--text)}}
 .lpc-t{display:flex;flex-direction:column;gap:0;padding:0 16px;min-width:0}
 .lpc-title{font-size:14px;font-weight:500;line-height:1.35;color:var(--text)}
 .lpc-src{font-size:14px;line-height:1.5;color:var(--text-3)}
-.lpc:hover .lpc-title,.lpc:focus-visible .lpc-title{color:var(--accent-c)}
+.lpc:focus-visible .lpc-title{color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.lpc:hover .lpc-title{color:var(--accent-c)}}
 .list li > .attach{flex:1 1 100%;margin:8px 0 0}
 .photos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .photos img{display:block;width:100%;aspect-ratio:3 / 2;object-fit:cover;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
@@ -917,7 +913,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .phbtn img{transition:opacity var(--dur) var(--ease)}
 @media (hover: hover) and (pointer: fine){.phbtn:hover img{opacity:.88}}
 .vwrap{position:fixed;inset:0;z-index:var(--z-dialog);display:flex;align-items:center;justify-content:center;padding:24px}
-.vscrim{position:fixed;inset:0;border:0;padding:0;margin:0;cursor:zoom-out;animation:palFade var(--dur) var(--ease) both}
+.vscrim{position:fixed;inset:0;border:0;padding:0;margin:0;cursor:zoom-out;animation:palFade var(--dur) var(--ease-settle) both}
 .vdlg{position:relative;outline:none;animation:vwIn var(--dur-slow) var(--ease-settle) both}
 @keyframes vwIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
 .vfig{margin:0;display:flex;flex-direction:column}
@@ -926,9 +922,10 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .vtitle{font-size:16px;font-weight:500;line-height:1.35;color:var(--text)}
 .vmeta{display:flex;flex-wrap:wrap;column-gap:8px;font-size:14px;line-height:1.5;color:var(--text-3)}
 .vcount{font-variant-numeric:tabular-nums}
-.vbtn{position:absolute;z-index:1;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:color-mix(in oklch, var(--bg) 92%, transparent);color:var(--text);backdrop-filter:blur(4px);cursor:pointer;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease)}
+.vbtn{position:absolute;z-index:1;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:color-mix(in oklch, var(--bg) 92%, transparent);color:var(--text);backdrop-filter:blur(4px);cursor:pointer;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.vbtn:active{transform:scale(.97)}
 .vbtn svg{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.vbtn:hover{border-color:var(--line-strong);background:var(--bg)}
+@media (hover:hover) and (pointer:fine){.vbtn:hover{border-color:var(--line-strong);background:var(--bg)}}
 /* the viewer is a card in the search palette's language: the photo on top of a bordered card, caption below, a footer with key hints */
 .vw-card .vscrim{background:var(--scrim);backdrop-filter:blur(2px)}
 .vw-card .vdlg{width:min(840px,100%);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);overflow:hidden}
@@ -947,17 +944,19 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .vmnav{display:none}
 @media (max-width: 639.98px){
 .vwrap .vprev,.vwrap .vnext,.vwrap .vfoot{display:none}
-.vwrap{padding:0;align-items:stretch;--vdy:0px}
-.vwrap.vw-card .vscrim{background:var(--viewer-bg);backdrop-filter:none;opacity:var(--vfade,1)}
-.vwrap.vw-card .vdlg{width:100%;height:100%;display:flex;flex-direction:column;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible;padding:0 0 calc(16px + env(safe-area-inset-bottom));translate:0 var(--vdy);transition:translate var(--dur-slow) var(--ease-settle)}
+.vwrap{padding:0;align-items:stretch}
+.vwrap.vw-card .vscrim{background:var(--viewer-bg);backdrop-filter:none;transition:opacity var(--dur) var(--ease-settle)}
+.vwrap.drag .vscrim{transition:none}
+.vwrap.vw-card .vdlg{width:100%;height:100%;display:flex;flex-direction:column;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible;padding:0 0 calc(16px + env(safe-area-inset-bottom, 0px));touch-action:none;transition:translate var(--dur-slow) var(--ease-settle)}
+.vwrap.out .vdlg{transition-duration:var(--dur)}
 .vwrap.drag .vdlg{transition:none}
-.vwrap.vw-card .vclose{top:8px;right:8px;width:44px;height:44px;border-color:transparent;background:var(--viewer-control);color:var(--viewer-text)}
+.vwrap.vw-card .vclose{top:calc(8px + env(safe-area-inset-top, 0px));right:calc(8px + env(safe-area-inset-right, 0px));width:44px;height:44px;border-color:transparent;background:var(--viewer-control);color:var(--viewer-text)}
 .vwrap.vw-card .vfig{flex:1;min-height:0;padding-top:60px}
 .vwrap.vw-card .vimgbox{flex:0 1 auto;min-height:0;margin:auto 0;border:0;background:transparent;aspect-ratio:3 / 2}
 .vwrap.vw-card .vcap{padding:24px 20px 0}
 .vwrap.vw-card .vtitle{color:var(--viewer-text)}
 .vwrap.vw-card .vmeta{color:var(--viewer-text-2)}
-.vmnav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 8px 0}
+.vmnav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px calc(8px + env(safe-area-inset-right, 0px)) 0 calc(8px + env(safe-area-inset-left, 0px))}
 .vmnav .vbtn{position:static;flex:none;width:44px;height:44px;border-color:transparent;background:var(--viewer-control);color:var(--viewer-text)}
 .vdots{display:flex;gap:8px}
 .vdot{width:6px;height:6px;border-radius:50%;background:var(--viewer-dot);transition:background var(--dur) var(--ease)}
@@ -973,7 +972,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .photos > li{flex:0 0 calc(100% - 40px);scroll-snap-align:start}
 .photos > li:only-child{flex-basis:100%}
 }
-@media (prefers-reduced-motion:reduce){.vdlg{animation:palFade var(--dur) var(--ease) both;transition:none}.vscrim{animation:none}}
+@media (prefers-reduced-motion:reduce){.vdlg{animation:palFade var(--dur) var(--ease-settle) both;transition:none}.vscrim{animation:none}}
 .vdemo .vdlg{animation:none}
 .vdemo .vprev,.vdemo .vnext{top:calc(720px * 2 / 3 / 2)}
 
@@ -1278,19 +1277,19 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
       <span data-dc-tpl="362" class="mdx">MDX: <code data-dc-tpl="363">pre / code</code></span>
     </div>
     <div data-dc-tpl="364" class="demo"><div data-dc-tpl="365" class="body">      <div data-dc-tpl="366" class="codeblock">
-        <div data-dc-tpl="367" class="code-h"><span data-dc-tpl="368" class="lang">CSS</span><button data-dc-tpl="369" class="button" type="button" style="background: var(--bg);">Copy</button></div>
-        <pre data-dc-tpl="370" tabindex="0" role="region" aria-label="CSS for the page entrance"><code data-dc-tpl="371"><span data-dc-tpl="372" class="line"><span data-dc-tpl="373" class="tk-c">/* the page arrives as one piece */</span></span><span data-dc-tpl="374" class="line"><span data-dc-tpl="375" class="tk-k">@keyframes</span> <span data-dc-tpl="376" class="tk-n">page-in</span> <span data-dc-tpl="377" class="tk-p">{</span></span><span data-dc-tpl="378" class="line">  <span data-dc-tpl="379" class="tk-n">from</span> <span data-dc-tpl="380" class="tk-p">{</span> <span data-dc-tpl="381" class="tk-n">opacity</span><span data-dc-tpl="382" class="tk-p">:</span> <span data-dc-tpl="383" class="tk-s">0</span><span data-dc-tpl="384" class="tk-p">;</span> <span data-dc-tpl="385" class="tk-n">transform</span><span data-dc-tpl="386" class="tk-p">:</span> translateY<span data-dc-tpl="387" class="tk-p">(</span><span data-dc-tpl="388" class="tk-s">6px</span><span data-dc-tpl="389" class="tk-p">)</span><span data-dc-tpl="390" class="tk-p">;</span> <span data-dc-tpl="391" class="tk-p">}</span></span><span data-dc-tpl="392" class="line"><span data-dc-tpl="393" class="tk-p">}</span></span><span data-dc-tpl="394" class="line"><span data-dc-tpl="395" class="tk-k">@keyframes</span> <span data-dc-tpl="396" class="tk-n">page-fade</span> <span data-dc-tpl="397" class="tk-p">{</span></span><span data-dc-tpl="398" class="line">  <span data-dc-tpl="399" class="tk-n">from</span> <span data-dc-tpl="400" class="tk-p">{</span> <span data-dc-tpl="401" class="tk-n">opacity</span><span data-dc-tpl="402" class="tk-p">:</span> <span data-dc-tpl="403" class="tk-s">0</span><span data-dc-tpl="404" class="tk-p">;</span> <span data-dc-tpl="405" class="tk-p">}</span></span><span data-dc-tpl="406" class="line"><span data-dc-tpl="407" class="tk-p">}</span></span><span data-dc-tpl="408" class="line"><span data-dc-tpl="409" class="tk-n">main</span> <span data-dc-tpl="410" class="tk-p">{</span></span><span data-dc-tpl="411" class="line">  <span data-dc-tpl="412" class="tk-n">animation</span><span data-dc-tpl="413" class="tk-p">:</span> page-in <span data-dc-tpl="414" class="tk-s">250ms</span> cubic-bezier<span data-dc-tpl="415" class="tk-p">(</span><span data-dc-tpl="416" class="tk-s">.22</span><span data-dc-tpl="417" class="tk-p">,</span> <span data-dc-tpl="418" class="tk-s">1</span><span data-dc-tpl="419" class="tk-p">,</span> <span data-dc-tpl="420" class="tk-s">.36</span><span data-dc-tpl="421" class="tk-p">,</span> <span data-dc-tpl="422" class="tk-s">1</span><span data-dc-tpl="423" class="tk-p">)</span> backwards<span data-dc-tpl="424" class="tk-p">;</span></span><span data-dc-tpl="425" class="line"><span data-dc-tpl="426" class="tk-p">}</span></span><span data-dc-tpl="427" class="line"><span data-dc-tpl="428" class="tk-k">@view-transition</span> <span data-dc-tpl="429" class="tk-p">{</span> <span data-dc-tpl="430" class="tk-n">navigation</span><span data-dc-tpl="431" class="tk-p">:</span> auto<span data-dc-tpl="432" class="tk-p">;</span> <span data-dc-tpl="433" class="tk-p">}</span></span><span data-dc-tpl="434" class="line"><span data-dc-tpl="435" class="tk-c">/* reduced motion: still a fade, just no movement */</span></span><span data-dc-tpl="436" class="line"><span data-dc-tpl="437" class="tk-k">@media</span> <span data-dc-tpl="438" class="tk-p">(</span><span data-dc-tpl="439" class="tk-n">prefers-reduced-motion</span><span data-dc-tpl="440" class="tk-p">:</span> reduce<span data-dc-tpl="441" class="tk-p">)</span> <span data-dc-tpl="442" class="tk-p">{</span></span><span data-dc-tpl="443" class="line">  <span data-dc-tpl="444" class="tk-n">main</span> <span data-dc-tpl="445" class="tk-p">{</span> <span data-dc-tpl="446" class="tk-n">animation</span><span data-dc-tpl="447" class="tk-p">:</span> page-fade <span data-dc-tpl="448" class="tk-s">150ms</span> ease-out backwards<span data-dc-tpl="449" class="tk-p">;</span> <span data-dc-tpl="450" class="tk-p">}</span></span><span data-dc-tpl="451" class="line"><span data-dc-tpl="452" class="tk-p">}</span></span></code></pre>
+        <div data-dc-tpl="367" class="code-h"><span data-dc-tpl="368" class="lang">CSS</span><button data-dc-tpl="369" class="button" type="button" style="background: var(--bg);"><span data-dc-tpl="370" class="sw"><span data-dc-tpl="371" class="sw-a">Copy</span><span data-dc-tpl="372" class="sw-b" aria-hidden="true">Copied</span></span></button></div>
+        <pre data-dc-tpl="373" tabindex="0" role="region" aria-label="CSS for the page entrance"><code data-dc-tpl="374"><span data-dc-tpl="375" class="line"><span data-dc-tpl="376" class="tk-c">/* the page arrives as one piece */</span></span><span data-dc-tpl="377" class="line"><span data-dc-tpl="378" class="tk-k">@keyframes</span> <span data-dc-tpl="379" class="tk-n">page-in</span> <span data-dc-tpl="380" class="tk-p">{</span></span><span data-dc-tpl="381" class="line">  <span data-dc-tpl="382" class="tk-n">from</span> <span data-dc-tpl="383" class="tk-p">{</span> <span data-dc-tpl="384" class="tk-n">opacity</span><span data-dc-tpl="385" class="tk-p">:</span> <span data-dc-tpl="386" class="tk-s">0</span><span data-dc-tpl="387" class="tk-p">;</span> <span data-dc-tpl="388" class="tk-n">transform</span><span data-dc-tpl="389" class="tk-p">:</span> translateY<span data-dc-tpl="390" class="tk-p">(</span><span data-dc-tpl="391" class="tk-s">6px</span><span data-dc-tpl="392" class="tk-p">)</span><span data-dc-tpl="393" class="tk-p">;</span> <span data-dc-tpl="394" class="tk-p">}</span></span><span data-dc-tpl="395" class="line"><span data-dc-tpl="396" class="tk-p">}</span></span><span data-dc-tpl="397" class="line"><span data-dc-tpl="398" class="tk-k">@keyframes</span> <span data-dc-tpl="399" class="tk-n">page-fade</span> <span data-dc-tpl="400" class="tk-p">{</span></span><span data-dc-tpl="401" class="line">  <span data-dc-tpl="402" class="tk-n">from</span> <span data-dc-tpl="403" class="tk-p">{</span> <span data-dc-tpl="404" class="tk-n">opacity</span><span data-dc-tpl="405" class="tk-p">:</span> <span data-dc-tpl="406" class="tk-s">0</span><span data-dc-tpl="407" class="tk-p">;</span> <span data-dc-tpl="408" class="tk-p">}</span></span><span data-dc-tpl="409" class="line"><span data-dc-tpl="410" class="tk-p">}</span></span><span data-dc-tpl="411" class="line"><span data-dc-tpl="412" class="tk-n">main</span> <span data-dc-tpl="413" class="tk-p">{</span></span><span data-dc-tpl="414" class="line">  <span data-dc-tpl="415" class="tk-n">animation</span><span data-dc-tpl="416" class="tk-p">:</span> page-in <span data-dc-tpl="417" class="tk-s">250ms</span> cubic-bezier<span data-dc-tpl="418" class="tk-p">(</span><span data-dc-tpl="419" class="tk-s">.22</span><span data-dc-tpl="420" class="tk-p">,</span> <span data-dc-tpl="421" class="tk-s">1</span><span data-dc-tpl="422" class="tk-p">,</span> <span data-dc-tpl="423" class="tk-s">.36</span><span data-dc-tpl="424" class="tk-p">,</span> <span data-dc-tpl="425" class="tk-s">1</span><span data-dc-tpl="426" class="tk-p">)</span> backwards<span data-dc-tpl="427" class="tk-p">;</span></span><span data-dc-tpl="428" class="line"><span data-dc-tpl="429" class="tk-p">}</span></span><span data-dc-tpl="430" class="line"><span data-dc-tpl="431" class="tk-k">@view-transition</span> <span data-dc-tpl="432" class="tk-p">{</span> <span data-dc-tpl="433" class="tk-n">navigation</span><span data-dc-tpl="434" class="tk-p">:</span> auto<span data-dc-tpl="435" class="tk-p">;</span> <span data-dc-tpl="436" class="tk-p">}</span></span><span data-dc-tpl="437" class="line"><span data-dc-tpl="438" class="tk-c">/* reduced motion: still a fade, just no movement */</span></span><span data-dc-tpl="439" class="line"><span data-dc-tpl="440" class="tk-k">@media</span> <span data-dc-tpl="441" class="tk-p">(</span><span data-dc-tpl="442" class="tk-n">prefers-reduced-motion</span><span data-dc-tpl="443" class="tk-p">:</span> reduce<span data-dc-tpl="444" class="tk-p">)</span> <span data-dc-tpl="445" class="tk-p">{</span></span><span data-dc-tpl="446" class="line">  <span data-dc-tpl="447" class="tk-n">main</span> <span data-dc-tpl="448" class="tk-p">{</span> <span data-dc-tpl="449" class="tk-n">animation</span><span data-dc-tpl="450" class="tk-p">:</span> page-fade <span data-dc-tpl="451" class="tk-s">150ms</span> ease-out backwards<span data-dc-tpl="452" class="tk-p">;</span> <span data-dc-tpl="453" class="tk-p">}</span></span><span data-dc-tpl="454" class="line"><span data-dc-tpl="455" class="tk-p">}</span></span></code></pre>
       </div></div>
     </div>
   </section>
-  <section data-dc-tpl="453" class="spec" aria-labelledby="c-figure">
-    <div data-dc-tpl="454" class="spec-h">
-      <h3 data-dc-tpl="455" id="c-figure">Figure</h3>
-      <p data-dc-tpl="456" class="spec-u">Image or illustration with a short caption below in grey.</p>
-      <p data-dc-tpl="457" class="spec-w">Used on: Home (Speaking), case studies</p>
-      <span data-dc-tpl="458" class="mdx">MDX: <code data-dc-tpl="459">img / Figure</code></span>
+  <section data-dc-tpl="456" class="spec" aria-labelledby="c-figure">
+    <div data-dc-tpl="457" class="spec-h">
+      <h3 data-dc-tpl="458" id="c-figure">Figure</h3>
+      <p data-dc-tpl="459" class="spec-u">Image or illustration with a short caption below in grey.</p>
+      <p data-dc-tpl="460" class="spec-w">Used on: Home (Speaking), case studies</p>
+      <span data-dc-tpl="461" class="mdx">MDX: <code data-dc-tpl="462">img / Figure</code></span>
     </div>
-    <div data-dc-tpl="460" class="demo"><figure data-dc-tpl="461" style="margin: 0px; display: flex; flex-direction: column; gap: 8px; max-width: 420px;"><div data-dc-tpl="462" style="aspect-ratio: 16 / 9; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--surface);"></div><figcaption data-dc-tpl="463" style="font-size: 14px; color: var(--text-3);">Explaining identity systems at the Polygon DevX Global Tour, 2023.</figcaption></figure>
+    <div data-dc-tpl="463" class="demo"><figure data-dc-tpl="464" style="margin: 0px; display: flex; flex-direction: column; gap: 8px; max-width: 420px;"><div data-dc-tpl="465" style="aspect-ratio: 16 / 9; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--surface);"></div><figcaption data-dc-tpl="466" style="font-size: 14px; color: var(--text-3);">Explaining identity systems at the Polygon DevX Global Tour, 2023.</figcaption></figure>
     </div>
   </section>
     </div>

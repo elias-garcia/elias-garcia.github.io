@@ -14,6 +14,7 @@ import StructuredData from "../../components/StructuredData.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
   getPage,
+  getPostCopy,
   getPosts,
   getProfile,
   getReadingTime,
@@ -43,11 +44,12 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { post, topics, previous, next } = Astro.props;
 const { title, description, date, topic } = post.data;
-const [{ Content }, readingTime, profile, writing] = await Promise.all([
+const [{ Content }, readingTime, profile, writing, copy] = await Promise.all([
   render(post),
   getReadingTime(post),
   getProfile(),
   getPage("writing"),
+  getPostCopy(),
 ]);
 const label = topicLabel(topics, topic);
 const markdown = `/writing/${post.id}.md`;
@@ -78,8 +80,8 @@ const structuredData = blogPosting(
         <div class="top">
           <BackLink href="/writing" label={writing.title} />
           <CopyButton
-            label="Copy page"
-            name="Copy page as Markdown"
+            label={copy.copyPage}
+            name={copy.copyPageName}
             url={markdown}
           >
             <svg viewBox="0 0 16 16" aria-hidden="true">
@@ -204,10 +206,16 @@ const structuredData = blogPosting(
       color var(--dur) var(--ease),
       text-decoration-color var(--dur) var(--ease);
 
-    &:hover,
     &:focus-visible {
       color: var(--text);
       text-decoration-color: currentColor;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: var(--text);
+        text-decoration-color: currentColor;
+      }
     }
 
     &:focus-visible {

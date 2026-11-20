@@ -1,4 +1,5 @@
 ---
+import { getPostCopy } from "../lib/content.ts";
 import Button from "./Button.astro";
 import VisuallyHidden from "./VisuallyHidden.astro";
 
@@ -12,6 +13,7 @@ type Props = {
 };
 
 const { label, name, url, onSurface = false } = Astro.props;
+const { copied } = await getPostCopy();
 ---
 
 <span class="copy">
@@ -22,7 +24,12 @@ const { label, name, url, onSurface = false } = Astro.props;
     data-copy-url={url}
   >
     <slot />
-    <span data-copy-label={label}>{label}</span>
+    <span class="labels">
+      <span data-copy-label>{label}</span>
+      <span aria-hidden="true" data-copy-done>
+        {copied}
+      </span>
+    </span>
   </Button>
   <VisuallyHidden>
     <span role="status" data-copy-status></span>
@@ -48,20 +55,31 @@ const { label, name, url, onSurface = false } = Astro.props;
     return source?.innerText ?? "";
   }
 
+  // Both labels are always there, so the button keeps the longer one's
+  // width; only the one showing is exposed.
+  function setCopied(button: HTMLElement, copied: boolean): void {
+    button.toggleAttribute("data-copied", copied);
+    button
+      .querySelector("[data-copy-label]")
+      ?.setAttribute("aria-hidden", String(copied));
+    button
+      .querySelector("[data-copy-done]")
+      ?.setAttribute("aria-hidden", String(!copied));
+  }
+
   function showCopied(button: HTMLElement): void {
-    const message = "Copied";
-    const label = button.querySelector<HTMLElement>("[data-copy-label]");
     const status = button.parentElement?.querySelector("[data-copy-status]");
-    if (label === null || status === null || status === undefined) {
+    if (status === null || status === undefined) {
       return;
     }
-    label.textContent = message;
-    status.textContent = message;
+    setCopied(button, true);
+    status.textContent =
+      button.querySelector("[data-copy-done]")?.textContent ?? "";
     window.clearTimeout(timers.get(button));
     timers.set(
       button,
       window.setTimeout(() => {
-        label.textContent = label.dataset["copyLabel"] ?? "";
+        setCopied(button, false);
         status.textContent = "";
       }, copiedFor),
     );
@@ -96,6 +114,48 @@ const { label, name, url, onSurface = false } = Astro.props;
     /* Copying needs the script. */
     @media (scripting: none) {
       display: none;
+    }
+  }
+
+  /* One cell for both labels, so the button never changes width. They swap
+     with a short crossfade, as transitions so a second click mid-swap
+     reverses smoothly; with reduced motion only the opacity changes. */
+  .labels {
+    display: inline-grid;
+    justify-items: center;
+
+    > * {
+      grid-area: 1 / 1;
+      transition: opacity var(--dur) var(--ease-settle);
+    }
+  }
+
+  .labels > :last-child,
+  :global([data-copied]) .labels > :first-child {
+    opacity: 0;
+  }
+
+  :global([data-copied]) .labels > :last-child {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .labels > * {
+      transition:
+        opacity var(--dur) var(--ease-settle),
+        filter var(--dur) var(--ease-settle),
+        scale var(--dur) var(--ease-settle);
+    }
+
+    .labels > :last-child,
+    :global([data-copied]) .labels > :first-child {
+      filter: blur(var(--swap-blur));
+      scale: var(--swap-scale);
+    }
+
+    :global([data-copied]) .labels > :last-child {
+      filter: none;
+      scale: 1;
     }
   }
 </style>

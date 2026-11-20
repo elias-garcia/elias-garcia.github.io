@@ -115,6 +115,11 @@ async function listPages(): Promise<string[]> {
 }
 
 async function check(page: Page, where: string): Promise<void> {
+  // A view transition (the image viewer's photo) changes the page only once
+  // it has captured it, so it's waited for first.
+  await page.evaluate(async () => {
+    await document.activeViewTransition?.finished;
+  });
   // Contrast is only meaningful once animations have finished.
   // Looping animations never finish, so only wait for the ones that end;
   // allSettled because a cancelled animation rejects instead of finishing.

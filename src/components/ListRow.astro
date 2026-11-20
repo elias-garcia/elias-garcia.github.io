@@ -74,6 +74,19 @@ const Title = article ? "h3" : "span";
     transition: opacity var(--dur) var(--ease);
   }
 
+  /* Pressed on a touch screen, the row dims at once and comes back over
+     150ms (DESIGN.md §2.9). */
+  @media (hover: none), (pointer: coarse) {
+    .row-interactive {
+      transition: opacity var(--dur) var(--ease-settle);
+    }
+
+    .row-interactive:has(.title-link:active) {
+      opacity: var(--press-dim);
+      transition: none;
+    }
+  }
+
   /* The title link covers the whole row: one row, one action. */
   .title-link {
     /* Not positioned, despite the touch target rule in global.css, so the
@@ -97,22 +110,19 @@ const Title = article ? "h3" : "span";
     }
   }
 
+  /* A text underline, so it follows every line of a title that wraps. */
   .underline .title-text {
-    background-image: linear-gradient(currentColor, currentColor);
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    background-size: 0% var(--hairline);
+    text-decoration: underline var(--hairline) transparent;
+    text-underline-offset: var(--underline-offset);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .row-interactive:hover .underline .title-text {
-      background-size: 100% var(--hairline);
-    }
-  }
-
-  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
     .underline .title-text {
-      transition: background-size var(--dur-slow) var(--ease-settle);
+      transition: text-decoration-color var(--dur) var(--ease);
+    }
+
+    .row-interactive:hover .underline .title-text {
+      text-decoration-color: currentColor;
     }
   }
 

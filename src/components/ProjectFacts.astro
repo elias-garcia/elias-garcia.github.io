@@ -101,10 +101,16 @@ const { year, status, links } = Astro.props;
     text-underline-offset: var(--underline-offset);
     transition: text-decoration-color var(--dur) var(--ease);
 
-    &:hover,
     &:focus-visible {
       color: inherit;
       text-decoration-color: currentColor;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: inherit;
+        text-decoration-color: currentColor;
+      }
     }
 
     &:focus-visible {

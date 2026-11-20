@@ -117,7 +117,7 @@ export async function getCvFormatCopy(format: "pdf" | "markdown") {
   return data;
 }
 
-async function getPostCopy() {
+export async function getPostCopy() {
   const { data } = await requireEntry("post", "post");
   return data;
 }

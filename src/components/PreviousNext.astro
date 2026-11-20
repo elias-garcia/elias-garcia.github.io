@@ -64,9 +64,22 @@ const links = [
       border-color var(--dur) var(--ease),
       background var(--dur) var(--ease);
 
-    &:hover {
-      border-color: var(--line-strong);
-      background: var(--surface);
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        border-color: var(--line-strong);
+        background: var(--surface);
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        border-color var(--dur) var(--ease),
+        background var(--dur) var(--ease),
+        scale var(--dur) var(--ease-settle);
+
+      &:active {
+        scale: var(--press-scale-tile);
+      }
     }
   }
 

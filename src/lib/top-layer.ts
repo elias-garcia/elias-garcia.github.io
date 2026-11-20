@@ -1,8 +1,8 @@
-// Dialogs and popovers fade out when they close (DESIGN.md §2.5, overlays).
-// Where a closing element can stay in the top layer until its fade is done
-// (`overlay` and a `display` transition), CSS does it alone. Elsewhere (Safari,
-// Firefox) the element fades out while it's still open (`data-closing`), and
-// closes afterwards.
+// The image viewer fades out when it closes without its photo travelling
+// (DESIGN.md §3). Where a closing element can stay in the top layer until its
+// fade is done (`overlay` and a `display` transition), CSS does it alone.
+// Elsewhere (Safari, Firefox) the element fades out while it's still open
+// (`data-closing`), and closes afterwards.
 
 let cssFadesOut: boolean | undefined;
 
@@ -30,7 +30,7 @@ function canFadeOutInCss(): boolean {
   return cssFadesOut;
 }
 
-const closing = new WeakMap<HTMLElement, object>();
+const closing = new WeakSet<HTMLElement>();
 
 export async function closeTopLayer(
   element: HTMLElement,
@@ -43,8 +43,7 @@ export async function closeTopLayer(
   if (closing.has(element)) {
     return;
   }
-  const attempt = {};
-  closing.set(element, attempt);
+  closing.add(element);
   element.dataset.closing = "";
   await Promise.allSettled(
     element
@@ -56,34 +55,11 @@ export async function closeTopLayer(
       )
       .map((animation) => animation.finished),
   );
-  // Opened again during the fade: it stays open.
-  if (closing.get(element) === attempt) {
-    closing.delete(element);
-    close();
-    delete element.dataset.closing;
-  }
-}
-
-// For an element opened again while it fades out.
-export function stopClosing(element: HTMLElement): void {
   closing.delete(element);
+  close();
   delete element.dataset.closing;
 }
 
 export function isClosing(element: HTMLElement): boolean {
   return closing.has(element);
-}
-
-// Esc, a click outside (`closedby="any"`) and Android's Back fade out too.
-// Browsers only let a page hold back a close request after a user action, so
-// without one the dialog closes at once.
-export function fadeOnCloseRequests(dialog: HTMLDialogElement): void {
-  dialog.addEventListener("cancel", (event) => {
-    if (event.cancelable && !canFadeOutInCss()) {
-      event.preventDefault();
-      void closeTopLayer(dialog, () => {
-        dialog.close();
-      });
-    }
-  });
 }

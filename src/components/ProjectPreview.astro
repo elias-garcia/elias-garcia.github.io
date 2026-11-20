@@ -57,23 +57,32 @@ const Illustration = illustrations[illustration];
     animation-play-state: paused;
   }
 
-  :global(a:is(:hover, :focus-visible)) > .preview :global([data-loop]) {
+  :global(a:focus-visible) > .preview :global([data-loop]) {
     animation-play-state: running;
   }
 
   @media (hover: hover) and (pointer: fine) {
+    :global(a:hover) > .preview :global([data-loop]) {
+      animation-play-state: running;
+    }
+  }
+
+  /* Hover never moves the card: its border darkens and its preview plays. */
+  @media (hover: hover) and (pointer: fine) {
     :global(a:hover) > .preview {
-      translate: 0 calc(-1 * var(--nudge));
       border-color: var(--line-strong);
     }
+  }
+
+  :global(a) > .preview {
+    transition: border-color var(--dur) var(--ease);
   }
 
   @media (prefers-reduced-motion: no-preference) {
     :global(a) > .preview {
       transition:
-        translate var(--dur) var(--ease-settle),
-        scale var(--dur-fast) var(--ease),
-        border-color var(--dur) var(--ease);
+        border-color var(--dur) var(--ease),
+        scale var(--dur) var(--ease-settle);
     }
 
     :global(a:active) > .preview {

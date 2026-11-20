@@ -1,7 +1,17 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8">
+<!doctype html><html lang="en"><head>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta charset="utf-8">
 <title>Writing — Elías García</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap">
 <style>
+/* phones: the platform layer. No grey tap flash (every control has its own :active), no double-tap delay,
+   controls aren't text you can long-press-select, and no font inflation in landscape */
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+a,button,summary,label,[role="button"]{touch-action:manipulation}
+button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user-select:none}
+.phbtn img{-webkit-touch-callout:none}
+/* touch: text links and rows dim while pressed (instantly), then fade back */
+@media (hover:none),(pointer:coarse){a:active:not(.button,.tile,.card,.pn,.lpc,.topic,.item a){opacity:.6}.list .item:has(a:active){opacity:.6;transition:none}}
+
 :root{--space-page:64px;--space-section:80px;--space-footer:96px}
 .site main p:not([class]):not([style*="font-size"]){line-height:1.6}
 @media (max-width: 639.98px){:root{--space-page:32px;--space-section:64px;--space-footer:64px}}
@@ -13,80 +23,80 @@
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
-a:hover{color:var(--accent-c)}
+@media (hover:hover) and (pointer:fine){a:hover{color:var(--accent-c)}}
 .site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent-c);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
 .site p{text-wrap:pretty}
 .nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
-.nav a:hover{color:var(--text)}
-.nav a[aria-current],.nav a[aria-current]:hover{color:var(--accent-c)}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform var(--dur-slow) var(--ease-settle)}
-.nav a:hover::after,.nav a[aria-current]::after{transform:scaleX(1);transform-origin:left}
+@media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
+.nav a[aria-current]{color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent-c)}}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 
 
 /* topic chips: links to the topic pages (/writing/topics/ai). The Home pill: grey at rest, indigo for the current page */
 .topics{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.topic{display:inline-flex;align-items:center;gap:8px;height:32px;text-decoration:none;padding:0 8px 0 12px;border:0;border-radius:var(--r-full);background:var(--control);font:inherit;font-size:14px;color:var(--text-2);cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
-.topic:hover{background:var(--control-hover);color:var(--text)}
+.topic{display:inline-flex;align-items:center;gap:8px;height:32px;text-decoration:none;padding:0 8px 0 12px;border:0;border-radius:var(--r-full);background:var(--control);font:inherit;font-size:14px;color:var(--text-2);cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.topic:hover{background:var(--control-hover);color:var(--text)}}
 .topic:active{transform:scale(.97)}
-.topic[aria-current="page"],.topic[aria-current="page"]:hover{background:var(--tint);color:var(--accent-c);font-weight:500}
+.topic[aria-current="page"]{background:var(--tint);color:var(--accent-c);font-weight:500}@media (hover:hover) and (pointer:fine){.topic[aria-current="page"]:hover{background:var(--tint);color:var(--accent-c);font-weight:500}}
 .topic .c{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 8px;border-radius:var(--r-full);background:var(--bg);font-size:12px;font-weight:500;color:var(--text-2);font-variant-numeric:tabular-nums;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
 .topic[aria-current="page"] .c{background:var(--accent-c);color:var(--bg)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* list re-enters when the topic changes (production: a page navigation; the intro and chips keep their place via view-transition-name, the list arrives with the page entrance) */
-@keyframes inA{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@keyframes inB{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.fa .enter{animation:inA var(--dur) var(--ease-settle) both}
-.fb .enter{animation:inB var(--dur) var(--ease-settle) both}
+
+
+
+
 
 /* rows: the title link covers the whole row; one row, one action */
 .list .item{transition:opacity var(--dur) var(--ease)}
-.list:has(.item:hover) .item:not(:hover){opacity:.45}
+@media (hover:hover) and (pointer:fine){.list:has(.item:hover) .item:not(:hover){opacity:.45}}
 /* the year groups are one list: hovering any post fades every other post, across years */
-main:has(.list .item:hover) .list .item:not(:hover){opacity:.45}
+@media (hover:hover) and (pointer:fine){main:has(.list .item:hover) .list .item:not(:hover){opacity:.45}}
 .row{position:relative;display:flex;flex-wrap:wrap;gap:4px 24px;padding:12px 0}
 .gut{flex:0 0 112px;color:var(--text-3);font-variant-numeric:tabular-nums}
 .txt{flex:1 1 300px;min-width:0;display:flex;flex-direction:column}
 .ttl{font-weight:500;color:var(--text)}
 .ttl::after{content:"";position:absolute;inset:0}
-.ttl span{background-image:linear-gradient(currentColor,currentColor);background-size:0% 1px;background-repeat:no-repeat;background-position:0 100%;transition:background-size var(--dur-slow) var(--ease-settle)}
-.row:hover .ttl span{background-size:100% 1px}
+.ttl span{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:transparent;transition:text-decoration-color var(--dur) var(--ease)}
+@media (hover:hover) and (pointer:fine){.row:hover .ttl span{text-decoration-color:currentColor}}
 
 
 @media (prefers-reduced-motion:reduce){
-.fa .enter,.fb .enter{animation:none !important}
+
 .ttl span{transition:none}
 }
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
-.kbd:hover{border-color:var(--line-strong);color:var(--text)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
 /* search menu */
-@keyframes palFade{from{opacity:0}}
-@keyframes palPop{from{opacity:0;transform:translateY(-6px) scale(.97)}}
-.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default;animation:palFade var(--dur) var(--ease) both}
-.ppanel{animation:palPop var(--dur) var(--ease-settle) both;transform-origin:top center}
+
+.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default}
+/* search opens and closes instantly: it is a keyboard shortcut */
 .pin{padding:0;flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:16px;color:var(--text);background:transparent;height:100%}
 .pin::placeholder{color:var(--text-3)}
 .ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
 .pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
-.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;transition:background var(--dur-fast) var(--ease)}
-.popt:hover{color:var(--text)}
+.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none}
+@media (hover:hover) and (pointer:fine){.popt:hover{color:var(--text)}}
 .popt.act{background:var(--tint)}
-.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2);transition:background var(--dur-fast) var(--ease),color var(--dur-fast) var(--ease)}
+.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2)}
 .popt.act .pic{background:var(--bg);color:var(--accent-c)}
 .pic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0;transition:opacity var(--dur-fast) var(--ease)}
+.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0}
 .popt.act .pret{opacity:1}
 mark.phl{background:none;color:var(--accent-c);font-weight:600;padding:0}
 .pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
-.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer}
-.pclear:hover{background:var(--control-hover);color:var(--text)}
-@media (prefers-reduced-motion:reduce){.pscrim,.ppanel{animation:none !important}}
+.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+.pclear:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.pclear:hover{background:var(--control-hover);color:var(--text)}}
+
 
 /* page entrance: the content arrives as one piece, fast; the header never moves */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
@@ -95,7 +105,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 /* between pages: the header stays put, the content cross-fades */
 @view-transition{navigation:auto}
 .site > header{view-transition-name:site-header}
-::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease) both}
+::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
 ::view-transition-group(roleburn-preview){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
@@ -105,8 +115,8 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 
 
 /* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
-.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
-.button:hover{background:var(--control-hover);color:var(--text)}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
 .button:active{transform:scale(.97)}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .button svg circle{fill:currentColor;stroke:none}
@@ -124,16 +134,10 @@ img:not([src$=".svg"]){filter:brightness(.92)}
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:-60px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:top var(--dur) var(--ease)}
-.skip:focus{top:12px;color:var(--bg)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:translate var(--dur) var(--ease-settle)}
+.skip:focus{translate:0 0;color:var(--bg)}
+@media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
-@media (hover: none), (pointer: coarse){
-.list:has(.item:hover) .item:not(:hover){opacity:1}
-main:has(.list .item:hover) .list .item:not(:hover){opacity:1}
-.tile:hover .pv,.card:hover .pv{transform:none;border-color:var(--line)}
-.more:hover svg,.card:hover .go svg,.pn:hover svg,.back:hover svg,.next:hover svg{transform:none}
-.more:hover span,.card:hover .go > span,.ttl span{background-size:0% 1px}
-}
 /* phones: search shows just the icon, and pages start closer to the top */
 @media (max-width: 639.98px){
 .kbd{width:36px;padding:0;justify-content:center}
@@ -143,8 +147,9 @@ main:has(.list .item:hover) .list .item:not(:hover){opacity:1}
 }
 
 /* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
-.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
-.pcrumb:hover{background:var(--control-hover);color:var(--text)}
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+.pcrumb:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.pcrumb:hover{background:var(--control-hover);color:var(--text)}}
 .pret{text-align:center}
 
 /* semantic list + post titles as headings, same look */
@@ -163,18 +168,18 @@ ul.list{list-style:none;margin:0;padding:0}
 @media (max-width: 639.98px){.clock > span:nth-child(n+2){display:none}}
 
 /* search is a modal: while it is open the page behind it does not scroll */
-html:has(.pscrim){overflow:hidden}
+html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
 
 /* jumping to a #link scrolls smoothly (heading anchors, footnotes, back links, skip link); instant with reduced motion */
 @media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
 </style>
 </head><body>
-<div data-dc-tpl="3" class="site" style="min-height: 100vh; background: var(--bg);">
+<div data-dc-tpl="3" class="site" style="min-height: 100svh; background: var(--bg);">
   <a data-dc-tpl="4" class="skip" href="#content">Skip to content</a>
 
 
   <header data-dc-tpl="5" style="position: sticky; top: 0px; z-index: var(--z-header); background: color-mix(in oklch, var(--bg) 82%, transparent); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line);">
-    <div data-dc-tpl="6" style="max-width: 688px; margin: 0px auto; padding: 0px 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+    <div data-dc-tpl="6" style="max-width: 688px; margin: 0px auto; padding: 0 max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px)); height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
       <a data-dc-tpl="7" href="Main.dc.html" aria-label="Elías García, home" style="display: flex; align-items: center; height: 44px;">
         <svg data-dc-tpl="8" viewBox="0 0 35.44 60" width="16.54" height="28" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="9" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="10" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="11" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="12" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="13" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
       </a>
@@ -190,7 +195,7 @@ html:has(.pscrim){overflow:hidden}
     </div>
   </header>
 
-  <main data-dc-tpl="23" id="content" style="max-width: 688px; margin: 0px auto; padding: var(--space-page) 24px 0; display: flex; flex-direction: column; gap: 32px;">
+  <main data-dc-tpl="23" id="content" style="max-width: 688px; margin: 0px auto; padding: var(--space-page) max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 32px;">
 
     <header data-dc-tpl="24" style="display: flex; flex-direction: column; gap: 24px;">
       <div data-dc-tpl="25" style="display: flex; flex-direction: column; gap: 8px;">
@@ -215,9 +220,9 @@ html:has(.pscrim){overflow:hidden}
       </div>
     </header>
 
-    <div data-dc-tpl="38" class="fa" style="display: flex; flex-direction: column; gap: 32px;">
+    <div data-dc-tpl="38" style="display: flex; flex-direction: column; gap: 32px;">
       
-        <section data-dc-tpl="40" class="enter" style="display: flex; flex-direction: column; gap: 16px;">
+        <section data-dc-tpl="40" style="display: flex; flex-direction: column; gap: 16px;">
           <h2 data-dc-tpl="41" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;"><span class="sc-interp">2026</span></h2>
           <ul data-dc-tpl="42" class="list" role="list" style="display: flex; flex-direction: column;">
             
@@ -254,7 +259,7 @@ html:has(.pscrim){overflow:hidden}
           </ul>
         </section>
       
-        <section data-dc-tpl="40" class="enter" style="display: flex; flex-direction: column; gap: 16px;">
+        <section data-dc-tpl="40" style="display: flex; flex-direction: column; gap: 16px;">
           <h2 data-dc-tpl="41" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;"><span class="sc-interp">2025</span></h2>
           <ul data-dc-tpl="42" class="list" role="list" style="display: flex; flex-direction: column;">
             
@@ -281,12 +286,12 @@ html:has(.pscrim){overflow:hidden}
   </main>
 
   <footer data-dc-tpl="56" style="margin-top: var(--space-footer); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);">
-    <div data-dc-tpl="57" style="max-width: 688px; margin: 0px auto; padding: 12px 24px; min-height: 64px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: 14px; color: var(--text-3);">
+    <div data-dc-tpl="57" style="max-width: 688px; margin: 0px auto; padding: 12px max(24px, env(safe-area-inset-right, 0px)) 12px max(24px, env(safe-area-inset-left, 0px)); min-height: 64px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: 14px; color: var(--text-3);">
       <span data-dc-tpl="58" style="display: flex; align-items: center; gap: 12px;">
         <svg data-dc-tpl="59" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="60" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="61" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="62" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="63" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="64" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
         Elías García, 2026
       </span>
-      <span data-dc-tpl="65" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="66"><time data-dc-tpl="67" datetime="17:03"><span class="sc-interp">17:03</span></time> in Portugal</span><span data-dc-tpl="68" aria-hidden="true">·</span><span data-dc-tpl="69"><span class="sc-interp">1h behind you</span></span></span>
+      <span data-dc-tpl="65" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="66"><time data-dc-tpl="67" datetime="00:54"><span class="sc-interp">00:54</span></time> in Portugal</span><span data-dc-tpl="68" aria-hidden="true">·</span><span data-dc-tpl="69"><span class="sc-interp">1h behind you</span></span></span>
     </div>
   </footer>
 

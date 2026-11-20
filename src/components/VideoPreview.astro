@@ -47,9 +47,25 @@ const { href, thumbnail, label, source } = Astro.props.video;
     background: var(--bg);
     transition: border-color var(--dur) var(--ease);
 
-    &:is(:hover, :focus-visible) {
+    &:focus-visible {
       border-color: var(--line-strong);
-      color: inherit;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        border-color: var(--line-strong);
+        color: inherit;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        border-color var(--dur) var(--ease),
+        scale var(--dur) var(--ease-settle);
+
+      &:active {
+        scale: var(--press-scale-tile);
+      }
     }
   }
 
@@ -91,10 +107,18 @@ const { href, thumbnail, label, source } = Astro.props.video;
       border-color var(--dur) var(--ease),
       color var(--dur) var(--ease);
 
-    .video:is(:hover, :focus-visible) & {
+    .video:focus-visible & {
       border-color: var(--text);
       background: var(--text);
       color: var(--bg);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .video:hover & {
+        border-color: var(--text);
+        background: var(--text);
+        color: var(--bg);
+      }
     }
 
     svg {
@@ -117,8 +141,14 @@ const { href, thumbnail, label, source } = Astro.props.video;
     line-height: var(--leading-tight);
     transition: color var(--dur) var(--ease);
 
-    .video:is(:hover, :focus-visible) & {
+    .video:focus-visible & {
       color: var(--accent);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .video:hover & {
+        color: var(--accent);
+      }
     }
   }
 

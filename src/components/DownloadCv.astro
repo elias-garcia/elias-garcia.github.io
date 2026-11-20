@@ -38,37 +38,47 @@ const formats = await getCvFormats();
 </div>
 
 <script>
-  import { closeTopLayer, isClosing, stopClosing } from "../lib/top-layer.ts";
-
   const menu = document.querySelector<HTMLElement>("[data-cv-formats]");
   const button = document.querySelector<HTMLElement>("[data-cv-button]");
 
   if (menu !== null && button !== null) {
     const close = () => {
-      void closeTopLayer(menu, () => {
-        menu.hidePopover();
-      });
+      menu.hidePopover();
     };
 
-    // The button closes the menu with its fade too, instead of the popover's
-    // own toggle, which can't wait for it; pressed during the fade, it keeps
-    // the menu open. A tap outside still closes it at once where CSS can't
-    // fade it out (DESIGN.md §2.5).
-    button.addEventListener("click", (event) => {
-      if (!menu.matches(":popover-open")) {
-        return;
+    // Opened or closed from the keyboard, the menu and its chevron change at
+    // once (DESIGN.md §2.5). A click from Enter or Space has no detail.
+    const noteKeyboard = (fromKeyboard: boolean) => {
+      menu.toggleAttribute("data-keyboard", fromKeyboard);
+    };
+    button.addEventListener("click", ({ detail }) => {
+      noteKeyboard(detail === 0);
+    });
+    // Esc closes the menu wherever focus is, the button included, and Tab
+    // closes it by leaving. A press or a wheel closes it with motion; they're
+    // noted whether it's still open or not, since WebKit can close it before
+    // the page sees them.
+    document.addEventListener("keydown", ({ key }) => {
+      if (
+        (key === "Escape" || key === "Tab") &&
+        menu.matches(":popover-open")
+      ) {
+        noteKeyboard(true);
       }
-      event.preventDefault();
-      if (isClosing(menu)) {
-        stopClosing(menu);
-      } else {
-        close();
-      }
+    });
+    const notePointer = () => {
+      noteKeyboard(false);
+    };
+    document.addEventListener("pointerdown", notePointer, { capture: true });
+    document.addEventListener("wheel", notePointer, {
+      capture: true,
+      passive: true,
     });
 
     // A download doesn't leave the page, so choosing a format closes the menu.
-    menu.addEventListener("click", ({ target }) => {
+    menu.addEventListener("click", ({ target, detail }) => {
       if (target instanceof Element && target.closest("a") !== null) {
+        noteKeyboard(detail === 0);
         close();
       }
     });
@@ -123,12 +133,16 @@ const formats = await getCvFormats();
   .chevron {
     margin-inline-end: calc(-1 * var(--space-1));
 
-    :global(.button:has(+ .formats:popover-open:not([data-closing]))) & {
+    :global(.button:has(+ .formats:popover-open)) & {
       rotate: 180deg;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      transition: rotate var(--dur) var(--ease);
+      transition: rotate var(--dur) var(--ease-settle);
+    }
+
+    :global(.button:has(+ .formats[data-keyboard])) & {
+      transition: none;
     }
   }
 
@@ -152,15 +166,15 @@ const formats = await getCvFormats();
     position-area: block-end span-inline-end;
     position-try-fallbacks: flip-inline;
 
-    /* Column direction stays on while the menu animates closed. */
-    flex-direction: column;
     transform-origin: top left;
 
-    /* The overlay motion (DESIGN.md §2.5). Opening: a fade, and from the
-       button it grows slightly; with reduced motion only the fade. */
+    /* It grows from its button as it opens, and closes at once (DESIGN.md
+       §2.5). A transition rather than keyframes, so a quick reopen carries
+       on from where it is. With reduced motion it only fades. */
     &:popover-open {
       display: flex;
-      transition: opacity var(--dur-slow) var(--ease);
+      flex-direction: column;
+      transition: opacity var(--dur) var(--ease-settle);
 
       @starting-style {
         opacity: 0;
@@ -170,33 +184,19 @@ const formats = await getCvFormats();
     @media (prefers-reduced-motion: no-preference) {
       &:popover-open {
         transition:
-          opacity var(--dur-slow) var(--ease),
-          scale var(--dur-slow) var(--ease-settle);
+          opacity var(--dur) var(--ease-settle),
+          scale var(--dur) var(--ease-settle),
+          translate var(--dur) var(--ease-settle);
 
         @starting-style {
-          scale: var(--overlay-scale);
+          scale: var(--menu-scale);
+          translate: 0 calc(-1 * var(--space-1));
         }
       }
     }
 
-    /* Closing: a quicker fade. Where a closing popover can stay in the top
-       layer until it's done (`overlay`), CSS fades it out by itself... */
-    @supports (overlay: auto) {
-      transition-property: opacity, display, overlay;
-      transition-duration: var(--dur);
-      transition-timing-function: var(--ease);
-      transition-behavior: allow-discrete;
-
-      &:not(:popover-open) {
-        opacity: 0;
-      }
-    }
-
-    /* ...elsewhere, src/lib/top-layer.ts fades it out while it's still open,
-       then closes it. */
-    &:popover-open[data-closing] {
-      opacity: 0;
-      transition: opacity var(--dur) var(--ease);
+    &[data-keyboard]:popover-open {
+      transition: none;
     }
   }
 
@@ -206,12 +206,27 @@ const formats = await getCvFormats();
     gap: var(--space-3);
     padding: var(--space-2) var(--space-3);
     border-radius: var(--r-md);
-    transition: background var(--dur-fast) var(--ease);
 
-    &:hover,
     &:focus-visible {
       background: var(--tint);
       outline-offset: 0;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: var(--tint);
+      }
+    }
+
+    /* Pressed on a touch screen, a format dims and fades back like a search
+       row (DESIGN.md §2.9). */
+    @media (hover: none), (pointer: coarse) {
+      transition: opacity var(--dur) var(--ease-settle);
+
+      &:active {
+        opacity: var(--press-dim);
+        transition: none;
+      }
     }
   }
 
@@ -225,14 +240,17 @@ const formats = await getCvFormats();
     border-radius: var(--r-md);
     background: var(--control);
     color: var(--text-2);
-    transition:
-      background var(--dur-fast) var(--ease),
-      color var(--dur-fast) var(--ease);
 
-    .format:hover &,
     .format:focus-visible & {
       background: var(--bg);
       color: var(--accent);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .format:hover & {
+        background: var(--bg);
+        color: var(--accent);
+      }
     }
 
     :global(svg) {
@@ -262,11 +280,16 @@ const formats = await getCvFormats();
     color: var(--text-3);
     font-size: var(--text-micro);
     font-variant-numeric: tabular-nums;
-    transition: color var(--dur-fast) var(--ease);
 
     /* --text-3 is too faint on the tint background (DESIGN.md §2.1). */
-    .format:is(:hover, :focus-visible) & {
+    .format:focus-visible & {
       color: var(--text-2);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .format:hover & {
+        color: var(--text-2);
+      }
     }
   }
 

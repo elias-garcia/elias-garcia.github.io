@@ -99,6 +99,9 @@
   --space-page: var(--space-16); /* top of main, under the header */
   --space-section: var(--space-20); /* between Home sections */
   --space-footer: var(--space-24); /* above the footer */
+  /* The page's sides, clear of a notch in landscape (DESIGN.md §2.9). */
+  --page-start: max(var(--space-6), env(safe-area-inset-left, 0px));
+  --page-end: max(var(--space-6), env(safe-area-inset-right, 0px));
 
   /* ---- Radius ---- */
   --r-sm: 4px; /* key hints, footnote markers, focus ring on text links */
@@ -107,24 +110,28 @@
   --r-full: 999px; /* buttons, chips */
 
   /* ---- Motion: UI feedback never exceeds 250ms ---- */
-  --dur-fast: 100ms; /* press, search row highlight, old page fading out */
-  --dur: 150ms; /* hover, colour/opacity, overlays closing */
-  --dur-slow: 250ms; /* page entrance, expanding rows, underline growing, overlays opening */
-  --ease: ease-out;
-  /* Things arriving and moving; not an overlay's fade. */
+  --dur-fast: 100ms; /* old page fading out */
+  --dur: 150ms; /* press, hover, colour/opacity, hover underlines, Download CV menu, viewer closing */
+  --dur-slow: 250ms; /* page entrance, expanding rows, viewer opening */
+  --ease: ease-out; /* hover and colour changes only */
+  /* Everything that enters, leaves or moves. */
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
   --row-fade: 0.45; /* other rows while one is hovered */
   --photo-hover: 0.88; /* a photo button under the pointer */
+  --press-dim: 0.6; /* a text link or list row pressed on a touch screen */
   --press-scale: 0.97;
   --press-scale-tile: 0.99;
-  --overlay-scale: 0.97; /* an overlay arriving: the Download CV menu, dialogs */
-  --dur-ping: 2.4s; /* availability dot, a slow loop */
+  --menu-scale: 0.97; /* the Download CV menu arriving */
+  --viewer-scale: 0.98; /* the image viewer card arriving */
+  --swap-blur: 2px; /* a copy button's label leaving */
+  --swap-scale: 0.96;
+  --dur-ping: 2.4s; /* availability dot, one ping */
   --ease-ping: cubic-bezier(0, 0, 0.2, 1);
   --entrance-offset: 6px;
   --dur-demo: 600ms; /* easing demo in posts, a deliberate exception */
   --dur-flash: 2s; /* a footnote or marker you arrive at lights up, then fades */
   --dur-morph: 400ms; /* a project preview morphing into its case study hero, a deliberate exception */
-  --dur-scan: 6s; /* a case study hero's scan, a slow loop */
+  --dur-scan: 6s; /* a case study hero's scan, one cycle */
   --ease-scan: cubic-bezier(0.45, 0, 0.55, 1); /* the scan's even sweep */
   --dur-sweep: 3s; /* a project preview's radar sweep, a slow loop */
   --dur-travel: 2.4s; /* a project preview's dot crossing its steps, a slow loop */
@@ -141,6 +148,7 @@
   --z-menu: 30;
   --z-dialog: 50;
   --z-viewer-controls: 1; /* inside the image viewer: its buttons, above the photo */
+  --z-viewer-closing: 1; /* the old page above the new while a photo travels back */
   --z-scan: 1; /* inside a case study hero: the scan line, above the listings it sweeps */
   --z-skip: 100;
 
@@ -169,7 +177,7 @@
   --play: 32px; /* play button on a video preview */
   --row-basis: 300px; /* text column next to the gutter; wraps below it when narrower */
   --nudge-sm: 1px; /* external arrow nudge and baseline offset */
-  --nudge: 2px; /* see-more chevron nudge, tile lift */
+  --nudge: 2px; /* arrows nudging toward where they lead */
   --logo-h: 28px; /* header logo */
   --logo-h-sm: 16px; /* footer logo */
   --hairline: 1px;
@@ -178,7 +186,7 @@
   --code-inline: 0.875em; /* inline code, relative to the text around it */
   --focus-ring: 2px;
   --focus-offset: 3px;
-  --underline-offset: 3px; /* text links and the post's topic link */
+  --underline-offset: 3px; /* text links, the post's topic link, list row titles on hover */
   --underline-strong: 2px; /* a text link's underline on hover and focus */
   --kbd-min: 20px; /* narrowest key hint */
   --search-w: 560px; /* search panel */
