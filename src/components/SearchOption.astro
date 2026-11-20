@@ -177,4 +177,12 @@ const Row = href === undefined ? "div" : "a";
     color: var(--accent);
     font-weight: var(--weight-semibold);
   }
+
+  /* The selected row's tint is gone in forced colours: an outline marks it. */
+  @media (forced-colors: active) {
+    .option[aria-selected="true"] {
+      outline: var(--focus-ring) solid Highlight;
+      outline-offset: calc(-1 * var(--focus-ring));
+    }
+  }
 </style>

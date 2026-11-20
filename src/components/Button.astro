@@ -89,4 +89,11 @@ const { class: className, onSurface = false, ...attributes } = Astro.props;
       stroke: none;
     }
   }
+
+  /* Its fill is gone in forced colours: a border shows it's a button. */
+  @media (forced-colors: active) {
+    .button {
+      border: var(--hairline) solid ButtonBorder;
+    }
+  }
 </style>

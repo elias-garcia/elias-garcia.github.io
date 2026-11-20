@@ -164,4 +164,12 @@ const { pathname } = Astro.url;
       }
     }
   }
+
+  /* currentColor isn't a system colour, so forced colours would drop the
+     underline. */
+  @media (forced-colors: active) {
+    .link::after {
+      background: LinkText;
+    }
+  }
 </style>

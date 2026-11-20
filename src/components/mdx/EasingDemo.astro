@@ -166,4 +166,16 @@ const curves = ["linear", "ease-out"] as const;
       display: none;
     }
   }
+
+  /* Forced colours drop the fills: the track gets an edge, and the plain
+     runner a system colour. */
+  @media (forced-colors: active) {
+    .track {
+      border: var(--hairline) solid CanvasText;
+    }
+
+    .dot {
+      background: CanvasText;
+    }
+  }
 </style>

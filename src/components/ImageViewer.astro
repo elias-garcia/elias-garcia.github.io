@@ -1419,4 +1419,14 @@ const copy = await getViewerCopy();
   .viewer[data-instant] .track :global(.slide) {
     transition: none;
   }
+
+  @media (forced-colors: active) {
+    .viewer :global(.position-dot) {
+      background: GrayText;
+    }
+
+    .viewer :global(.position-dot.current) {
+      background: CanvasText;
+    }
+  }
 </style>

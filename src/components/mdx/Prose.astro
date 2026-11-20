@@ -170,7 +170,7 @@
     }
   }
 
-  .prose :global(li > ul > li)::before {
+  .prose :global(li > ul:not(.contains-task-list) > li)::before {
     background: transparent;
     box-shadow: inset 0 0 0 var(--hairline) var(--text-3);
   }
@@ -613,6 +613,49 @@
     25% {
       background: var(--accent);
       color: var(--bg);
+    }
+  }
+
+  /* Forced colours: what is drawn with a fill or a shadow gets a system
+     colour or a border, and text on the accent keeps a readable pair. */
+  @media (forced-colors: active) {
+    .prose :global(ul:not(.contains-task-list) > li)::before,
+    .prose :global(.notes)::before {
+      background: CanvasText;
+    }
+
+    .prose :global(li > ul:not(.contains-task-list) > li)::before {
+      border: var(--hairline) solid CanvasText;
+      background: Canvas;
+    }
+
+    .prose :global(.fn) {
+      border: var(--hairline) solid ButtonBorder;
+
+      /* Not adjusted, or the browser paints a plate behind the number. */
+      &:is(:focus-visible, :target) {
+        forced-color-adjust: none;
+        background: LinkText;
+        color: Canvas;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          forced-color-adjust: none;
+          background: LinkText;
+          color: Canvas;
+        }
+      }
+    }
+
+    /* The note you arrive at loses its tint. */
+    .prose :global(.notes li:target) {
+      outline: var(--focus-ring) solid Highlight;
+      outline-offset: var(--focus-offset);
+    }
+
+    .prose :global(ul.contains-task-list input:checked)::before {
+      border-color: Canvas;
     }
   }
 </style>

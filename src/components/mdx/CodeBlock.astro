@@ -94,4 +94,13 @@ const name =
       box-shadow: inset var(--rule-strong) 0 var(--accent);
     }
   }
+
+  /* A highlighted line's tint and inset shadow are gone in forced colours:
+     an edge marks it. */
+  @media (forced-colors: active) {
+    .block :global(.line.highlighted) {
+      border-inline-start: var(--rule-strong) solid Highlight;
+      padding-inline-start: calc(var(--space-5) - var(--rule-strong));
+    }
+  }
 </style>

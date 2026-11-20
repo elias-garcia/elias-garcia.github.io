@@ -78,4 +78,10 @@ const { href, label } = Astro.props;
       transition: translate var(--dur) var(--ease-settle);
     }
   }
+
+  @media (forced-colors: active) {
+    .label::after {
+      background: LinkText;
+    }
+  }
 </style>

@@ -185,4 +185,10 @@ const { job, open } = Astro.props;
       block-size: 0;
     }
   }
+
+  @media (forced-colors: active) {
+    .points li::before {
+      background: CanvasText;
+    }
+  }
 </style>

@@ -430,6 +430,11 @@ Back link + Copy page, title (display), metadata line, then the article (max 640
 
 Every page must pass axe (WCAG 2.2 AA + best practice) in light and dark, at 1280, 390 and 320px, with no horizontal scroll.
 
+- **Forced colours** (Windows contrast themes, `@media (forced-colors: active)`): the browser replaces every colour that isn't a system colour, fills included, so nothing may rely on a fill alone.
+  - The accent tokens map to `LinkText`, which keeps what is drawn with them: the availability and status dots, the reading progress, a checked task box. The hover and current-page underlines are drawn with `currentColor`, which isn't a system colour, so they are set to `LinkText` too.
+  - Buttons, chips, footnote markers and search's small controls get a 1px `ButtonBorder` edge; the selected chip a 2px `Highlight` border; the selected search row and the note you arrive at a `Highlight` outline; a highlighted code line a `Highlight` edge.
+  - Bullets and the easing demo's plain runner use `CanvasText`. Text that sits on the accent (the selected chip's count, a focused footnote marker) is `Canvas` on `LinkText`, with `forced-color-adjust: none` so no plate is painted behind it.
+  - Text colours are left to the browser, so links keep the system's link colour.
 - Landmarks: one `<header>`, `<nav aria-label="Main">`, `<main id="content">`, `<footer>`. One `h1` per page, no skipped heading levels.
 - Lists are `<ul role="list">` (role keeps semantics in Safari with `list-style: none`). Dates are `<time>`. Contact is `<address>` + `<dl>`. Page intros are `<header>` inside `main`, not labelled sections.
 - Every interactive element is a real `<a>`, `<button>` or `<summary>`; the Download CV button opens its popover with `popovertarget` and `aria-controls`; the selected chip has `aria-current="page"`; the search uses `role="dialog"`, `aria-modal`, a combobox input and `aria-activedescendant`. Its result count and messages are announced by one hidden status region half a second after typing stops, not on every key; a click outside closes it (`closedby="any"`, with a click listener where that isn't supported); and Enter that only confirms an input method's composition never opens a result.

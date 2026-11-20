@@ -247,3 +247,18 @@
     --photo-brightness: 0.92;
   }
 }
+
+/* Forced colours (Windows contrast themes): the browser replaces every colour
+   that isn't a system colour, backgrounds included. As system colours, the
+   accent keeps what is drawn with it (dots, the reading progress, a checked
+   box), and the tints go: a selected or highlighted thing gets a border or an
+   outline where it's styled. Text colours stay as they are, so the browser
+   still tells links from text. */
+@media (forced-colors: active) {
+  :root {
+    --accent: LinkText;
+    --accent-line: LinkText;
+    --tint: Canvas;
+    --code-highlight: Canvas;
+  }
+}

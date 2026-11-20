@@ -77,4 +77,23 @@ const { label, count, href, current } = Astro.props;
       color: var(--bg);
     }
   }
+
+  /* Forced colours drop the fills: a border shows the chip, a stronger one
+     the selected chip, and its count keeps a readable pair. */
+  @media (forced-colors: active) {
+    .chip {
+      border: var(--hairline) solid ButtonBorder;
+
+      &[aria-current="page"] {
+        border: var(--rule-strong) solid Highlight;
+      }
+    }
+
+    /* Not adjusted, or the browser paints a plate behind the number. */
+    .chip[aria-current="page"] .count {
+      forced-color-adjust: none;
+      background: LinkText;
+      color: Canvas;
+    }
+  }
 </style>
