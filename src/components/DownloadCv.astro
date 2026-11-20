@@ -41,7 +41,8 @@ const formats = await getCvFormats();
   const menu = document.querySelector<HTMLElement>("[data-cv-formats]");
   const button = document.querySelector<HTMLElement>("[data-cv-button]");
 
-  if (menu !== null && button !== null) {
+  // Without Popover, the formats stay a plain list under the button.
+  if (menu !== null && button !== null && "popover" in HTMLElement.prototype) {
     const close = () => {
       menu.hidePopover();
     };
@@ -66,10 +67,17 @@ const formats = await getCvFormats();
         noteKeyboard(true);
       }
     });
+    // Where the page is scrolling to, while it brings the menu into view.
+    let arrivingAt: number | undefined;
     const notePointer = () => {
       noteKeyboard(false);
+      arrivingAt = undefined;
     };
     document.addEventListener("pointerdown", notePointer, { capture: true });
+    document.addEventListener("touchmove", notePointer, {
+      capture: true,
+      passive: true,
+    });
     document.addEventListener("wheel", notePointer, {
       capture: true,
       passive: true,
@@ -99,17 +107,62 @@ const formats = await getCvFormats();
     // the menu, scrolling doesn't close it, so tabbing through it (which
     // scrolls the focused link into view) keeps it open; a mouse wheel
     // always closes it.
+    //
+    // A window too short for the menu scrolls until it fits, as it opens: at
+    // once from the keyboard or with reduced motion, smoothly otherwise.
+    // That scroll doesn't close it, until the visitor takes over (a press, a
+    // drag, a wheel). The distance comes from the button, not from the menu:
+    // the menu is still growing in, and Safari doesn't scroll a popover into
+    // view.
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const root = document.documentElement;
+    const scrollUntilMenuFits = () => {
+      const style = getComputedStyle(menu);
+      const bottom =
+        button.getBoundingClientRect().bottom +
+        parseFloat(style.marginTop) +
+        menu.offsetHeight +
+        parseFloat(style.scrollMarginBottom);
+      const top = Math.min(
+        window.scrollY + Math.max(0, bottom - root.clientHeight),
+        root.scrollHeight - root.clientHeight,
+      );
+      if (top <= window.scrollY) {
+        return;
+      }
+      arrivingAt = top;
+      window.scrollTo({
+        top,
+        behavior:
+          reducedMotion.matches || menu.hasAttribute("data-keyboard")
+            ? "instant"
+            : "smooth",
+      });
+    };
     const closeOnScroll = () => {
+      if (arrivingAt !== undefined) {
+        if (Math.abs(window.scrollY - arrivingAt) < 1) {
+          arrivingAt = undefined;
+        }
+        return;
+      }
       if (!menu.contains(document.activeElement)) {
         close();
       }
     };
+    const arrived = () => {
+      arrivingAt = undefined;
+    };
     menu.addEventListener("toggle", (event) => {
       if (event.newState === "open") {
         addEventListener("scroll", closeOnScroll, { passive: true });
+        addEventListener("scrollend", arrived);
         addEventListener("wheel", close, { passive: true });
+        scrollUntilMenuFits();
       } else {
+        arrivingAt = undefined;
         removeEventListener("scroll", closeOnScroll);
+        removeEventListener("scrollend", arrived);
         removeEventListener("wheel", close);
       }
     });
@@ -151,9 +204,6 @@ const formats = await getCvFormats();
   }
 
   .formats {
-    position: fixed;
-    position-anchor: --cv-button;
-    inset: auto;
     margin: var(--space-2) 0 0;
     inline-size: var(--menu-w);
     max-inline-size: calc(100dvw - 2 * var(--space-6));
@@ -162,11 +212,33 @@ const formats = await getCvFormats();
     border-radius: var(--r-lg);
     background: var(--bg);
     color: var(--text);
-    box-shadow: var(--shadow-overlay);
-    position-area: block-end span-inline-end;
-    position-try-fallbacks: flip-inline;
 
-    transform-origin: top left;
+    /* It floats under its button where Popover exists; elsewhere it stays a
+       plain list under the button, always there. */
+    @supports selector(:popover-open) {
+      position: fixed;
+      position-anchor: --cv-button;
+      inset: auto;
+      box-shadow: var(--shadow-overlay);
+      position-area: block-end span-inline-end;
+      position-try-fallbacks: flip-inline;
+      transform-origin: top left;
+      /* Room under it when a short window scrolls to fit it: the script
+         reads this. */
+      scroll-margin-block-end: var(--space-4);
+    }
+
+    @supports not selector(:popover-open) {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  /* Without Popover the button opens nothing: it reads as the list's label. */
+  @supports not selector(:popover-open) {
+    .chevron {
+      display: none;
+    }
 
     /* It grows from its button as it opens, and closes at once (DESIGN.md
        §2.5). A transition rather than keyframes, so a quick reopen carries
