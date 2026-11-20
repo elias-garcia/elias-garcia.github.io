@@ -121,14 +121,17 @@ async function check(page: Page, where: string): Promise<void> {
     await document.activeViewTransition?.finished;
   });
   // Contrast is only meaningful once animations have finished.
-  // Looping animations never finish, so only wait for the ones that end;
-  // allSettled because a cancelled animation rejects instead of finishing.
+  // Looping animations never finish, and scroll-driven ones (the reading
+  // progress) only at the end of the page, so only wait for timed ones that
+  // end; allSettled because a cancelled animation rejects instead of
+  // finishing.
   await page.evaluate(() =>
     Promise.allSettled(
       document
         .getAnimations()
         .filter(
           (animation) =>
+            animation.timeline instanceof DocumentTimeline &&
             animation.effect?.getComputedTiming().endTime !== Infinity,
         )
         .map((animation) => animation.finished),

@@ -70,7 +70,12 @@ const { pathname } = Astro.url;
         background: var(--accent);
         transform: scaleX(0);
         transform-origin: 0 50%;
-        animation: grow auto linear both;
+        /* Longhands: the build's CSS minifier folds animation-timeline into
+           the animation shorthand, which browsers then reject. */
+        animation-name: grow;
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
         animation-timeline: scroll(root block);
       }
     }
