@@ -157,11 +157,8 @@ p {
 
 /* ---- Page transitions (DESIGN.md §2.5) ---- */
 
-@media (prefers-reduced-motion: no-preference) {
-  @view-transition {
-    navigation: auto;
-  }
-}
+/* The opt-in is inline in the base layout's <head>, so Chrome finds it before
+   this file applies. */
 
 ::view-transition-old(root) {
   animation: page-out var(--dur-fast) var(--ease-settle) both;

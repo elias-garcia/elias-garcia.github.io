@@ -62,6 +62,16 @@ const shareImage = pageShareImage ?? {
       content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
     />
     <meta name="color-scheme" content="light dark" />
+    <!-- The page transition's opt-in is inline, ahead of the stylesheets:
+         Chrome looks for it on the new page before a linked stylesheet
+         applies, and skips the transition when it isn't there yet. -->
+    <style is:inline>
+      @media (prefers-reduced-motion: no-preference) {
+        @view-transition {
+          navigation: auto;
+        }
+      }
+    </style>
     <title>{documentTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
