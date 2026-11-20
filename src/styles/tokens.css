@@ -141,6 +141,7 @@
   --z-menu: 30;
   --z-dialog: 50;
   --z-viewer-controls: 1; /* inside the image viewer: its buttons, above the photo */
+  --z-scan: 1; /* inside a case study hero: the scan line, above the listings it sweeps */
   --z-skip: 100;
 
   /* ---- Fixed sizes ---- */
