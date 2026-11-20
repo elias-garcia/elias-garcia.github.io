@@ -1,5 +1,6 @@
 ---
 import { newTabNote, opensNewTab } from "../lib/links.ts";
+import Icon from "./Icon.astro";
 import VisuallyHidden from "./VisuallyHidden.astro";
 
 type Props = {
@@ -9,9 +10,7 @@ type Props = {
 const { href } = Astro.props;
 ---
 
-<svg class="external" viewBox="0 0 12 12" aria-hidden="true">
-  <path d="M4.5 3.5h4v4M8.5 3.5l-5 5"></path>
-</svg>
+<Icon name="external" size="sm" class="external" />
 {opensNewTab(href) && <VisuallyHidden>{newTabNote}</VisuallyHidden>}
 
 <style>
@@ -20,15 +19,9 @@ const { href } = Astro.props;
     --nudge-sm: 1px;
 
     display: inline-block;
-    inline-size: var(--icon-sm);
-    block-size: var(--icon-sm);
     margin-inline-start: var(--space-1);
     vertical-align: calc(-1 * var(--nudge-sm));
-    fill: none;
     stroke: var(--text-3);
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
     transition: stroke var(--dur) var(--ease);
 
     :global(a:focus-visible) & {

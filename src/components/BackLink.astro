@@ -1,4 +1,6 @@
 ---
+import Icon from "./Icon.astro";
+
 type Props = {
   href: string;
   label: string;
@@ -8,9 +10,7 @@ const { href, label } = Astro.props;
 ---
 
 <a class="back" href={href}>
-  <svg viewBox="0 0 16 16" aria-hidden="true">
-    <path d="M10 3.5L5.5 8l4.5 4.5"></path>
-  </svg>
+  <Icon name="chevron-left" class="chevron" />
   {label}
 </a>
 
@@ -28,24 +28,14 @@ const { href, label } = Astro.props;
     }
   }
 
-  svg {
-    inline-size: var(--icon-md);
-    block-size: var(--icon-md);
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
   @media (hover: hover) and (pointer: fine) {
-    .back:hover svg {
+    .back:hover .chevron {
       translate: calc(-1 * var(--nudge)) 0;
     }
   }
 
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    svg {
+    .chevron {
       transition: translate var(--dur) var(--ease-settle);
     }
   }

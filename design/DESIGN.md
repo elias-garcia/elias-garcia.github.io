@@ -182,9 +182,11 @@ Two sizes, one weight: 1.5px stroke, round caps and joins, `currentColor`.
 | Token | Size | Use |
 |---|---|---|
 | `icon-md` | 16px | Icons on their own or in a control: buttons, search result tiles, menu items, header search |
-| `icon-sm` | 12px | The two inline markers, 4px from their word: the see-more chevron and the external-link arrow. Never a tap target on their own |
+| `icon-sm` | 12px | Small markers beside text: the see-more and "View project" chevrons, the external-link arrow, the course rating's star, the footnote's return arrow. Never a tap target on their own |
 
 Icons always sit next to a text label, or carry an accessible name when alone. Decorative icons get `aria-hidden="true"`.
+
+One `Icon` component draws them all: each icon is a file in `src/assets/icons/`, inlined as an `<svg>` with the stroke above. Never draw an icon inline in a component. Filled shapes inside an icon (the RSS dot, the play triangle, the star, the Markdown mark) carry their own `fill` in the file.
 
 ### 2.8 Fixed sizes and breakpoint
 

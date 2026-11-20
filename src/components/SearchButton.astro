@@ -1,5 +1,6 @@
 ---
 import { getSearchCopy } from "../lib/content.ts";
+import Icon from "./Icon.astro";
 import VisuallyHidden from "./VisuallyHidden.astro";
 
 const copy = await getSearchCopy();
@@ -13,10 +14,7 @@ const copy = await getSearchCopy();
   aria-keyshortcuts="Meta+K Control+K"
   data-search-open
 >
-  <svg viewBox="0 0 16 16" aria-hidden="true">
-    <circle cx="7" cy="7" r="4.5"></circle>
-    <path d="M10.5 10.5L14 14"></path>
-  </svg>
+  <Icon name="search" />
   <VisuallyHidden>{copy.button}</VisuallyHidden>
   <span class="shortcut apple">{copy.shortcut}</span>
   <span class="shortcut other">{copy.shortcutOther}</span>
@@ -70,15 +68,6 @@ const copy = await getSearchCopy();
       inline-size: var(--search-button-sm);
       padding: 0;
     }
-  }
-
-  svg {
-    flex: none;
-    inline-size: var(--icon-md);
-    block-size: var(--icon-md);
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.5;
   }
 
   .shortcut {

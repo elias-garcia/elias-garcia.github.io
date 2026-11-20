@@ -1,4 +1,6 @@
 ---
+import Icon from "./Icon.astro";
+
 type Link = {
   href: string;
   title: string;
@@ -24,15 +26,11 @@ const links = [
       <a class:list={["card", direction]} href={href}>
         <span class="label">
           {direction === "previous" && (
-            <svg viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M10 3.5L5.5 8l4.5 4.5" />
-            </svg>
+            <Icon name="chevron-left" class="chevron" />
           )}
           {label}
           {direction === "next" && (
-            <svg viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M6 3.5L10.5 8 6 12.5" />
-            </svg>
+            <Icon name="chevron-right" class="chevron" />
           )}
         </span>
         <span class="title">{title}</span>
@@ -101,28 +99,18 @@ const links = [
     font-weight: var(--weight-medium);
   }
 
-  svg {
-    inline-size: var(--icon-md);
-    block-size: var(--icon-md);
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
   @media (hover: hover) and (pointer: fine) {
-    .previous:hover svg {
+    .previous:hover .chevron {
       translate: calc(-1 * var(--nudge)) 0;
     }
 
-    .next:hover svg {
+    .next:hover .chevron {
       translate: var(--nudge) 0;
     }
   }
 
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    svg {
+    .chevron {
       transition: translate var(--dur) var(--ease-settle);
     }
   }

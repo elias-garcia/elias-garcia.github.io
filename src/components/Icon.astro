@@ -1,0 +1,82 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import ChevronDown from "../assets/icons/chevron-down.svg";
+import ChevronLeft from "../assets/icons/chevron-left.svg";
+import ChevronRight from "../assets/icons/chevron-right.svg";
+import ChevronRightSmall from "../assets/icons/chevron-right-small.svg";
+import Close from "../assets/icons/close.svg";
+import Download from "../assets/icons/download.svg";
+import External from "../assets/icons/external.svg";
+import Go from "../assets/icons/go.svg";
+import Mail from "../assets/icons/mail.svg";
+import Markdown from "../assets/icons/markdown.svg";
+import Pdf from "../assets/icons/pdf.svg";
+import Play from "../assets/icons/play.svg";
+import Plus from "../assets/icons/plus.svg";
+import Post from "../assets/icons/post.svg";
+import Project from "../assets/icons/project.svg";
+import Return from "../assets/icons/return.svg";
+import Rss from "../assets/icons/rss.svg";
+import Search from "../assets/icons/search.svg";
+import Star from "../assets/icons/star.svg";
+import Topic from "../assets/icons/topic.svg";
+
+// Every icon. Decorative: the control or link it sits in carries the name.
+// Most are drawn on a 16px grid; a few small markers on a 12px one. `size`
+// is how large an icon shows, whatever its grid.
+const icons = {
+  "chevron-down": ChevronDown,
+  "chevron-left": ChevronLeft,
+  "chevron-right": ChevronRight,
+  "chevron-right-small": ChevronRightSmall,
+  close: Close,
+  download: Download,
+  external: External,
+  go: Go,
+  mail: Mail,
+  markdown: Markdown,
+  pdf: Pdf,
+  play: Play,
+  plus: Plus,
+  post: Post,
+  project: Project,
+  return: Return,
+  rss: Rss,
+  search: Search,
+  star: Star,
+  topic: Topic,
+};
+
+type Props = HTMLAttributes<"svg"> & {
+  name: keyof typeof icons;
+  size?: "md" | "sm";
+};
+
+const { name, size = "md", class: className, ...attributes } = Astro.props;
+const Svg = icons[name];
+---
+
+<Svg
+  class:list={["icon", { sm: size === "sm" }, className]}
+  aria-hidden="true"
+  {...attributes}
+/>
+
+<style>
+  /* :where() keeps these below whatever the component using the icon sets. */
+  :where(.icon) {
+    flex: none;
+    inline-size: var(--icon-md);
+    block-size: var(--icon-md);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  :where(.sm) {
+    inline-size: var(--icon-sm);
+    block-size: var(--icon-sm);
+  }
+</style>

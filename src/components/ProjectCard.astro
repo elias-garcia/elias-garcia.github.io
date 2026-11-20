@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { hasCaseStudy } from "../lib/content.ts";
+import Icon from "./Icon.astro";
 import ProjectPreview from "./ProjectPreview.astro";
 import ProjectStatus from "./ProjectStatus.astro";
 
@@ -25,9 +26,7 @@ const Tag = href === undefined ? "div" : "a";
         {href !== undefined && (
           <span class="go">
             View project
-            <svg viewBox="0 0 12 12" aria-hidden="true">
-              <path d="M4.5 3l3 3-3 3"></path>
-            </svg>
+            <Icon name="chevron-right-small" size="sm" class="chevron" />
           </span>
         )}
       </div>
@@ -99,16 +98,6 @@ const Tag = href === undefined ? "div" : "a";
     }
   }
 
-  svg {
-    inline-size: var(--icon-sm);
-    block-size: var(--icon-sm);
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
   /* The title follows the link colour; the label turns with it. */
   .card {
     &:focus-visible {
@@ -128,13 +117,13 @@ const Tag = href === undefined ? "div" : "a";
   }
 
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .card:hover svg {
+    .card:hover .chevron {
       translate: var(--nudge) 0;
     }
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    svg {
+    .chevron {
       transition: translate var(--dur) var(--ease-settle);
     }
   }

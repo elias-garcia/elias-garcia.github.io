@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { formatMinutes, formatScore } from "../lib/format.ts";
+import Icon from "./Icon.astro";
 import MetaItem from "./MetaItem.astro";
 import MetaLine from "./MetaLine.astro";
 import VisuallyHidden from "./VisuallyHidden.astro";
@@ -19,9 +20,7 @@ const score = formatScore(rating.score);
       Rated {score} out of 5 from {rating.reviews} reviews.
     </VisuallyHidden>
     <span class="rating" aria-hidden="true">
-      <svg class="star" viewBox="0 0 12 12">
-        <path d="M6 .9l1.55 3.17 3.5.5-2.53 2.47.6 3.48L6 8.88l-3.12 1.64.6-3.48L.95 4.57l3.5-.5z"></path>
-      </svg>
+      <Icon name="star" size="sm" class="star" />
       <span class="score">{score}</span>({rating.reviews} reviews)
     </span>
   </MetaItem>
@@ -37,10 +36,7 @@ const score = formatScore(rating.score);
   }
 
   .star {
-    flex: none;
-    inline-size: var(--icon-sm);
-    block-size: var(--icon-sm);
-    fill: var(--text);
+    color: var(--text);
   }
 
   .score {

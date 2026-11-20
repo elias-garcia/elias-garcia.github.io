@@ -10,6 +10,7 @@ import { formatMonthDay, isoDate } from "../lib/format.ts";
 import { linkTarget, newTabNote } from "../lib/links.ts";
 import Button from "./Button.astro";
 import Chip from "./Chip.astro";
+import Icon from "./Icon.astro";
 import List from "./List.astro";
 import ListRow from "./ListRow.astro";
 import MetaItem from "./MetaItem.astro";
@@ -42,10 +43,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
 <div class="writing">
   <PageIntro title={page.title} intro={page.intro}>
     <Button slot="action" href="/rss.xml" {...linkTarget("/rss.xml")}>
-      <svg viewBox="0 0 16 16" aria-hidden="true">
-        <path d="M3.5 3a9.5 9.5 0 0 1 9.5 9.5M3.5 7a5.5 5.5 0 0 1 5.5 5.5"></path>
-        <circle cx="4" cy="12" r="1.1"></circle>
-      </svg>
+      <Icon name="rss" />
       Subscribe
       <VisuallyHidden>{newTabNote}</VisuallyHidden>
     </Button>

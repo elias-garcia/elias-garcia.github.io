@@ -44,7 +44,7 @@ Markup follows the HTML specification, even where the reference HTML does someth
 
 ```
 src/
-  assets/       # images processed by astro:assets
+  assets/       # images processed by astro:assets; icons/ holds the icon set
   components/   # .astro components, one per file, PascalCase; mdx/ holds the prose and MDX ones
   layouts/      # page shells
   pages/        # routes and static endpoints
@@ -74,6 +74,7 @@ design/         # design handoff (reference only)
 - Motion (DESIGN.md §2.5): the three durations and two curves, `--ease-settle` for anything that enters, leaves or moves and `--ease` only for hover and colour. Nothing driven by the keyboard animates: search opens instantly, the Download CV menu opened with Enter or Space appears instantly, arrowing through rows highlights instantly, and the image viewer opens, closes and changes photo instantly from the keyboard. Hover never moves a card, and hover underlines fade in. Every pressable control has press feedback (.97 for buttons, .99 for bordered cards), and copy buttons keep their width: both labels share one grid cell and crossfade. Menus grow from their trigger with a transition and `@starting-style`, never keyframes. Gestures accept flicks, ignore a second finger, and set transforms on the moving element, never through a CSS variable on a parent. Animate transform and opacity (expanding rows excepted). Hover movement only under `(hover: hover) and (pointer: fine)`; honour `prefers-reduced-motion`.
 - Phones (DESIGN.md §2.9): keep the viewport tag as it is (`viewport-fit=cover`, `interactive-widget=resizes-content`) and never disable zoom. Every hover style sits in `@media (hover: hover) and (pointer: fine)`; touch gets press states instead (no tap flash; text links and list rows dim while pressed; the base layout's passive `touchstart` listener makes iOS apply `:active`). Use `100svh` for the page shell and `dvh` for open dialogs, never `100vh`. Pad for the notch with `env(safe-area-inset-*)` (`--page-start`, `--page-end`). Check on a real iPhone and Android phone: emulation hides all of this.
 - Styles live in each component's scoped `<style>`. Global CSS only for tokens, reset and base element styles.
+- Icons come from `Icon.astro` (`<Icon name="…" />`, one file per icon in `src/assets/icons/`). Never inline an icon's `<svg>` in a component; style an icon from its parent through a class.
 - Check both themes for every change, and colour changes with forced colours emulated too (DESIGN.md §6): a state must never rely on a fill alone. System colour keywords (`CanvasText`, `Highlight`…) are the one exception to tokens only, and only inside `@media (forced-colors: active)`.
 - Links to other websites and the RSS feed open in a new tab (`linkTarget()` in `src/lib/links.ts`). Pages on this site, downloads and `mailto:` links don't.
 

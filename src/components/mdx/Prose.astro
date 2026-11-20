@@ -356,14 +356,7 @@
       }
 
       & > :global(.chevron) {
-        flex: none;
-        inline-size: var(--icon-md);
-        block-size: var(--icon-md);
-        fill: none;
         stroke: var(--text-3);
-        stroke-width: 1.5;
-        stroke-linecap: round;
-        stroke-linejoin: round;
 
         @media (prefers-reduced-motion: no-preference) {
           transition: rotate var(--dur-slow) var(--ease-settle);
@@ -601,16 +594,6 @@
           background: var(--control);
           color: var(--accent);
         }
-      }
-
-      & :global(svg) {
-        inline-size: var(--icon-sm);
-        block-size: var(--icon-sm);
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 1.5;
-        stroke-linecap: round;
-        stroke-linejoin: round;
       }
     }
   }

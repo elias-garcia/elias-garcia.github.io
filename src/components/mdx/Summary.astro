@@ -1,12 +1,11 @@
 ---
 import type { HTMLAttributes } from "astro/types";
+import Icon from "../Icon.astro";
 
 type Props = HTMLAttributes<"summary">;
 ---
 
 <summary {...Astro.props}>
-  <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true">
-    <path d="M6 3.5L10.5 8 6 12.5"></path>
-  </svg>
+  <Icon name="chevron-right" class="chevron" />
   <slot />
 </summary>

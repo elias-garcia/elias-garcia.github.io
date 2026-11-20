@@ -4,6 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import { attachmentImage } from "../lib/attachment.ts";
 import { linkTarget } from "../lib/links.ts";
 import ExternalArrow from "./ExternalArrow.astro";
+import Icon from "./Icon.astro";
 
 type Props = {
   video: CollectionEntry<"courses">["data"]["video"];
@@ -23,9 +24,7 @@ const { href, thumbnail, label, source } = Astro.props.video;
       loading="lazy"
     />
     <span class="play" aria-hidden="true">
-      <svg viewBox="0 0 16 16">
-        <path d="M5 3.2v9.6a.6.6 0 0 0 .92.5l7.3-4.8a.6.6 0 0 0 0-1L5.92 2.7A.6.6 0 0 0 5 3.2z"></path>
-      </svg>
+      <Icon name="play" />
     </span>
   </span>
   <span class="text">
@@ -121,12 +120,6 @@ const { href, thumbnail, label, source } = Astro.props.video;
         background: var(--text);
         color: var(--bg);
       }
-    }
-
-    svg {
-      inline-size: var(--icon-md);
-      block-size: var(--icon-md);
-      fill: currentColor;
     }
   }
 

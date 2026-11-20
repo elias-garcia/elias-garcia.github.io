@@ -1,7 +1,7 @@
 ---
 import { getCvFormats } from "../lib/cv.ts";
 import Button from "./Button.astro";
-import CvFormatIcon from "./CvFormatIcon.astro";
+import Icon from "./Icon.astro";
 
 const formats = await getCvFormats();
 ---
@@ -14,9 +14,7 @@ const formats = await getCvFormats();
     data-cv-button
   >
     Download CV
-    <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M4.5 6.5L8 10l3.5-3.5"></path>
-    </svg>
+    <Icon name="chevron-down" class="chevron" />
   </Button>
   <ul class="formats" id="cv-formats" popover role="list" data-cv-formats>
     {formats.map((format) => (
@@ -28,7 +26,7 @@ const formats = await getCvFormats();
           data-astro-prefetch="false"
         >
           <span class="tile" aria-hidden="true">
-            <CvFormatIcon format={format.icon} />
+            <Icon name={format.icon} />
           </span>
           <span class="text">
             <span class="title">
@@ -333,16 +331,6 @@ const formats = await getCvFormats();
         background: var(--bg);
         color: var(--accent);
       }
-    }
-
-    :global(svg) {
-      inline-size: var(--icon-md);
-      block-size: var(--icon-md);
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
     }
   }
 

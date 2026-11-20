@@ -1,6 +1,7 @@
 ---
 import { viewerImage } from "../lib/attachment.ts";
 import { getViewerCopy } from "../lib/content.ts";
+import Icon from "./Icon.astro";
 import KeyHintGroup from "./KeyHintGroup.astro";
 
 // The image viewer for the talk photos (RowPhotos.astro): a card over the
@@ -25,9 +26,7 @@ const copy = await getViewerCopy();
     aria-label={copy.close}
     data-viewer-close
   >
-    <svg viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M4 4l8 8M12 4l-8 8"></path>
-    </svg>
+    <Icon name="close" />
   </button>
 
   <figure class="figure">
@@ -42,9 +41,7 @@ const copy = await getViewerCopy();
         data-viewer-previous
         data-viewer-several
       >
-        <svg viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M10 3.5 5.5 8l4.5 4.5"></path>
-        </svg>
+        <Icon name="chevron-left" />
       </button>
       <button
         class="control arrow next"
@@ -53,9 +50,7 @@ const copy = await getViewerCopy();
         data-viewer-next
         data-viewer-several
       >
-        <svg viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M6 3.5 10.5 8 6 12.5"></path>
-        </svg>
+        <Icon name="chevron-right" />
       </button>
     </div>
     <figcaption class="caption">
@@ -86,9 +81,7 @@ const copy = await getViewerCopy();
       aria-label={copy.previous}
       data-viewer-previous
     >
-      <svg viewBox="0 0 16 16" aria-hidden="true">
-        <path d="M10 3.5 5.5 8l4.5 4.5"></path>
-      </svg>
+      <Icon name="chevron-left" />
     </button>
     <span class="dots" aria-hidden="true" data-viewer-dots></span>
     <button
@@ -97,9 +90,7 @@ const copy = await getViewerCopy();
       aria-label={copy.next}
       data-viewer-next
     >
-      <svg viewBox="0 0 16 16" aria-hidden="true">
-        <path d="M6 3.5 10.5 8 6 12.5"></path>
-      </svg>
+      <Icon name="chevron-right" />
     </button>
   </div>
 
@@ -1171,16 +1162,6 @@ const copy = await getViewerCopy();
         border-color: var(--line-strong);
         background: var(--bg);
       }
-    }
-
-    svg {
-      inline-size: var(--icon-md);
-      block-size: var(--icon-md);
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
     }
   }
 

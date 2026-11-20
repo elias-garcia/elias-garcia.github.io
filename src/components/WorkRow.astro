@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { workMode } from "../lib/content.ts";
+import Icon from "./Icon.astro";
 import VisuallyHidden from "./VisuallyHidden.astro";
 import Years from "./Years.astro";
 
@@ -31,9 +32,7 @@ const { job, open } = Astro.props;
         </span>
         <span class="role">{job.role}</span>
       </span>
-      <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
-        <path d="M8 3v10M3 8h10"></path>
-      </svg>
+      <Icon name="plus" class="plus" />
     </summary>
     <ul class="points" role="list">
       {job.points.map((point) => (
@@ -111,15 +110,10 @@ const { job, open } = Astro.props;
     color: var(--text-2);
   }
 
-  .icon {
+  .plus {
     grid-area: icon;
-    inline-size: var(--icon-md);
-    block-size: var(--icon-md);
     margin-block-start: var(--space-1);
-    fill: none;
     stroke: var(--text-3);
-    stroke-width: 1.5;
-    stroke-linecap: round;
     transition: stroke var(--dur) var(--ease);
 
     @media (hover: hover) and (pointer: fine) {
@@ -164,7 +158,7 @@ const { job, open } = Astro.props;
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .icon {
+    .plus {
       transition:
         stroke var(--dur) var(--ease),
         rotate var(--dur-slow) var(--ease-settle);

@@ -71,23 +71,6 @@ const { class: className, onSurface = false, ...attributes } = Astro.props;
         scale: var(--press-scale);
       }
     }
-
-    & :global(svg) {
-      flex: none;
-      inline-size: var(--icon-md);
-      block-size: var(--icon-md);
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    /* The RSS icon's dot is filled, unlike every other icon's strokes. */
-    & :global(svg circle) {
-      fill: currentColor;
-      stroke: none;
-    }
   }
 
   /* Its fill is gone in forced colours: a border shows it's a button. */

@@ -3,9 +3,9 @@ import { getCvFormats } from "../lib/cv.ts";
 import { getPage, getProfile, getSearchCopy } from "../lib/content.ts";
 import { describeSections } from "../lib/navigation.ts";
 import { getSearchIndex } from "../lib/search.ts";
+import Icon from "./Icon.astro";
 import KeyHint from "./KeyHint.astro";
 import KeyHintGroup from "./KeyHintGroup.astro";
-import SearchIcon from "./SearchIcon.astro";
 import SearchOption from "./SearchOption.astro";
 import VisuallyHidden from "./VisuallyHidden.astro";
 
@@ -39,10 +39,7 @@ if (email === undefined) {
   data-index={JSON.stringify(index)}
 >
   <div class="input-row">
-    <svg class="magnifier" viewBox="0 0 16 16" aria-hidden="true">
-      <circle cx="7" cy="7" r="4.5"></circle>
-      <path d="M10.5 10.5L14 14"></path>
-    </svg>
+    <Icon name="search" class="magnifier" />
     <button class="small-control crumb" type="button" hidden data-search-crumb>
       {copy.cv.title}
       <VisuallyHidden>. {copy.cv.back}</VisuallyHidden>
@@ -87,7 +84,7 @@ if (email === undefined) {
       </div>
       {sections.map(({ label, href, description }) => (
         <SearchOption title={label} line={description} href={href}>
-          <SearchIcon name="go" />
+          <Icon name="go" />
         </SearchOption>
       ))}
     </div>
@@ -96,13 +93,13 @@ if (email === undefined) {
         {copy.actions}
       </div>
       <SearchOption title={copy.email} line={email.text} href={email.href}>
-        <SearchIcon name="mail" />
+        <Icon name="mail" />
       </SearchOption>
       <SearchOption title={copy.cv.title} line={copy.cv.line} action="cv" more>
-        <SearchIcon name="download" />
+        <Icon name="download" />
       </SearchOption>
       <SearchOption title={copy.rss.title} line={copy.rss.line} href="/rss.xml">
-        <SearchIcon name="rss" />
+        <Icon name="rss" />
       </SearchOption>
     </div>
     <div
@@ -125,7 +122,7 @@ if (email === undefined) {
           download
           fullLine
         >
-          <SearchIcon name={icon} />
+          <Icon name={icon} />
         </SearchOption>
       ))}
     </div>
@@ -176,7 +173,7 @@ if (email === undefined) {
         {copy.suggest}
       </div>
       <SearchOption line={copy.suggestion.line} href={email.href}>
-        <SearchIcon name="mail" />
+        <Icon name="mail" />
       </SearchOption>
     </div>
   </div>
@@ -198,17 +195,17 @@ if (email === undefined) {
 
   <template data-search-template="posts">
     <SearchOption href="" fullLine>
-      <SearchIcon name="post" />
+      <Icon name="post" />
     </SearchOption>
   </template>
   <template data-search-template="projects">
     <SearchOption href="" fullLine>
-      <SearchIcon name="project" />
+      <Icon name="project" />
     </SearchOption>
   </template>
   <template data-search-template="topics">
     <SearchOption href="">
-      <SearchIcon name="topic" />
+      <Icon name="topic" />
     </SearchOption>
   </template>
 </dialog>
@@ -864,12 +861,7 @@ if (email === undefined) {
   }
 
   .magnifier {
-    flex: none;
-    inline-size: var(--icon-md);
-    block-size: var(--icon-md);
-    fill: none;
     stroke: var(--text-3);
-    stroke-width: 1.5;
   }
 
   .input {

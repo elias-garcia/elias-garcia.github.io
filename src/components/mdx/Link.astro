@@ -1,5 +1,6 @@
 ---
 import { linkTarget, newTabNote, opensNewTab } from "../../lib/links.ts";
+import Icon from "../Icon.astro";
 import TextLink from "../TextLink.astro";
 import VisuallyHidden from "../VisuallyHidden.astro";
 
@@ -32,9 +33,7 @@ const number =
   </a>
 ) : backlink !== undefined ? (
   <a class="backref" href={href} aria-label={label}>
-    <svg viewBox="0 0 12 12" aria-hidden="true">
-      <path d="M9.5 3.5v2a2 2 0 0 1-2 2h-5M4.5 5.5l-2 2 2 2"></path>
-    </svg>
+    <Icon name="return" size="sm" />
   </a>
 ) : (
   <TextLink href={href} id={id} title={title} {...linkTarget(href)}>
