@@ -72,6 +72,10 @@ const shareImage = pageShareImage ?? {
         }
       }
     </style>
+    <!-- The first render, and with it a page transition, waits until the
+         content is parsed: the block lifts at the footer's opening tag, which
+         follows the content. -->
+    <link rel="expect" href="#footer" blocking="render" />
     <title>{documentTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
