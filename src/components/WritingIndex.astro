@@ -69,7 +69,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
 
   <div class="years">
     {[...years].map(([year, yearRows]) => (
-      <Section id={`year-${String(year)}`} title={String(year)}>
+      <Section title={String(year)}>
         <List>
           {yearRows.map(({ post, readingTime }) => (
             <ListRow

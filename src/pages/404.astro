@@ -28,7 +28,7 @@ const [beforeLink, afterLink] = page.report.split("{link}");
       </span>
     </PageIntro>
 
-    <Section id="suggestions" title={page.suggestionsTitle}>
+    <Section title={page.suggestionsTitle}>
       <List>
         {suggestions.map(({ label, href, description }) => (
           <ListRow title={label} href={href} dateOnPhones={false}>

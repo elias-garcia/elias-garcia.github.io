@@ -389,7 +389,7 @@ Screenshots for each: `screenshots/<page>.{desktop,phone}.{light,dark}.png`.
 8. **Education.** One plain row.
 9. **Contact.** `<address>` with a `<dl>`: Email, GitHub, LinkedIn, X, each value a link with the arrow.
 
-Sections are `<section aria-labelledby>` with `h2` headings at the text size (16/500, `--text`), `--space-section` apart (80, 64 on phones); the intro is a `<header>`. The space above a heading and its place at the left edge mark the section; don't make the headings bigger.
+Sections are plain `<section>` elements, **not labelled**, with `h2` headings at the text size (16/500, `--text`), `--space-section` apart (80, 64 on phones); the intro is a `<header>`. The space above a heading and its place at the left edge mark the section; don't make the headings bigger.
 
 ### Projects (`/projects`)
 Intro (title, one line), then the card grid: one per row on phones, two per row from 640px with the first spanning both when the count is odd. Order: projects in progress first, then the rest; each group by year, newest first, then by title. Every card shows "View project ›" on the title row (from 640px).
@@ -435,7 +435,7 @@ Every page must pass axe (WCAG 2.2 AA + best practice) in light and dark, at 128
   - Buttons, chips, footnote markers and search's small controls get a 1px `ButtonBorder` edge; the selected chip a 2px `Highlight` border; the selected search row and the note you arrive at a `Highlight` outline; a highlighted code line a `Highlight` edge.
   - Bullets and the easing demo's plain runner use `CanvasText`. Text that sits on the accent (the selected chip's count, a focused footnote marker) is `Canvas` on `LinkText`, with `forced-color-adjust: none` so no plate is painted behind it.
   - Text colours are left to the browser, so links keep the system's link colour.
-- Landmarks: one `<header>`, `<nav aria-label="Main">`, `<main id="content">`, `<footer>`. One `h1` per page, no skipped heading levels.
+- Landmarks: one `<header>`, `<nav aria-label="Main">`, `<main id="content">`, `<footer>`, and nothing else on most pages. A `<section>` with a name becomes a `region` landmark, so the sections on Home, Writing and the 404 carry no `aria-labelledby`: people move through them by their `h2` headings, and nine named regions would bury the four landmarks that matter. Work experience needs none either: its rows are native `<details>`. Named on purpose: a post's Notes (one per post), and the scrollable code blocks and tables (focusable so the keyboard can scroll them, and anything focusable needs a role and a name). One `h1` per page, no skipped heading levels.
 - Lists are `<ul role="list">` (role keeps semantics in Safari with `list-style: none`). Dates are `<time>`. Contact is `<address>` + `<dl>`. Page intros are `<header>` inside `main`, not labelled sections.
 - Every interactive element is a real `<a>`, `<button>` or `<summary>`; the Download CV button opens its popover with `popovertarget` and `aria-controls`; the selected chip has `aria-current="page"`; the search uses `role="dialog"`, `aria-modal`, a combobox input and `aria-activedescendant`. Its result count and messages are announced by one hidden status region half a second after typing stops, not on every key; a click outside closes it (`closedby="any"`, with a click listener where that isn't supported); and Enter that only confirms an input method's composition never opens a result.
 - Visible focus: 2px `--accent` outline, 3px offset, following the element's shape (text links get `--r-sm`).
