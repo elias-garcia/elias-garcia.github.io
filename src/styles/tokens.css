@@ -121,6 +121,7 @@
   --press-scale: 0.97;
   --press-scale-tile: 0.99;
   --entrance-offset: 6px;
+  --dur-flash: 2s; /* a footnote marker or a note you arrive at lights up, then fades; a deliberate exception */
   --dur-morph: 400ms; /* a project preview morphing into its case study hero, a deliberate exception */
 
   /* ---- Elevation and layers ---- */

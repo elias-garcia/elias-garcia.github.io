@@ -31,3 +31,47 @@ const label = `${String(id)}-anchor`;
     </span>
   </div>
 )}
+
+<style>
+  /* The # link shows on hover and focus. */
+  .heading {
+    position: relative;
+
+    h2 {
+      font-size: var(--text-title);
+      font-weight: var(--weight-semibold);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-title);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover .anchor {
+        opacity: 1;
+      }
+    }
+  }
+
+  .anchor {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: calc(-1 * var(--space-6));
+    inline-size: var(--space-5);
+    color: var(--text-3);
+    font-size: var(--text-title);
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-tight);
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease);
+
+    &:focus-visible {
+      opacity: 1;
+    }
+  }
+
+  .notes-label {
+    font-size: var(--text-subtitle);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-title);
+  }
+</style>

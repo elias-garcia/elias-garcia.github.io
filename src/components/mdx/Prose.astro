@@ -4,16 +4,6 @@
 
 <style>
   .prose {
-    /* A note or marker you arrive at lights up, then fades. */
-    --dur-flash: 2s;
-    --marker: 20px;
-    /* Footnote markers sit just above the baseline. */
-    --marker-lift: 2px;
-    /* A marker you return to lands a third of the way down. */
-    --marker-scroll: 30vh;
-    /* The smallest target (WCAG 2.5.8): the footnote back link. */
-    --target-sm: 24px;
-    --rule-short: 64px;
     /* Inline code, relative to the text around it. */
     --code-inline: 0.875em;
 
@@ -58,6 +48,13 @@
       font-size: var(--text-small);
       line-height: var(--leading-tight);
       text-align: center;
+    }
+
+    /* GFM puts each footnote marker in a <sup>: the marker sets its own size
+       and lift. */
+    & :global(sup:has(.fn)) {
+      font-size: inherit;
+      vertical-align: baseline;
     }
 
     & :global(h3),
@@ -110,6 +107,11 @@
 
   .prose > :global(h4) {
     margin-block-start: var(--space-6);
+  }
+
+  /* The Notes sit apart from the article. */
+  .prose > :global(.notes) {
+    margin-block-start: var(--space-16);
   }
 
   .prose > :global(.heading + *) {
@@ -294,47 +296,6 @@
     border-radius: var(--r-lg);
   }
 
-  .prose :global(.table) {
-    overflow-x: auto;
-    border: var(--hairline) solid var(--line);
-    border-radius: var(--r-lg);
-
-    /* Cells never wrap mid-word on phones: the box scrolls instead. */
-    & :global(table) {
-      inline-size: max-content;
-      min-inline-size: 100%;
-      border-collapse: collapse;
-      font-size: var(--text-small);
-      line-height: var(--leading-normal);
-    }
-
-    & :global(th) {
-      padding: var(--space-2) var(--space-4);
-      border-block-end: var(--hairline) solid var(--line);
-      background: var(--surface);
-      color: var(--text-3);
-      font-size: var(--text-small);
-      font-weight: var(--weight-medium);
-      text-align: start;
-      white-space: nowrap;
-    }
-
-    & :global(td) {
-      padding: var(--space-2) var(--space-4);
-      border-block-start: var(--hairline) solid var(--line);
-      color: var(--text-2);
-      vertical-align: top;
-    }
-
-    & :global(tbody tr:first-child td) {
-      border-block-start: 0;
-    }
-
-    & :global(:is(th, td)[style*="right"]) {
-      font-variant-numeric: tabular-nums;
-    }
-  }
-
   .prose > :global(details) {
     border: var(--hairline) solid var(--line);
     color: var(--text-2);
@@ -403,251 +364,16 @@
     }
   }
 
-  /* ---- Section headings, with a # link on hover and focus ---- */
-
-  .prose :global(.heading) {
-    position: relative;
-
-    & :global(h2) {
-      font-size: var(--text-title);
-      font-weight: var(--weight-semibold);
-      line-height: var(--leading-tight);
-      letter-spacing: var(--tracking-title);
-    }
-
-    & :global(.anchor) {
-      position: absolute;
-      inset-block-start: 0;
-      inset-inline-start: calc(-1 * var(--space-6));
-      inline-size: var(--space-5);
-      color: var(--text-3);
-      font-size: var(--text-title);
-      font-weight: var(--weight-medium);
-      line-height: var(--leading-tight);
-      opacity: 0;
-      transition: opacity var(--dur) var(--ease);
-
-      &:focus-visible {
-        border-radius: var(--r-sm);
-        opacity: 1;
-      }
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      &:hover :global(.anchor) {
-        opacity: 1;
-      }
-    }
-  }
-
-  /* ---- Footnote markers ---- */
-
-  .prose :global(.fn) {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-inline-size: var(--marker);
-    min-block-size: var(--marker);
-    margin-inline-start: var(--space-1);
-    padding-inline: var(--space-1);
-    border-radius: var(--r-sm);
-    background: var(--control);
-    color: var(--text-2);
-    font-size: var(--text-micro);
-    font-weight: var(--weight-semibold);
-    line-height: var(--leading-none);
-    vertical-align: var(--marker-lift);
-    /* Returning from a note, the marker lands a third of the way down, with
-       the sentence before it in view, and lights up in its hover colours. */
-    scroll-margin-block-start: var(--marker-scroll);
-    transition:
-      background var(--dur) var(--ease),
-      color var(--dur) var(--ease);
-
-    &:focus-visible {
-      background: var(--accent);
-      color: var(--bg);
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        background: var(--accent);
-        color: var(--bg);
-      }
-    }
-
-    &:target {
-      animation: light var(--dur-flash) var(--ease) both;
-
-      @media (prefers-reduced-motion: reduce) {
-        animation: none;
-        background: var(--accent);
-        color: var(--bg);
-      }
-    }
-  }
-
-  /* GFM puts each marker in a <sup>: the marker sets its own size and lift. */
-  .prose :global(sup:has(.fn)) {
-    font-size: inherit;
-    vertical-align: baseline;
-  }
-
-  /* Touch: the 44px hit area is centred on the small markers. */
-  @media (pointer: coarse) {
-    .prose :global(:is(.fn, .backref))::before {
-      inset-inline: 50% auto;
-      inline-size: var(--hit-area);
-      translate: -50% -50%;
-    }
-  }
-
-  /* ---- Notes at the end of the article ---- */
-
-  .prose :global(.notes) {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    margin-block-start: var(--space-16);
-    padding-block-start: var(--space-6);
-
-    /* A short rule: a full-width one would compete with the author footer's. */
-    &::before {
-      content: "";
-      position: absolute;
-      inset-block-start: 0;
-      inset-inline-start: 0;
-      inline-size: var(--rule-short);
-      block-size: var(--hairline);
-      background: var(--line);
-    }
-
-    & :global(.notes-label) {
-      font-size: var(--text-subtitle);
-      font-weight: var(--weight-semibold);
-      line-height: var(--leading-tight);
-      letter-spacing: var(--tracking-title);
-    }
-
-    & :global(ol) {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-      list-style: decimal;
-      padding-inline-start: var(--space-5);
-      color: var(--text-2);
-      font-size: var(--text-small);
-      line-height: var(--leading-normal);
-    }
-
-    & :global(li) {
-      margin-inline-start: calc(-1 * var(--space-2));
-      padding: var(--space-1) var(--space-2);
-      border-radius: var(--r-md);
-
-      &::marker {
-        color: var(--text-3);
-        font-variant-numeric: tabular-nums;
-      }
-
-      &:target {
-        animation: tint var(--dur-flash) var(--ease) both;
-
-        @media (prefers-reduced-motion: reduce) {
-          animation: none;
-          background: var(--tint);
-        }
-      }
-    }
-
-    & :global(li p) {
-      color: inherit;
-      font-size: inherit;
-      line-height: inherit;
-    }
-
-    /* A 24px target around the 12px icon; the negative block margins keep
-       the line height as it is. */
-    & :global(.backref) {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      inline-size: var(--target-sm);
-      block-size: var(--target-sm);
-      margin: calc(-1 * var(--space-1)) 0 calc(-1 * var(--space-1))
-        var(--space-1);
-      border-radius: var(--r-sm);
-      color: var(--text-3);
-      vertical-align: middle;
-      transition:
-        color var(--dur) var(--ease),
-        background var(--dur) var(--ease);
-
-      &:focus-visible {
-        background: var(--control);
-        color: var(--accent);
-      }
-
-      @media (hover: hover) and (pointer: fine) {
-        &:hover {
-          background: var(--control);
-          color: var(--accent);
-        }
-      }
-    }
-  }
-
-  @keyframes tint {
-    from {
-      background: var(--tint);
-    }
-  }
-
-  @keyframes light {
-    0%,
-    25% {
-      background: var(--accent);
-      color: var(--bg);
-    }
-  }
-
   /* Forced colours: what is drawn with a fill or a shadow gets a system
      colour or a border, and text on the accent keeps a readable pair. */
   @media (forced-colors: active) {
-    .prose :global(ul:not(.contains-task-list) > li)::before,
-    .prose :global(.notes)::before {
+    .prose :global(ul:not(.contains-task-list) > li)::before {
       background: CanvasText;
     }
 
     .prose :global(li > ul:not(.contains-task-list) > li)::before {
       border: var(--hairline) solid CanvasText;
       background: Canvas;
-    }
-
-    .prose :global(.fn) {
-      border: var(--hairline) solid ButtonBorder;
-
-      /* Not adjusted, or the browser paints a plate behind the number. */
-      &:is(:focus-visible, :target) {
-        forced-color-adjust: none;
-        background: LinkText;
-        color: Canvas;
-      }
-
-      @media (hover: hover) and (pointer: fine) {
-        &:hover {
-          forced-color-adjust: none;
-          background: LinkText;
-          color: Canvas;
-        }
-      }
-    }
-
-    /* The note you arrive at loses its tint. */
-    .prose :global(.notes li:target) {
-      outline: var(--focus-ring) solid Highlight;
-      outline-offset: var(--focus-offset);
     }
 
     .prose :global(ul.contains-task-list input:checked)::before {
