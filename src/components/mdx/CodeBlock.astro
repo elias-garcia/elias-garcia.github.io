@@ -6,24 +6,27 @@ import CopyButton from "../CopyButton.astro";
 
 type Props = HTMLAttributes<"pre"> & { "data-language"?: string };
 
-const {
-  class: className,
-  style,
-  "data-language": language = "plaintext",
-} = Astro.props;
+const { class: className, style, "data-language": fence } = Astro.props;
 const copy = await getPostCopy();
-const name = fill(copy.codeName, { language });
+// Astro names a fence without a language "plaintext".
+const language = fence === "plaintext" ? undefined : fence;
+const name =
+  language === undefined
+    ? copy.plainCodeName
+    : fill(copy.codeName, { language });
 ---
 
 <div class="code" data-copy-scope>
-  <div class="header">
-    <span class="language">{language}</span>
-    <CopyButton
-      label={copy.copyCode}
-      name={fill(copy.copyCodeName, { language })}
-      onSurface
-    />
-  </div>
+  {language !== undefined && (
+    <div class="header">
+      <span class="language">{language}</span>
+      <CopyButton
+        label={copy.copyCode}
+        name={fill(copy.copyCodeName, { language })}
+        onSurface
+      />
+    </div>
+  )}
   <pre
     class:list={["block", className]}
     style={style}

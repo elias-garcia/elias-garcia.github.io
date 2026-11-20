@@ -172,6 +172,7 @@ const post = defineCollection({
     copyPageName: z.string(),
     copyCode: z.string(),
     codeName: template("{language}"),
+    plainCodeName: z.string(),
     copyCodeName: template("{language}"),
     copied: z.string(),
   }),
