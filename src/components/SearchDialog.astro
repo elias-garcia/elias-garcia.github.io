@@ -26,6 +26,7 @@ if (email === undefined) {
 
 <dialog
   class="search"
+  closedby="any"
   aria-label={copy.dialog}
   data-search
   data-email={email.href}
@@ -71,7 +72,7 @@ if (email === undefined) {
     <KeyHint>{copy.hints.escape}</KeyHint>
   </div>
 
-  <div class="status" role="status" data-search-status></div>
+  <div class="status" data-search-status></div>
 
   <div
     class="list"
@@ -189,7 +190,10 @@ if (email === undefined) {
       hidden
       data-search-back-hint
     />
-    <span class="count" role="status" data-search-count></span>
+    <span class="count" data-search-count></span>
+    <VisuallyHidden>
+      <span role="status" data-search-announcement></span>
+    </VisuallyHidden>
   </div>
 
   <template data-search-template="posts">
@@ -387,6 +391,9 @@ if (email === undefined) {
     return [mark, characters.slice(last + 1).join("")];
   }
 
+  const announceAfter = 500;
+  const compositionWindow = 50;
+
   const dialog = document.querySelector<HTMLDialogElement>("[data-search]");
   const input = dialog?.querySelector<HTMLInputElement>("[data-search-input]");
   const list = dialog?.querySelector<HTMLElement>("[data-search-list]");
@@ -396,6 +403,9 @@ if (email === undefined) {
   const clear = dialog?.querySelector<HTMLButtonElement>("[data-search-clear]");
   const backHint = dialog?.querySelector<HTMLElement>(
     "[data-search-back-hint]",
+  );
+  const announcement = dialog?.querySelector<HTMLElement>(
+    "[data-search-announcement]",
   );
   const copy: unknown = JSON.parse(dialog?.dataset.copy ?? "null");
   const index: unknown = JSON.parse(dialog?.dataset.index ?? "null");
@@ -409,12 +419,29 @@ if (email === undefined) {
     crumb &&
     clear &&
     backHint &&
+    announcement &&
     isCopy(copy) &&
     isIndex(index)
   ) {
     const plural = new Intl.PluralRules(document.documentElement.lang);
     let view: View = "home";
     let active = 0;
+
+    // Screen readers hear the message or the count once typing pauses, not
+    // on every key.
+    let announcing: number | undefined;
+    const announce = () => {
+      window.clearTimeout(announcing);
+      announcing = window.setTimeout(() => {
+        announcement.textContent = [
+          ...status.querySelectorAll(".message-title, .message-hint, .note"),
+        ]
+          .map((part) => part.textContent)
+          .concat(count.textContent)
+          .filter((part) => part !== "")
+          .join(" ");
+      }, announceAfter);
+    };
 
     const showMessage = ({ title: titleText, hint: hintText }: Message) => {
       const message = document.createElement("div");
@@ -527,7 +554,7 @@ if (email === undefined) {
           : input.dataset.placeholder) ?? "";
     };
 
-    const render = () => {
+    const draw = () => {
       const query = input.value.trim();
       clear.hidden = query === "";
       status.replaceChildren();
@@ -646,6 +673,11 @@ if (email === undefined) {
       select(0);
     };
 
+    const render = () => {
+      draw();
+      announce();
+    };
+
     const activate = (option: HTMLElement) => {
       if (option.dataset.action === "cv") {
         input.value = "";
@@ -695,7 +727,16 @@ if (email === undefined) {
 
     input.addEventListener("input", render);
 
+    let composedAt: number | undefined;
+    input.addEventListener("compositionend", (event) => {
+      composedAt = event.timeStamp;
+    });
+
     input.addEventListener("keydown", (event) => {
+      // While an input method is composing, the keys are its own.
+      if (event.isComposing) {
+        return;
+      }
       if (event.key === "ArrowDown" || event.key === "ArrowUp") {
         event.preventDefault();
         // With nothing selected, ↓ goes to the first row and ↑ to the last.
@@ -704,7 +745,12 @@ if (email === undefined) {
         return;
       }
       // Enter that confirms an input method's composition isn't for the list.
-      if (event.key === "Enter" && !event.isComposing) {
+      // Safari ends the composition just before that Enter arrives, so the
+      // time since it ended is checked too.
+      const confirmsComposition =
+        composedAt !== undefined &&
+        Math.abs(event.timeStamp - composedAt) < compositionWindow;
+      if (event.key === "Enter" && !confirmsComposition) {
         const option = options()[active];
         if (option !== undefined) {
           event.preventDefault();
@@ -763,12 +809,15 @@ if (email === undefined) {
 
     crumb.addEventListener("click", back);
 
-    // A click on the backdrop lands on the dialog itself.
-    dialog.addEventListener("click", (event) => {
-      if (event.target === dialog) {
-        close();
-      }
-    });
+    // Where `closedby` isn't supported, a click on the backdrop closes the
+    // dialog: it lands on the dialog itself.
+    if (!("closedBy" in HTMLDialogElement.prototype)) {
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) {
+          close();
+        }
+      });
+    }
   }
 </script>
 
@@ -802,7 +851,7 @@ if (email === undefined) {
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    block-size: var(--search-input-h);
+    min-block-size: var(--search-input-h);
     padding-inline: var(--space-4);
     border-block-end: var(--hairline) solid var(--line);
   }
@@ -884,8 +933,6 @@ if (email === undefined) {
     }
   }
 
-  /* The status region has no box of its own: empty, it stays rendered, since
-     a live region that appears with its message isn't always announced. */
   .status {
     :global(.message) {
       display: flex;
@@ -914,7 +961,6 @@ if (email === undefined) {
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: var(--space-1) var(--space-2) var(--space-2);
-    scrollbar-width: thin;
   }
 
   .group-label {
