@@ -1,15 +1,14 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import { render } from "astro:content";
+import Article from "../../components/Article.astro";
 import AuthorFooter from "../../components/AuthorFooter.astro";
 import BackLink from "../../components/BackLink.astro";
 import CopyButton from "../../components/CopyButton.astro";
-import DisplayTitle from "../../components/DisplayTitle.astro";
 import Icon from "../../components/Icon.astro";
 import MetaItem from "../../components/MetaItem.astro";
 import MetaLine from "../../components/MetaLine.astro";
 import { mdxComponents } from "../../components/mdx/index.ts";
-import Prose from "../../components/mdx/Prose.astro";
 import PreviousNext from "../../components/PreviousNext.astro";
 import StructuredData from "../../components/StructuredData.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -75,48 +74,38 @@ const structuredData = blogPosting(
 >
   <link slot="head" rel="alternate" type="text/markdown" href={markdown} />
   <StructuredData slot="head" data={structuredData} />
-  <article class="post">
-    <div class="reading">
-      <div class="head">
-        <div class="top">
-          <BackLink href="/writing" label={writing.title} />
-          <CopyButton
-            label={copy.copyPage}
-            name={copy.copyPageName}
-            url={markdown}
+  <Article title={title}>
+    <BackLink slot="back" href="/writing" label={writing.title} />
+    <CopyButton
+      slot="action"
+      label={copy.copyPage}
+      name={copy.copyPageName}
+      url={markdown}
+    >
+      <Icon name="markdown" />
+    </CopyButton>
+    <p slot="intro" class="meta">
+      <MetaLine>
+        <MetaItem>
+          <time datetime={isoDate(date)}>
+            <span class="long">{formatLongDate(date)}</span>
+            <span class="short">{formatMediumDate(date)}</span>
+          </time>
+        </MetaItem>
+        <MetaItem>
+          <a
+            class="topic"
+            href={`/writing/topics/${topic.slug}`}
+            aria-label={`More posts about ${label}`}
           >
-            <Icon name="markdown" />
-          </CopyButton>
-        </div>
-        <header class="intro">
-          <DisplayTitle>{title}</DisplayTitle>
-          <p class="meta">
-            <MetaLine>
-              <MetaItem>
-                <time datetime={isoDate(date)}>
-                  <span class="long">{formatLongDate(date)}</span>
-                  <span class="short">{formatMediumDate(date)}</span>
-                </time>
-              </MetaItem>
-              <MetaItem>
-                <a
-                  class="topic"
-                  href={`/writing/topics/${topic.slug}`}
-                  aria-label={`More posts about ${label}`}
-                >
-                  {label}
-                </a>
-              </MetaItem>
-              <MetaItem>{readingTime}</MetaItem>
-            </MetaLine>
-          </p>
-        </header>
-      </div>
-      <Prose>
-        <Content components={mdxComponents} />
-      </Prose>
-    </div>
-    <div class="end">
+            {label}
+          </a>
+        </MetaItem>
+        <MetaItem>{readingTime}</MetaItem>
+      </MetaLine>
+    </p>
+    <Content components={mdxComponents} />
+    <Fragment slot="end">
       <AuthorFooter name={profile.name} role={profile.role} />
       <PreviousNext
         name="More posts"
@@ -135,43 +124,11 @@ const structuredData = blogPosting(
           }
         }
       />
-    </div>
-  </article>
+    </Fragment>
+  </Article>
 </BaseLayout>
 
 <style>
-  .post {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-16);
-  }
-
-  .reading,
-  .end {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-8);
-  }
-
-  .head {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-
-  .top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
-  }
-
-  .intro {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
   .meta {
     color: var(--text-3);
     font-size: var(--text-small);

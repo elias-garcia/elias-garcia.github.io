@@ -7,7 +7,7 @@ Temporary. Delete this file when the redesign ships.
 One page per step. Each step builds the components that page needs (DESIGN.md §3), reusing the ones earlier steps built, and checks them against `design/reference/components.html` (or `components-2.html` for prose and search) and the page's screenshots in both themes and both widths. Each step ends with the reviewer and a commit.
 
 1. ~~**Setup.**~~ Done: Astro project and tooling, tokens, font, content collections, base layout (head, header, footer, skip link, page transitions) and `npm run a11y`.
-2. ~~**Home.**~~ Done. Intro with the Download CV menu (and the generated `/cv.md`), about, project tiles, work experience rows, latest posts, speaking and teaching, education and contact. Components: button, menu button, see-more link, list row, expandable row, project tile, Roleburn illustration (in its tile), metadata line, figure, external-link arrow.
+2. ~~**Home.**~~ Done. Intro with the Download CV menu (and the generated `/cv.md`), about, project tiles (the project card's `tile` variant), work experience rows, latest posts, speaking and teaching, education and contact. Components: button, menu button, see-more link, list row, expandable row, project tile, Roleburn illustration (in its tile), metadata line, figure, external-link arrow.
 3. ~~**Writing.**~~ Done. Intro with Subscribe, topic chips, posts grouped by year, and the RSS feed behind Subscribe. Components: chip.
 4. ~~**Post.**~~ Done. The article with its reading progress bar and the `/writing/<slug>.md` version. Components: back link + Copy page, the post-header metadata line (date, topic link, reading time), the prose (every Markdown element, footnotes with their Notes section, code blocks with the indigo theme, the Note callout and details), easing demo, author footer, previous/next card.
 5. ~~**Projects.**~~ Done. Intro and the project card grid (from 640px, the first project spans both columns when the count is odd). Components: project card, project status line (also on the Home tiles) and page intro (shared with Writing), reusing the project illustrations.
@@ -33,7 +33,7 @@ One page per step. Each step builds the components that page needs (DESIGN.md §
 
 ## Notes for the next steps
 
-- MDX files don't import components. Render them with `<Content components={mdxComponents} />` inside `Prose`, as the post and case study pages do; `src/components/mdx/index.ts` maps Markdown elements to components and lists the components posts and case studies can use.
+- MDX files don't import components. Render them with `<Content components={mdxComponents} />` inside `Article` (which sets its content as `Prose`), as the post and case study pages do; `src/components/mdx/index.ts` maps Markdown elements to components and lists the components posts and case studies can use.
 - `src/content/writing/prose.mdx` is a draft with every prose element (`/writing/prose` in `npm run dev`). Check it against `design/reference/prose.html` whenever prose or code styles change.
 - Reading time: use `getReadingMinutes(post)` from `src/lib/content.ts`.
 - `npm run a11y` checks pages only. Add each interactive state (open menu, open dialog) to `scripts/a11y.ts` in the step that builds it.

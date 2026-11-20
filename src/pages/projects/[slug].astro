@@ -1,10 +1,9 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import { render } from "astro:content";
+import Article from "../../components/Article.astro";
 import BackLink from "../../components/BackLink.astro";
-import DisplayTitle from "../../components/DisplayTitle.astro";
 import { mdxComponents } from "../../components/mdx/index.ts";
-import Prose from "../../components/mdx/Prose.astro";
 import PreviousNext from "../../components/PreviousNext.astro";
 import ProjectFacts from "../../components/ProjectFacts.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -34,21 +33,15 @@ const [{ Content }, projects] = await Promise.all([
 ---
 
 <BaseLayout title={title} description={description}>
-  <article class="case-study">
-    <div class="reading">
-      <div class="top">
-        <BackLink href="/projects" label={projects.title} />
-        <header class="intro">
-          <DisplayTitle>{title}</DisplayTitle>
-          <p class="lead">{description}</p>
-        </header>
-        <ProjectFacts year={year} status={status} links={links} />
-      </div>
-      <Prose>
-        <Content components={mdxComponents} />
-      </Prose>
-    </div>
+  <Article title={title}>
+    <BackLink slot="back" href="/projects" label={projects.title} />
+    <p slot="intro" class="lead">
+      {description}
+    </p>
+    <ProjectFacts slot="facts" year={year} status={status} links={links} />
+    <Content components={mdxComponents} />
     <PreviousNext
+      slot="end"
       name="More projects"
       previous={
         previous && {
@@ -65,34 +58,10 @@ const [{ Content }, projects] = await Promise.all([
         }
       }
     />
-  </article>
+  </Article>
 </BaseLayout>
 
 <style>
-  .case-study {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-16);
-  }
-
-  .reading {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-12);
-  }
-
-  .top {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-
-  .intro {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
   .lead {
     color: var(--text-2);
     font-size: var(--text-subtitle);
