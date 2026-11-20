@@ -25,9 +25,9 @@ Markup follows the HTML specification, even where the reference HTML does someth
 
 ## Verify before finishing
 
-`npm run format && npm run lint && npm run build && npm run a11y`
+`npm run format && npm run lint && npm test && npm run build && npm run a11y`
 
-`build` type-checks with `astro check`; `a11y` runs axe on every page and state, in both themes and at three widths.
+`test` runs the unit tests (`src/lib/*.test.ts`, Node's own test runner); `build` type-checks with `astro check`; `a11y` runs axe on every page and state, in both themes and at three widths.
 
 ## Principles
 
@@ -57,7 +57,7 @@ design/         # design handoff (reference only)
 ```
 
 - Static first, and readable without JavaScript: scripts enhance HTML that already works. Use native elements (`<details>`, `<dialog>`, `popover`) where they can match the design; where they can't, content renders visible and the script collapses it.
-- Interactivity is a vanilla `<script>` in its component, finding its elements through `data-*` attributes. No custom element classes and no UI framework. Scripts that must set page state before the first render are tiny `is:inline` scripts in `<head>` that fall back cleanly without the API.
+- Interactivity is a vanilla `<script>` in its component, finding its elements through `data-*` attributes. What a script works out without the DOM (search matching, gesture maths) is a module in `src/lib/` with unit tests beside it. A concern that stands on its own (the photo's travel, zoom, the status bar, the history entry) is a module there too. No custom element classes and no UI framework. Scripts that must set page state before the first render are tiny `is:inline` scripts in `<head>` that fall back cleanly without the API.
 - Page transitions are the browser's cross-document View Transitions, in CSS. Never add `<ClientRouter />`.
 - A Content-Security-Policy is on (`security.csp` in `astro.config.ts`, headers in `vercel.json`; DESIGN.md §8): anything loaded from another origin is blocked until the policy allows it. Astro hashes the scripts and styles it processes, not `is:inline` ones: those only run from `<head>`, ahead of the policy's `<meta>`, so never put one in the body. The policy isn't applied in `npm run dev`: check with a build.
 - The build is a snapshot. Never render the current time, the current year or anything relative to "now" into HTML: ship a stable fallback and let a script fill it in.
