@@ -1,0 +1,6 @@
+writingIndex:
+  subscribe: Subscribe
+  # The topic chips, for screen readers.
+  filterName: Filter posts by topic
+  # The chip that shows every post.
+  all: All

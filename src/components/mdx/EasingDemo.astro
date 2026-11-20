@@ -1,4 +1,5 @@
 ---
+import { getPostCopy } from "../../lib/content.ts";
 import Button from "../Button.astro";
 
 type Props = {
@@ -7,6 +8,7 @@ type Props = {
 
 const { caption } = Astro.props;
 const curves = ["linear", "ease-out"] as const;
+const { replay } = await getPostCopy();
 ---
 
 <figure class="demo" data-easing-demo>
@@ -23,7 +25,7 @@ const curves = ["linear", "ease-out"] as const;
     ))}
   </div>
   <span class="replay">
-    <Button data-easing-replay>Replay</Button>
+    <Button data-easing-replay>{replay}</Button>
   </span>
   <figcaption>{caption}</figcaption>
 </figure>

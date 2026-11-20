@@ -1,7 +1,14 @@
 ---
 import { getCvFormats } from "../lib/cv.ts";
-import { getPage, getProfile, getSearchCopy } from "../lib/content.ts";
+import {
+  getHomeCopy,
+  getPage,
+  getProfile,
+  getSearchCopy,
+  getSections,
+} from "../lib/content.ts";
 import { describeSections } from "../lib/navigation.ts";
+import { routes } from "../lib/routes.ts";
 import { getSearchIndex } from "../lib/search.ts";
 import Icon from "./Icon.astro";
 import KeyHint from "./KeyHint.astro";
@@ -9,15 +16,18 @@ import KeyHintGroup from "./KeyHintGroup.astro";
 import SearchOption from "./SearchOption.astro";
 import VisuallyHidden from "./VisuallyHidden.astro";
 
-const [copy, profile, writing, projects, formats, index] = await Promise.all([
-  getSearchCopy(),
-  getProfile(),
-  getPage("writing"),
-  getPage("projects"),
-  getCvFormats(),
-  getSearchIndex(),
-]);
-const sections = describeSections(copy.sections, "search.yaml");
+const [copy, home, profile, writing, projects, formats, index, navigation] =
+  await Promise.all([
+    getSearchCopy(),
+    getHomeCopy(),
+    getProfile(),
+    getPage("writing"),
+    getPage("projects"),
+    getCvFormats(),
+    getSearchIndex(),
+    getSections(),
+  ]);
+const sections = describeSections(navigation, copy.sections, "search.yaml");
 const email = profile.contact.find(({ href }) => href.startsWith("mailto:"));
 if (email === undefined) {
   throw new Error("The profile has no `mailto:` contact for the search.");
@@ -41,7 +51,7 @@ if (email === undefined) {
   <div class="input-row">
     <Icon name="search" class="magnifier" />
     <button class="small-control crumb" type="button" hidden data-search-crumb>
-      {copy.cv.title}
+      {home.downloadCv}
       <VisuallyHidden>. {copy.cv.back}</VisuallyHidden>
     </button>
     <input
@@ -95,22 +105,31 @@ if (email === undefined) {
       <SearchOption title={copy.email} line={email.text} href={email.href}>
         <Icon name="mail" />
       </SearchOption>
-      <SearchOption title={copy.cv.title} line={copy.cv.line} action="cv" more>
+      <SearchOption
+        title={home.downloadCv}
+        line={copy.cv.line}
+        action="cv"
+        more
+      >
         <Icon name="download" />
       </SearchOption>
-      <SearchOption title={copy.rss.title} line={copy.rss.line} href="/rss.xml">
+      <SearchOption
+        title={copy.rss.title}
+        line={copy.rss.line}
+        href={routes.feed}
+      >
         <Icon name="rss" />
       </SearchOption>
     </div>
     <div
       class="group"
       role="group"
-      aria-label={copy.cv.title}
+      aria-label={home.downloadCv}
       hidden
       data-view="cv"
     >
       <div class="group-label" aria-hidden="true">
-        {copy.cv.title}
+        {home.downloadCv}
       </div>
       {formats.map(({ label, keywords, description, size, href, icon }) => (
         <SearchOption

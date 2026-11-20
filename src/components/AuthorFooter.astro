@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import avatar from "../assets/avatar.jpg";
+import { routes } from "../lib/routes.ts";
 
 type Props = {
   name: string;
@@ -13,7 +14,7 @@ const { name, role } = Astro.props;
 <footer class="author">
   <Image class="avatar" src={avatar} alt="" widths={[40, 80]} sizes="40px" />
   <address>
-    <a class="name" href="/" rel="author">
+    <a class="name" href={routes.home} rel="author">
       {name}
     </a>
     <span class="role">{role}</span>

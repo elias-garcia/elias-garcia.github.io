@@ -16,7 +16,6 @@ search:
   actions: Actions
   email: Send me an email
   cv:
-    title: Download CV
     line: PDF or Markdown
     placeholder: Choose a format
     # When what's typed starts no format's name; {query} is what was typed.

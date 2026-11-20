@@ -36,6 +36,8 @@ const site = defineCollection({
     contact: z.array(link.extend({ text: z.string() })),
     // Every page's browser title but Home's, which is the name alone.
     pageTitle: template("{page}", "{name}"),
+    feedTitle: template("{name}", "{page}"),
+    shareAlt: template("{name}", "{role}"),
   }),
 });
 
@@ -159,11 +161,6 @@ const notFound = defineCollection({
   }),
 });
 
-const counts = z.object({
-  one: template("{count}"),
-  other: template("{count}"),
-});
-
 const post = defineCollection({
   loader: file("src/content/post.yaml"),
   schema: z.object({
@@ -176,13 +173,82 @@ const post = defineCollection({
     copyCodeName: template("{language}"),
     copied: z.string(),
     copyFailed: z.string(),
+    topicName: template("{topic}"),
+    more: z.string(),
+    previous: z.string(),
+    next: z.string(),
+    footnotes: z.string(),
+    footnoteName: template("{number}"),
+    sectionLink: z.string(),
+    tableName: z.string(),
+    callout: z.string(),
+    replay: z.string(),
   }),
 });
 
-const share = defineCollection({
-  loader: file("src/content/share.yaml"),
+const counts = z.object({
+  one: template("{count}"),
+  other: template("{count}"),
+});
+
+const layout = defineCollection({
+  loader: file("src/content/layout.yaml"),
   schema: z.object({
-    sections: z.array(z.string()).nonempty(),
+    skip: z.string(),
+    navName: z.string(),
+    homeName: template("{name}"),
+    homeLabel: z.string(),
+    newTab: z.string(),
+    clock: template("{time}", "{country}"),
+    sameTime: z.string(),
+    ahead: template("{amount}"),
+    behind: template("{amount}"),
+  }),
+});
+
+const home = defineCollection({
+  loader: file("src/content/home.yaml"),
+  schema: z.object({
+    role: template("{role}", "{city}", "{country}"),
+    about: z.string(),
+    work: z.string(),
+    speaking: z.string(),
+    teaching: z.string(),
+    education: z.string(),
+    contact: z.string(),
+    downloadCv: z.string(),
+    allProjects: z.string(),
+    allPosts: z.string(),
+    degree: template("{title}", "{school}"),
+    present: z.string(),
+    rating: template("{score}", "{reviews}"),
+    reviews: template("{reviews}"),
+    reviewCount: counts,
+    lessonCount: counts,
+    experience: z.string(),
+  }),
+});
+
+const project = defineCollection({
+  loader: file("src/content/project.yaml"),
+  schema: z.object({
+    view: z.string(),
+    year: z.string(),
+    status: z.string(),
+    links: z.string(),
+    noLinks: z.string(),
+    more: z.string(),
+    previous: z.string(),
+    next: z.string(),
+  }),
+});
+
+const writingIndex = defineCollection({
+  loader: file("src/content/writing-index.yaml"),
+  schema: z.object({
+    subscribe: z.string(),
+    filterName: z.string(),
+    all: z.string(),
   }),
 });
 
@@ -222,7 +288,6 @@ const search = defineCollection({
     actions: z.string(),
     email: z.string(),
     cv: z.object({
-      title: z.string(),
       line: z.string(),
       placeholder: z.string(),
       noMatch: template("{query}"),
@@ -255,10 +320,13 @@ export const collections = {
   site,
   pages,
   notFound,
+  layout,
+  home,
+  project,
+  writingIndex,
   search,
   viewer,
   post,
-  share,
   work,
   talks,
   courses,

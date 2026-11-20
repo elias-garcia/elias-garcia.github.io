@@ -14,3 +14,19 @@ post:
   copied: Copied
   # When the browser refuses the copy; the button grows to fit it.
   copyFailed: Couldn't copy
+  # A post's topic link, for screen readers; {topic} is the topic.
+  topicName: "More posts about {topic}"
+  # The links to the other posts, at the end of one.
+  more: More posts
+  previous: Previous post
+  next: Next post
+  # The footnotes' heading, and a marker's name; {number} is its number.
+  footnotes: Notes
+  footnoteName: "Note {number}"
+  # Read before a section heading's name, on its # link.
+  sectionLink: "Link to section:"
+  # A scrollable table's name, and a callout's label.
+  tableName: Table
+  callout: Note
+  # The easing demo's button.
+  replay: Replay

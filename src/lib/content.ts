@@ -7,6 +7,8 @@ import {
 } from "astro:content";
 import { z } from "astro/zod";
 import { compareText } from "./format.ts";
+import type { Section } from "./navigation.ts";
+import { routes } from "./routes.ts";
 import { fill } from "./template.ts";
 
 async function requireEntry<Collection extends CollectionKey>(
@@ -107,13 +109,20 @@ export async function getPage(id: string) {
   return data;
 }
 
-export async function getNotFoundPage() {
-  const { data } = await requireEntry("notFound", "not-found");
+// The interface text of each part of the site: one collection each, with a
+// single entry.
+export async function getHomeCopy() {
+  const { data } = await requireEntry("home", "home");
   return data;
 }
 
-export async function getCvFormatCopy(format: "pdf" | "markdown") {
-  const { data } = await requireEntry("cvFormats", format);
+export async function getLayoutCopy() {
+  const { data } = await requireEntry("layout", "layout");
+  return data;
+}
+
+export async function getNotFoundPage() {
+  const { data } = await requireEntry("notFound", "notFound");
   return data;
 }
 
@@ -122,13 +131,8 @@ export async function getPostCopy() {
   return data;
 }
 
-export async function getShareCopy() {
-  const { data } = await requireEntry("share", "share");
-  return data;
-}
-
-export async function getViewerCopy() {
-  const { data } = await requireEntry("viewer", "viewer");
+export async function getProjectCopy() {
+  const { data } = await requireEntry("project", "project");
   return data;
 }
 
@@ -137,9 +141,38 @@ export async function getSearchCopy() {
   return data;
 }
 
+export async function getViewerCopy() {
+  const { data } = await requireEntry("viewer", "viewer");
+  return data;
+}
+
+export async function getWritingIndexCopy() {
+  const { data } = await requireEntry("writingIndex", "writingIndex");
+  return data;
+}
+
+export async function getCvFormatCopy(format: "pdf" | "markdown") {
+  const { data } = await requireEntry("cvFormats", format);
+  return data;
+}
+
+// The header's navigation: Home, then each listing page under its title.
+export async function getSections(): Promise<readonly Section[]> {
+  const [layout, projects, writing] = await Promise.all([
+    getLayoutCopy(),
+    getPage("projects"),
+    getPage("writing"),
+  ]);
+  return [
+    { label: layout.homeLabel, href: routes.home },
+    { label: projects.title, href: routes.projects },
+    { label: writing.title, href: routes.writing },
+  ];
+}
+
 export async function getFeedTitle(): Promise<string> {
   const [profile, page] = await Promise.all([getProfile(), getPage("writing")]);
-  return `${profile.name}: ${page.title}`;
+  return fill(profile.feedTitle, { name: profile.name, page: page.title });
 }
 
 const readingTime = z.object({ minutesRead: z.number() });

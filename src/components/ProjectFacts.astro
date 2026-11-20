@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { getProjectCopy } from "../lib/content.ts";
 import { linkTarget } from "../lib/links.ts";
 import ExternalArrow from "./ExternalArrow.astro";
 import TextLink from "./TextLink.astro";
@@ -10,24 +11,25 @@ type Props = Pick<
 >;
 
 const { year, status, links } = Astro.props;
+const copy = await getProjectCopy();
 ---
 
 <dl class="facts">
   <div class="fact">
-    <dt>Year</dt>
+    <dt>{copy.year}</dt>
     <dd>
       <time datetime={String(year)}>{year}</time>
     </dd>
   </div>
   <div class="fact">
-    <dt>Status</dt>
+    <dt>{copy.status}</dt>
     <dd>{status}</dd>
   </div>
   <div class="fact links">
-    <dt>Links</dt>
+    <dt>{copy.links}</dt>
     <dd>
       {links.length === 0 ? (
-        <span class="none">Not public yet</span>
+        <span class="none">{copy.noLinks}</span>
       ) : (
         links.map(({ label, href }) => (
           <TextLink quiet href={href} {...linkTarget(href)}>

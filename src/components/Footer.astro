@@ -1,4 +1,5 @@
 ---
+import { getLayoutCopy } from "../lib/content.ts";
 import Logo from "./Logo.astro";
 
 type Props = {
@@ -8,6 +9,10 @@ type Props = {
 };
 
 const { name, country, timezone } = Astro.props;
+const copy = await getLayoutCopy();
+// The clock's sentence in pieces: the country always shows; the time and the
+// words around it only once the script has filled the time in.
+const clock = copy.clock.split(/(\{time\}|\{country\})/).filter(Boolean);
 ---
 
 <footer class="footer" id="footer">
@@ -21,12 +26,23 @@ const { name, country, timezone } = Astro.props;
         </span>
       </span>
     </p>
-    <p class="clock" data-footer-timezone={timezone}>
+    <p
+      class="clock"
+      data-footer-timezone={timezone}
+      data-footer-same={copy.sameTime}
+      data-footer-ahead={copy.ahead}
+      data-footer-behind={copy.behind}
+    >
       <span>
-        <span data-footer-enhanced hidden>
-          <time data-footer-time></time> in{" "}
-        </span>
-        {country}
+        {clock.map((part) =>
+          part === "{country}" ? (
+            country
+          ) : (
+            <span data-footer-enhanced hidden>
+              {part === "{time}" ? <time data-footer-time /> : part}
+            </span>
+          ),
+        )}
       </span>
       <span class="dot" data-footer-enhanced hidden aria-hidden="true">
         ·
@@ -42,8 +58,10 @@ const { name, country, timezone } = Astro.props;
 </footer>
 
 <script>
+  import { fill } from "../lib/template.ts";
+
   const clock = document.querySelector<HTMLElement>("[data-footer-timezone]");
-  const timeZone = clock?.dataset["footerTimezone"];
+  const timeZone = clock?.dataset.footerTimezone;
   const year = document.querySelector("[data-footer-year]");
   const time = document.querySelector("time[data-footer-time]");
   const offset = document.querySelector("[data-footer-offset]");
@@ -60,19 +78,34 @@ const { name, country, timezone } = Astro.props;
     return (sign === "-" ? -1 : 1) * (Number(hours) * 60 + Number(minutes));
   }
 
-  function describe(minutes: number): string {
-    if (minutes === 0) {
-      return "same time as you";
+  // "5h", "1h 30m": through Intl where durations exist there.
+  function formatOffset(hours: number, minutes: number): string {
+    if ("DurationFormat" in Intl) {
+      return new Intl.DurationFormat(document.documentElement.lang, {
+        style: "narrow",
+      }).format({ hours, minutes });
     }
-    const hours = Math.floor(Math.abs(minutes) / 60);
-    const rest = Math.abs(minutes) % 60;
-    const amount = [
+    return [
       hours > 0 && `${String(hours)}h`,
-      rest > 0 && `${String(rest)}m`,
+      minutes > 0 && `${String(minutes)}m`,
     ]
       .filter(Boolean)
       .join(" ");
-    return `${amount} ${minutes > 0 ? "ahead of" : "behind"} you`;
+  }
+
+  function describe(minutes: number): string {
+    if (minutes === 0) {
+      return clock?.dataset.footerSame ?? "";
+    }
+    const amount = formatOffset(
+      Math.floor(Math.abs(minutes) / 60),
+      Math.abs(minutes) % 60,
+    );
+    const template =
+      (minutes > 0
+        ? clock?.dataset.footerAhead
+        : clock?.dataset.footerBehind) ?? "";
+    return fill(template, { amount });
   }
 
   function update(zone: string): void {

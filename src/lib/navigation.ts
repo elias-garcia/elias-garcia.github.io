@@ -1,12 +1,11 @@
-export const sections = [
-  { label: "Home", href: "/" },
-  { label: "Projects", href: "/projects" },
-  { label: "Writing", href: "/writing" },
-] as const;
+import { routes } from "./routes.ts";
+
+export type Section = { readonly label: string; readonly href: string };
 
 // The navigation's sections, each with its line from a content file that
 // describes them by path. `file` names that file in the errors.
 export function describeSections(
+  sections: readonly Section[],
   descriptions: Readonly<Record<string, string>>,
   file: string,
 ) {
@@ -52,7 +51,7 @@ export function currentState(
   if (path === href) {
     return "page";
   }
-  if (href !== "/" && path.startsWith(`${href}/`)) {
+  if (href !== routes.home && path.startsWith(`${href}/`)) {
     return "true";
   }
   return undefined;

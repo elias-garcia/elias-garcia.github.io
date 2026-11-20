@@ -1,6 +1,12 @@
-<aside class="note" aria-label="Note">
+---
+import { getPostCopy } from "../../lib/content.ts";
+
+const { callout } = await getPostCopy();
+---
+
+<aside class="note" aria-label={callout}>
   <span class="label" aria-hidden="true">
-    Note
+    {callout}
   </span>
   <div class="text">
     <slot />

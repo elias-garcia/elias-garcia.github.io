@@ -5,17 +5,25 @@ import PageIntro from "../components/PageIntro.astro";
 import Section from "../components/Section.astro";
 import TextLink from "../components/TextLink.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { getNotFoundPage, getProfile } from "../lib/content.ts";
+import { getNotFoundPage, getProfile, getSections } from "../lib/content.ts";
 import { describeSections } from "../lib/navigation.ts";
 
-const [page, profile] = await Promise.all([getNotFoundPage(), getProfile()]);
+const [page, profile, sections] = await Promise.all([
+  getNotFoundPage(),
+  getProfile(),
+  getSections(),
+]);
 
 const email = profile.contact.find(({ href }) => href.startsWith("mailto:"));
 if (email === undefined) {
   throw new Error("The profile has no `mailto:` contact for broken links.");
 }
 
-const suggestions = describeSections(page.suggestions, "not-found.yaml");
+const suggestions = describeSections(
+  sections,
+  page.suggestions,
+  "not-found.yaml",
+);
 
 const [beforeLink, afterLink] = page.report.split("{link}");
 ---

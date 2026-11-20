@@ -8,6 +8,7 @@ import SkipLink from "../components/SkipLink.astro";
 import { getFeedTitle, getProfile } from "../lib/content.ts";
 import { formatCountry } from "../lib/format.ts";
 import { requireSite, toPath } from "../lib/navigation.ts";
+import { routes } from "../lib/routes.ts";
 import { shareImageSize } from "../lib/share-image.ts";
 import { fill } from "../lib/template.ts";
 import "../styles/global.css";
@@ -37,15 +38,15 @@ const canonical = new URL(path, siteUrl);
 // alone. Social cards show the site's name on their own, so they get the
 // page alone.
 const documentTitle =
-  path === "/"
+  path === routes.home
     ? title
     : fill(profile.pageTitle, { page: title, name: profile.name });
 // Its script only exists on Vercel deployments (previews included):
 // elsewhere (astro dev, astro preview, Lighthouse) it would be a missing file.
 const onVercel = process.env.VERCEL === "1";
 const shareImage = pageShareImage ?? {
-  path: "/share/site.png",
-  alt: `${profile.name}, ${profile.role}`,
+  path: routes.shareImage,
+  alt: fill(profile.shareAlt, { name: profile.name, role: profile.role }),
 };
 ---
 
@@ -101,12 +102,12 @@ const shareImage = pageShareImage ?? {
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href={routes.sitemap} />
     <link
       rel="alternate"
       type="application/rss+xml"
       title={feedTitle}
-      href="/rss.xml"
+      href={routes.feed}
     />
     <meta
       name="theme-color"

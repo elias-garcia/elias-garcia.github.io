@@ -1,9 +1,10 @@
 ---
+import { getHomeCopy } from "../lib/content.ts";
 import { getCvFormats } from "../lib/cv.ts";
 import Button from "./Button.astro";
 import Icon from "./Icon.astro";
 
-const formats = await getCvFormats();
+const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
 ---
 
 <div class="download">
@@ -13,7 +14,7 @@ const formats = await getCvFormats();
     aria-controls="cv-formats"
     data-cv-button
   >
-    Download CV
+    {copy.downloadCv}
     <Icon name="chevron-down" class="chevron" />
   </Button>
   <ul class="formats" id="cv-formats" popover role="list" data-cv-formats>

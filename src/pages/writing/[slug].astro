@@ -23,7 +23,9 @@ import {
 } from "../../lib/content.ts";
 import { formatLongDate, formatMediumDate, isoDate } from "../../lib/format.ts";
 import { requireSite, toPath } from "../../lib/navigation.ts";
+import { routes } from "../../lib/routes.ts";
 import { blogPosting } from "../../lib/structured-data.ts";
+import { fill } from "../../lib/template.ts";
 
 export const getStaticPaths = (async () => {
   const posts = await getPosts();
@@ -52,8 +54,8 @@ const [{ Content }, readingTime, profile, writing, copy] = await Promise.all([
   getPostCopy(),
 ]);
 const label = topicLabel(topics, topic);
-const markdown = `/writing/${post.id}.md`;
-const shareImage = `/share/writing/${post.id}.png`;
+const markdown = routes.postMarkdown(post.id);
+const shareImage = routes.postShareImage(post.id);
 const siteUrl = requireSite(Astro.site, "structured data");
 const structuredData = blogPosting(
   post,
@@ -75,7 +77,7 @@ const structuredData = blogPosting(
   <link slot="head" rel="alternate" type="text/markdown" href={markdown} />
   <StructuredData slot="head" data={structuredData} />
   <Article title={title}>
-    <BackLink slot="back" href="/writing" label={writing.title} />
+    <BackLink slot="back" href={routes.writing} label={writing.title} />
     <CopyButton
       slot="action"
       label={copy.copyPage}
@@ -95,8 +97,8 @@ const structuredData = blogPosting(
         <MetaItem>
           <a
             class="topic"
-            href={`/writing/topics/${topic.slug}`}
-            aria-label={`More posts about ${label}`}
+            href={routes.topic(topic.slug)}
+            aria-label={fill(copy.topicName, { topic: label })}
           >
             {label}
           </a>
@@ -108,19 +110,19 @@ const structuredData = blogPosting(
     <Fragment slot="end">
       <AuthorFooter name={profile.name} role={profile.role} />
       <PreviousNext
-        name="More posts"
+        name={copy.more}
         previous={
           previous && {
-            href: `/writing/${previous.id}`,
+            href: routes.post(previous.id),
             title: previous.data.title,
-            label: "Previous post",
+            label: copy.previous,
           }
         }
         next={
           next && {
-            href: `/writing/${next.id}`,
+            href: routes.post(next.id),
             title: next.data.title,
-            label: "Next post",
+            label: copy.next,
           }
         }
       />

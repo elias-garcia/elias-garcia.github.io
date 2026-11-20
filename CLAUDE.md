@@ -80,7 +80,7 @@ design/         # design handoff (reference only)
 
 ## Content
 
-- `src/content/` is the single source of content. Never hardcode copy in components or duplicate it in another file. Each post or project is one file with its metadata in the frontmatter.
+- `src/content/` is the single source of content. Never hardcode copy in components or duplicate it in another file. Each post or project is one file with its metadata in the frontmatter. Interface text lives there too, one file per part of the site, each read through its getter in `src/lib/content.ts`; sentences with a variable part are templates filled with `fill()`. The labels inside a drawing (the project illustrations, a case study hero) are part of the drawing and stay in it.
 - Never store what can be derived, like topic counts, reading time or whether a project has a case study (it has a body).
 - Topics are not case sensitive (`AI` and `ai` are one topic); the label is the newest post's spelling.
 - Posts with `draft: true` show in `npm run dev` and are left out of the production build. A project with `draft: true` keeps its card, but its case study is left out the same way.
@@ -89,7 +89,7 @@ design/         # design handoff (reference only)
 
 ## URLs
 
-- No trailing slash, in pages and in internal links.
+- No trailing slash, in pages and in internal links. Build the addresses of pages and generated files with `routes` (`src/lib/routes.ts`), never by hand.
 - Every page has a unique `<title>`, `<meta name="description">`, `<link rel="canonical">` and Open Graph tags, set through the base layout.
 
 ## Process

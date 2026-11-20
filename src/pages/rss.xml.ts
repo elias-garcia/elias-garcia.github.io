@@ -8,6 +8,7 @@ import {
   topicLabel,
 } from "../lib/content.ts";
 import { requireSite } from "../lib/navigation.ts";
+import { routes } from "../lib/routes.ts";
 
 export const GET: APIRoute = async ({ site }) => {
   const [title, page, posts] = await Promise.all([
@@ -27,7 +28,7 @@ export const GET: APIRoute = async ({ site }) => {
       description: data.description,
       pubDate: data.date,
       categories: [topicLabel(topics, data.topic)],
-      link: `/writing/${id}`,
+      link: routes.post(id),
     })),
   });
 };

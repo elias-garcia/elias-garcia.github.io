@@ -1,8 +1,10 @@
 ---
-import { linkTarget, newTabNote, opensNewTab } from "../../lib/links.ts";
+import { getPostCopy } from "../../lib/content.ts";
+import { linkTarget, opensNewTab } from "../../lib/links.ts";
+import { fill } from "../../lib/template.ts";
 import Icon from "../Icon.astro";
 import TextLink from "../TextLink.astro";
-import VisuallyHidden from "../VisuallyHidden.astro";
+import NewTabNote from "../NewTabNote.astro";
 
 // What MDX passes for a Markdown link. GFM marks footnote references and back
 // links with data attributes.
@@ -25,10 +27,11 @@ const {
 } = Astro.props;
 const number =
   reference === undefined ? "" : await Astro.slots.render("default");
+const { footnoteName } = await getPostCopy();
 ---
 
 {reference !== undefined ? (
-  <a class="fn" href={href} id={id} aria-label={`Note ${number}`}>
+  <a class="fn" href={href} id={id} aria-label={fill(footnoteName, { number })}>
     {number}
   </a>
 ) : backlink !== undefined ? (
@@ -38,7 +41,7 @@ const number =
 ) : (
   <TextLink href={href} id={id} title={title} {...linkTarget(href)}>
     <slot />
-    {opensNewTab(href) && <VisuallyHidden>{newTabNote}</VisuallyHidden>}
+    {opensNewTab(href) && <NewTabNote />}
   </TextLink>
 )}
 

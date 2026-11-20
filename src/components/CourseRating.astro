@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { formatMinutes, formatScore } from "../lib/format.ts";
+import { getHomeCopy } from "../lib/content.ts";
+import { formatCount, formatMinutes, formatScore } from "../lib/format.ts";
+import { fill } from "../lib/template.ts";
 import Icon from "./Icon.astro";
 import MetaItem from "./MetaItem.astro";
 import MetaLine from "./MetaLine.astro";
@@ -12,19 +14,20 @@ type Props = {
 
 const { rating, lessons, minutes } = Astro.props.course;
 const score = formatScore(rating.score);
+const copy = await getHomeCopy();
+const reviews = formatCount(rating.reviews, copy.reviewCount);
 ---
 
 <MetaLine>
   <MetaItem>
-    <VisuallyHidden>
-      Rated {score} out of 5 from {rating.reviews} reviews.
-    </VisuallyHidden>
+    <VisuallyHidden>{fill(copy.rating, { score, reviews })}</VisuallyHidden>
     <span class="rating" aria-hidden="true">
       <Icon name="star" size="sm" class="star" />
-      <span class="score">{score}</span>({rating.reviews} reviews)
+      <span class="score">{score}</span>
+      {fill(copy.reviews, { reviews })}
     </span>
   </MetaItem>
-  <MetaItem>{lessons} lessons</MetaItem>
+  <MetaItem>{formatCount(lessons, copy.lessonCount)}</MetaItem>
   <MetaItem>{formatMinutes(minutes)}</MetaItem>
 </MetaLine>
 

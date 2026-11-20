@@ -1,11 +1,14 @@
 ---
 import type { HTMLAttributes } from "astro/types";
+import { getPostCopy } from "../../lib/content.ts";
 
 // Wide tables scroll sideways inside a box that keyboards can reach.
 type Props = HTMLAttributes<"table">;
+
+const { tableName } = await getPostCopy();
 ---
 
-<div class="table" tabindex="0" role="region" aria-label="Table">
+<div class="table" tabindex="0" role="region" aria-label={tableName}>
   <table {...Astro.props}>
     <slot />
   </table>

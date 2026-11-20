@@ -1,3 +1,5 @@
+import { routes } from "./routes.ts";
+
 export function leavesSite(href: string | undefined): href is string {
   return href !== undefined && !href.startsWith("/");
 }
@@ -7,7 +9,7 @@ export function leavesSite(href: string | undefined): href is string {
 // `mailto:` links (which open the mail app, not a page) do not.
 export function opensNewTab(href: string | undefined): boolean {
   return (
-    href !== undefined && (/^https?:\/\//.test(href) || href === "/rss.xml")
+    href !== undefined && (/^https?:\/\//.test(href) || href === routes.feed)
   );
 }
 
@@ -22,6 +24,3 @@ export function linkTarget(href: string | undefined) {
       }
     : {};
 }
-
-// Read after a link that opens in a new tab, for screen readers.
-export const newTabNote = " (opens in a new tab)";

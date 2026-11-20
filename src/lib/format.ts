@@ -1,3 +1,5 @@
+import { fill } from "./template.ts";
+
 const locale = "en-US";
 
 const collator = new Intl.Collator(locale);
@@ -82,7 +84,7 @@ export function formatCount(
 ): string {
   const template =
     plural.select(count) === "one" ? templates.one : templates.other;
-  return template.replace("{count}", () => String(count));
+  return fill(template, { count: String(count) });
 }
 
 export function formatFileSize(bytes: number): string {
@@ -94,8 +96,12 @@ export type YearRange = {
   readonly end?: number | undefined;
 };
 
-export function formatYearRange({ start, end }: YearRange): string {
-  return `${String(start)} – ${end === undefined ? "Now" : String(end)}`;
+// `present` stands for the end of a range that hasn't ended.
+export function formatYearRange(
+  { start, end }: YearRange,
+  present: string,
+): string {
+  return `${String(start)} – ${end === undefined ? present : String(end)}`;
 }
 
 const duration = new Intl.DurationFormat(locale, { style: "narrow" });

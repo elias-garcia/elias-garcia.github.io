@@ -1,7 +1,7 @@
 ---
-import { newTabNote, opensNewTab } from "../lib/links.ts";
+import { opensNewTab } from "../lib/links.ts";
 import Icon from "./Icon.astro";
-import VisuallyHidden from "./VisuallyHidden.astro";
+import NewTabNote from "./NewTabNote.astro";
 
 type Props = {
   href: string;
@@ -11,7 +11,7 @@ const { href } = Astro.props;
 ---
 
 <Icon name="external" size="sm" class="external" />
-{opensNewTab(href) && <VisuallyHidden>{newTabNote}</VisuallyHidden>}
+{opensNewTab(href) && <NewTabNote />}
 
 <style>
   .external {

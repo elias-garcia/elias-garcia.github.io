@@ -35,7 +35,8 @@ One page per step. Each step builds the components that page needs (DESIGN.md §
 
 - MDX files don't import components. Render them with `<Content components={mdxComponents} />` inside `Article` (which sets its content as `Prose`), as the post and case study pages do; `src/components/mdx/index.ts` maps Markdown elements to components and lists the components posts and case studies can use.
 - `src/content/writing/prose.mdx` is a draft with every prose element (`/writing/prose` in `npm run dev`). Check it against `design/reference/prose.html` whenever prose or code styles change.
-- Reading time: use `getReadingMinutes(post)` from `src/lib/content.ts`.
+- Reading time: use `getReadingTime(post)` from `src/lib/content.ts`.
+- Interface text lives in `src/content/`, one file per part of the site, each with a getter in `src/lib/content.ts` (`getHomeCopy()`, `getLayoutCopy()`…). Addresses come from `routes` in `src/lib/routes.ts`.
 - `npm run a11y` checks pages only. Add each interactive state (open menu, open dialog) to `scripts/a11y.ts` in the step that builds it.
 - When `src/env.d.ts` is added, allow `interface` there in `eslint.config.ts`.
 - TypeScript stays on 6.0 because `@astrojs/check` and `typescript-eslint` don't support 7 yet. Move to 7 once both list it as a supported peer.

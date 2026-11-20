@@ -1,5 +1,8 @@
 ---
-import { currentState, sections } from "../lib/navigation.ts";
+import { getLayoutCopy, getSections } from "../lib/content.ts";
+import { currentState } from "../lib/navigation.ts";
+import { routes } from "../lib/routes.ts";
+import { fill } from "../lib/template.ts";
 import Logo from "./Logo.astro";
 import SearchButton from "./SearchButton.astro";
 
@@ -10,14 +13,19 @@ type Props = {
 
 const { name, readingProgress } = Astro.props;
 const { pathname } = Astro.url;
+const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
 ---
 
 <header class="header">
   <div class="bar">
-    <a class="home" href="/" aria-label={`${name}, home`}>
+    <a
+      class="home"
+      href={routes.home}
+      aria-label={fill(copy.homeName, { name })}
+    >
       <Logo size="md" />
     </a>
-    <nav aria-label="Main">
+    <nav aria-label={copy.navName}>
       <ul class="links" role="list">
         {sections.map(({ label, href }) => (
           <li>

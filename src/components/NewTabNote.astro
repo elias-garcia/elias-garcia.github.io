@@ -1,0 +1,9 @@
+---
+import { getLayoutCopy } from "../lib/content.ts";
+import VisuallyHidden from "./VisuallyHidden.astro";
+
+// Read after a link that opens in a new tab, for screen readers.
+const { newTab } = await getLayoutCopy();
+---
+
+<VisuallyHidden> {newTab}</VisuallyHidden>

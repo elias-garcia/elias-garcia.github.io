@@ -21,6 +21,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import {
   getCourses,
   getEducation,
+  getHomeCopy,
+  getPage,
   getPosts,
   getProfile,
   getProjects,
@@ -30,18 +32,33 @@ import {
 import { formatCountry, formatMonthYear, isoMonth } from "../lib/format.ts";
 import { linkTarget } from "../lib/links.ts";
 import { requireSite } from "../lib/navigation.ts";
+import { routes } from "../lib/routes.ts";
 import { person, website } from "../lib/structured-data.ts";
+import { fill } from "../lib/template.ts";
 
-const [profile, projects, work, posts, talks, courses, education] =
-  await Promise.all([
-    getProfile(),
-    getProjects(),
-    getWork(),
-    getPosts(),
-    getTalks(),
-    getCourses(),
-    getEducation(),
-  ]);
+const [
+  copy,
+  projectsPage,
+  writingPage,
+  profile,
+  projects,
+  work,
+  posts,
+  talks,
+  courses,
+  education,
+] = await Promise.all([
+  getHomeCopy(),
+  getPage("projects"),
+  getPage("writing"),
+  getProfile(),
+  getProjects(),
+  getWork(),
+  getPosts(),
+  getTalks(),
+  getCourses(),
+  getEducation(),
+]);
 const [description = profile.role] = profile.about;
 const siteUrl = requireSite(Astro.site, "structured data");
 const portrait = await getImage({ src: avatar, width: 400 });
@@ -69,7 +86,11 @@ const newestJob = work[0]?.id;
         <div class="who">
           <PageTitle>{profile.name}</PageTitle>
           <p class="role">
-            {profile.role} in {profile.city}, {formatCountry(profile.country)}
+            {fill(copy.role, {
+              role: profile.role,
+              city: profile.city,
+              country: formatCountry(profile.country),
+            })}
           </p>
           <div class="actions">
             <DownloadCv />
@@ -80,15 +101,15 @@ const newestJob = work[0]?.id;
           </div>
         </div>
       </div>
-      <Section title="About">
+      <Section title={copy.about}>
         {profile.about.map((paragraph) => (
           <p class="about">{paragraph}</p>
         ))}
       </Section>
     </header>
 
-    <Section title="Projects">
-      <SeeMore slot="action" href="/projects" label="All projects" />
+    <Section title={projectsPage.title}>
+      <SeeMore slot="action" href={routes.projects} label={copy.allProjects} />
       <ul class="tiles" role="list">
         {projects.slice(0, 3).map((project) => (
           <ProjectCard project={project} tile />
@@ -96,7 +117,7 @@ const newestJob = work[0]?.id;
       </ul>
     </Section>
 
-    <Section title="Work experience">
+    <Section title={copy.work}>
       <List>
         {work.map((job) => (
           <WorkRow job={job.data} open={job.id === newestJob} />
@@ -104,11 +125,11 @@ const newestJob = work[0]?.id;
       </List>
     </Section>
 
-    <Section title="Writing">
-      <SeeMore slot="action" href="/writing" label="All posts" />
+    <Section title={writingPage.title}>
+      <SeeMore slot="action" href={routes.writing} label={copy.allPosts} />
       <List>
         {posts.slice(0, 3).map((post) => (
-          <ListRow title={post.data.title} href={`/writing/${post.id}`}>
+          <ListRow title={post.data.title} href={routes.post(post.id)}>
             <time slot="date" datetime={isoMonth(post.data.date)}>
               {formatMonthYear(post.data.date)}
             </time>
@@ -118,7 +139,7 @@ const newestJob = work[0]?.id;
       </List>
     </Section>
 
-    <Section title="Speaking">
+    <Section title={copy.speaking}>
       <List>
         {talks.map(({ data }) => (
           <ListRow title={data.title}>
@@ -132,7 +153,7 @@ const newestJob = work[0]?.id;
       </List>
     </Section>
 
-    <Section title="Teaching">
+    <Section title={copy.teaching}>
       <List>
         {courses.map(({ data }) => (
           <ListRow title={data.title} href={data.href}>
@@ -147,10 +168,15 @@ const newestJob = work[0]?.id;
       </List>
     </Section>
 
-    <Section title="Education">
+    <Section title={copy.education}>
       <List>
         {education.map(({ data }) => (
-          <ListRow title={`${data.title} at ${data.school}`}>
+          <ListRow
+            title={fill(copy.degree, {
+              title: data.title,
+              school: data.school,
+            })}
+          >
             <Years slot="date" start={data.start} end={data.end} />
             {data.detail}
           </ListRow>
@@ -158,7 +184,7 @@ const newestJob = work[0]?.id;
       </List>
     </Section>
 
-    <Section title="Contact">
+    <Section title={copy.contact}>
       <address>
         <dl class="contact">
           {profile.contact.map((link) => (

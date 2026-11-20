@@ -1,5 +1,11 @@
+---
+import { getLayoutCopy } from "../lib/content.ts";
+
+const { skip } = await getLayoutCopy();
+---
+
 <a class="skip" href="#content">
-  Skip to content
+  {skip}
 </a>
 
 <style>

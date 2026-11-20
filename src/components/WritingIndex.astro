@@ -3,11 +3,13 @@ import type { CollectionEntry } from "astro:content";
 import {
   getReadingTime,
   getTopics,
+  getWritingIndexCopy,
   topicLabel,
   type Topic,
 } from "../lib/content.ts";
 import { formatMonthDay, isoDate } from "../lib/format.ts";
-import { linkTarget, newTabNote } from "../lib/links.ts";
+import { linkTarget } from "../lib/links.ts";
+import { routes } from "../lib/routes.ts";
 import Button from "./Button.astro";
 import Chip from "./Chip.astro";
 import Icon from "./Icon.astro";
@@ -15,9 +17,9 @@ import List from "./List.astro";
 import ListRow from "./ListRow.astro";
 import MetaItem from "./MetaItem.astro";
 import MetaLine from "./MetaLine.astro";
+import NewTabNote from "./NewTabNote.astro";
 import PageIntro from "./PageIntro.astro";
 import Section from "./Section.astro";
-import VisuallyHidden from "./VisuallyHidden.astro";
 
 type Props = {
   page: CollectionEntry<"pages">["data"];
@@ -27,6 +29,7 @@ type Props = {
 
 const { page, posts, topic } = Astro.props;
 const topics = getTopics(posts);
+const copy = await getWritingIndexCopy();
 const shown =
   topic === undefined
     ? posts
@@ -42,23 +45,23 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
 
 <div class="writing">
   <PageIntro title={page.title} intro={page.intro}>
-    <Button slot="action" href="/rss.xml" {...linkTarget("/rss.xml")}>
+    <Button slot="action" href={routes.feed} {...linkTarget(routes.feed)}>
       <Icon name="rss" />
-      Subscribe
-      <VisuallyHidden>{newTabNote}</VisuallyHidden>
+      {copy.subscribe}
+      <NewTabNote />
     </Button>
-    <nav class="topics" aria-label="Filter posts by topic">
+    <nav class="topics" aria-label={copy.filterName}>
       <Chip
-        label="All"
+        label={copy.all}
         count={posts.length}
-        href="/writing"
+        href={routes.writing}
         current={topic === undefined}
       />
       {[...topics.values()].map(({ slug, label, count }) => (
         <Chip
           label={label}
           count={count}
-          href={`/writing/topics/${slug}`}
+          href={routes.topic(slug)}
           current={slug === topic?.slug}
         />
       ))}
@@ -72,7 +75,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
           {yearRows.map(({ post, readingTime }) => (
             <ListRow
               title={post.data.title}
-              href={`/writing/${post.id}`}
+              href={routes.post(post.id)}
               article
               underline
             >

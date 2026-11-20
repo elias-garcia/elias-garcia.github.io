@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { requireSite } from "../lib/navigation.ts";
+import { routes } from "../lib/routes.ts";
 
 // Every crawler is welcome, AI crawlers included (DESIGN.md §7). They're
 // also named one by one, so it's clear they're allowed on purpose.
@@ -22,7 +23,7 @@ export const GET: APIRoute = ({ site }) => {
     (agent) => `User-agent: ${agent}\nAllow: /`,
   );
   const sitemap = new URL(
-    "sitemap-index.xml",
+    routes.sitemap,
     requireSite(site, "the sitemap's address"),
   );
   return new Response(`${groups.join("\n\n")}\n\nSitemap: ${sitemap.href}\n`, {

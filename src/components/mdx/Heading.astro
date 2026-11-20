@@ -1,18 +1,21 @@
 ---
 import type { HTMLAttributes } from "astro/types";
+import { getPostCopy } from "../../lib/content.ts";
 
 type Props = HTMLAttributes<"h2">;
 
 const { id, class: className } = Astro.props;
 // GFM's own heading for the footnotes: hidden, with this id.
 const footnotes = id === "footnote-label" && className === "sr-only";
-// The anchor is named "Link to section: <heading>", so each reads differently.
+// The anchor's name is a label followed by the heading, so each reads
+// differently.
 const label = `${String(id)}-anchor`;
+const copy = await getPostCopy();
 ---
 
 {footnotes ? (
   <h2 id={id} class="notes-label">
-    Notes
+    {copy.footnotes}
   </h2>
 ) : (
   <div class="heading">
@@ -27,7 +30,7 @@ const label = `${String(id)}-anchor`;
       #
     </a>
     <span id={label} hidden>
-      Link to section:
+      {copy.sectionLink}
     </span>
   </div>
 )}

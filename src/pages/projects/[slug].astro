@@ -7,7 +7,13 @@ import { mdxComponents } from "../../components/mdx/index.ts";
 import PreviousNext from "../../components/PreviousNext.astro";
 import ProjectFacts from "../../components/ProjectFacts.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getPage, getProjects, hasCaseStudy } from "../../lib/content.ts";
+import {
+  getPage,
+  getProjectCopy,
+  getProjects,
+  hasCaseStudy,
+} from "../../lib/content.ts";
+import { routes } from "../../lib/routes.ts";
 
 export const getStaticPaths = (async () => {
   const caseStudies = (await getProjects()).filter(hasCaseStudy);
@@ -26,15 +32,16 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { project, previous, next } = Astro.props;
 const { title, description, year, status, links } = project.data;
-const [{ Content }, projects] = await Promise.all([
+const [{ Content }, projects, copy] = await Promise.all([
   render(project),
   getPage("projects"),
+  getProjectCopy(),
 ]);
 ---
 
 <BaseLayout title={title} description={description}>
   <Article title={title}>
-    <BackLink slot="back" href="/projects" label={projects.title} />
+    <BackLink slot="back" href={routes.projects} label={projects.title} />
     <p slot="intro" class="lead">
       {description}
     </p>
@@ -42,19 +49,19 @@ const [{ Content }, projects] = await Promise.all([
     <Content components={mdxComponents} />
     <PreviousNext
       slot="end"
-      name="More projects"
+      name={copy.more}
       previous={
         previous && {
-          href: `/projects/${previous.id}`,
+          href: routes.project(previous.id),
           title: previous.data.title,
-          label: "Previous",
+          label: copy.previous,
         }
       }
       next={
         next && {
-          href: `/projects/${next.id}`,
+          href: routes.project(next.id),
           title: next.data.title,
-          label: "Next",
+          label: copy.next,
         }
       }
     />
