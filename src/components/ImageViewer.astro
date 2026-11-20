@@ -105,9 +105,32 @@ const copy = await getViewerCopy();
 </dialog>
 
 <script>
-  import type createPanzoom from "@panzoom/panzoom";
-  import type { PanzoomObject } from "@panzoom/panzoom";
-  import { hasStrings, isRecord } from "../lib/guards.ts";
+  import { backEntry } from "../lib/back-entry.ts";
+  import {
+    backdropFade,
+    dragToClose,
+    followDrag,
+    followSwipe,
+    isDeliberate,
+    lockDirection,
+    swipeToMove,
+    wrapIndex,
+  } from "../lib/gestures.ts";
+  import { hasStrings } from "../lib/guards.ts";
+  import {
+    canTravel,
+    isTravellingBack,
+    skipTravel,
+    travelBetween,
+  } from "../lib/photo-travel.ts";
+  import {
+    clearZooms,
+    isZoomedIn,
+    loadZoom,
+    resetZoom,
+    zoomable,
+  } from "../lib/photo-zoom.ts";
+  import { restoreStatusBar, tintStatusBar } from "../lib/status-bar.ts";
   import { fill } from "../lib/template.ts";
   import { closeTopLayer, isClosing } from "../lib/top-layer.ts";
 
@@ -116,31 +139,6 @@ const copy = await getViewerCopy();
   function isCopy(value: unknown): value is Copy {
     return hasStrings(value, ["label", "labelOne", "position"]);
   }
-
-  function isViewerEntry(state: unknown): boolean {
-    return isRecord(state) && state.viewer === true;
-  }
-
-  // Gesture thresholds, in CSS pixels.
-  const lockAfter = 8;
-  const swipeToMove = 50;
-  const dragToClose = 80;
-  // A shorter gesture still counts if it's a flick: this fast, in pixels per
-  // millisecond, over at least this distance.
-  const flickSpeed = 0.11;
-  const flickDistance = 16;
-  // Past the first or last photo, and dragging the viewer up, the photo
-  // follows less the further the finger goes.
-  const edgeFriction = 120;
-  const upFriction = 60;
-  // How far a drag down goes before the backdrop is at its faintest.
-  const fadeDistance = 480;
-  const faintest = 0.4;
-  // The name the photo travels under between its thumbnail and the viewer.
-  const travelName = "viewer-photo";
-
-  const damp = (distance: number, friction: number) =>
-    distance / (1 + Math.abs(distance) / friction);
 
   const dialog = document.querySelector<HTMLDialogElement>("[data-viewer]");
   const frame = dialog?.querySelector<HTMLElement>("[data-viewer-frame]");
@@ -172,20 +170,10 @@ const copy = await getViewerCopy();
     let images: HTMLImageElement[] = [];
     let opener: HTMLButtonElement | undefined;
     let current = 0;
-    // The viewer adds a history entry when it opens, so Back closes it.
-    // `ownsEntry`: the current entry is the viewer's. `goingBack`: the viewer
-    // took its entry back and that Back hasn't landed yet.
-    let ownsEntry = false;
-    let goingBack = false;
     let talkTitle = "";
-    let travel: ViewTransition | undefined;
-    // The photos the current travel has named.
-    let travelling: HTMLImageElement[] = [];
     // Puts a photo moved past the end of the row for a wrap back in its
     // place, at once.
     let unwrap: (() => void) | undefined;
-    let panzoom: typeof createPanzoom | undefined;
-    const zooms = new Map<HTMLImageElement, PanzoomObject>();
 
     // On phones the photos sit in a row that slides; elsewhere, and with
     // reduced motion, they're stacked and crossfade.
@@ -207,48 +195,7 @@ const copy = await getViewerCopy();
       settle?.();
     };
 
-    // Panzoom only loads once a photo is opened, and only pinch-zooms: one
-    // finger moves between photos or drags the viewer closed unless the
-    // photo is zoomed in.
-    const zoomable = (image: HTMLImageElement) => {
-      if (panzoom === undefined || zooms.has(image)) {
-        return;
-      }
-      zooms.set(
-        image,
-        panzoom(image, {
-          minScale: 1,
-          maxScale: 4,
-          contain: "outside",
-          panOnlyWhenZoomed: true,
-          cursor: "auto",
-          // The stylesheet decides: the card clips a zoomed photo, the phone
-          // viewer lets it fill the screen.
-          overflow: "",
-        }),
-      );
-    };
-
-    const loadZoom = async () => {
-      try {
-        panzoom ??= (await import("@panzoom/panzoom")).default;
-      } catch {
-        // Zoom is an extra: if Panzoom can't load (offline, say), the photo
-        // doesn't zoom, and the next photo opened tries again.
-        return;
-      }
-      const image = images[current];
-      if (dialog.open && image !== undefined) {
-        zoomable(image);
-      }
-    };
-
-    const zoomedIn = () => {
-      const image = images[current];
-      return image !== undefined && (zooms.get(image)?.getScale() ?? 1) > 1;
-    };
-
-    const wrap = (index: number) => (index + photos.length) % photos.length;
+    const wrap = (index: number) => wrapIndex(index, photos.length);
 
     // Swaps the thumbnail for the larger photo once it's ready, once, and
     // decodes it ahead, so the first slide to it doesn't stall.
@@ -286,10 +233,7 @@ const copy = await getViewerCopy();
     // the page and the same crop of the same file, until the larger photo
     // loads; a thumbnail that hasn't loaded yet (it's lazy) shows nothing.
     const buildSlides = () => {
-      for (const zoom of zooms.values()) {
-        zoom.destroy();
-      }
-      zooms.clear();
+      clearZooms();
       images = photos.map((photo) => {
         const thumbnail = photo.querySelector("img");
         const image = document.createElement("img");
@@ -314,10 +258,7 @@ const copy = await getViewerCopy();
 
     // `at`: where the row stands, if not at the photo (a wrap's last step).
     const show = (index: number, at?: number) => {
-      const previous = images[current];
-      if (previous !== undefined) {
-        zooms.get(previous)?.reset({ animate: false });
-      }
+      resetZoom(images[current]);
       current = wrap(index);
       for (const [index, slide] of slides.entries()) {
         slide.classList.toggle("current", index === current);
@@ -332,9 +273,8 @@ const copy = await getViewerCopy();
       ])) {
         load(index);
       }
-      const image = images[current];
-      if (dialog.open && image !== undefined) {
-        zoomable(image);
+      if (dialog.open) {
+        zoomable(images[current]);
       }
       const values = {
         index: String(current + 1),
@@ -351,52 +291,6 @@ const copy = await getViewerCopy();
       }
     };
 
-    // Opening and closing, the photo travels between its thumbnail and the
-    // frame: one view transition name, passed from one to the other as the
-    // viewer changes. The card and the backdrop fade around it. Without view
-    // transitions, or with reduced motion, they only fade.
-    const canTravel = () =>
-      "startViewTransition" in document && !reducedMotion.matches;
-
-    const travelBetween = (
-      from: HTMLImageElement,
-      change: () => HTMLImageElement | undefined,
-      closing: boolean,
-    ) => {
-      travel?.skipTransition();
-      root.dataset.viewerTravel = closing ? "closing" : "opening";
-      from.style.viewTransitionName = travelName;
-      const named = [from];
-      const transition = document.startViewTransition(async () => {
-        from.style.removeProperty("view-transition-name");
-        const to = change();
-        if (to !== undefined) {
-          named.push(to);
-          to.style.viewTransitionName = travelName;
-          // Drawn before the transition shows it.
-          await to.decode().catch(() => undefined);
-        }
-      });
-      travel = transition;
-      travelling = named;
-      // A travel cut short by a newer one leaves the names that one uses:
-      // the newer one may have named the same photo already.
-      const done = () => {
-        const current = travel === transition;
-        for (const photo of named) {
-          if (current || !travelling.includes(photo)) {
-            photo.style.removeProperty("view-transition-name");
-          }
-        }
-        if (current) {
-          travel = undefined;
-          travelling = [];
-          delete root.dataset.viewerTravel;
-        }
-      };
-      void transition.finished.then(done, done);
-    };
-
     // A thumbnail scrolled out of its strip (on phones) is no place to
     // travel back to.
     const inStrip = (photo: HTMLButtonElement | undefined) => {
@@ -411,26 +305,12 @@ const copy = await getViewerCopy();
 
     // On phones the status bar turns as dark as the viewer while it's open,
     // like a native photo viewer's, and back when it closes.
-    const statusBar = new Map<HTMLMetaElement, string>();
     const darkenStatusBar = () => {
-      if (!phone.matches) {
-        return;
+      if (phone.matches) {
+        tintStatusBar(
+          getComputedStyle(root).getPropertyValue("--viewer-bg").trim(),
+        );
       }
-      const dark = getComputedStyle(root).getPropertyValue("--viewer-bg");
-      for (const meta of document.querySelectorAll<HTMLMetaElement>(
-        'meta[name="theme-color"]',
-      )) {
-        if (!statusBar.has(meta)) {
-          statusBar.set(meta, meta.content);
-        }
-        meta.content = dark.trim();
-      }
-    };
-    const restoreStatusBar = () => {
-      for (const [meta, color] of statusBar) {
-        meta.content = color;
-      }
-      statusBar.clear();
     };
 
     // Let go, it stays see-through until it has sprung back.
@@ -466,14 +346,10 @@ const copy = await getViewerCopy();
     // as it fades. Otherwise the photo travels back into the thumbnail of the
     // photo on screen, which may not be the one that opened the viewer.
     const close = (how: "key" | "drag" | "pointer") => {
-      if (
-        !dialog.open ||
-        isClosing(dialog) ||
-        root.dataset.viewerTravel === "closing"
-      ) {
+      if (!dialog.open || isClosing(dialog) || isTravellingBack()) {
         return;
       }
-      travel?.skipTransition();
+      skipTravel();
       settleWrap();
       const shut = () => {
         dialog.close();
@@ -515,7 +391,7 @@ const copy = await getViewerCopy();
       if (talk === null) {
         return;
       }
-      travel?.skipTransition();
+      skipTravel();
       opener = button;
       // The last close's drag stays until now, so the viewer could leave
       // from where it was dropped.
@@ -550,11 +426,8 @@ const copy = await getViewerCopy();
         // without a ring appearing on a button they don't use (DESIGN.md §3).
         dialog.focus({ preventScroll: true });
         darkenStatusBar();
-        // The photo opened on can zoom straight away, once Panzoom is in.
-        const image = images[current];
-        if (image !== undefined) {
-          zoomable(image);
-        }
+        // The photo opened on can zoom straight away, if Panzoom is in.
+        zoomable(images[current]);
       };
       if (key) {
         instantly(reveal);
@@ -570,14 +443,14 @@ const copy = await getViewerCopy();
       } else {
         reveal();
       }
-      // Back closes the viewer, as it does other full-screen overlays. Reopened
-      // before the last close was handled, it keeps that entry; if the last
-      // close's Back is still on its way, the new entry waits for it.
-      if (!ownsEntry && !goingBack) {
-        history.pushState({ viewer: true }, "");
-        ownsEntry = true;
-      }
-      void loadZoom();
+      entry.opened();
+      // Zoom loads on the first open: the photo on screen can zoom once it
+      // has, if the viewer is still open.
+      void loadZoom().then(() => {
+        if (dialog.open) {
+          zoomable(images[current]);
+        }
+      });
     };
 
     // On phones, a wrap keeps sliding the way the button points: the photo
@@ -636,11 +509,10 @@ const copy = await getViewerCopy();
       if (dialog.dataset.dragging === undefined) {
         dialog.dataset.dragging = "";
       }
-      const followed = distance >= 0 ? distance : damp(distance, upFriction);
-      dialog.style.translate = `0 ${String(followed)}px`;
+      dialog.style.translate = `0 ${String(followDrag(distance))}px`;
       dialog.style.setProperty(
         "--backdrop-fade",
-        String(Math.max(faintest, 1 - Math.max(0, distance) / fadeDistance)),
+        String(backdropFade(distance)),
       );
     };
 
@@ -653,11 +525,17 @@ const copy = await getViewerCopy();
       if (dialog.dataset.swiping === undefined) {
         dialog.dataset.swiping = "";
       }
-      const followed = atEnd(distance)
-        ? damp(distance, edgeFriction)
-        : distance;
+      const followed = followSwipe(distance, atEnd(distance));
       track.style.translate = `calc(${String(current * -100)}% + ${String(followed)}px) 0`;
     };
+
+    // The viewer adds a history entry when it opens, so Back closes it.
+    const entry = backEntry({
+      isOpen: () => dialog.open,
+      close: () => {
+        close("pointer");
+      },
+    });
 
     // The close event arrives a moment after the viewer closes, so it may
     // find the viewer open again.
@@ -666,43 +544,12 @@ const copy = await getViewerCopy();
         return;
       }
       restoreStatusBar();
-      const image = images[current];
-      if (image !== undefined) {
-        zooms.get(image)?.reset({ animate: false });
-      }
-      // Closed some other way than Back: take back the history entry, so the
-      // next Back leaves the page as expected.
-      if (ownsEntry) {
-        ownsEntry = false;
-        goingBack = true;
-        history.back();
-      }
+      resetZoom(images[current]);
+      entry.closed();
       // Safari doesn't focus a button on click, so the browser can't return
       // focus to it. The page stays where it was, even with the photo under
       // the sticky header.
       opener?.focus({ preventScroll: true });
-    });
-
-    addEventListener("popstate", () => {
-      if (goingBack) {
-        goingBack = false;
-        // Reopened before the Back landed: now add its entry.
-        if (dialog.open) {
-          history.pushState({ viewer: true }, "");
-          ownsEntry = true;
-        }
-      } else {
-        // The visitor went Back (or forward): the entry is no longer ours.
-        ownsEntry = false;
-        if (dialog.open) {
-          close("pointer");
-        } else if (isViewerEntry(history.state)) {
-          // Forward onto the entry of a viewer that's closed: step off it, or
-          // the next Back would do nothing visible.
-          goingBack = true;
-          history.back();
-        }
-      }
     });
 
     // A click from Enter or Space has no pointer behind it (`detail` 0).
@@ -811,7 +658,7 @@ const copy = await getViewerCopy();
       "touchstart",
       (event) => {
         const touch = event.changedTouches[0];
-        if (event.touches.length > 1 || zoomedIn()) {
+        if (event.touches.length > 1 || isZoomedIn(images[current])) {
           cancelGesture();
         } else if (touch !== undefined) {
           gesture = {
@@ -832,19 +679,19 @@ const copy = await getViewerCopy();
         if (gesture === undefined || touch === undefined) {
           return;
         }
-        if (zoomedIn()) {
+        if (isZoomedIn(images[current])) {
           cancelGesture();
           return;
         }
         const x = touch.clientX - gesture.x;
         const y = touch.clientY - gesture.y;
-        if (
-          gesture.lock === undefined &&
-          Math.max(Math.abs(x), Math.abs(y)) > lockAfter
-        ) {
-          gesture.lock = Math.abs(y) > Math.abs(x) ? "y" : "x";
-          // A swipe during a wrap's slide finishes it first.
-          settleWrap();
+        if (gesture.lock === undefined) {
+          const lock = lockDirection(x, y);
+          if (lock !== undefined) {
+            gesture.lock = lock;
+            // A swipe during a wrap's slide finishes it first.
+            settleWrap();
+          }
         }
         if (gesture.lock === "y" && phone.matches) {
           setDrag(y);
@@ -864,12 +711,12 @@ const copy = await getViewerCopy();
       gesture = undefined;
       const x = touch.clientX - start.x;
       const y = touch.clientY - start.y;
-      const elapsed = Math.max(1, event.timeStamp - start.time);
-      const counts = (distance: number, enough: number) =>
-        Math.abs(distance) > enough ||
-        (Math.abs(distance) > flickDistance &&
-          Math.abs(distance) / elapsed > flickSpeed);
-      if (start.lock === "y" && y > 0 && counts(y, dragToClose)) {
+      const elapsed = event.timeStamp - start.time;
+      if (
+        start.lock === "y" &&
+        y > 0 &&
+        isDeliberate(y, elapsed, dragToClose)
+      ) {
         // Only a phone's viewer follows the finger down.
         close(phone.matches ? "drag" : "pointer");
         return;
@@ -877,7 +724,11 @@ const copy = await getViewerCopy();
       // Settles on the next photo, or springs back.
       endDrag();
       endSwipe();
-      if (start.lock === "x" && counts(x, swipeToMove) && !atEnd(x)) {
+      if (
+        start.lock === "x" &&
+        isDeliberate(x, elapsed, swipeToMove) &&
+        !atEnd(x)
+      ) {
         move(x < 0 ? 1 : -1);
       }
     });
