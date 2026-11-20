@@ -9,7 +9,7 @@ import List from "../components/List.astro";
 import ListRow from "../components/ListRow.astro";
 import PageTitle from "../components/PageTitle.astro";
 import PreviewMorph from "../components/PreviewMorph.astro";
-import ProjectTile from "../components/ProjectTile.astro";
+import ProjectCard from "../components/ProjectCard.astro";
 import RowPhotos from "../components/RowPhotos.astro";
 import Section from "../components/Section.astro";
 import SeeMore from "../components/SeeMore.astro";
@@ -91,7 +91,7 @@ const newestJob = work[0]?.id;
       <SeeMore slot="action" href="/projects" label="All projects" />
       <ul class="tiles" role="list">
         {projects.slice(0, 3).map((project) => (
-          <ProjectTile project={project} />
+          <ProjectCard project={project} tile />
         ))}
       </ul>
     </Section>

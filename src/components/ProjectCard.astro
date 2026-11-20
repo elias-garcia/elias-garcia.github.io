@@ -7,12 +7,15 @@ import ProjectStatus from "./ProjectStatus.astro";
 
 type Props = {
   project: CollectionEntry<"projects">;
+  // On Home: a level-three title, the short summary and no "View project".
+  tile?: boolean;
   // The first project spans the grid from 640px when the count is odd.
-  wide: boolean;
+  wide?: boolean;
 };
 
-const { project, wide } = Astro.props;
-const { title, description, status, year, illustration } = project.data;
+const { project, tile = false, wide = false } = Astro.props;
+const { title, summary, description, status, year, illustration } =
+  project.data;
 const href = hasCaseStudy(project) ? `/projects/${project.id}` : undefined;
 const Tag = href === undefined ? "div" : "a";
 ---
@@ -21,18 +24,22 @@ const Tag = href === undefined ? "div" : "a";
   <Tag class="card" href={href}>
     <ProjectPreview illustration={illustration} wide={wide} />
     <div class="head">
-      <div class="title-row">
-        <h2 class="title">{title}</h2>
-        {href !== undefined && (
-          <span class="go">
-            View project
-            <Icon name="chevron-right-small" size="sm" class="chevron" />
-          </span>
-        )}
-      </div>
+      {tile ? (
+        <h3 class="title">{title}</h3>
+      ) : (
+        <div class="title-row">
+          <h2 class="title">{title}</h2>
+          {href !== undefined && (
+            <span class="go">
+              View project
+              <Icon name="chevron-right-small" size="sm" class="chevron" />
+            </span>
+          )}
+        </div>
+      )}
       <ProjectStatus status={status} year={year} />
     </div>
-    <p class="description">{description}</p>
+    <p class="description">{tile ? summary : description}</p>
   </Tag>
 </li>
 

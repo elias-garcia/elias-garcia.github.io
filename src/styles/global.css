@@ -145,7 +145,6 @@ html:has(dialog:modal) {
   a:not(
       .button,
       .chip,
-      .tile,
       .card,
       .video,
       .title-link,
