@@ -8,9 +8,26 @@ import {
 import { formatCount, formatMonthYear } from "./format.ts";
 import { routes } from "./routes.ts";
 
+export type SearchEntry = {
+  readonly title: string;
+  readonly line: string;
+  readonly meta: string;
+  readonly href: string;
+};
+export type SearchTopic = {
+  readonly label: string;
+  readonly count: string;
+  readonly href: string;
+};
+export type SearchIndex = {
+  readonly posts: readonly SearchEntry[];
+  readonly projects: readonly SearchEntry[];
+  readonly topics: readonly SearchTopic[];
+};
+
 // What the search dialog carries in its HTML. A query matches only what a
 // row shows, its title and line, so every result shows why it matched.
-export async function getSearchIndex() {
+export async function getSearchIndex(): Promise<SearchIndex> {
   const [posts, projects, copy] = await Promise.all([
     getPosts(),
     getProjects(),

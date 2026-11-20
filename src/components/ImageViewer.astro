@@ -107,31 +107,18 @@ const copy = await getViewerCopy();
 <script>
   import type createPanzoom from "@panzoom/panzoom";
   import type { PanzoomObject } from "@panzoom/panzoom";
+  import { hasStrings, isRecord } from "../lib/guards.ts";
   import { fill } from "../lib/template.ts";
   import { closeTopLayer, isClosing } from "../lib/top-layer.ts";
 
   type Copy = { label: string; labelOne: string; position: string };
 
   function isCopy(value: unknown): value is Copy {
-    return (
-      typeof value === "object" &&
-      value !== null &&
-      "label" in value &&
-      typeof value.label === "string" &&
-      "labelOne" in value &&
-      typeof value.labelOne === "string" &&
-      "position" in value &&
-      typeof value.position === "string"
-    );
+    return hasStrings(value, ["label", "labelOne", "position"]);
   }
 
   function isViewerEntry(state: unknown): boolean {
-    return (
-      typeof state === "object" &&
-      state !== null &&
-      "viewer" in state &&
-      state.viewer === true
-    );
+    return isRecord(state) && state.viewer === true;
   }
 
   // Gesture thresholds, in CSS pixels.

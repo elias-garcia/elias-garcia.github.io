@@ -230,16 +230,10 @@ if (email === undefined) {
 </dialog>
 
 <script>
+  import { hasStrings, isRecord } from "../lib/guards.ts";
+  import type { SearchEntry, SearchIndex, SearchTopic } from "../lib/search.ts";
   import { fill } from "../lib/template.ts";
 
-  type Entry = {
-    title: string;
-    line: string;
-    meta: string;
-    href: string;
-  };
-  type Topic = { label: string; count: string; href: string };
-  type Index = { posts: Entry[]; projects: Entry[]; topics: Topic[] };
   type Counts = { one: string; other: string };
   type Message = { title: string; hint: string };
   type Copy = {
@@ -250,29 +244,15 @@ if (email === undefined) {
   };
   type View = "home" | "cv" | "results" | "none";
 
-  function isRecord(value: unknown): value is Record<string, unknown> {
-    return typeof value === "object" && value !== null;
+  function isEntry(value: unknown): value is SearchEntry {
+    return hasStrings(value, ["title", "line", "meta", "href"]);
   }
 
-  function isEntry(value: unknown): value is Entry {
-    return (
-      isRecord(value) &&
-      ["title", "line", "meta", "href"].every(
-        (key) => typeof value[key] === "string",
-      )
-    );
+  function isTopic(value: unknown): value is SearchTopic {
+    return hasStrings(value, ["label", "count", "href"]);
   }
 
-  function isTopic(value: unknown): value is Topic {
-    return (
-      isRecord(value) &&
-      typeof value.label === "string" &&
-      typeof value.count === "string" &&
-      typeof value.href === "string"
-    );
-  }
-
-  function isIndex(value: unknown): value is Index {
+  function isIndex(value: unknown): value is SearchIndex {
     return (
       isRecord(value) &&
       Array.isArray(value.posts) &&
@@ -284,31 +264,13 @@ if (email === undefined) {
     );
   }
 
-  function isCounts(value: unknown): value is Counts {
-    return (
-      isRecord(value) &&
-      typeof value.one === "string" &&
-      typeof value.other === "string"
-    );
-  }
-
-  function isMessage(value: unknown): value is Message {
-    return (
-      isRecord(value) &&
-      typeof value.title === "string" &&
-      typeof value.hint === "string"
-    );
-  }
-
   function isCopy(value: unknown): value is Copy {
     return (
       isRecord(value) &&
-      isMessage(value.noResults) &&
+      hasStrings(value.noResults, ["title", "hint"]) &&
       typeof value.noFormat === "string" &&
-      isRecord(value.suggestion) &&
-      typeof value.suggestion.title === "string" &&
-      typeof value.suggestion.subject === "string" &&
-      isCounts(value.resultCount)
+      hasStrings(value.suggestion, ["title", "subject"]) &&
+      hasStrings(value.resultCount, ["one", "other"])
     );
   }
 
@@ -346,7 +308,7 @@ if (email === undefined) {
     return starts;
   }
 
-  function matches(entry: Entry, terms: readonly string[]): boolean {
+  function matches(entry: SearchEntry, terms: readonly string[]): boolean {
     const { folded } = fold(`${entry.title} ${entry.line}`);
     return terms.every((term) => wordStarts(folded, term).length > 0);
   }
@@ -625,7 +587,7 @@ if (email === undefined) {
       const posts = index.posts.filter((entry) => matches(entry, terms));
       const projects = index.projects.filter((entry) => matches(entry, terms));
       const total = posts.length + projects.length;
-      const toRow = (kind: "posts" | "projects") => (entry: Entry) =>
+      const toRow = (kind: "posts" | "projects") => (entry: SearchEntry) =>
         row(
           kind,
           highlight(entry.title, terms),
