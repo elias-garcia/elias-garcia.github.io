@@ -12,3 +12,5 @@ post:
   plainCodeName: Code
   copyCodeName: "Copy {language} code"
   copied: Copied
+  # When the browser refuses the copy; the button grows to fit it.
+  copyFailed: Couldn't copy

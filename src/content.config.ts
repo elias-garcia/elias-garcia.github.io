@@ -175,6 +175,7 @@ const post = defineCollection({
     plainCodeName: z.string(),
     copyCodeName: template("{language}"),
     copied: z.string(),
+    copyFailed: z.string(),
   }),
 });
 

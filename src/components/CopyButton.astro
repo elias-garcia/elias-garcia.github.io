@@ -13,21 +13,27 @@ type Props = {
 };
 
 const { label, name, url, onSurface = false } = Astro.props;
-const { copied } = await getPostCopy();
+const { copied, copyFailed } = await getPostCopy();
 ---
 
 <span class="copy">
   <Button
     aria-label={name}
+    data-copy-name={name}
     onSurface={onSurface}
     data-copy-button
     data-copy-url={url}
   >
     <slot />
     <span class="labels">
-      <span data-copy-label>{label}</span>
-      <span aria-hidden="true" data-copy-done>
+      <span class="idle" data-copy-label="idle">
+        {label}
+      </span>
+      <span class="done" aria-hidden="true" data-copy-label="copied">
         {copied}
+      </span>
+      <span class="failed" aria-hidden="true" data-copy-label="failed">
+        {copyFailed}
       </span>
     </span>
   </Button>
@@ -37,7 +43,7 @@ const { copied } = await getPostCopy();
 </span>
 
 <script>
-  const copiedFor = 1500;
+  const shownFor = 1500;
   const timers = new WeakMap<HTMLElement, number>();
 
   async function textToCopy(button: HTMLElement): Promise<string> {
@@ -55,33 +61,50 @@ const { copied } = await getPostCopy();
     return source?.innerText ?? "";
   }
 
-  // Both labels are always there, so the button keeps the longer one's
-  // width; only the one showing is exposed.
-  function setCopied(button: HTMLElement, copied: boolean): void {
-    button.toggleAttribute("data-copied", copied);
-    button
-      .querySelector("[data-copy-label]")
-      ?.setAttribute("aria-hidden", String(copied));
-    button
-      .querySelector("[data-copy-done]")
-      ?.setAttribute("aria-hidden", String(!copied));
+  type State = "idle" | "copied" | "failed";
+
+  // Every label is always there, and only the one showing is exposed. The
+  // idle and copied labels share the button's width; a failure is rare, so
+  // its longer label lets the button grow.
+  //
+  // While "Copied" or the failure shows, it is the button's name too: the
+  // name has to hold the text on screen (WCAG 2.5.3).
+  function setState(button: HTMLElement, state: State): string {
+    button.dataset.copyState = state;
+    let shown = "";
+    for (const label of button.querySelectorAll<HTMLElement>(
+      "[data-copy-label]",
+    )) {
+      const showing = label.dataset.copyLabel === state;
+      label.setAttribute("aria-hidden", String(!showing));
+      if (showing) {
+        shown = label.textContent.trim();
+      }
+    }
+    button.setAttribute(
+      "aria-label",
+      state === "idle" ? (button.dataset.copyName ?? shown) : shown,
+    );
+    return shown;
   }
 
-  function showCopied(button: HTMLElement): void {
+  function show(button: HTMLElement, state: "copied" | "failed"): void {
     const status = button.parentElement?.querySelector("[data-copy-status]");
     if (status === null || status === undefined) {
       return;
     }
-    setCopied(button, true);
+    const message = setState(button, state);
+    // VoiceOver skips a message identical to the region's last one, so a
+    // repeat while it's still showing gets an invisible difference.
     status.textContent =
-      button.querySelector("[data-copy-done]")?.textContent ?? "";
+      status.textContent === message ? `${message}\u00A0` : message;
     window.clearTimeout(timers.get(button));
     timers.set(
       button,
       window.setTimeout(() => {
-        setCopied(button, false);
+        setState(button, "idle");
         status.textContent = "";
-      }, copiedFor),
+      }, shownFor),
     );
   }
 
@@ -92,9 +115,9 @@ const { copied } = await getPostCopy();
       await navigator.clipboard.write([
         new ClipboardItem({ "text/plain": textToCopy(button) }),
       ]);
-      showCopied(button);
+      show(button, "copied");
     } catch {
-      // The design only has "Copied": a failed copy leaves the button as it was.
+      show(button, "failed");
     }
   }
 
@@ -117,45 +140,67 @@ const { copied } = await getPostCopy();
     }
   }
 
-  /* One cell for both labels, so the button never changes width. They swap
-     with a short crossfade, as transitions so a second click mid-swap
-     reverses smoothly; with reduced motion only the opacity changes. */
+  /* One cell for the labels, so the button keeps its width as "Copy" turns
+     to "Copied". They swap with a short crossfade, as transitions so a second
+     click mid-swap reverses smoothly; with reduced motion only the opacity
+     changes. The failure label takes no room until it shows. :where() keeps
+     the hidden defaults below the rules that show a label. */
   .labels {
     display: inline-grid;
     justify-items: center;
-
-    > * {
-      grid-area: 1 / 1;
-      transition: opacity var(--dur) var(--ease-settle);
-    }
   }
 
-  .labels > :last-child,
-  :global([data-copied]) .labels > :first-child {
+  .labels > :where(*) {
+    grid-area: 1 / 1;
     opacity: 0;
+    transition:
+      opacity var(--dur) var(--ease-settle),
+      display var(--dur) allow-discrete;
   }
 
-  :global([data-copied]) .labels > :last-child {
+  .labels > :where(.failed) {
+    display: none;
+  }
+
+  :global([data-copy-button]:not([data-copy-state])) .idle,
+  :global([data-copy-state="idle"]) .idle,
+  :global([data-copy-state="copied"]) .done,
+  :global([data-copy-state="failed"]) .failed {
     opacity: 1;
   }
 
+  :global([data-copy-state="failed"]) .failed {
+    display: block;
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+
   @media (prefers-reduced-motion: no-preference) {
-    .labels > * {
+    .labels > :where(*) {
+      filter: blur(var(--swap-blur));
+      scale: var(--swap-scale);
       transition:
         opacity var(--dur) var(--ease-settle),
         filter var(--dur) var(--ease-settle),
-        scale var(--dur) var(--ease-settle);
+        scale var(--dur) var(--ease-settle),
+        display var(--dur) allow-discrete;
     }
 
-    .labels > :last-child,
-    :global([data-copied]) .labels > :first-child {
-      filter: blur(var(--swap-blur));
-      scale: var(--swap-scale);
-    }
-
-    :global([data-copied]) .labels > :last-child {
+    :global([data-copy-button]:not([data-copy-state])) .idle,
+    :global([data-copy-state="idle"]) .idle,
+    :global([data-copy-state="copied"]) .done,
+    :global([data-copy-state="failed"]) .failed {
       filter: none;
       scale: 1;
+    }
+
+    :global([data-copy-state="failed"]) .failed {
+      @starting-style {
+        filter: blur(var(--swap-blur));
+        scale: var(--swap-scale);
+      }
     }
   }
 </style>

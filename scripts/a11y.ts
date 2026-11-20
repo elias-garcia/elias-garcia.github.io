@@ -3,6 +3,29 @@ import { preview } from "astro";
 import { readdir } from "node:fs/promises";
 import { chromium, type Page } from "playwright";
 
+// Clicks a post's Copy page button with a clipboard that takes the text or
+// refuses it. The label only stays for 1.5s, less than a check takes, so
+// every pending timer is cancelled to keep it up.
+async function copyPage(
+  page: Page,
+  outcome: "copied" | "failed",
+): Promise<void> {
+  await page.evaluate((succeeds) => {
+    navigator.clipboard.write = () =>
+      succeeds
+        ? Promise.resolve()
+        : Promise.reject(new Error("Refused, for the check."));
+  }, outcome === "copied");
+  await page.locator("[data-copy-button]").first().click();
+  await page.locator(`[data-copy-state="${outcome}"]`).first().waitFor();
+  await page.evaluate(() => {
+    const last = window.setTimeout(() => undefined, 0);
+    for (let id = last; id > 0; id -= 1) {
+      window.clearTimeout(id);
+    }
+  });
+}
+
 // Interactive states to check on top of each page's initial state.
 const states: Record<
   string,
@@ -16,6 +39,14 @@ const states: Record<
     {
       name: "heading anchor focused",
       open: (page) => page.locator(".anchor").first().focus(),
+    },
+    {
+      name: "page copied",
+      open: (page) => copyPage(page, "copied"),
+    },
+    {
+      name: "copy failed",
+      open: (page) => copyPage(page, "failed"),
     },
   ],
   "/": [
