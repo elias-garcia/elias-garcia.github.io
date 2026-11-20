@@ -42,6 +42,10 @@ One page per step. Each step builds the components that page needs (DESIGN.md §
 - `npm run a11y` runs in the installed Google Chrome (`channel: "chrome"`), so any machine or CI runner that runs it needs Chrome.
 - The 404 page has no `noindex`: a real 404 status already keeps it out of search results. If it ever gets one, add `"autodiscoverUrlBlocklist": ["/404.html"]` to `collect` in `lighthouserc.json`, or the SEO check fails.
 
+## Still to do
+
+- **OS text scaling** (`<meta name="text-scale" content="scale">`, Chrome and Edge 146+). Not opted in yet: with the default text size doubled, phone-width layouts break (the header's links run off the side, search rows squeeze their text, the contact email overflows). Desktop widths are fine. Fix those, test every page at 200% and 320px, then add the tag.
+
 ## Content still missing
 
 - The posts marked `draft: true`.
@@ -53,7 +57,7 @@ One page per step. Each step builds the components that page needs (DESIGN.md §
 
 ## Going live
 
-1. Import the repo into Vercel and check the `redesign` preview.
+1. Import the repo into Vercel and check the `redesign` preview. Check the response headers there (`curl -I`): `vercel.json` sets them and they can't be tested locally. Open the browser console on the preview too and check for Content-Security-Policy violations: Web Analytics only loads on Vercel, so the policy is untested with it (it loads from the same origin, so it should pass). The policy blocks Vercel's preview toolbar; that only affects previews.
 2. Merge `redesign` into `main`, add `eliasgarcia.dev` in Vercel and point DNS at it.
    Turn on Web Analytics in the Vercel project, then visit a missing address from another page and check that the page view records that address and the referrer (the log of broken links). The site uses `inject()` rather than Vercel's Astro component, which records the path known at build time, `/404`.
 3. Once the domain serves from Vercel, turn off GitHub Pages and delete the `gh-pages` branch.

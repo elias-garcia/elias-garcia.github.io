@@ -31,6 +31,29 @@ export default defineConfig({
     layout: "constrained",
     responsiveStyles: true,
   },
+  // Only this site's own scripts and styles run: Astro adds the hashes of
+  // the ones it processes to a <meta> policy at the end of each page's
+  // <head>. `is:inline` code isn't hashed, so it only runs from <head>,
+  // ahead of that <meta>. Headers that a <meta> can't carry are in
+  // vercel.json.
+  security: {
+    csp: {
+      directives: [
+        "default-src 'self'",
+        "object-src 'none'",
+        "base-uri 'none'",
+        "form-action 'none'",
+      ],
+      // Stylesheets and <style> elements: the site's own. Style attributes
+      // are allowed, for the code blocks' inline colours (Shiki).
+      styleDirective: {
+        resources: [
+          { resource: "'self'", kind: "element" },
+          { resource: "'unsafe-inline'", kind: "attribute" },
+        ],
+      },
+    },
+  },
   integrations: [
     mdx(),
     sitemap({
