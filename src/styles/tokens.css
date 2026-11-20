@@ -40,9 +40,9 @@
   /* Behind the search dialog and the image viewer card. */
   --scrim: rgb(9 9 11 / 0.18);
   --scrim-backdrop: blur(2px);
-  --header-bg: color-mix(in oklch, var(--bg) 82%, transparent);
+  --header-bg: color-mix(in oklab, var(--bg) 82%, transparent);
   --photo-control-bg: color-mix(
-    in oklch,
+    in oklab,
     var(--bg) 92%,
     transparent
   ); /* round buttons over photos: video play, image viewer */

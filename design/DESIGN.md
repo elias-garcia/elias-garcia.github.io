@@ -53,7 +53,7 @@ The **zinc** and **indigo** palettes only, 14 tokens, each with a light and a da
 Rules:
 - `--text-3` sits only on `--bg` or `--surface`, never on `--control` (4.4:1 in light mode, below AA).
 - `--control-hover` and `--line` share a value today but are separate roles; never merge them.
-- The header uses `--bg` mixed with transparency (`color-mix(in oklch, var(--bg) 82%, transparent)`), not new colours.
+- The header uses `--bg` mixed with transparency (`color-mix(in oklab, var(--bg) 82%, transparent)`; `oklab`, not `oklch`, for mixing with a neutral), not new colours.
 - In the canvas the accent token was named `--accent-c`; in code it is `--accent`.
 - Photos (every image except SVGs) are dimmed to 92% brightness in dark mode, so they don't glare against the dark background.
 
