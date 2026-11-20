@@ -11,6 +11,7 @@ const copy = await getViewerCopy();
 <dialog
   class="viewer"
   closedby="any"
+  tabindex="-1"
   data-viewer
   data-copy={JSON.stringify({
     label: copy.label,
@@ -22,7 +23,6 @@ const copy = await getViewerCopy();
     class="control close"
     type="button"
     aria-label={copy.close}
-    autofocus
     data-viewer-close
   >
     <svg viewBox="0 0 16 16" aria-hidden="true">
@@ -568,6 +568,9 @@ const copy = await getViewerCopy();
       const thumbnail = button.querySelector("img");
       const reveal = () => {
         dialog.showModal();
+        // The viewer itself takes focus, not ×: ← → then change photos
+        // without a ring appearing on a button they don't use (DESIGN.md §3).
+        dialog.focus({ preventScroll: true });
         darkenStatusBar();
         // The photo opened on can zoom straight away, once Panzoom is in.
         const image = images[current];
@@ -788,6 +791,24 @@ const copy = await getViewerCopy();
       } else if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
         event.preventDefault();
         move(event.key === "ArrowLeft" ? -1 : 1, { key: true });
+      } else if (event.key === "Tab") {
+        // A modal dialog lets Tab leave for the browser's toolbar: keep it on
+        // the viewer's buttons, and give Shift+Tab from the viewer itself
+        // (nothing comes before it) the last one.
+        const controls = [
+          ...dialog.querySelectorAll<HTMLButtonElement>("button"),
+        ].filter((control) => control.getClientRects().length > 0);
+        const first = controls[0];
+        const last = controls.at(-1);
+        const active = document.activeElement;
+        const atEdge = event.shiftKey
+          ? active === dialog || active === first
+          : active === last;
+        const target = event.shiftKey ? last : first;
+        if (atEdge && target !== undefined) {
+          event.preventDefault();
+          target.focus();
+        }
       }
     });
 
@@ -923,6 +944,12 @@ const copy = await getViewerCopy();
 
     &[open] {
       display: flex;
+    }
+
+    /* Focused on open, but it isn't a control: no ring (DESIGN.md §3). */
+    &:focus,
+    &:focus-visible {
+      outline: none;
     }
 
     &::backdrop {
