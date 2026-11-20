@@ -1,10 +1,14 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 
-type Props = HTMLAttributes<"a">;
+// quiet: among facts, not in a sentence. The link keeps the text's colour
+// and a grey underline that darkens.
+type Props = HTMLAttributes<"a"> & { quiet?: boolean };
+
+const { quiet = false, ...attributes } = Astro.props;
 ---
 
-<a class="text-link" {...Astro.props}>
+<a class:list={["text-link", { quiet }]} {...attributes}>
   <slot />
 </a>
 
@@ -34,9 +38,22 @@ type Props = HTMLAttributes<"a">;
         text-decoration-thickness: var(--underline-strong);
       }
     }
+  }
+
+  .quiet {
+    color: inherit;
+    text-decoration-color: var(--line-strong);
 
     &:focus-visible {
-      border-radius: var(--r-sm);
+      text-decoration-color: currentColor;
+      text-decoration-thickness: var(--hairline);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        text-decoration-color: currentColor;
+        text-decoration-thickness: var(--hairline);
+      }
     }
   }
 </style>
