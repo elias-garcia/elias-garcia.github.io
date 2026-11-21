@@ -10,6 +10,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "eslint .",
     "test": "node --test \"src/lib/*.test.ts\"",
     "html": "html-validate dist",

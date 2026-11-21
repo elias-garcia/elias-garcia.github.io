@@ -21,6 +21,7 @@ Markup follows the HTML specification, even where the reference HTML does someth
 - Astro 7 with static output, TypeScript (`astro/tsconfigs/strictest`), MDX, plain CSS with no framework.
 - Icons: Lucide through `@lucide/astro`.
 - ESLint, Prettier, html-validate, Playwright + axe, Lighthouse CI.
+- GitHub Actions: `ci.yml` runs every check below on pull requests, plus the internal links and anchors (lychee); `links.yml` checks the links to other sites on the first of each month.
 - Node 26, pinned with `engines.node`.
 - Vercel through Git: `main` deploys to production (`eliasgarcia.dev`), other branches get previews. The build is plain static files in `dist/`, with no adapter.
 
