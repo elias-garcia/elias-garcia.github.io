@@ -20,15 +20,15 @@ Markup follows the HTML specification, even where the reference HTML does someth
 
 - Astro 7 with static output, TypeScript (`astro/tsconfigs/strictest`), MDX, plain CSS with no framework.
 - Icons: Lucide through `@lucide/astro`.
-- ESLint, Prettier, Playwright + axe, Lighthouse CI.
+- ESLint, Prettier, html-validate, Playwright + axe, Lighthouse CI.
 - Node 26, pinned with `engines.node`.
 - Vercel through Git: `main` deploys to production (`eliasgarcia.dev`), other branches get previews. The build is plain static files in `dist/`, with no adapter.
 
 ## Verify before finishing
 
-`npm run format && npm run lint && npm test && npm run build && npm run a11y`
+`npm run format && npm run lint && npm test && npm run build && npm run html && npm run a11y`
 
-`test` runs the unit tests (`src/lib/*.test.ts`, Node's own test runner); `build` type-checks with `astro check`; `a11y` runs axe on every page and state, in both themes and at three widths.
+`test` runs the unit tests (`src/lib/*.test.ts`, Node's own test runner); `build` type-checks with `astro check`; `html` validates the built pages against the HTML specification (html-validate's `standard` preset); `a11y` runs axe on every page and state, in both themes and at three widths.
 
 ## Principles
 

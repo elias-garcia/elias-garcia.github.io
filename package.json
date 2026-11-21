@@ -12,6 +12,7 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "test": "node --test \"src/lib/*.test.ts\"",
+    "html": "html-validate dist",
     "a11y": "node scripts/a11y.ts",
     "lighthouse": "lhci autorun",
     "lighthouse:open": "lhci open"
@@ -40,6 +41,7 @@
     "@types/node": "^26.6.6",
     "eslint": "^10.14.0",
     "eslint-plugin-astro": "^3.2.1",
+    "html-validate": "^11.21.1",
     "jiti": "^2.7.0",
     "playwright": "^1.65.0",
     "prettier": "^3.10.0",

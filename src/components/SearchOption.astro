@@ -3,8 +3,9 @@ import { linkTarget } from "../lib/links.ts";
 
 // A row in the search list. A link goes somewhere; without `href` the row is
 // an action the dialog's script handles (`action`). The icon is the slot.
-// Rows in a <template> start empty (a link row with an empty `href`); the
-// script fills the `data-` parts and the `href`.
+// Rows in a <template> start empty: a link row with an empty `href` renders
+// a link without one (an empty `href` isn't a valid one), and the script
+// fills the `data-` parts and the `href`.
 type Props = {
   title?: string;
   line?: string;
@@ -37,7 +38,7 @@ const Row = href === undefined ? "div" : "a";
   role="option"
   aria-selected="false"
   tabindex="-1"
-  href={href}
+  href={href === "" ? undefined : href}
   download={download || undefined}
   data-astro-prefetch={download ? "false" : undefined}
   data-action={action}
