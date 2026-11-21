@@ -19,52 +19,65 @@ const { title, summary, description, status, year, illustration } =
   project.data;
 const href = hasCaseStudy(project) ? routes.project(project.id) : undefined;
 const copy = await getProjectCopy();
-const Tag = href === undefined ? "div" : "a";
+const Title = tile ? "h3" : "h2";
 ---
 
-<li class:list={["cell", { wide }]}>
-  <Tag class="card" href={href}>
-    <ProjectPreview illustration={illustration} wide={wide} />
-    <div class="head">
-      {tile ? (
-        <h3 class="title">{title}</h3>
-      ) : (
-        <div class="title-row">
-          <h2 class="title">{title}</h2>
-          {href !== undefined && (
-            <span class="go">
-              {copy.view}
-              <Icon name="chevron-right" size="sm" class="chevron" />
-            </span>
-          )}
-        </div>
+<li class:list={["card", { wide, linked: href !== undefined }]}>
+  <ProjectPreview illustration={illustration} wide={wide} />
+  <div class="head">
+    <div class="title-row">
+      <Title class="title">
+        {href === undefined ? (
+          title
+        ) : (
+          <a class="title-link" href={href}>
+            {title}
+          </a>
+        )}
+      </Title>
+      {!tile && href !== undefined && (
+        <span class="go" aria-hidden="true">
+          {copy.view}
+          <Icon name="chevron-right" size="sm" class="chevron" />
+        </span>
       )}
-      <ProjectStatus status={status} year={year} />
     </div>
-    <p class="description">{tile ? summary : description}</p>
-  </Tag>
+    <ProjectStatus status={status} year={year} />
+  </div>
+  <p class="description">{tile ? summary : description}</p>
 </li>
 
 <style>
-  .cell,
+  /* The card sets its own row gap, so the page's grid gap only spaces
+     cards apart. */
   .card {
+    position: relative;
     display: grid;
     grid-row: span 3;
     grid-template-rows: subgrid;
     align-content: start;
+    row-gap: var(--space-2);
+
+    :global(.preview) {
+      margin-block-end: var(--space-2);
+    }
   }
 
   .wide {
     grid-column: 1 / -1;
   }
 
-  /* The card sets its own row gap, so the page's grid gap only spaces
-     cards apart. */
-  .card {
-    row-gap: var(--space-2);
+  /* The link is the title alone, so that is all a screen reader reads as
+     its name, and it covers the whole card: one card, one action. */
+  .title-link {
+    /* Not positioned, despite the touch target rule in global.css, so the
+       ::after covers the card instead of the link. */
+    position: static;
 
-    :global(.preview) {
-      margin-block-end: var(--space-2);
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
     }
   }
 
@@ -107,27 +120,66 @@ const Tag = href === undefined ? "div" : "a";
     }
   }
 
-  /* The title follows the link colour; the label turns with it. */
-  .card {
-    &:focus-visible {
+  /* Focused, the ring goes round the card, the title takes the link colour
+     and the label turns with it. */
+  .title-link:focus-visible {
+    outline: none;
+    color: var(--accent);
+
+    &::after {
       border-radius: var(--r-lg);
-      color: var(--accent);
+      outline: var(--focus-ring) solid var(--accent);
+      outline-offset: var(--focus-offset);
     }
+  }
 
-    &:focus-visible .go {
+  .linked:has(.title-link:focus-visible) .go {
+    color: var(--accent);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .linked:hover .go {
       color: var(--accent);
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      &:hover .go {
-        color: var(--accent);
-      }
     }
   }
 
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .card:hover .chevron {
+    .linked:hover .chevron {
       translate: var(--nudge) 0;
+    }
+  }
+
+  /* The preview reacts to the card's link: hover never moves the card, its
+     border darkens and its illustration plays, as it does while focused. */
+  .linked {
+    :global(.preview) {
+      transition: border-color var(--dur) var(--ease);
+    }
+
+    &:has(.title-link:focus-visible) :global([data-loop]) {
+      animation-play-state: running;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover :global(.preview) {
+        border-color: var(--line-strong);
+      }
+
+      &:hover :global([data-loop]) {
+        animation-play-state: running;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      :global(.preview) {
+        transition:
+          border-color var(--dur) var(--ease),
+          scale var(--dur) var(--ease-settle);
+      }
+
+      &:active :global(.preview) {
+        scale: var(--press-scale-tile);
+      }
     }
   }
 

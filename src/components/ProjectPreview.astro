@@ -51,42 +51,8 @@ const Illustration = illustrations[illustration];
     }
   }
 
-  /* Inside a link (a tile or card), the preview reacts to it, and the
-     illustration only moves while the link is hovered or focused. */
+  /* The illustration only moves when the card it's in says so. */
   .preview :global([data-loop]) {
     animation-play-state: paused;
-  }
-
-  :global(a:focus-visible) > .preview :global([data-loop]) {
-    animation-play-state: running;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    :global(a:hover) > .preview :global([data-loop]) {
-      animation-play-state: running;
-    }
-  }
-
-  /* Hover never moves the card: its border darkens and its preview plays. */
-  @media (hover: hover) and (pointer: fine) {
-    :global(a:hover) > .preview {
-      border-color: var(--line-strong);
-    }
-  }
-
-  :global(a) > .preview {
-    transition: border-color var(--dur) var(--ease);
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    :global(a) > .preview {
-      transition:
-        border-color var(--dur) var(--ease),
-        scale var(--dur) var(--ease-settle);
-    }
-
-    :global(a:active) > .preview {
-      scale: var(--press-scale-tile);
-    }
   }
 </style>

@@ -48,6 +48,10 @@ One page per step. Each step builds the components that page needs (DESIGN.md §
 
 - **OS text scaling** (`<meta name="text-scale" content="scale">`, Chrome and Edge 146+). Not opted in yet: with the default text size doubled, phone-width layouts break (the header's links run off the side, search rows squeeze their text, the contact email overflows). Desktop widths are fine. Fix those, test every page at 200% and 320px, then add the tag.
 
+## Decided against
+
+- **Cards as `<article>`.** List plus headings already provide the navigation; `<article>` would add a redundant announcement per card with no practical gain.
+
 ## Content still missing
 
 - The posts marked `draft: true`.

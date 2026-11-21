@@ -13,7 +13,7 @@
         return;
       }
       const preview = document.querySelector(
-        `a[href="${new URL(url).pathname}"] > [data-morph]`,
+        `li:has(a[href="${new URL(url).pathname}"]) > [data-morph]`,
       );
       if (preview === null) {
         return;
