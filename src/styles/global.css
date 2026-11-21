@@ -38,6 +38,12 @@ button {
   font: inherit;
 }
 
+/* The browser's bold is 700, which isn't one of the three weights. */
+b,
+strong {
+  font-weight: var(--weight-semibold);
+}
+
 img:not([src$=".svg"]) {
   filter: brightness(var(--photo-brightness));
 }
