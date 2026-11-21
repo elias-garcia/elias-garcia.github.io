@@ -124,7 +124,9 @@ const shareImage = pageShareImage ?? {
     <script is:inline>
       // The search shortcut is ⌘K on Apple's systems and Ctrl K elsewhere;
       // set before the first render so the header button doesn't change.
-      if (!/Mac|iPhone|iPad|iPod/.test(navigator.platform)) {
+      // No API says which modifier a keyboard has, so the system is read
+      // from the user agent: every browser keeps it there.
+      if (!/Mac|iPhone|iPad|iPod/.test(navigator.userAgent)) {
         document.documentElement.dataset.shortcut = "other";
       }
     </script>
