@@ -22,7 +22,7 @@ const reviews = formatCount(rating.reviews, copy.reviewCount);
   <MetaItem>
     <VisuallyHidden>{fill(copy.rating, { score, reviews })}</VisuallyHidden>
     <span class="rating" aria-hidden="true">
-      <Icon name="star" size="sm" class="star" />
+      <Icon name="star" size="sm" filled class="star" />
       <span class="score">{score}</span>
       {fill(copy.reviews, { reviews })}
     </span>

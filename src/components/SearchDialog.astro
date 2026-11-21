@@ -94,7 +94,7 @@ if (email === undefined) {
       </div>
       {sections.map(({ label, href, description }) => (
         <SearchOption title={label} line={description} href={href}>
-          <Icon name="go" />
+          <Icon name="arrow-right" />
         </SearchOption>
       ))}
     </div>
@@ -214,17 +214,17 @@ if (email === undefined) {
 
   <template data-search-template="posts">
     <SearchOption href="" fullLine>
-      <Icon name="post" />
+      <Icon name="file-text" />
     </SearchOption>
   </template>
   <template data-search-template="projects">
     <SearchOption href="" fullLine>
-      <Icon name="project" />
+      <Icon name="layout-grid" />
     </SearchOption>
   </template>
   <template data-search-template="topics">
     <SearchOption href="">
-      <Icon name="topic" />
+      <Icon name="hash" />
     </SearchOption>
   </template>
 </dialog>

@@ -1,63 +1,81 @@
 ---
 import type { HTMLAttributes } from "astro/types";
-import ChevronDown from "../assets/icons/chevron-down.svg";
-import ChevronLeft from "../assets/icons/chevron-left.svg";
-import ChevronRight from "../assets/icons/chevron-right.svg";
-import ChevronRightSmall from "../assets/icons/chevron-right-small.svg";
-import Close from "../assets/icons/close.svg";
-import Download from "../assets/icons/download.svg";
-import External from "../assets/icons/external.svg";
-import Go from "../assets/icons/go.svg";
-import Mail from "../assets/icons/mail.svg";
-import Markdown from "../assets/icons/markdown.svg";
-import Pdf from "../assets/icons/pdf.svg";
-import Play from "../assets/icons/play.svg";
-import Plus from "../assets/icons/plus.svg";
-import Post from "../assets/icons/post.svg";
-import Project from "../assets/icons/project.svg";
-import Return from "../assets/icons/return.svg";
-import Rss from "../assets/icons/rss.svg";
-import Search from "../assets/icons/search.svg";
-import Star from "../assets/icons/star.svg";
-import Topic from "../assets/icons/topic.svg";
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import ChevronDown from "@lucide/astro/icons/chevron-down";
+import ChevronLeft from "@lucide/astro/icons/chevron-left";
+import ChevronRight from "@lucide/astro/icons/chevron-right";
+import CornerDownLeft from "@lucide/astro/icons/corner-down-left";
+import Download from "@lucide/astro/icons/download";
+import FileCode from "@lucide/astro/icons/file-code";
+import FileText from "@lucide/astro/icons/file-text";
+import Hash from "@lucide/astro/icons/hash";
+import LayoutGrid from "@lucide/astro/icons/layout-grid";
+import Mail from "@lucide/astro/icons/mail";
+import Play from "@lucide/astro/icons/play";
+import Plus from "@lucide/astro/icons/plus";
+import Rss from "@lucide/astro/icons/rss";
+import Search from "@lucide/astro/icons/search";
+import Star from "@lucide/astro/icons/star";
+import X from "@lucide/astro/icons/x";
 
-// Every icon. Decorative: the control or link it sits in carries the name.
-// Most are drawn on a 16px grid; a few small markers on a 12px one. `size`
-// is how large an icon shows, whatever its grid.
+// Every icon, under its Lucide name (DESIGN.md §2.7). Decorative: the
+// control or link it sits in carries the name.
 const icons = {
+  "arrow-right": ArrowRight,
+  "arrow-up-right": ArrowUpRight,
   "chevron-down": ChevronDown,
   "chevron-left": ChevronLeft,
   "chevron-right": ChevronRight,
-  "chevron-right-small": ChevronRightSmall,
-  close: Close,
+  "corner-down-left": CornerDownLeft,
   download: Download,
-  external: External,
-  go: Go,
+  "file-code": FileCode,
+  "file-text": FileText,
+  hash: Hash,
+  "layout-grid": LayoutGrid,
   mail: Mail,
-  markdown: Markdown,
-  pdf: Pdf,
   play: Play,
   plus: Plus,
-  post: Post,
-  project: Project,
-  return: Return,
   rss: Rss,
   search: Search,
   star: Star,
-  topic: Topic,
+  x: X,
 };
 
-type Props = HTMLAttributes<"svg"> & {
+// The width and height attributes, for a page whose styles haven't loaded
+// (Lucide writes 24 otherwise): the same sizes as --icon-md and --icon-sm.
+const pixels = { md: 16, sm: 12 };
+
+// What a component may pass on to the <svg>. Without the icon's own props,
+// and without `color` and `title`, which Lucide types more narrowly.
+type Props = Omit<
+  HTMLAttributes<"svg">,
+  "name" | "size" | "color" | "title" | "stroke-width"
+> & {
   name: keyof typeof icons;
   size?: "md" | "sm";
+  filled?: boolean;
 };
 
-const { name, size = "md", class: className, ...attributes } = Astro.props;
-const Svg = icons[name];
+const {
+  name,
+  size = "md",
+  filled = false,
+  class: className,
+  ...attributes
+} = Astro.props;
+const Lucide = icons[name];
 ---
 
-<Svg
-  class:list={["icon", { sm: size === "sm" }, className]}
+<Lucide
+  class:list={[
+    "icon",
+    { sm: size === "sm", filled, dotted: name === "rss" },
+    className,
+  ]}
+  size={pixels[size]}
+  stroke-width={1.5}
+  nonScalingStroke
   aria-hidden="true"
   {...attributes}
 />
@@ -68,15 +86,20 @@ const Svg = icons[name];
     flex: none;
     inline-size: var(--icon-md);
     block-size: var(--icon-md);
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
   }
 
   :where(.sm) {
     inline-size: var(--icon-sm);
     block-size: var(--icon-sm);
+  }
+
+  :where(.filled) {
+    fill: currentColor;
+  }
+
+  /* The RSS icon's dot is a dot, not a ring (DESIGN.md §2.7). */
+  :where(.dotted) :global(circle) {
+    fill: currentColor;
+    stroke: none;
   }
 </style>

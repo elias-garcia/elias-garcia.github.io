@@ -110,13 +110,13 @@ export async function getCvFormats() {
       ...pdf,
       href: routes.cvPdf,
       size: formatFileSize(sizes.pdf),
-      icon: "pdf",
+      icon: "file-text",
     },
     {
       ...markdown,
       href: routes.cvMarkdown,
       size: formatFileSize(sizes.markdown),
-      icon: "markdown",
+      icon: "file-code",
     },
   ] as const;
 }

@@ -177,16 +177,43 @@ The search dialog, the image viewer and the Download CV menu sit in the browser'
 
 ### 2.7 Icons
 
-Two sizes, one weight: 1.5px stroke, round caps and joins, `currentColor`.
+**All icons come from [Lucide](https://lucide.dev), through its official Astro package `@lucide/astro`.** Never draw a new icon by hand: pick the closest Lucide icon. The only drawings that aren't Lucide are the logo and the project illustrations.
+
+- **Why Lucide:** its style is ours: strokes, round caps and joins, quiet. Each icon is an Astro component that renders an inline SVG at build time, so no icon JavaScript ships and only the icons you import end up in the build.
+- **One weight, two sizes.** Lucide draws on a 24px grid with a 2px stroke, so at 16px it would render 1.33px. Always pass a stroke width of 1.5 (`stroke-width={1.5}` in the Astro package) with `nonScalingStroke`, which keeps the stroke at exactly 1.5px at any size. Colour is `currentColor`.
 
 | Token | Size | Use |
 |---|---|---|
 | `icon-md` | 16px | Icons on their own or in a control: buttons, search result tiles, menu items, header search |
-| `icon-sm` | 12px | Small markers beside text: the see-more and "View project" chevrons, the external-link arrow, the course rating's star, the footnote's return arrow. Never a tap target on their own |
+| `icon-sm` | 12px | The inline markers, 4px from their word: the see-more chevron, the external-link arrow, the footnote back-link, the rating star. Never a tap target on their own |
 
-Icons always sit next to a text label, or carry an accessible name when alone. Decorative icons get `aria-hidden="true"`.
+One `Icon` component (`src/components/Icon.astro`) draws them all: `<Icon name="search" />`, with the Lucide name, `size="sm"` for 12px and `filled` for the two filled ones. It imports each icon it uses by name, sets `stroke-width` 1.5, `nonScalingStroke` and `aria-hidden`, and passes on the class a component gives it. Never draw an icon inline in a component.
 
-One `Icon` component draws them all: each icon is a file in `src/assets/icons/`, inlined as an `<svg>` with the stroke above. Never draw an icon inline in a component. Filled shapes inside an icon (the RSS dot, the play triangle, the star, the Markdown mark) carry their own `fill` in the file.
+**The icons in use** (search results are pages, posts, projects and three actions: email, Download CV, RSS; talks and external profiles aren't searched):
+
+| Where | Lucide icon | Size |
+|---|---|---|
+| Header search button, search input | `search` | 16 |
+| Close (search, photo viewer) | `x` | 16 |
+| Photo viewer ‹ ›, previous / next cards, back links | `chevron-left`, `chevron-right` | 16 |
+| Download CV button (open / closed) | `chevron-down` (rotates 180°) | 16 |
+| Work row expand | `plus` (rotates into ×) | 16 |
+| Download CV action in search | `download` | 16 |
+| PDF format, posts in search results | `file-text` | 16 |
+| Markdown format, Copy page | `file-code` | 16 |
+| Projects in search results | `layout-grid` | 16 |
+| Topic suggestions when a search finds nothing | `hash` | 16 |
+| Send me an email | `mail` | 16 |
+| Subscribe with RSS (button and search action) | `rss` (its dot is filled) | 16 |
+| Go to (pages) in search | `arrow-right` | 16 |
+| Video play button | `play` (filled) | 16 |
+| Copy (code examples on the Foundations board) | `copy` | 16 |
+| External-link arrow after a word | `arrow-up-right` | 12 |
+| See-more and "View project" chevron | `chevron-right` | 12 |
+| Footnote back-link | `corner-down-left` | 12 |
+| Course rating | `star` (filled) | 12 |
+
+Icons always sit next to a text label, or carry an accessible name when alone. Decorative icons get `aria-hidden="true"`. In the reference pages each icon carries `data-icon="<lucide name>"`.
 
 ### 2.8 Fixed sizes and breakpoint
 
@@ -255,9 +282,9 @@ Each component appears exactly once in the design system. Live versions, split b
 - **Menu button: Download CV.** Label + chevron (no leading icon); the chevron rotates 180° while open. Opens a 320px menu under the button (`--r-lg`, `--shadow-overlay`): opacity and scale .97→1 from its top-left corner, dropping 4px into place, over 150ms `--ease-settle`, as a transition with `@starting-style`; it closes instantly, and with reduced motion it only fades in. **Opened from the keyboard** (Enter or Space on the button, a click whose `detail` is 0) it appears at once, with no transition, and the chevron flips at once; closed with Esc or Tab it goes at once too. A mouse or touch open still grows in. Its rows highlight instantly. Two links laid out like search rows (icon tile, title, one description line) but at the **compact-control sizes**, because the menu hangs off a 14px button: format name 14, size 12 `--text-3`, description 12 `--text-2`: **PDF · 120 KB**, "Formatted for reading, printing and sharing" and **Markdown · 4 KB**, "Plain text for AI tools and agents". It is a short list of links in a popover, not a `role="menu"`: Tab moves through the links. Esc or choosing a format closes it and returns focus to the button; a click outside or tabbing past the last link closes it and leaves focus where the visitor moved it. It also closes as soon as the page scrolls (it would drift from its button and cover the sticky header), except while focus is in the menu, so tabbing through it keeps it open; a mouse wheel always closes it. **In a window too short for it** (a small phone in landscape) the page scrolls just enough to show the whole menu with 16px under it as it opens: smoothly, or at once with reduced motion or when opened from the keyboard; that scroll doesn't close it. It never flips above the button (there isn't room under the sticky header). Without Popover support the two formats stay a plain bordered list under the button, which then opens nothing and loses its chevron: it reads as the list's label. File sizes are computed at build time.
 - **Chip.** A set of links that filters a list (Writing topics), each to its own page. 32px, `--control`, label + count badge. Selected (`aria-current="page"`): `--tint` fill, `--accent` label, count badge `--accent` fill with `--bg` text. Never alone, never for actions. "All" first, selected on `/writing`.
 - **See-more link.** Muted 14px text + 12px chevron; on hover the text darkens, a 1px underline fades in (an `::after` from opacity 0 to 1, 150ms `--ease-settle`) and the chevron nudges 2px. Only for pages inside the site ("All projects", "All posts").
-- **Back link + Copy page.** Top of posts: "‹ Writing" on the left, **Copy page** button on the right with the Markdown mark icon; label changes to "Copied" for 1.5s (see **Copy buttons**); `aria-label="Copy page as Markdown"`. Copies the post's Markdown (generate it at build time from the MDX).
+- **Back link + Copy page.** Top of posts: "‹ Writing" on the left, **Copy page** button on the right with the `file-code` icon; label changes to "Copied" for 1.5s (see **Copy buttons**); `aria-label="Copy page as Markdown"`. Copies the post's Markdown (generate it at build time from the MDX).
 - **Copy buttons** (Copy page, the code blocks' Copy). "Copy" and "Copied" sit in one grid cell (`display: inline-grid`, `grid-area: 1 / 1` on each, centred), so the button always has the width of the longer of the two and never jumps. Copying swaps them: the outgoing label goes to opacity 0, `blur(2px)` and scale .96 while the incoming one returns to opacity 1, no blur, scale 1 (150ms `--ease-settle`, transitions so a second click mid-swap reverses smoothly); after 1.5s it swaps back. The hidden labels are `aria-hidden="true"`. While "Copied" (or the failure) shows, it is the button's `aria-label` too, so the name always holds the text on screen (WCAG 2.5.3); then the name returns to "Copy page as Markdown" or "Copy css code". Screen readers don't reliably read a name change on a focused button, so a polite `role="status"` live region next to the button announces "Copied" as well, and the failure below (a repeat is announced too). **When the copy fails** (the browser refuses clipboard access, or the page's Markdown can't be fetched) the label turns to "Couldn't copy" for the same 1.5s and the same region announces it. It is rare, so its label reserves no room: the button grows to fit it. With reduced motion, opacity only.
-- **External-link arrow.** A 12px arrow icon (`M4.5 3.5h4v4M8.5 3.5l-5 5`), 4px after the word, `--text-3` stroke, link colour on hover and a 1px up-right nudge (pointer devices only). Only on standalone links that leave the site: contact rows, the course row, project facts. Links inside prose never get it. Screen readers hear the link text, plus "(opens in a new tab)" when the link opens one.
+- **External-link arrow.** A 12px arrow icon (Lucide `arrow-up-right`), 4px after the word, `--text-3` stroke, link colour on hover and a 1px up-right nudge (pointer devices only). Only on standalone links that leave the site: contact rows, the course row, project facts. Links inside prose never get it. Screen readers hear the link text, plus "(opens in a new tab)" when the link opens one.
 
 ### Lists and cards
 - **List row.** 112px date gutter (`<time>` in `--text-3`), title 16/500, one second line at 16 in `--text-2`, 12px vertical padding, no dividers. Rows are `<li>` in a `<ul role="list">`. When one row is hovered, the other link rows fade to .45 (pointer devices only). The fade covers the whole list the row belongs to: on Writing that is every post across all year groups (the years are one list split by headings; scope the rule to the container of the year groups); on Home each section (Writing, Speaking, Teaching, Work) fades only its own rows. **A row is a link only if it has somewhere to go; otherwise it is a plain row**: not an `<a>`, no hover, not focusable.
@@ -290,7 +317,7 @@ Each component appears exactly once in the design system. Live versions, split b
   - **First-line alignment:** the head is a grid aligned to the start; the date and the company share 16px / 24px; the 16px +/× sits in the first line and is centred on it, so all three share the first line's centre. On phones the date and the icon share the first line the same way. Never centre the icon against the whole two-line head.
 - **Project tile (Home).** Preview (`--surface`, `--line` border, `--r-lg`, nothing on top of it), then the title (`h3`), the project status line, and one line of description. One per row with a 16:7 preview below 640px, three in a row with 4:3 from 640px; never two columns. `grid-template-rows: subgrid` keeps titles aligned. On hover its border darkens to `--line-strong` and its preview plays (pointer only); it never lifts.
 - **Project card (Projects).** One link per card (the whole card). Preview with nothing on top of it, then the title row, the project status line, the description. No stack/tags line. On hover the border darkens to `--line-strong`, the preview plays and the "View project" arrow nudges (pointer only); the card never lifts.
-  - **Title row (from 640px):** title (`h2`) on the left, the label **"View project"** (14px, `--text-2`) with a 12px chevron (`M4.5 3l3 3-3 3`) on the right, on one line; the label is styled text inside the card link, never a separate link. Same label on every card.
+  - **Title row (from 640px):** title (`h2`) on the left, the label **"View project"** (14px, `--text-2`) with a 12px chevron (Lucide `chevron-right`) on the right, on one line; the label is styled text inside the card link, never a separate link. Same label on every card.
   - **Hover and keyboard focus:** title and label turn `--accent` together (the card is a link, so it follows the site-wide link hover) and the chevron slides 2px right (150ms, `--ease-settle`), like the see-more links. Pointer devices only for the movement; still with reduced motion.
   - **Phones (below 640px):** the label and chevron are hidden; the title has the whole row and the card itself is the link.
   - **Grid:** one column below 640px, two from 640px. From 640px, with an odd count the first card spans both columns (featured: 16:7 preview, wider illustration; its title is 16/500 like every other card, and descriptions are 16 `--text-2`); pairs use 4:3 previews. Below 640px every card is equal: one per row, 16:7 previews, 16px titles, and the featured card's wider illustration is scaled to match the others.
@@ -434,6 +461,7 @@ Back link + Copy page, title (display), metadata line, then the article (max 640
 
 Every page must pass axe (WCAG 2.2 AA + best practice) in light and dark, at 1280, 390 and 320px, with no horizontal scroll.
 
+- **Weights:** `b` and `strong` are 600 everywhere (base rule), `th` is 500; nothing falls back to the browser's 700.
 - **Forced colours** (Windows contrast themes, `@media (forced-colors: active)`): the browser replaces every colour that isn't a system colour, fills included, so nothing may rely on a fill alone.
   - The accent tokens map to `LinkText`, which keeps what is drawn with them: the availability and status dots, the reading progress, a checked task box. The hover and current-page underlines are drawn with `currentColor`, which isn't a system colour, so they are set to `LinkText` too.
   - Buttons, chips, footnote markers and search's small controls get a 1px `ButtonBorder` edge; the selected chip a 2px `Highlight` border; the selected search row and the note you arrive at a `Highlight` outline; a highlighted code line a `Highlight` edge.
