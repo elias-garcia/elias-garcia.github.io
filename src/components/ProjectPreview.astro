@@ -1,0 +1,58 @@
+---
+import type { CollectionEntry } from "astro:content";
+import PolFundingSpreads from "./illustrations/PolFundingSpreads.astro";
+import Roleburn from "./illustrations/Roleburn.astro";
+import WorkIssue from "./illustrations/WorkIssue.astro";
+
+type Props = {
+  illustration: CollectionEntry<"projects">["data"]["illustration"];
+  // The featured card on Projects: 16:7 from 640px (every preview is 16:7 below it).
+  wide?: boolean;
+};
+
+const { illustration, wide = false } = Astro.props;
+
+const illustrations = {
+  roleburn: Roleburn,
+  "work-issue": WorkIssue,
+  "pol-funding-spreads": PolFundingSpreads,
+};
+
+const Illustration = illustrations[illustration];
+---
+
+<div
+  class:list={["preview", { wide }]}
+  data-morph={illustration === "roleburn" ? "roleburn-preview" : undefined}
+>
+  {illustration === "roleburn" ? <Roleburn wide={wide} /> : <Illustration />}
+</div>
+
+<style>
+  .preview {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+
+    &.wide {
+      aspect-ratio: 16 / 7;
+    }
+
+    @media (width < 40rem) {
+      aspect-ratio: 16 / 7;
+    }
+
+    :global(.illustration) {
+      display: block;
+      inline-size: 100%;
+      block-size: 100%;
+    }
+  }
+
+  /* The illustration only moves when the card it's in says so. */
+  .preview :global([data-loop]) {
+    animation-play-state: paused;
+  }
+</style>

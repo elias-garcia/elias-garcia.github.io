@@ -1,0 +1,32 @@
+home:
+  # Under the name; {role}, {city} and {country} come from the profile.
+  role: "{role} in {city}, {country}"
+  # Section titles. Projects and Writing take their page's title. The site's
+  # share image lists `speaking` too.
+  about: About
+  work: Work experience
+  speaking: Speaking
+  teaching: Teaching
+  education: Education
+  contact: Contact
+  # The menu button under the name; search offers the same download.
+  downloadCv: Download CV
+  allProjects: All projects
+  allPosts: All posts
+  # A degree; {title} and {school} come from education.yaml.
+  degree: "{title} at {school}"
+  # The end of a range of years that hasn't ended.
+  present: Now
+  # A course's rating line. The first is read by screen readers in place of
+  # the star and the numbers. {reviews} is the count in words, from
+  # `reviewCount`; counts go by plural category ("one", "other").
+  rating: "Rated {score} out of 5 from {reviews}."
+  reviews: "({reviews})"
+  reviewCount:
+    one: "{count} review"
+    other: "{count} reviews"
+  lessonCount:
+    one: "{count} lesson"
+    other: "{count} lessons"
+  # The work section's title in the Markdown CV.
+  experience: Experience

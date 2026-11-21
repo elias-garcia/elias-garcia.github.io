@@ -1,0 +1,82 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+// onSurface: on a grey surface (a code block), the fill turns --bg.
+type Props = { onSurface?: boolean } & (
+  | (HTMLAttributes<"button"> & { href?: never })
+  | (HTMLAttributes<"a"> & { href: string })
+);
+
+const { class: className, onSurface = false, ...attributes } = Astro.props;
+---
+
+{attributes.href === undefined ? (
+  <button
+    class:list={["button", { "on-surface": onSurface }, className]}
+    type="button"
+    {...attributes}
+  >
+    <slot />
+  </button>
+) : (
+  <a
+    class:list={["button", { "on-surface": onSurface }, className]}
+    {...attributes}
+  >
+    <slot />
+  </a>
+)}
+
+<style>
+  .button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-block-size: var(--control-h);
+    padding: var(--space-1) var(--space-3);
+    border: 0;
+    border-radius: var(--r-full);
+    background: var(--control);
+    color: var(--text-2);
+    font-size: var(--text-small);
+    line-height: var(--leading-none);
+    cursor: pointer;
+    /* A link button's label isn't selected by a long press either. */
+    -webkit-user-select: none;
+    user-select: none;
+    transition:
+      background var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+
+    &.on-surface {
+      background: var(--bg);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: var(--control-hover);
+        color: var(--text);
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        background var(--dur) var(--ease),
+        color var(--dur) var(--ease),
+        scale var(--dur) var(--ease-settle);
+
+      &:active {
+        scale: var(--press-scale);
+      }
+    }
+  }
+
+  /* Its fill is gone in forced colours: a border shows it's a button. */
+  @media (forced-colors: active) {
+    .button {
+      border: var(--hairline) solid ButtonBorder;
+    }
+  }
+</style>

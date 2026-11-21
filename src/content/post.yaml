@@ -1,0 +1,32 @@
+post:
+  # A post's reading time: in its header, on Writing and on its share image.
+  readingTime: "{minutes} min read"
+  # The copy buttons: Copy page at the top of a post, Copy on each code block.
+  # A button's label turns to `copied` for a moment after copying.
+  copyPage: Copy page
+  copyPageName: Copy page as Markdown
+  copyCode: Copy
+  codeName: "{language} code"
+  # The label of a code block whose fence names no language (it has no
+  # header bar).
+  plainCodeName: Code
+  copyCodeName: "Copy {language} code"
+  copied: Copied
+  # When the browser refuses the copy; the button grows to fit it.
+  copyFailed: Couldn't copy
+  # A post's topic link, for screen readers; {topic} is the topic.
+  topicName: "More posts about {topic}"
+  # The links to the other posts, at the end of one.
+  more: More posts
+  previous: Previous post
+  next: Next post
+  # The footnotes' heading, and a marker's name; {number} is its number.
+  footnotes: Notes
+  footnoteName: "Note {number}"
+  # Read before a section heading's name, on its # link.
+  sectionLink: "Link to section:"
+  # A scrollable table's name, and a callout's label.
+  tableName: Table
+  callout: Note
+  # The easing demo's button.
+  replay: Replay

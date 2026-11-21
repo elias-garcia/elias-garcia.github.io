@@ -1,0 +1,59 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+// quiet: among facts, not in a sentence. The link keeps the text's colour
+// and a grey underline that darkens.
+type Props = HTMLAttributes<"a"> & { quiet?: boolean };
+
+const { quiet = false, ...attributes } = Astro.props;
+---
+
+<a class:list={["text-link", { quiet }]} {...attributes}>
+  <slot />
+</a>
+
+<style>
+  /* A link inside running text: indigo with a soft underline that is always
+     there. */
+  .text-link {
+    --underline-strong: 2px;
+
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-line);
+    text-decoration-thickness: var(--hairline);
+    text-underline-offset: var(--underline-offset);
+    transition:
+      text-decoration-color var(--dur) var(--ease),
+      text-decoration-thickness var(--dur) var(--ease);
+
+    &:focus-visible {
+      text-decoration-color: var(--accent);
+      text-decoration-thickness: var(--underline-strong);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: var(--underline-strong);
+      }
+    }
+  }
+
+  .quiet {
+    color: inherit;
+    text-decoration-color: var(--line-strong);
+
+    &:focus-visible {
+      text-decoration-color: currentColor;
+      text-decoration-thickness: var(--hairline);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        text-decoration-color: currentColor;
+        text-decoration-thickness: var(--hairline);
+      }
+    }
+  }
+</style>

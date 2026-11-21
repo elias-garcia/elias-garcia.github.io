@@ -1,0 +1,174 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import { render } from "astro:content";
+import Article from "../../components/Article.astro";
+import AuthorFooter from "../../components/AuthorFooter.astro";
+import BackLink from "../../components/BackLink.astro";
+import CopyButton from "../../components/CopyButton.astro";
+import Icon from "../../components/Icon.astro";
+import MetaItem from "../../components/MetaItem.astro";
+import MetaLine from "../../components/MetaLine.astro";
+import { mdxComponents } from "../../components/mdx/index.ts";
+import PreviousNext from "../../components/PreviousNext.astro";
+import StructuredData from "../../components/StructuredData.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  getPage,
+  getPostCopy,
+  getPosts,
+  getProfile,
+  getReadingTime,
+  getTopics,
+  topicLabel,
+} from "../../lib/content.ts";
+import { formatLongDate, formatMediumDate, isoDate } from "../../lib/format.ts";
+import { requireSite, toPath } from "../../lib/navigation.ts";
+import { routes } from "../../lib/routes.ts";
+import { blogPosting } from "../../lib/structured-data.ts";
+import { fill } from "../../lib/template.ts";
+
+export const getStaticPaths = (async () => {
+  const posts = await getPosts();
+  const topics = getTopics(posts);
+  return posts.map((post, index) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      topics,
+      // Posts are newest first: the previous post is the older one.
+      previous: posts[index + 1],
+      next: posts[index - 1],
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { post, topics, previous, next } = Astro.props;
+const { title, description, date, topic } = post.data;
+const [{ Content }, readingTime, profile, writing, copy] = await Promise.all([
+  render(post),
+  getReadingTime(post),
+  getProfile(),
+  getPage("writing"),
+  getPostCopy(),
+]);
+const label = topicLabel(topics, topic);
+const markdown = routes.postMarkdown(post.id);
+const shareImage = routes.postShareImage(post.id);
+const siteUrl = requireSite(Astro.site, "structured data");
+const structuredData = blogPosting(
+  post,
+  label,
+  profile,
+  siteUrl,
+  new URL(toPath(Astro.url.pathname), siteUrl),
+  new URL(shareImage, siteUrl),
+);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  readingProgress
+  shareImage={{ path: shareImage, alt: title }}
+  article={{ published: isoDate(date) }}
+>
+  <link slot="head" rel="alternate" type="text/markdown" href={markdown} />
+  <StructuredData slot="head" data={structuredData} />
+  <Article title={title}>
+    <BackLink slot="back" href={routes.writing} label={writing.title} />
+    <CopyButton
+      slot="action"
+      label={copy.copyPage}
+      name={copy.copyPageName}
+      url={markdown}
+    >
+      <Icon name="file-code" />
+    </CopyButton>
+    <p slot="intro" class="meta">
+      <MetaLine>
+        <MetaItem>
+          <time datetime={isoDate(date)}>
+            <span class="long">{formatLongDate(date)}</span>
+            <span class="short">{formatMediumDate(date)}</span>
+          </time>
+        </MetaItem>
+        <MetaItem>
+          <a
+            class="topic"
+            href={routes.topic(topic.slug)}
+            aria-label={fill(copy.topicName, { topic: label })}
+          >
+            {label}
+          </a>
+        </MetaItem>
+        <MetaItem>{readingTime}</MetaItem>
+      </MetaLine>
+    </p>
+    <Content components={mdxComponents} />
+    <Fragment slot="end">
+      <AuthorFooter name={profile.name} role={profile.role} />
+      <PreviousNext
+        name={copy.more}
+        previous={
+          previous && {
+            href: routes.post(previous.id),
+            title: previous.data.title,
+            label: copy.previous,
+          }
+        }
+        next={
+          next && {
+            href: routes.post(next.id),
+            title: next.data.title,
+            label: copy.next,
+          }
+        }
+      />
+    </Fragment>
+  </Article>
+</BaseLayout>
+
+<style>
+  .meta {
+    color: var(--text-3);
+    font-size: var(--text-small);
+  }
+
+  .short {
+    display: none;
+  }
+
+  @media (width < 40rem) {
+    .long {
+      display: none;
+    }
+
+    .short {
+      display: inline;
+    }
+  }
+
+  .topic {
+    color: var(--text-3);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: var(--underline-offset);
+    transition:
+      color var(--dur) var(--ease),
+      text-decoration-color var(--dur) var(--ease);
+
+    &:focus-visible {
+      color: var(--text);
+      text-decoration-color: currentColor;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: var(--text);
+        text-decoration-color: currentColor;
+      }
+    }
+  }
+</style>

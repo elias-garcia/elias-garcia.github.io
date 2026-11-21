@@ -1,0 +1,99 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getProjectCopy } from "../lib/content.ts";
+import { linkTarget } from "../lib/links.ts";
+import ExternalArrow from "./ExternalArrow.astro";
+import TextLink from "./TextLink.astro";
+
+type Props = Pick<
+  CollectionEntry<"projects">["data"],
+  "year" | "status" | "links"
+>;
+
+const { year, status, links } = Astro.props;
+const copy = await getProjectCopy();
+---
+
+<dl class="facts">
+  <div class="fact">
+    <dt>{copy.year}</dt>
+    <dd>
+      <time datetime={String(year)}>{year}</time>
+    </dd>
+  </div>
+  <div class="fact">
+    <dt>{copy.status}</dt>
+    <dd>{status}</dd>
+  </div>
+  <div class="fact links">
+    <dt>{copy.links}</dt>
+    <dd>
+      {links.length === 0 ? (
+        <span class="none">{copy.noLinks}</span>
+      ) : (
+        links.map(({ label, href }) => (
+          <TextLink quiet href={href} {...linkTarget(href)}>
+            {label}
+            <ExternalArrow href={href} />
+          </TextLink>
+        ))
+      )}
+    </dd>
+  </div>
+</dl>
+
+<style>
+  /* Phones: one fact per row, the label in the lists' date column. From
+     40rem: three columns, each label above its value. */
+  .facts {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+    border-block: var(--hairline) solid var(--line);
+
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-4) var(--space-6);
+    }
+  }
+
+  .fact {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-6);
+    min-inline-size: 0;
+
+    @media (width >= 40rem) {
+      flex-direction: column;
+      align-items: start;
+      gap: var(--space-1);
+    }
+  }
+
+  dt {
+    flex: 0 0 var(--gutter);
+    color: var(--text-3);
+    font-size: var(--text-small);
+
+    @media (width >= 40rem) {
+      flex-basis: auto;
+    }
+  }
+
+  dd {
+    min-inline-size: 0;
+    margin: 0;
+    font-size: var(--text-small);
+  }
+
+  .links dd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+  }
+
+  .none {
+    color: var(--text-3);
+  }
+</style>

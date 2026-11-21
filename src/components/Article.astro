@@ -1,0 +1,80 @@
+---
+import DisplayTitle from "./DisplayTitle.astro";
+import Prose from "./mdx/Prose.astro";
+
+// What a post and a case study share: the way back with an action beside
+// it, the title and what sits under it, facts, the content (the default
+// slot, set as prose), and what closes the page.
+type Props = {
+  title: string;
+};
+
+const { title } = Astro.props;
+const facts = Astro.slots.has("facts");
+---
+
+<article class="article">
+  <div class:list={["reading", { facts }]}>
+    <div class="head">
+      <div class="top">
+        <slot name="back" />
+        <slot name="action" />
+      </div>
+      <header class="intro">
+        <DisplayTitle>{title}</DisplayTitle>
+        <slot name="intro" />
+      </header>
+      <slot name="facts" />
+    </div>
+    <Prose>
+      <slot />
+    </Prose>
+  </div>
+  <div class="end">
+    <slot name="end" />
+  </div>
+</article>
+
+<style>
+  .article {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  .reading,
+  .end {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  /* Facts end in a rule, and the content starts further below it. */
+  .reading.facts {
+    gap: var(--space-12);
+  }
+
+  /* Nothing closes the page: no gap either. */
+  .end:not(:has(*)) {
+    display: none;
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+</style>

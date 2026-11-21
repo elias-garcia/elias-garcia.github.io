@@ -1,0 +1,209 @@
+---
+import { getPostCopy } from "../lib/content.ts";
+import Button from "./Button.astro";
+import VisuallyHidden from "./VisuallyHidden.astro";
+
+type Props = {
+  label: string;
+  name: string;
+  onSurface?: boolean;
+  // Copies this URL's text; without it, the text of the [data-copy-text]
+  // element inside the closest [data-copy-scope].
+  url?: string;
+};
+
+const { label, name, url, onSurface = false } = Astro.props;
+const { copied, copyFailed } = await getPostCopy();
+---
+
+<span class="copy">
+  <Button
+    aria-label={name}
+    data-copy-name={name}
+    onSurface={onSurface}
+    data-copy-button
+    data-copy-url={url}
+  >
+    <slot />
+    <span class="labels">
+      <span class="idle" data-copy-label="idle">
+        {label}
+      </span>
+      <span class="done" aria-hidden="true" data-copy-label="copied">
+        {copied}
+      </span>
+      <span class="failed" aria-hidden="true" data-copy-label="failed">
+        {copyFailed}
+      </span>
+    </span>
+  </Button>
+  <VisuallyHidden>
+    <span role="status" data-copy-status></span>
+  </VisuallyHidden>
+</span>
+
+<script>
+  const shownFor = 1500;
+  const timers = new WeakMap<HTMLElement, number>();
+
+  async function textToCopy(button: HTMLElement): Promise<string> {
+    const { copyUrl } = button.dataset;
+    if (copyUrl !== undefined) {
+      const response = await fetch(copyUrl);
+      if (!response.ok) {
+        throw new Error(`Could not load ${copyUrl}.`);
+      }
+      return response.text();
+    }
+    const source = button
+      .closest("[data-copy-scope]")
+      ?.querySelector<HTMLElement>("[data-copy-text]");
+    return source?.innerText ?? "";
+  }
+
+  type State = "idle" | "copied" | "failed";
+
+  // Every label is always there, and only the one showing is exposed. The
+  // idle and copied labels share the button's width; a failure is rare, so
+  // its longer label lets the button grow.
+  //
+  // While "Copied" or the failure shows, it is the button's name too: the
+  // name has to hold the text on screen (WCAG 2.5.3).
+  function setState(button: HTMLElement, state: State): string {
+    button.dataset.copyState = state;
+    let shown = "";
+    for (const label of button.querySelectorAll<HTMLElement>(
+      "[data-copy-label]",
+    )) {
+      const showing = label.dataset.copyLabel === state;
+      label.setAttribute("aria-hidden", String(!showing));
+      if (showing) {
+        shown = label.textContent.trim();
+      }
+    }
+    button.setAttribute(
+      "aria-label",
+      state === "idle" ? (button.dataset.copyName ?? shown) : shown,
+    );
+    return shown;
+  }
+
+  function show(button: HTMLElement, state: "copied" | "failed"): void {
+    const status = button.parentElement?.querySelector("[data-copy-status]");
+    if (status === null || status === undefined) {
+      return;
+    }
+    const message = setState(button, state);
+    // VoiceOver skips a message identical to the region's last one, so a
+    // repeat while it's still showing gets an invisible difference.
+    status.textContent =
+      status.textContent === message ? `${message}\u00A0` : message;
+    window.clearTimeout(timers.get(button));
+    timers.set(
+      button,
+      window.setTimeout(() => {
+        setState(button, "idle");
+        status.textContent = "";
+      }, shownFor),
+    );
+  }
+
+  async function copy(button: HTMLElement): Promise<void> {
+    try {
+      // A promise inside ClipboardItem keeps the click's permission while the
+      // text loads, which Safari needs for the fetched Markdown.
+      await navigator.clipboard.write([
+        new ClipboardItem({ "text/plain": textToCopy(button) }),
+      ]);
+      show(button, "copied");
+    } catch {
+      show(button, "failed");
+    }
+  }
+
+  for (const button of document.querySelectorAll<HTMLElement>(
+    "[data-copy-button]",
+  )) {
+    button.addEventListener("click", () => {
+      void copy(button);
+    });
+  }
+</script>
+
+<style>
+  .copy {
+    --swap-blur: 2px;
+    --swap-scale: 0.96;
+
+    display: inline-flex;
+
+    /* Copying needs the script. */
+    @media (scripting: none) {
+      display: none;
+    }
+  }
+
+  /* One cell for the labels, so the button keeps its width as "Copy" turns
+     to "Copied". They swap with a short crossfade, as transitions so a second
+     click mid-swap reverses smoothly; with reduced motion only the opacity
+     changes. The failure label takes no room until it shows. :where() keeps
+     the hidden defaults below the rules that show a label. */
+  .labels {
+    display: inline-grid;
+    justify-items: center;
+  }
+
+  .labels > :where(*) {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transition:
+      opacity var(--dur) var(--ease-settle),
+      display var(--dur) allow-discrete;
+  }
+
+  .labels > :where(.failed) {
+    display: none;
+  }
+
+  :global([data-copy-button]:not([data-copy-state])) .idle,
+  :global([data-copy-state="idle"]) .idle,
+  :global([data-copy-state="copied"]) .done,
+  :global([data-copy-state="failed"]) .failed {
+    opacity: 1;
+  }
+
+  :global([data-copy-state="failed"]) .failed {
+    display: block;
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .labels > :where(*) {
+      filter: blur(var(--swap-blur));
+      scale: var(--swap-scale);
+      transition:
+        opacity var(--dur) var(--ease-settle),
+        filter var(--dur) var(--ease-settle),
+        scale var(--dur) var(--ease-settle),
+        display var(--dur) allow-discrete;
+    }
+
+    :global([data-copy-button]:not([data-copy-state])) .idle,
+    :global([data-copy-state="idle"]) .idle,
+    :global([data-copy-state="copied"]) .done,
+    :global([data-copy-state="failed"]) .failed {
+      filter: none;
+      scale: 1;
+    }
+
+    :global([data-copy-state="failed"]) .failed {
+      @starting-style {
+        filter: blur(var(--swap-blur));
+        scale: var(--swap-scale);
+      }
+    }
+  }
+</style>

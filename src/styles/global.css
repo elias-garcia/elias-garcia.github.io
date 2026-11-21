@@ -1,0 +1,239 @@
+@import "./tokens.css";
+
+/* ---- Reset ---- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+img,
+svg,
+picture {
+  display: block;
+  max-inline-size: 100%;
+}
+
+button {
+  font: inherit;
+}
+
+/* The browser's bold is 700, which isn't one of the three weights. */
+b,
+strong {
+  font-weight: var(--weight-semibold);
+}
+
+img:not([src$=".svg"]) {
+  filter: brightness(var(--photo-brightness));
+}
+
+/* ---- Base ---- */
+
+html {
+  /* Every tappable thing has its own press state instead (DESIGN.md §2.9). */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Anchor targets stop below the sticky header, not under it. */
+  scroll-padding-block-start: calc(var(--bar-h) + var(--space-4));
+  /* Short and long pages keep the same width, so navigating doesn't shift. */
+  scrollbar-gutter: stable;
+
+  /* Jumps to a #link (anchors, footnotes, the skip link) scroll smoothly. */
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
+}
+
+::selection {
+  background: var(--tint-strong);
+  color: var(--text);
+}
+
+body {
+  /* The smallest viewport: on phones, 100vh is taller than the screen while
+     the address bar shows. */
+  min-block-size: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: break-word;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--dur) var(--ease);
+
+  /* The focus ring follows this; a link with its own shape (a button, a
+     card) sets its own radius. */
+  &:focus-visible {
+    border-radius: var(--r-sm);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--accent);
+    }
+  }
+}
+
+/* ---- Dialogs: the search and the image viewer (DESIGN.md §2.6) ---- */
+
+dialog {
+  max-inline-size: none;
+  padding: 0;
+  overflow: hidden;
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: var(--shadow-overlay);
+
+  &::backdrop {
+    background: var(--scrim);
+    backdrop-filter: var(--scrim-backdrop);
+  }
+}
+
+/* The page behind a modal dialog doesn't scroll, or pull to refresh. */
+html:has(dialog:modal) {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* ---- Touch (DESIGN.md §2.9) ---- */
+
+/* Links and controls don't wait for a possible double-tap zoom. */
+:where(a, button, summary, label, [role="button"]) {
+  touch-action: manipulation;
+}
+
+/* A long press doesn't select a control's label. Text content stays
+   selectable. */
+:where(button, summary, [role="button"]) {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* On touch screens a pressed text link dims at once and, with no opacity
+   transition of its own, comes back at once, so a tap shows before the next
+   page arrives. Buttons, chips and cards have their own press, rows dim and
+   fade back (ListRow, SearchOption and the Download CV formats), a heading's
+   # link isn't shown on touch, and the skip link keeps its slide. */
+@media (hover: none), (pointer: coarse) {
+  a:not(
+      .button,
+      .chip,
+      .card,
+      .video,
+      .title-link,
+      .option,
+      .format,
+      .anchor,
+      .skip
+    ):active {
+    opacity: var(--press-dim);
+  }
+}
+
+p {
+  text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-offset);
+}
+
+/* Every link and control gets a 44px touch target on coarse pointers,
+   without changing how it looks (DESIGN.md §2.8). */
+@media (pointer: coarse) {
+  :where(a, button, summary) {
+    position: relative;
+  }
+
+  :where(a, button, summary)::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 50%;
+    min-inline-size: var(--hit-area);
+    block-size: var(--hit-area);
+    translate: 0 -50%;
+  }
+}
+
+/* ---- Page transitions (DESIGN.md §2.5) ---- */
+
+/* The opt-in is inline in the base layout's <head>, so Chrome finds it before
+   this file applies. */
+
+::view-transition-old(root) {
+  animation: page-out var(--dur-fast) var(--ease-settle) both;
+}
+
+::view-transition-new(root) {
+  animation: none;
+}
+
+/* A project preview morphs into its case study hero. Without a partner on
+   the other page (the hero leaving for Writing, say), each half moves like
+   the rest of the page. */
+::view-transition-group(roleburn-preview) {
+  animation-duration: var(--dur-morph);
+  animation-timing-function: var(--ease-settle);
+}
+
+::view-transition-old(roleburn-preview):only-child {
+  animation: page-out var(--dur-fast) var(--ease-settle) both;
+}
+
+::view-transition-new(roleburn-preview):only-child {
+  animation: page-in var(--dur-slow) var(--ease-settle) both;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    translate: 0 var(--entrance-offset);
+  }
+}
+
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+}

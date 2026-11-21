@@ -1,0 +1,366 @@
+---
+import { getHomeCopy } from "../lib/content.ts";
+import { getCvFormats } from "../lib/cv.ts";
+import Button from "./Button.astro";
+import Icon from "./Icon.astro";
+
+const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
+---
+
+<div class="download">
+  <Button popovertarget="cv-formats" aria-controls="cv-formats" data-cv-button>
+    {copy.downloadCv}
+    <Icon name="chevron-down" class="chevron" />
+  </Button>
+  <ul class="formats" id="cv-formats" popover role="list" data-cv-formats>
+    {formats.map((format) => (
+      <li>
+        <a
+          class="format"
+          href={format.href}
+          download
+          data-astro-prefetch="false"
+        >
+          <span class="tile" aria-hidden="true">
+            <Icon name={format.icon} />
+          </span>
+          <span class="text">
+            <span class="title">
+              {format.label} <span class="size">{format.size}</span>
+            </span>
+            <span class="description">{format.description}</span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<script>
+  const menu = document.querySelector<HTMLElement>("[data-cv-formats]");
+  const button = document.querySelector<HTMLElement>("[data-cv-button]");
+
+  // Without Popover, the formats stay a plain list under the button.
+  if (menu !== null && button !== null && "popover" in HTMLElement.prototype) {
+    const close = () => {
+      menu.hidePopover();
+    };
+
+    // Opened or closed from the keyboard, the menu and its chevron change at
+    // once (DESIGN.md §2.5). A click from Enter or Space has no detail.
+    const noteKeyboard = (fromKeyboard: boolean) => {
+      menu.toggleAttribute("data-keyboard", fromKeyboard);
+    };
+    button.addEventListener("click", ({ detail }) => {
+      noteKeyboard(detail === 0);
+    });
+    // Esc closes the menu wherever focus is, the button included, and Tab
+    // closes it by leaving. A press or a wheel closes it with motion; they're
+    // noted whether it's still open or not, since WebKit can close it before
+    // the page sees them.
+    document.addEventListener("keydown", ({ key }) => {
+      if (
+        (key === "Escape" || key === "Tab") &&
+        menu.matches(":popover-open")
+      ) {
+        noteKeyboard(true);
+      }
+    });
+    // Where the page is scrolling to, while it brings the menu into view.
+    let arrivingAt: number | undefined;
+    const notePointer = () => {
+      noteKeyboard(false);
+      arrivingAt = undefined;
+    };
+    document.addEventListener("pointerdown", notePointer, { capture: true });
+    document.addEventListener("touchmove", notePointer, {
+      capture: true,
+      passive: true,
+    });
+    document.addEventListener("wheel", notePointer, {
+      capture: true,
+      passive: true,
+    });
+
+    // A download doesn't leave the page, so choosing a format closes the menu.
+    menu.addEventListener("click", ({ target, detail }) => {
+      if (target instanceof Element && target.closest("a") !== null) {
+        noteKeyboard(detail === 0);
+        close();
+      }
+    });
+
+    // Tabbing out of the menu closes it, as DESIGN.md asks.
+    menu.addEventListener("focusout", ({ relatedTarget }) => {
+      if (
+        relatedTarget instanceof Node &&
+        !menu.contains(relatedTarget) &&
+        relatedTarget !== button
+      ) {
+        close();
+      }
+    });
+
+    // The menu closes as soon as the page scrolls: in the top layer it would
+    // drift from its button and cover the sticky header. While focus is in
+    // the menu, scrolling doesn't close it, so tabbing through it (which
+    // scrolls the focused link into view) keeps it open; a mouse wheel
+    // always closes it.
+    //
+    // A window too short for the menu scrolls until it fits, as it opens: at
+    // once from the keyboard or with reduced motion, smoothly otherwise.
+    // That scroll doesn't close it, until the visitor takes over (a press, a
+    // drag, a wheel). The distance comes from the button, not from the menu:
+    // the menu is still growing in, and Safari doesn't scroll a popover into
+    // view.
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const root = document.documentElement;
+    const scrollUntilMenuFits = () => {
+      const style = getComputedStyle(menu);
+      const bottom =
+        button.getBoundingClientRect().bottom +
+        parseFloat(style.marginTop) +
+        menu.offsetHeight +
+        parseFloat(style.scrollMarginBottom);
+      const top = Math.min(
+        window.scrollY + Math.max(0, bottom - root.clientHeight),
+        root.scrollHeight - root.clientHeight,
+      );
+      if (top <= window.scrollY) {
+        return;
+      }
+      arrivingAt = top;
+      window.scrollTo({
+        top,
+        behavior:
+          reducedMotion.matches || menu.hasAttribute("data-keyboard")
+            ? "instant"
+            : "smooth",
+      });
+    };
+    const closeOnScroll = () => {
+      if (arrivingAt !== undefined) {
+        if (Math.abs(window.scrollY - arrivingAt) < 1) {
+          arrivingAt = undefined;
+        }
+        return;
+      }
+      if (!menu.contains(document.activeElement)) {
+        close();
+      }
+    };
+    const arrived = () => {
+      arrivingAt = undefined;
+    };
+    menu.addEventListener("toggle", (event) => {
+      if (event.newState === "open") {
+        addEventListener("scroll", closeOnScroll, { passive: true });
+        addEventListener("scrollend", arrived);
+        addEventListener("wheel", close, { passive: true });
+        scrollUntilMenuFits();
+      } else {
+        arrivingAt = undefined;
+        removeEventListener("scroll", closeOnScroll);
+        removeEventListener("scrollend", arrived);
+        removeEventListener("wheel", close);
+      }
+    });
+
+    // Without CSS anchor positioning, place the menu under its button.
+    if (!CSS.supports("anchor-name", "--cv-button")) {
+      menu.addEventListener("beforetoggle", (event) => {
+        if (event.newState !== "open") {
+          return;
+        }
+        const { left, bottom } = button.getBoundingClientRect();
+        menu.style.position = "absolute";
+        menu.style.left = `${String(left + window.scrollX)}px`;
+        menu.style.top = `${String(bottom + window.scrollY)}px`;
+      });
+    }
+  }
+</script>
+
+<style>
+  /* The menu hangs from this box, not from the button: the button shrinks
+     while it's pressed, and the menu would move with it. */
+  .download {
+    --menu-scale: 0.97;
+    --menu-w: 320px;
+
+    anchor-name: --cv-button;
+  }
+
+  .chevron {
+    margin-inline-end: calc(-1 * var(--space-1));
+
+    :global(.button:has(+ .formats:popover-open)) & {
+      rotate: 180deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: rotate var(--dur) var(--ease-settle);
+    }
+
+    :global(.button:has(+ .formats[data-keyboard])) & {
+      transition: none;
+    }
+  }
+
+  .formats {
+    margin: var(--space-2) 0 0;
+    inline-size: var(--menu-w);
+    max-inline-size: calc(100dvw - 2 * var(--space-6));
+    padding: var(--space-1);
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    color: var(--text);
+
+    /* It floats under its button where Popover exists; elsewhere it stays a
+       plain list under the button, always there. */
+    @supports selector(:popover-open) {
+      position: fixed;
+      position-anchor: --cv-button;
+      inset: auto;
+      box-shadow: var(--shadow-overlay);
+      position-area: block-end span-inline-end;
+      position-try-fallbacks: flip-inline;
+      transform-origin: top left;
+      /* Room under it when a short window scrolls to fit it: the script
+         reads this. */
+      scroll-margin-block-end: var(--space-4);
+    }
+
+    @supports not selector(:popover-open) {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  /* Without Popover the button opens nothing: it reads as the list's label. */
+  @supports not selector(:popover-open) {
+    .chevron {
+      display: none;
+    }
+
+    /* It grows from its button as it opens, and closes at once (DESIGN.md
+       §2.5). A transition rather than keyframes, so a quick reopen carries
+       on from where it is. With reduced motion it only fades. */
+    &:popover-open {
+      display: flex;
+      flex-direction: column;
+      transition: opacity var(--dur) var(--ease-settle);
+
+      @starting-style {
+        opacity: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      &:popover-open {
+        transition:
+          opacity var(--dur) var(--ease-settle),
+          scale var(--dur) var(--ease-settle),
+          translate var(--dur) var(--ease-settle);
+
+        @starting-style {
+          scale: var(--menu-scale);
+          translate: 0 calc(-1 * var(--space-1));
+        }
+      }
+    }
+
+    &[data-keyboard]:popover-open {
+      transition: none;
+    }
+  }
+
+  .format {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--r-md);
+
+    &:focus-visible {
+      background: var(--tint);
+      outline-offset: 0;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: var(--tint);
+      }
+    }
+
+    /* Pressed on a touch screen, a format dims and fades back like a search
+       row (DESIGN.md §2.9). */
+    @media (hover: none), (pointer: coarse) {
+      transition: opacity var(--dur) var(--ease-settle);
+
+      &:active {
+        opacity: var(--press-dim);
+        transition: none;
+      }
+    }
+  }
+
+  .tile {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--control-h);
+    block-size: var(--control-h);
+    border-radius: var(--r-md);
+    background: var(--control);
+    color: var(--text-2);
+
+    .format:focus-visible & {
+      background: var(--bg);
+      color: var(--accent);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .format:hover & {
+        background: var(--bg);
+        color: var(--accent);
+      }
+    }
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    line-height: var(--leading-tight);
+  }
+
+  .title {
+    font-size: var(--text-small);
+  }
+
+  .size {
+    margin-inline-start: var(--space-1);
+    color: var(--text-3);
+    font-size: var(--text-micro);
+    font-variant-numeric: tabular-nums;
+
+    /* --text-3 is too faint on the tint background (DESIGN.md §2.1). */
+    .format:focus-visible & {
+      color: var(--text-2);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .format:hover & {
+        color: var(--text-2);
+      }
+    }
+  }
+
+  .description {
+    color: var(--text-2);
+    font-size: var(--text-micro);
+  }
+</style>

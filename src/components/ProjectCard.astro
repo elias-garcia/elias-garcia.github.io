@@ -1,0 +1,191 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getProjectCopy, hasCaseStudy } from "../lib/content.ts";
+import { routes } from "../lib/routes.ts";
+import Icon from "./Icon.astro";
+import ProjectPreview from "./ProjectPreview.astro";
+import ProjectStatus from "./ProjectStatus.astro";
+
+type Props = {
+  project: CollectionEntry<"projects">;
+  // On Home: a level-three title, the short summary and no "View project".
+  tile?: boolean;
+  // The first project spans the grid from 640px when the count is odd.
+  wide?: boolean;
+};
+
+const { project, tile = false, wide = false } = Astro.props;
+const { title, summary, description, status, year, illustration } =
+  project.data;
+const href = hasCaseStudy(project) ? routes.project(project.id) : undefined;
+const copy = await getProjectCopy();
+const Title = tile ? "h3" : "h2";
+---
+
+<li class:list={["card", { wide, linked: href !== undefined }]}>
+  <ProjectPreview illustration={illustration} wide={wide} />
+  <div class="head">
+    <div class="title-row">
+      <Title class="title">
+        {href === undefined ? (
+          title
+        ) : (
+          <a class="title-link" href={href}>
+            {title}
+          </a>
+        )}
+      </Title>
+      {!tile && href !== undefined && (
+        <span class="go" aria-hidden="true">
+          {copy.view}
+          <Icon name="chevron-right" size="sm" class="chevron" />
+        </span>
+      )}
+    </div>
+    <ProjectStatus status={status} year={year} />
+  </div>
+  <p class="description">{tile ? summary : description}</p>
+</li>
+
+<style>
+  /* The card sets its own row gap, so the page's grid gap only spaces
+     cards apart. */
+  .card {
+    position: relative;
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    align-content: start;
+    row-gap: var(--space-2);
+
+    :global(.preview) {
+      margin-block-end: var(--space-2);
+    }
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+
+  /* The link is the title alone, so that is all a screen reader reads as
+     its name, and it covers the whole card: one card, one action. */
+  .title-link {
+    /* Not positioned, despite the touch target rule in global.css, so the
+       ::after covers the card instead of the link. */
+    position: static;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-1) var(--space-4);
+  }
+
+  .title {
+    font-size: inherit;
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-tight);
+    text-wrap: balance;
+  }
+
+  .description {
+    color: var(--text-2);
+  }
+
+  .go {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--text-2);
+    font-size: var(--text-small);
+    transition: color var(--dur) var(--ease);
+
+    @media (width < 40rem) {
+      display: none;
+    }
+  }
+
+  /* Focused, the ring goes round the card, the title takes the link colour
+     and the label turns with it. */
+  .title-link:focus-visible {
+    outline: none;
+    color: var(--accent);
+
+    &::after {
+      border-radius: var(--r-lg);
+      outline: var(--focus-ring) solid var(--accent);
+      outline-offset: var(--focus-offset);
+    }
+  }
+
+  .linked:has(.title-link:focus-visible) .go {
+    color: var(--accent);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .linked:hover .go {
+      color: var(--accent);
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .linked:hover .chevron {
+      translate: var(--nudge) 0;
+    }
+  }
+
+  /* The preview reacts to the card's link: hover never moves the card, its
+     border darkens and its illustration plays, as it does while focused. */
+  .linked {
+    :global(.preview) {
+      transition: border-color var(--dur) var(--ease);
+    }
+
+    &:has(.title-link:focus-visible) :global([data-loop]) {
+      animation-play-state: running;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover :global(.preview) {
+        border-color: var(--line-strong);
+      }
+
+      &:hover :global([data-loop]) {
+        animation-play-state: running;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      :global(.preview) {
+        transition:
+          border-color var(--dur) var(--ease),
+          scale var(--dur) var(--ease-settle);
+      }
+
+      &:active :global(.preview) {
+        scale: var(--press-scale-tile);
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .chevron {
+      transition: translate var(--dur) var(--ease-settle);
+    }
+  }
+</style>

@@ -1,0 +1,76 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import { render } from "astro:content";
+import Article from "../../components/Article.astro";
+import BackLink from "../../components/BackLink.astro";
+import { mdxComponents } from "../../components/mdx/index.ts";
+import PreviousNext from "../../components/PreviousNext.astro";
+import ProjectFacts from "../../components/ProjectFacts.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  getPage,
+  getProjectCopy,
+  getProjects,
+  hasCaseStudy,
+} from "../../lib/content.ts";
+import { routes } from "../../lib/routes.ts";
+
+export const getStaticPaths = (async () => {
+  const caseStudies = (await getProjects()).filter(hasCaseStudy);
+  return caseStudies.map((project, index) => ({
+    params: { slug: project.id },
+    props: {
+      project,
+      // In the order of the Projects page.
+      previous: caseStudies[index - 1],
+      next: caseStudies[index + 1],
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { project, previous, next } = Astro.props;
+const { title, description, year, status, links } = project.data;
+const [{ Content }, projects, copy] = await Promise.all([
+  render(project),
+  getPage("projects"),
+  getProjectCopy(),
+]);
+---
+
+<BaseLayout title={title} description={description}>
+  <Article title={title}>
+    <BackLink slot="back" href={routes.projects} label={projects.title} />
+    <p slot="intro" class="lead">
+      {description}
+    </p>
+    <ProjectFacts slot="facts" year={year} status={status} links={links} />
+    <Content components={mdxComponents} />
+    <PreviousNext
+      slot="end"
+      name={copy.more}
+      previous={
+        previous && {
+          href: routes.project(previous.id),
+          title: previous.data.title,
+          label: copy.previous,
+        }
+      }
+      next={
+        next && {
+          href: routes.project(next.id),
+          title: next.data.title,
+          label: copy.next,
+        }
+      }
+    />
+  </Article>
+</BaseLayout>
+
+<style>
+  .lead {
+    color: var(--text-2);
+    font-size: var(--text-subtitle);
+  }
+</style>

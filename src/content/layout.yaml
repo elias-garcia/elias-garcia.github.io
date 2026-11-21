@@ -1,0 +1,18 @@
+layout:
+  skip: Skip to content
+  # The header's navigation, for screen readers.
+  navName: Main
+  # The header's logo link; {name} is the profile's name.
+  homeName: "{name}, home"
+  # The first item of the navigation; the others take their page's title.
+  homeLabel: Home
+  # Read after a link that opens in a new tab, for screen readers.
+  newTab: (opens in a new tab)
+  # The footer's clock, filled in by a script. {time} is the time where the
+  # site's owner lives and {country} that country; {amount} is the
+  # difference with the visitor's clock ("5h", "1h 30m"), which the script
+  # formats.
+  clock: "{time} in {country}"
+  sameTime: same time as you
+  ahead: "{amount} ahead of you"
+  behind: "{amount} behind you"

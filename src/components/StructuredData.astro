@@ -1,0 +1,14 @@
+---
+import type { Thing, WithContext } from "schema-dts";
+
+// Schema.org data as JSON-LD (src/lib/structured-data.ts). "<" is escaped,
+// so no value can close the script element early.
+type Props = {
+  data: WithContext<Thing>;
+};
+
+const { data } = Astro.props;
+const json = JSON.stringify(data).replaceAll("<", "\\u003c");
+---
+
+<script is:inline type="application/ld+json" set:html={json} />

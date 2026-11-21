@@ -1,0 +1,105 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import ChevronDown from "@lucide/astro/icons/chevron-down";
+import ChevronLeft from "@lucide/astro/icons/chevron-left";
+import ChevronRight from "@lucide/astro/icons/chevron-right";
+import CornerDownLeft from "@lucide/astro/icons/corner-down-left";
+import Download from "@lucide/astro/icons/download";
+import FileCode from "@lucide/astro/icons/file-code";
+import FileText from "@lucide/astro/icons/file-text";
+import Hash from "@lucide/astro/icons/hash";
+import LayoutGrid from "@lucide/astro/icons/layout-grid";
+import Mail from "@lucide/astro/icons/mail";
+import Play from "@lucide/astro/icons/play";
+import Plus from "@lucide/astro/icons/plus";
+import Rss from "@lucide/astro/icons/rss";
+import Search from "@lucide/astro/icons/search";
+import Star from "@lucide/astro/icons/star";
+import X from "@lucide/astro/icons/x";
+
+// Every icon, under its Lucide name (DESIGN.md §2.7). Decorative: the
+// control or link it sits in carries the name.
+const icons = {
+  "arrow-right": ArrowRight,
+  "arrow-up-right": ArrowUpRight,
+  "chevron-down": ChevronDown,
+  "chevron-left": ChevronLeft,
+  "chevron-right": ChevronRight,
+  "corner-down-left": CornerDownLeft,
+  download: Download,
+  "file-code": FileCode,
+  "file-text": FileText,
+  hash: Hash,
+  "layout-grid": LayoutGrid,
+  mail: Mail,
+  play: Play,
+  plus: Plus,
+  rss: Rss,
+  search: Search,
+  star: Star,
+  x: X,
+};
+
+// The width and height attributes, for a page whose styles haven't loaded
+// (Lucide writes 24 otherwise): the same sizes as --icon-md and --icon-sm.
+const pixels = { md: 16, sm: 12 };
+
+// What a component may pass on to the <svg>. Without the icon's own props,
+// and without `color` and `title`, which Lucide types more narrowly.
+type Props = Omit<
+  HTMLAttributes<"svg">,
+  "name" | "size" | "color" | "title" | "stroke-width"
+> & {
+  name: keyof typeof icons;
+  size?: "md" | "sm";
+  filled?: boolean;
+};
+
+const {
+  name,
+  size = "md",
+  filled = false,
+  class: className,
+  ...attributes
+} = Astro.props;
+const Lucide = icons[name];
+---
+
+<Lucide
+  class:list={[
+    "icon",
+    { sm: size === "sm", filled, dotted: name === "rss" },
+    className,
+  ]}
+  size={pixels[size]}
+  stroke-width={1.5}
+  nonScalingStroke
+  aria-hidden="true"
+  {...attributes}
+/>
+
+<style>
+  /* :where() keeps these below whatever the component using the icon sets. */
+  :where(.icon) {
+    flex: none;
+    inline-size: var(--icon-md);
+    block-size: var(--icon-md);
+  }
+
+  :where(.sm) {
+    inline-size: var(--icon-sm);
+    block-size: var(--icon-sm);
+  }
+
+  :where(.filled) {
+    fill: currentColor;
+  }
+
+  /* The RSS icon's dot is a dot, not a ring. It keeps its stroke: without
+     it the dot is too small for the arcs (DESIGN.md §2.7). */
+  :where(.dotted) :global(circle) {
+    fill: currentColor;
+  }
+</style>

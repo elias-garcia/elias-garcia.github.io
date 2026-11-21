@@ -1,0 +1,37 @@
+---
+// Not labelled: a named <section> is a region landmark, and one per section
+// would crowd the page's landmarks. The headings are the way through.
+type Props = {
+  title: string;
+};
+
+const { title } = Astro.props;
+---
+
+<section class="section">
+  <div class="heading">
+    <h2>{title}</h2>
+    <slot name="action" />
+  </div>
+  <slot />
+</section>
+
+<style>
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+
+    h2 {
+      font-size: inherit;
+      font-weight: var(--weight-medium);
+    }
+  }
+</style>

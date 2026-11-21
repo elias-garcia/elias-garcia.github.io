@@ -1,0 +1,356 @@
+---
+import { getImage, Image } from "astro:assets";
+import avatar from "../assets/avatar.jpg";
+import CourseRating from "../components/CourseRating.astro";
+import DownloadCv from "../components/DownloadCv.astro";
+import ExternalArrow from "../components/ExternalArrow.astro";
+import ImageViewer from "../components/ImageViewer.astro";
+import List from "../components/List.astro";
+import ListRow from "../components/ListRow.astro";
+import PageTitle from "../components/PageTitle.astro";
+import PreviewMorph from "../components/PreviewMorph.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import RowPhotos from "../components/RowPhotos.astro";
+import Section from "../components/Section.astro";
+import SeeMore from "../components/SeeMore.astro";
+import StructuredData from "../components/StructuredData.astro";
+import VideoPreview from "../components/VideoPreview.astro";
+import WorkRow from "../components/WorkRow.astro";
+import Years from "../components/Years.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  getCourses,
+  getEducation,
+  getHomeCopy,
+  getPage,
+  getPosts,
+  getProfile,
+  getProjects,
+  getTalks,
+  getWork,
+} from "../lib/content.ts";
+import { formatCountry, formatMonthYear, isoMonth } from "../lib/format.ts";
+import { linkTarget } from "../lib/links.ts";
+import { requireSite } from "../lib/navigation.ts";
+import { routes } from "../lib/routes.ts";
+import { person, website } from "../lib/structured-data.ts";
+import { fill } from "../lib/template.ts";
+
+const [
+  copy,
+  projectsPage,
+  writingPage,
+  profile,
+  projects,
+  work,
+  posts,
+  talks,
+  courses,
+  education,
+] = await Promise.all([
+  getHomeCopy(),
+  getPage("projects"),
+  getPage("writing"),
+  getProfile(),
+  getProjects(),
+  getWork(),
+  getPosts(),
+  getTalks(),
+  getCourses(),
+  getEducation(),
+]);
+const [description = profile.role] = profile.about;
+const siteUrl = requireSite(Astro.site, "structured data");
+const portrait = await getImage({ src: avatar, width: 400 });
+const websiteData = website(profile, siteUrl);
+const personData = person(profile, siteUrl, new URL(portrait.src, siteUrl));
+const newestJob = work[0]?.id;
+---
+
+<BaseLayout title={profile.name} description={description}>
+  <PreviewMorph slot="head" />
+  <StructuredData slot="head" data={websiteData} />
+  <StructuredData slot="head" data={personData} />
+  <div class="home">
+    <header class="intro">
+      <div class="identity">
+        <Image
+          class="avatar"
+          src={avatar}
+          alt={profile.name}
+          widths={[80, 104, 160, 208]}
+          sizes="(width < 40rem) 80px, 104px"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <div class="who">
+          <PageTitle>{profile.name}</PageTitle>
+          <p class="role">
+            {fill(copy.role, {
+              role: profile.role,
+              city: profile.city,
+              country: formatCountry(profile.country),
+            })}
+          </p>
+          <div class="actions">
+            <DownloadCv />
+            <p class="availability">
+              <span class="dot" aria-hidden="true"></span>
+              {profile.availability}
+            </p>
+          </div>
+        </div>
+      </div>
+      <Section title={copy.about}>
+        {profile.about.map((paragraph) => (
+          <p class="about">{paragraph}</p>
+        ))}
+      </Section>
+    </header>
+
+    <Section title={projectsPage.title}>
+      <SeeMore slot="action" href={routes.projects} label={copy.allProjects} />
+      <ul class="tiles" role="list">
+        {projects.slice(0, 3).map((project) => (
+          <ProjectCard project={project} tile />
+        ))}
+      </ul>
+    </Section>
+
+    <Section title={copy.work}>
+      <List>
+        {work.map((job) => (
+          <WorkRow job={job.data} open={job.id === newestJob} />
+        ))}
+      </List>
+    </Section>
+
+    <Section title={writingPage.title}>
+      <SeeMore slot="action" href={routes.writing} label={copy.allPosts} />
+      <List>
+        {posts.slice(0, 3).map((post) => (
+          <ListRow title={post.data.title} href={routes.post(post.id)}>
+            <time slot="date" datetime={isoMonth(post.data.date)}>
+              {formatMonthYear(post.data.date)}
+            </time>
+            {post.data.description}
+          </ListRow>
+        ))}
+      </List>
+    </Section>
+
+    <Section title={copy.speaking}>
+      <List>
+        {talks.map(({ data }) => (
+          <ListRow title={data.title}>
+            <time slot="date" datetime={isoMonth(data.date)}>
+              {formatMonthYear(data.date)}
+            </time>
+            {data.where}
+            <RowPhotos slot="attachment" talk={data} />
+          </ListRow>
+        ))}
+      </List>
+    </Section>
+
+    <Section title={copy.teaching}>
+      <List>
+        {courses.map(({ data }) => (
+          <ListRow title={data.title} href={data.href}>
+            <time slot="date" datetime={isoMonth(data.date)}>
+              {formatMonthYear(data.date)}
+            </time>
+            {data.where}
+            <CourseRating slot="meta" course={data} />
+            <VideoPreview slot="attachment" video={data.video} />
+          </ListRow>
+        ))}
+      </List>
+    </Section>
+
+    <Section title={copy.education}>
+      <List>
+        {education.map(({ data }) => (
+          <ListRow
+            title={fill(copy.degree, {
+              title: data.title,
+              school: data.school,
+            })}
+          >
+            <Years slot="date" start={data.start} end={data.end} />
+            {data.detail}
+          </ListRow>
+        ))}
+      </List>
+    </Section>
+
+    <Section title={copy.contact}>
+      <address>
+        <dl class="contact">
+          {profile.contact.map((link) => (
+            <div class="contact-row">
+              <dt>{link.label}</dt>
+              <dd>
+                <a href={link.href} {...linkTarget(link.href)}>
+                  {link.text}
+                  <ExternalArrow href={link.href} />
+                </a>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </address>
+    </Section>
+  </div>
+  <ImageViewer />
+</BaseLayout>
+
+<style>
+  .home {
+    /* The availability dot's one ping. */
+    --dur-ping: 2.4s;
+    --ease-ping: cubic-bezier(0, 0, 0.2, 1);
+    --avatar: 104px;
+    --avatar-sm: 80px;
+    --contact-row: 36px;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-section);
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+
+    @media (width < 40rem) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  .avatar {
+    flex: none;
+    inline-size: var(--avatar);
+    block-size: var(--avatar);
+    border-radius: 50%;
+    background: var(--control);
+    object-fit: cover;
+
+    @media (width < 40rem) {
+      inline-size: var(--avatar-sm);
+      block-size: var(--avatar-sm);
+    }
+  }
+
+  .who {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-inline-size: 0;
+  }
+
+  .role {
+    color: var(--text-2);
+    line-height: var(--leading-body);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block-start: var(--space-3);
+  }
+
+  .availability {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: var(--control-h);
+    padding-inline: var(--space-1);
+    color: var(--text-2);
+    font-size: var(--text-small);
+  }
+
+  .dot {
+    position: relative;
+    flex: none;
+    inline-size: var(--dot);
+    block-size: var(--dot);
+    border-radius: 50%;
+    background: var(--accent);
+
+    @media (prefers-reduced-motion: no-preference) {
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: ping var(--dur-ping) var(--ease-ping) both;
+      }
+    }
+  }
+
+  @keyframes ping {
+    from {
+      opacity: 0.45;
+    }
+
+    80%,
+    to {
+      opacity: 0;
+      scale: 2.6;
+    }
+  }
+
+  .about {
+    color: var(--text-2);
+    line-height: var(--leading-body);
+  }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8) var(--space-6);
+
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .contact-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-6);
+    min-block-size: var(--contact-row);
+
+    dt {
+      flex: 0 0 var(--gutter);
+      color: var(--text-3);
+    }
+
+    dd {
+      flex: 1 1 var(--row-basis);
+      margin: 0;
+    }
+  }
+
+  address {
+    font-style: normal;
+  }
+</style>

@@ -1,0 +1,18 @@
+<span class="visually-hidden">
+  <slot />
+</span>
+
+<style>
+  /* Read by screen readers, invisible on screen. */
+  .visually-hidden {
+    position: absolute;
+    inline-size: var(--hairline);
+    block-size: var(--hairline);
+    margin: calc(-1 * var(--hairline));
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

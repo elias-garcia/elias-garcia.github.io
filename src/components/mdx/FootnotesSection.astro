@@ -1,0 +1,98 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+// GFM renders footnotes as <section data-footnotes>: they become the Notes.
+type Props = HTMLAttributes<"section"> & { "data-footnotes"?: unknown };
+
+const { "data-footnotes": footnotes, ...attributes } = Astro.props;
+---
+
+{footnotes !== undefined ? (
+  <section class="notes" data-footnotes>
+    <slot />
+  </section>
+) : (
+  <section {...attributes}>
+    <slot />
+  </section>
+)}
+
+<style>
+  .notes {
+    --rule-short: 64px;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-block-start: var(--space-6);
+
+    /* A short rule: a full-width one would compete with the author footer's. */
+    &::before {
+      content: "";
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      inline-size: var(--rule-short);
+      block-size: var(--hairline);
+      background: var(--line);
+    }
+
+    :global(ol) {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      list-style: decimal;
+      padding-inline-start: var(--space-5);
+      color: var(--text-2);
+      font-size: var(--text-small);
+      line-height: var(--leading-normal);
+    }
+
+    :global(li) {
+      margin-inline-start: calc(-1 * var(--space-2));
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--r-md);
+
+      &::marker {
+        color: var(--text-3);
+        font-variant-numeric: tabular-nums;
+      }
+
+      &:target {
+        animation: tint var(--dur-flash) var(--ease) both;
+
+        @media (prefers-reduced-motion: reduce) {
+          animation: none;
+          background: var(--tint);
+        }
+      }
+    }
+
+    /* Above the prose's own rule for a list item's paragraph. */
+    :global(ol > li p) {
+      color: inherit;
+      font-size: inherit;
+      line-height: inherit;
+    }
+  }
+
+  @keyframes tint {
+    from {
+      background: var(--tint);
+    }
+  }
+
+  /* Forced colours drop the rule's fill and the tint of the note you arrive
+     at. */
+  @media (forced-colors: active) {
+    .notes::before {
+      background: CanvasText;
+    }
+
+    .notes :global(li:target) {
+      outline: var(--focus-ring) solid Highlight;
+      outline-offset: var(--focus-offset);
+    }
+  }
+</style>

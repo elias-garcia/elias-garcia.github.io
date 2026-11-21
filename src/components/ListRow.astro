@@ -1,0 +1,184 @@
+---
+import { leavesSite, linkTarget } from "../lib/links.ts";
+import ExternalArrow from "./ExternalArrow.astro";
+
+type Props = {
+  title: string;
+  href?: string | undefined;
+  article?: boolean;
+  underline?: boolean;
+  // Below 40rem, drop the date column with what's in it.
+  dateOnPhones?: boolean;
+};
+
+const {
+  title,
+  href,
+  article = false,
+  underline = false,
+  dateOnPhones = true,
+} = Astro.props;
+const Row = article ? "article" : "div";
+const Title = article ? "h3" : "span";
+---
+
+<li>
+  <Row class:list={["row", { "row-interactive": href !== undefined }]}>
+    <div class:list={["date", { "date-wide-only": !dateOnPhones }]}>
+      <slot name="date" />
+    </div>
+    <div class="text">
+      <Title class="title">
+        {href === undefined ? (
+          title
+        ) : (
+          <a
+            class:list={["title-link", { underline }]}
+            href={href}
+            {...linkTarget(href)}
+          >
+            <span class="title-text">{title}</span>
+            {leavesSite(href) && <ExternalArrow href={href} />}
+          </a>
+        )}
+      </Title>
+      <span class="description">
+        <slot />
+      </span>
+      {Astro.slots.has("meta") && (
+        <span class="meta">
+          <slot name="meta" />
+        </span>
+      )}
+    </div>
+  </Row>
+  {Astro.slots.has("attachment") && (
+    <div class="attachment">
+      <div class="attachment-content">
+        <slot name="attachment" />
+      </div>
+    </div>
+  )}
+</li>
+
+<style>
+  .row {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-6);
+    padding-block: var(--space-3);
+  }
+
+  .row-interactive {
+    transition: opacity var(--dur) var(--ease);
+  }
+
+  /* Pressed on a touch screen, the row dims at once and comes back over
+     150ms (DESIGN.md §2.9). */
+  @media (hover: none), (pointer: coarse) {
+    .row-interactive {
+      transition: opacity var(--dur) var(--ease-settle);
+    }
+
+    .row-interactive:has(.title-link:active) {
+      opacity: var(--press-dim);
+      transition: none;
+    }
+  }
+
+  /* The title link covers the whole row: one row, one action. */
+  .title-link {
+    /* Not positioned, despite the touch target rule in global.css, so the
+       ::after covers the row instead of the link. */
+    position: static;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+
+    &:focus-visible {
+      outline: none;
+
+      &::after {
+        border-radius: var(--r-sm);
+        outline: var(--focus-ring) solid var(--accent);
+        outline-offset: var(--focus-offset);
+      }
+    }
+  }
+
+  /* A text underline, so it follows every line of a title that wraps. */
+  .underline .title-text {
+    text-decoration: underline var(--hairline) transparent;
+    text-underline-offset: var(--underline-offset);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .underline .title-text {
+      transition: text-decoration-color var(--dur) var(--ease);
+    }
+
+    .row-interactive:hover .underline .title-text {
+      text-decoration-color: currentColor;
+    }
+  }
+
+  .date {
+    flex: 0 0 var(--gutter);
+    color: var(--text-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .date-wide-only {
+    @media (width < 40rem) {
+      display: none;
+    }
+  }
+
+  .text {
+    display: flex;
+    flex: 1 1 var(--row-basis);
+    flex-direction: column;
+    min-inline-size: 0;
+  }
+
+  .title {
+    font-size: inherit;
+    font-weight: var(--weight-medium);
+  }
+
+  .description {
+    color: var(--text-2);
+  }
+
+  .meta {
+    margin-block-start: var(--space-1);
+    color: var(--text-3);
+    font-size: var(--text-small);
+  }
+
+  /* Media under the row's text. It wraps like the row, with an empty date
+     column, so it starts under the title and drops below with the date. It
+     spans the row, so its contents can follow the row's wrap with a
+     container query. */
+  .attachment {
+    container: attachment / inline-size;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--space-6);
+    margin-block-end: var(--space-3);
+
+    &::before {
+      content: "";
+      flex: 0 0 var(--gutter);
+    }
+  }
+
+  .attachment-content {
+    flex: 1 1 var(--row-basis);
+    min-inline-size: 0;
+  }
+</style>

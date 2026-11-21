@@ -1,46 +1,54 @@
 {
-	"name": "elias-garcia.github.io",
-	"version": "0.1.0",
-	"private": true,
-	"homepage": "https://eliasgarcia.dev",
-	"dependencies": {
-		"@fortawesome/fontawesome-svg-core": "^1.2.26",
-		"@fortawesome/free-brands-svg-icons": "^5.12.0",
-		"@fortawesome/free-solid-svg-icons": "^5.12.0",
-		"@fortawesome/react-fontawesome": "^0.1.8",
-		"react": "^16.12.0",
-		"react-dom": "^16.12.0",
-		"react-router-dom": "^5.1.2",
-		"react-scripts": "3.3.0"
-	},
-	"scripts": {
-		"start": "react-scripts start",
-		"build": "react-scripts build",
-		"predeploy": "npm run build",
-		"deploy": "gh-pages -d build",
-		"lint": "eslint src"
-	},
-	"eslintConfig": {
-		"extends": "react-app"
-	},
-	"browserslist": {
-		"production": [
-			">0.2%",
-			"not dead",
-			"not op_mini all"
-		],
-		"development": [
-			"last 1 chrome version",
-			"last 1 firefox version",
-			"last 1 safari version"
-		]
-	},
-	"devDependencies": {
-		"eslint": "^6.7.2",
-		"eslint-config-airbnb": "^18.0.1",
-		"eslint-plugin-import": "^2.19.1",
-		"eslint-plugin-jsx-a11y": "^6.2.3",
-		"eslint-plugin-react": "^7.17.0",
-		"gh-pages": "^2.1.1"
-	}
+  "name": "eliasgarcia.dev",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": "26.x"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "test": "node --test \"src/lib/*.test.ts\"",
+    "html": "html-validate dist",
+    "a11y": "node scripts/a11y.ts",
+    "lighthouse": "lhci autorun",
+    "lighthouse:open": "lhci open"
+  },
+  "dependencies": {
+    "@astrojs/markdown-satteri": "^0.4.8",
+    "@astrojs/mdx": "^8.1.4",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.5",
+    "@fontsource/instrument-sans": "^5.3.0",
+    "@lucide/astro": "^1.77.0",
+    "@panzoom/panzoom": "^4.6.2",
+    "@shikijs/transformers": "^4.6.0",
+    "@vercel/analytics": "^2.0.1",
+    "astro": "^7.4.10",
+    "reading-time": "^1.5.0",
+    "satori": "^0.63.2",
+    "satteri": "^0.11.7",
+    "sharp": "^0.35.5",
+    "shiki": "^4.6.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@axe-core/playwright": "^4.14.0",
+    "@lhci/cli": "^0.16.0",
+    "@types/node": "^26.6.6",
+    "eslint": "^10.14.0",
+    "eslint-plugin-astro": "^3.2.1",
+    "html-validate": "^11.21.1",
+    "jiti": "^2.7.0",
+    "playwright": "^1.65.0",
+    "prettier": "^3.10.0",
+    "prettier-plugin-astro": "^1.1.2",
+    "schema-dts": "^2.1.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.2"
+  }
 }

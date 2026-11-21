@@ -1,0 +1,882 @@
+---
+import { getCvFormats } from "../lib/cv.ts";
+import {
+  getHomeCopy,
+  getPage,
+  getProfile,
+  getSearchCopy,
+  getSections,
+} from "../lib/content.ts";
+import { describeSections } from "../lib/navigation.ts";
+import { routes } from "../lib/routes.ts";
+import { getSearchIndex } from "../lib/search.ts";
+import Icon from "./Icon.astro";
+import KeyHint from "./KeyHint.astro";
+import KeyHintGroup from "./KeyHintGroup.astro";
+import SearchOption from "./SearchOption.astro";
+import VisuallyHidden from "./VisuallyHidden.astro";
+
+const [copy, home, profile, writing, projects, formats, index, navigation] =
+  await Promise.all([
+    getSearchCopy(),
+    getHomeCopy(),
+    getProfile(),
+    getPage("writing"),
+    getPage("projects"),
+    getCvFormats(),
+    getSearchIndex(),
+    getSections(),
+  ]);
+const sections = describeSections(navigation, copy.sections, "search.yaml");
+const email = profile.contact.find(({ href }) => href.startsWith("mailto:"));
+if (email === undefined) {
+  throw new Error("The profile has no `mailto:` contact for the search.");
+}
+---
+
+<dialog
+  class="search"
+  closedby="any"
+  aria-label={copy.dialog}
+  data-search
+  data-email={email.href}
+  data-copy={JSON.stringify({
+    noResults: copy.noResults,
+    noFormat: copy.cv.noMatch,
+    suggestion: copy.suggestion,
+    resultCount: copy.resultCount,
+  })}
+  data-index={JSON.stringify(index)}
+>
+  <div class="input-row">
+    <Icon name="search" class="magnifier" />
+    <button class="small-control crumb" type="button" hidden data-search-crumb>
+      {home.downloadCv}
+      <VisuallyHidden>. {copy.cv.back}</VisuallyHidden>
+    </button>
+    <input
+      class="input"
+      type="text"
+      role="combobox"
+      aria-label={copy.input}
+      aria-expanded="true"
+      aria-controls="search-list"
+      aria-autocomplete="list"
+      autocomplete="off"
+      spellcheck="false"
+      autocapitalize="none"
+      autocorrect="off"
+      enterkeyhint="go"
+      placeholder={copy.input}
+      data-placeholder={copy.input}
+      data-cv-placeholder={copy.cv.placeholder}
+      autofocus
+      data-search-input
+    />
+    <button class="small-control clear" type="button" hidden data-search-clear>
+      {copy.clear}
+    </button>
+    <KeyHint>{copy.hints.escape}</KeyHint>
+  </div>
+
+  <div class="status" data-search-status></div>
+
+  <div
+    class="list"
+    id="search-list"
+    role="listbox"
+    aria-label={copy.results}
+    data-search-list
+  >
+    <div class="group" role="group" aria-label={copy.goTo} data-view="home">
+      <div class="group-label" aria-hidden="true">
+        {copy.goTo}
+      </div>
+      {sections.map(({ label, href, description }) => (
+        <SearchOption title={label} line={description} href={href}>
+          <Icon name="arrow-right" />
+        </SearchOption>
+      ))}
+    </div>
+    <div class="group" role="group" aria-label={copy.actions} data-view="home">
+      <div class="group-label" aria-hidden="true">
+        {copy.actions}
+      </div>
+      <SearchOption title={copy.email} line={email.text} href={email.href}>
+        <Icon name="mail" />
+      </SearchOption>
+      <SearchOption
+        title={home.downloadCv}
+        line={copy.cv.line}
+        action="cv"
+        more
+      >
+        <Icon name="download" />
+      </SearchOption>
+      <SearchOption
+        title={copy.rss.title}
+        line={copy.rss.line}
+        href={routes.feed}
+      >
+        <Icon name="rss" />
+      </SearchOption>
+    </div>
+    <div
+      class="group"
+      role="group"
+      aria-label={home.downloadCv}
+      hidden
+      data-view="cv"
+    >
+      <div class="group-label" aria-hidden="true">
+        {home.downloadCv}
+      </div>
+      {formats.map(({ label, keywords, description, size, href, icon }) => (
+        <SearchOption
+          title={label}
+          line={description}
+          meta={size}
+          href={href}
+          keywords={keywords}
+          download
+          fullLine
+        >
+          <Icon name={icon} />
+        </SearchOption>
+      ))}
+    </div>
+    <div
+      class="group"
+      role="group"
+      aria-label={writing.title}
+      hidden
+      data-view="results"
+      data-results="posts"
+    >
+      <div class="group-label" aria-hidden="true">
+        {writing.title}
+      </div>
+    </div>
+    <div
+      class="group"
+      role="group"
+      aria-label={projects.title}
+      hidden
+      data-view="results"
+      data-results="projects"
+    >
+      <div class="group-label" aria-hidden="true">
+        {projects.title}
+      </div>
+    </div>
+    <div
+      class="group"
+      role="group"
+      aria-label={copy.topics}
+      hidden
+      data-view="none"
+      data-results="topics"
+    >
+      <div class="group-label" aria-hidden="true">
+        {copy.topics}
+      </div>
+    </div>
+    <div
+      class="group"
+      role="group"
+      aria-label={copy.suggest}
+      hidden
+      data-view="none"
+    >
+      <div class="group-label" aria-hidden="true">
+        {copy.suggest}
+      </div>
+      <SearchOption line={copy.suggestion.line} href={email.href}>
+        <Icon name="mail" />
+      </SearchOption>
+    </div>
+  </div>
+
+  <div class="footer">
+    <KeyHintGroup keys={["↑", "↓"]} label={copy.hints.move} />
+    <KeyHintGroup keys={["↵"]} label={copy.hints.open} />
+    <KeyHintGroup
+      keys={[copy.hints.escape]}
+      label={copy.hints.back}
+      hidden
+      data-search-back-hint
+    />
+    <span class="count" data-search-count></span>
+    <VisuallyHidden>
+      <span role="status" data-search-announcement></span>
+    </VisuallyHidden>
+  </div>
+
+  <template data-search-template="posts">
+    <SearchOption href="" fullLine>
+      <Icon name="file-text" />
+    </SearchOption>
+  </template>
+  <template data-search-template="projects">
+    <SearchOption href="" fullLine>
+      <Icon name="layout-grid" />
+    </SearchOption>
+  </template>
+  <template data-search-template="topics">
+    <SearchOption href="">
+      <Icon name="hash" />
+    </SearchOption>
+  </template>
+</dialog>
+
+<script>
+  import { hasStrings, isRecord } from "../lib/guards.ts";
+  import type { SearchEntry, SearchIndex, SearchTopic } from "../lib/search.ts";
+  import {
+    fold,
+    markMatches,
+    markStart,
+    matches,
+    words,
+    type Segment,
+  } from "../lib/search-match.ts";
+  import { fill } from "../lib/template.ts";
+
+  type Counts = { one: string; other: string };
+  type Message = { title: string; hint: string };
+  type Copy = {
+    noResults: Message;
+    noFormat: string;
+    suggestion: { title: string; subject: string };
+    resultCount: Counts;
+  };
+  type View = "home" | "cv" | "results" | "none";
+
+  function isEntry(value: unknown): value is SearchEntry {
+    return hasStrings(value, ["title", "line", "meta", "href"]);
+  }
+
+  function isTopic(value: unknown): value is SearchTopic {
+    return hasStrings(value, ["label", "count", "href"]);
+  }
+
+  function isIndex(value: unknown): value is SearchIndex {
+    return (
+      isRecord(value) &&
+      Array.isArray(value.posts) &&
+      value.posts.every(isEntry) &&
+      Array.isArray(value.projects) &&
+      value.projects.every(isEntry) &&
+      Array.isArray(value.topics) &&
+      value.topics.every(isTopic)
+    );
+  }
+
+  function isCopy(value: unknown): value is Copy {
+    return (
+      isRecord(value) &&
+      hasStrings(value.noResults, ["title", "hint"]) &&
+      typeof value.noFormat === "string" &&
+      hasStrings(value.suggestion, ["title", "subject"]) &&
+      hasStrings(value.resultCount, ["one", "other"])
+    );
+  }
+
+  // A run of text, in a <mark> where it matches what was typed.
+  function toNode({ text, marked }: Segment): Node {
+    if (!marked) {
+      return document.createTextNode(text);
+    }
+    const mark = document.createElement("mark");
+    mark.textContent = text;
+    return mark;
+  }
+
+  const announceAfter = 500;
+  const compositionWindow = 50;
+
+  const dialog = document.querySelector<HTMLDialogElement>("[data-search]");
+  const input = dialog?.querySelector<HTMLInputElement>("[data-search-input]");
+  const list = dialog?.querySelector<HTMLElement>("[data-search-list]");
+  const status = dialog?.querySelector<HTMLElement>("[data-search-status]");
+  const count = dialog?.querySelector<HTMLElement>("[data-search-count]");
+  const crumb = dialog?.querySelector<HTMLButtonElement>("[data-search-crumb]");
+  const clear = dialog?.querySelector<HTMLButtonElement>("[data-search-clear]");
+  const backHint = dialog?.querySelector<HTMLElement>(
+    "[data-search-back-hint]",
+  );
+  const announcement = dialog?.querySelector<HTMLElement>(
+    "[data-search-announcement]",
+  );
+  const copy: unknown = JSON.parse(dialog?.dataset.copy ?? "null");
+  const index: unknown = JSON.parse(dialog?.dataset.index ?? "null");
+
+  if (
+    dialog &&
+    input &&
+    list &&
+    status &&
+    count &&
+    crumb &&
+    clear &&
+    backHint &&
+    announcement &&
+    isCopy(copy) &&
+    isIndex(index)
+  ) {
+    const plural = new Intl.PluralRules(document.documentElement.lang);
+    let view: View = "home";
+    let active = 0;
+
+    // Screen readers hear the message or the count once typing pauses, not
+    // on every key.
+    let announcing: number | undefined;
+    const announce = () => {
+      window.clearTimeout(announcing);
+      announcing = window.setTimeout(() => {
+        announcement.textContent = [
+          ...status.querySelectorAll(".message-title, .message-hint, .note"),
+        ]
+          .map((part) => part.textContent)
+          .concat(count.textContent)
+          .filter((part) => part !== "")
+          .join(" ");
+      }, announceAfter);
+    };
+
+    const showMessage = ({ title: titleText, hint: hintText }: Message) => {
+      const message = document.createElement("div");
+      message.className = "message";
+      const title = document.createElement("span");
+      title.className = "message-title";
+      title.textContent = titleText;
+      const hint = document.createElement("span");
+      hint.className = "message-hint";
+      hint.textContent = hintText;
+      message.append(title, hint);
+      status.replaceChildren(message);
+    };
+
+    const showNote = (text: string) => {
+      const note = document.createElement("p");
+      note.className = "note";
+      note.textContent = text;
+      status.replaceChildren(note);
+    };
+
+    const options = () => [
+      ...list.querySelectorAll<HTMLElement>(
+        '.group:not([hidden]) [role="option"]',
+      ),
+    ];
+
+    const deselect = () => {
+      active = -1;
+      for (const option of options()) {
+        option.setAttribute("aria-selected", "false");
+      }
+      input.removeAttribute("aria-activedescendant");
+    };
+
+    const select = (next: number) => {
+      const visible = options();
+      if (visible.length === 0) {
+        input.removeAttribute("aria-activedescendant");
+        return;
+      }
+      active = (next + visible.length) % visible.length;
+      for (const [position, option] of visible.entries()) {
+        option.setAttribute("aria-selected", String(position === active));
+      }
+      const current = visible[active];
+      if (current !== undefined) {
+        input.setAttribute("aria-activedescendant", current.id);
+        current.scrollIntoView({ block: "nearest" });
+      }
+    };
+
+    let nextId = 0;
+    const identify = (option: HTMLElement) => {
+      if (option.id === "") {
+        nextId += 1;
+        option.id = `search-option-${String(nextId)}`;
+      }
+    };
+    list.querySelectorAll<HTMLElement>('[role="option"]').forEach(identify);
+
+    const row = (
+      kind: "posts" | "projects" | "topics",
+      title: Node[],
+      line: Node[],
+      meta: string,
+      href: string,
+    ) => {
+      const template = dialog.querySelector<HTMLTemplateElement>(
+        `[data-search-template="${kind}"]`,
+      );
+      const option = template?.content.firstElementChild?.cloneNode(true);
+      if (!(option instanceof HTMLAnchorElement)) {
+        return undefined;
+      }
+      option.querySelector("[data-title]")?.replaceChildren(...title);
+      option.querySelector("[data-line]")?.replaceChildren(...line);
+      option.querySelector("[data-meta]")?.replaceChildren(meta);
+      option.href = href;
+      identify(option);
+      return option;
+    };
+
+    const fillGroup = (
+      kind: "posts" | "projects" | "topics",
+      rows: HTMLElement[],
+    ) => {
+      const group = list.querySelector<HTMLElement>(`[data-results="${kind}"]`);
+      if (group === null) {
+        return;
+      }
+      group.querySelectorAll('[role="option"]').forEach((option) => {
+        option.remove();
+      });
+      group.append(...rows);
+      group.dataset.empty = String(rows.length === 0);
+    };
+
+    const showView = (next: View) => {
+      view = next;
+      for (const group of list.querySelectorAll<HTMLElement>(".group")) {
+        group.hidden =
+          group.dataset.view !== view || group.dataset.empty === "true";
+      }
+      crumb.hidden = view !== "cv";
+      backHint.hidden = view !== "cv";
+      input.placeholder =
+        (view === "cv"
+          ? input.dataset.cvPlaceholder
+          : input.dataset.placeholder) ?? "";
+    };
+
+    const draw = () => {
+      const query = input.value.trim();
+      clear.hidden = query === "";
+      status.replaceChildren();
+      count.textContent = "";
+
+      // Choosing a format is a step, not a search: both stay listed, and
+      // typing only selects the first one whose name or keyword starts with
+      // the query.
+      if (view === "cv") {
+        const term = fold(query).folded;
+        let match = -1;
+        for (const [position, option] of list
+          .querySelectorAll<HTMLElement>('[data-view="cv"] [role="option"]')
+          .entries()) {
+          const title = option.querySelector("[data-title]");
+          const label = title?.textContent ?? "";
+          const names = [label, ...(option.dataset.keywords ?? "").split(" ")];
+          if (
+            match === -1 &&
+            term !== "" &&
+            names.some((name) => fold(name).folded.startsWith(term))
+          ) {
+            match = position;
+          }
+          title?.replaceChildren(
+            ...(position === match
+              ? markStart(label, term).map(toNode)
+              : [label]),
+          );
+        }
+        showView("cv");
+        if (term === "") {
+          if (active === -1) {
+            deselect();
+          } else {
+            select(active);
+          }
+        } else if (match === -1) {
+          deselect();
+          showNote(fill(copy.noFormat, { query }));
+        } else {
+          select(match);
+        }
+        return;
+      }
+
+      if (query === "") {
+        showView("home");
+        select(0);
+        return;
+      }
+
+      const terms = words(query);
+      // A query matches only what a row shows: its title and its line.
+      const found = (entry: SearchEntry) =>
+        matches(`${entry.title} ${entry.line}`, terms);
+      const posts = index.posts.filter(found);
+      const projects = index.projects.filter(found);
+      const total = posts.length + projects.length;
+      const toRow = (kind: "posts" | "projects") => (entry: SearchEntry) =>
+        row(
+          kind,
+          markMatches(entry.title, terms).map(toNode),
+          markMatches(entry.line, terms).map(toNode),
+          entry.meta,
+          entry.href,
+        );
+      fillGroup(
+        "posts",
+        posts.map(toRow("posts")).filter((option) => option !== undefined),
+      );
+      fillGroup(
+        "projects",
+        projects
+          .map(toRow("projects"))
+          .filter((option) => option !== undefined),
+      );
+      count.textContent = fill(
+        plural.select(total) === "one"
+          ? copy.resultCount.one
+          : copy.resultCount.other,
+        { count: String(total) },
+      );
+
+      if (total > 0) {
+        showView("results");
+        select(0);
+        return;
+      }
+
+      showMessage({
+        title: fill(copy.noResults.title, { query }),
+        hint: copy.noResults.hint,
+      });
+
+      fillGroup(
+        "topics",
+        index.topics
+          .map(({ label, count: posts, href }) =>
+            row("topics", [document.createTextNode(label)], [], posts, href),
+          )
+          .filter((option) => option !== undefined),
+      );
+      const suggestion = list.querySelector<HTMLAnchorElement>(
+        '[data-view="none"]:not([data-results]) [role="option"]',
+      );
+      if (suggestion !== null) {
+        const [before = "", after = ""] =
+          copy.suggestion.title.split("{query}");
+        const quoted = document.createElement("mark");
+        quoted.textContent = query;
+        suggestion
+          .querySelector("[data-title]")
+          ?.replaceChildren(before, quoted, after);
+        const url = new URL(dialog.dataset.email ?? "mailto:");
+        // Not URLSearchParams: mail apps don't read its "+" as a space.
+        url.search = `subject=${encodeURIComponent(fill(copy.suggestion.subject, { query }))}`;
+        suggestion.href = url.href;
+      }
+      showView("none");
+      select(0);
+    };
+
+    const render = () => {
+      draw();
+      announce();
+    };
+
+    const activate = (option: HTMLElement) => {
+      if (option.dataset.action === "cv") {
+        input.value = "";
+        active = 0;
+        showView("cv");
+        render();
+        return;
+      }
+      option.click();
+    };
+
+    const back = () => {
+      input.value = "";
+      showView("home");
+      render();
+      input.focus();
+    };
+
+    const close = () => {
+      dialog.close();
+    };
+
+    const open = () => {
+      if (dialog.open) {
+        return;
+      }
+      input.value = "";
+      showView("home");
+      render();
+      dialog.showModal();
+    };
+
+    document.addEventListener("keydown", (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        if (dialog.open) {
+          close();
+        } else {
+          open();
+        }
+      }
+    });
+
+    for (const button of document.querySelectorAll("[data-search-open]")) {
+      button.addEventListener("click", open);
+    }
+
+    input.addEventListener("input", render);
+
+    let composedAt: number | undefined;
+    input.addEventListener("compositionend", (event) => {
+      composedAt = event.timeStamp;
+    });
+
+    input.addEventListener("keydown", (event) => {
+      // While an input method is composing, the keys are its own.
+      if (event.isComposing) {
+        return;
+      }
+      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault();
+        // With nothing selected, ↓ goes to the first row and ↑ to the last.
+        const step = event.key === "ArrowDown" ? 1 : -1;
+        select(active === -1 && step === -1 ? -1 : active + step);
+        return;
+      }
+      // Enter that confirms an input method's composition isn't for the list.
+      // Safari ends the composition just before that Enter arrives, so the
+      // time since it ended is checked too.
+      const confirmsComposition =
+        composedAt !== undefined &&
+        Math.abs(event.timeStamp - composedAt) < compositionWindow;
+      if (event.key === "Enter" && !confirmsComposition) {
+        const option = options()[active];
+        if (option !== undefined) {
+          event.preventDefault();
+          activate(option);
+        }
+        return;
+      }
+      if (event.key === "Backspace" && view === "cv" && input.value === "") {
+        event.preventDefault();
+        back();
+      }
+    });
+
+    // Esc inside the Download CV choice goes back instead of closing.
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && view === "cv") {
+        event.preventDefault();
+        back();
+      }
+    });
+
+    list.addEventListener("click", (event) => {
+      if (!(event.target instanceof Element)) {
+        return;
+      }
+      const option = event.target.closest<HTMLElement>('[role="option"]');
+      if (option === null) {
+        return;
+      }
+      if (option instanceof HTMLAnchorElement) {
+        // The link does its own thing; the dialog steps out of the way, as
+        // a download or a new tab leaves the visitor here.
+        close();
+        return;
+      }
+      activate(option);
+      input.focus();
+    });
+
+    list.addEventListener("pointermove", (event) => {
+      if (!(event.target instanceof Element)) {
+        return;
+      }
+      const option = event.target.closest<HTMLElement>('[role="option"]');
+      const position = option === null ? -1 : options().indexOf(option);
+      if (position !== -1 && position !== active) {
+        select(position);
+      }
+    });
+
+    clear.addEventListener("click", () => {
+      input.value = "";
+      render();
+      input.focus();
+    });
+
+    crumb.addEventListener("click", back);
+
+    // Where `closedby` isn't supported, a click on the backdrop closes the
+    // dialog: it lands on the dialog itself.
+    if (!("closedBy" in HTMLDialogElement.prototype)) {
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) {
+          close();
+        }
+      });
+    }
+  }
+</script>
+
+<style>
+  .search {
+    --search-w: 560px;
+    --search-input-h: 56px;
+    /* The tallest result list, short of a small window. */
+    --search-list-h: min(440px, 100dvh - 220px);
+    /* The small controls in the input row: Clear and the crumb. */
+    --input-button-h: 28px;
+
+    inline-size: min(var(--search-w), 100% - 2 * var(--space-4));
+    max-block-size: none;
+    margin: var(--space-24) auto auto;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-block-size: var(--search-input-h);
+    padding-inline: var(--space-4);
+    border-block-end: var(--hairline) solid var(--line);
+  }
+
+  .magnifier {
+    stroke: var(--text-3);
+  }
+
+  .input {
+    flex: 1;
+    min-inline-size: 0;
+    block-size: 100%;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+
+    &::placeholder {
+      color: var(--text-3);
+    }
+  }
+
+  .small-control {
+    flex: none;
+    min-block-size: var(--input-button-h);
+    border: 0;
+    background: var(--control);
+    color: var(--text-2);
+    cursor: pointer;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: var(--control-hover);
+        color: var(--text);
+      }
+    }
+  }
+
+  /* The crumb highlights at once, like the rows (DESIGN.md §2.5); only its
+     press moves. */
+  .crumb {
+    padding-inline: var(--space-3);
+    border-radius: var(--r-full);
+    font-size: var(--text-small);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: scale var(--dur) var(--ease-settle);
+
+      &:active {
+        scale: var(--press-scale);
+      }
+    }
+  }
+
+  .clear {
+    padding-inline: var(--space-2);
+    border-radius: var(--r-md);
+    font-size: var(--text-micro);
+    transition:
+      background var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        background var(--dur) var(--ease),
+        color var(--dur) var(--ease),
+        scale var(--dur) var(--ease-settle);
+
+      &:active {
+        scale: var(--press-scale);
+      }
+    }
+  }
+
+  .status {
+    :global(.message) {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      padding: var(--space-4) var(--space-4) var(--space-1);
+    }
+
+    :global(.message-title) {
+      font-weight: var(--weight-medium);
+    }
+
+    :global(.message-hint),
+    :global(.note) {
+      color: var(--text-3);
+      font-size: var(--text-small);
+    }
+
+    :global(.note) {
+      padding: var(--space-3) var(--space-4) 0;
+    }
+  }
+
+  .list {
+    max-block-size: var(--search-list-h);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--space-1) var(--space-2) var(--space-2);
+  }
+
+  .group-label {
+    padding: var(--space-3) var(--space-3) var(--space-1);
+    color: var(--text-3);
+    font-size: var(--text-micro);
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-block-start: var(--hairline) solid var(--line);
+    background: var(--surface);
+    color: var(--text-3);
+    font-size: var(--text-micro);
+  }
+
+  .count {
+    margin-inline-start: auto;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (forced-colors: active) {
+    .small-control {
+      border: var(--hairline) solid ButtonBorder;
+    }
+  }
+</style>

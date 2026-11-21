@@ -1,0 +1,126 @@
+---
+import type { CollectionEntry } from "astro:content";
+import {
+  getReadingTime,
+  getTopics,
+  getWritingIndexCopy,
+  topicLabel,
+  type Topic,
+} from "../lib/content.ts";
+import { formatMonthDay, isoDate } from "../lib/format.ts";
+import { linkTarget } from "../lib/links.ts";
+import { routes } from "../lib/routes.ts";
+import Button from "./Button.astro";
+import Chip from "./Chip.astro";
+import Icon from "./Icon.astro";
+import List from "./List.astro";
+import ListRow from "./ListRow.astro";
+import MetaItem from "./MetaItem.astro";
+import MetaLine from "./MetaLine.astro";
+import NewTabNote from "./NewTabNote.astro";
+import PageIntro from "./PageIntro.astro";
+import Section from "./Section.astro";
+
+type Props = {
+  page: CollectionEntry<"pages">["data"];
+  posts: readonly CollectionEntry<"writing">[];
+  topic?: Topic;
+};
+
+const { page, posts, topic } = Astro.props;
+const topics = getTopics(posts);
+const copy = await getWritingIndexCopy();
+const shown =
+  topic === undefined
+    ? posts
+    : posts.filter(({ data }) => data.topic.slug === topic.slug);
+const rows = await Promise.all(
+  shown.map(async (post) => ({
+    post,
+    readingTime: await getReadingTime(post),
+  })),
+);
+const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
+---
+
+<div class="writing">
+  <PageIntro title={page.title} intro={page.intro}>
+    <Button slot="action" href={routes.feed} {...linkTarget(routes.feed)}>
+      <Icon name="rss" />
+      {copy.subscribe}
+      <NewTabNote />
+    </Button>
+    <nav class="topics" aria-label={copy.filterName}>
+      <Chip
+        label={copy.all}
+        count={posts.length}
+        href={routes.writing}
+        current={topic === undefined}
+      />
+      {[...topics.values()].map(({ slug, label, count }) => (
+        <Chip
+          label={label}
+          count={count}
+          href={routes.topic(slug)}
+          current={slug === topic?.slug}
+        />
+      ))}
+    </nav>
+  </PageIntro>
+
+  <div class="years">
+    {[...years].map(([year, yearRows]) => (
+      <Section title={String(year)}>
+        <List>
+          {yearRows.map(({ post, readingTime }) => (
+            <ListRow
+              title={post.data.title}
+              href={routes.post(post.id)}
+              article
+              underline
+            >
+              <time slot="date" datetime={isoDate(post.data.date)}>
+                {formatMonthDay(post.data.date)}
+              </time>
+              {post.data.description}
+              <MetaLine slot="meta">
+                <MetaItem>{topicLabel(topics, post.data.topic)}</MetaItem>
+                <MetaItem>{readingTime}</MetaItem>
+              </MetaLine>
+            </ListRow>
+          ))}
+        </List>
+      </Section>
+    ))}
+  </div>
+</div>
+
+<style>
+  .writing {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .topics {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .years {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  /* The year groups read as one list: hovering a post quiets all the others,
+     beyond the per-list fade in List. */
+  @media (hover: hover) and (pointer: fine) {
+    .years:has(:global(.row-interactive:hover))
+      :global(.row-interactive:not(:hover)) {
+      opacity: var(--row-fade);
+    }
+  }
+</style>
