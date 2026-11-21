@@ -8,7 +8,7 @@ const { "data-footnotes": footnotes, ...attributes } = Astro.props;
 ---
 
 {footnotes !== undefined ? (
-  <section class="notes" aria-labelledby="footnote-label">
+  <section class="notes" data-footnotes>
     <slot />
   </section>
 ) : (
