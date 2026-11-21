@@ -734,7 +734,7 @@ if (email === undefined) {
     /* The tallest result list, short of a small window. */
     --search-list-h: min(440px, 100dvh - 220px);
     /* The small controls in the input row: Clear and the crumb. */
-    --control-sm: 28px;
+    --input-button-h: 28px;
 
     inline-size: min(var(--search-w), 100% - 2 * var(--space-4));
     max-block-size: none;
@@ -772,7 +772,7 @@ if (email === undefined) {
 
   .small-control {
     flex: none;
-    min-block-size: var(--control-sm);
+    min-block-size: var(--input-button-h);
     border: 0;
     background: var(--control);
     color: var(--text-2);
