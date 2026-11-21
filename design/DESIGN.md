@@ -204,7 +204,7 @@ One `Icon` component (`src/components/Icon.astro`) draws them all: `<Icon name="
 | Projects in search results | `layout-grid` | 16 |
 | Topic suggestions when a search finds nothing | `hash` | 16 |
 | Send me an email | `mail` | 16 |
-| Subscribe with RSS (button and search action) | `rss` (its dot is filled) | 16 |
+| Subscribe with RSS (button and search action) | `rss`, its dot **filled and stroked** (`fill: currentColor`, keeping the 1.5px stroke) everywhere: about 2.8px across, the same proportion to the arcs as Lucide's own icon. Never `stroke: none`, which leaves a 1.3px dot | 16 |
 | Go to (pages) in search | `arrow-right` | 16 |
 | Video play button | `play` (filled) | 16 |
 | Copy (code examples on the Foundations board) | `copy` | 16 |

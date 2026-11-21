@@ -97,9 +97,9 @@ const Lucide = icons[name];
     fill: currentColor;
   }
 
-  /* The RSS icon's dot is a dot, not a ring (DESIGN.md §2.7). */
+  /* The RSS icon's dot is a dot, not a ring. It keeps its stroke: without
+     it the dot is too small for the arcs (DESIGN.md §2.7). */
   :where(.dotted) :global(circle) {
     fill: currentColor;
-    stroke: none;
   }
 </style>
