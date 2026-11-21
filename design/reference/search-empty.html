@@ -10,7 +10,7 @@ a,button,summary,label,[role="button"]{touch-action:manipulation}
 button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user-select:none}
 .phbtn img{-webkit-touch-callout:none}
 /* touch: text links and rows dim while pressed (instantly), then fade back */
-@media (hover:none),(pointer:coarse){a:active:not(.button,.tile,.card,.pn,.lpc,.topic,.item a){opacity:.6}.list .item:has(a:active){opacity:.6;transition:none}}
+@media (hover:none),(pointer:coarse){a:active:not(.button,.tile,.card,.cl,.pn,.lpc,.topic,.item a){opacity:.6}.list .item:has(a:active){opacity:.6;transition:none}}
 
 :root{--space-page:64px;--space-section:80px;--space-footer:96px}
 .site main p:not([class]):not([style*="font-size"]){line-height:1.6}
@@ -90,7 +90,7 @@ a{color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){.tile:hover .pv{border-color:var(--line-strong)}}
 .tile:active .pv{transform:scale(.99)}
 .anim{animation-play-state:paused !important}
-.tile:focus-visible .anim{animation-play-state:running !important}@media (hover:hover) and (pointer:fine){.tile:hover .anim{animation-play-state:running !important}}
+.tile:has(.cl:focus-visible) .anim{animation-play-state:running !important}@media (hover:hover) and (pointer:fine){.tile:hover .anim{animation-play-state:running !important}}
 .ill{width:100%;height:100%;display:block}
 .ring{fill:none;stroke:var(--line);stroke-width:1}
 .wedge{fill:var(--accent);opacity:.14}
@@ -400,6 +400,9 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 .photos > li:only-child{flex-basis:100%}
 }
 @media (prefers-reduced-motion:reduce){.vdlg{animation:palFade var(--dur) var(--ease-settle) both;transition:none}.vscrim{animation:none}.vtrack{display:block !important;translate:none !important;transition:none !important}.vslide{position:absolute !important;inset:0 !important;flex:none !important;translate:none !important;opacity:0 !important;transition:opacity var(--dur) var(--ease-settle) !important}.vslide.on{opacity:1 !important}}
+
+/* title-only link: the title's link is stretched over the card or tile with ::after, so the whole card is still one target; the focus ring is drawn on that ::after, round the card */
+.card,.tile{position:relative}.cl{color:inherit}.cl::after{content:"";position:absolute;inset:0}.site .cl:focus-visible{outline:none}.site .cl:focus-visible::after{outline:2px solid var(--accent-c);outline-offset:3px}
 </style>
 </head><body>
 <div data-dc-tpl="3" class="site" style="--accent: #4F39F6; min-height: 100svh; background: var(--bg);">
@@ -458,7 +461,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
       <ul data-dc-tpl="75" class="tiles" role="list" style="display: grid; gap: 4px 24px;">
 
         <li data-dc-tpl="76">
-        <a data-dc-tpl="77" class="tile" href="Project.dc.html">
+        <div data-dc-tpl="77" class="tile">
           <div data-dc-tpl="78" class="pv" style="position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden; view-transition-name: roleburn-preview;">
             <svg data-dc-tpl="79" class="ill" viewBox="0 0 200 150" aria-hidden="true">
               <circle data-dc-tpl="80" cx="100" cy="75" r="56" class="ring"></circle>
@@ -473,78 +476,78 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
               <circle data-dc-tpl="90" cx="54" cy="70" r="2.5" class="miss"></circle>
             </svg>
           </div>
-          <div data-dc-tpl="91" class="thead"><h3 data-dc-tpl="92" class="tt">Roleburn</h3><p data-dc-tpl="93" class="sm"><span data-dc-tpl="94" class="sdot" aria-hidden="true"></span><span data-dc-tpl="95">In progress</span><span data-dc-tpl="96" aria-hidden="true">·</span><time data-dc-tpl="97" datetime="2026">2026</time></p></div>
-          <span data-dc-tpl="98" class="td">A daily radar for remote roles that match my CV.</span>
-        </a>
+          <div data-dc-tpl="91" class="thead"><h3 data-dc-tpl="92" class="tt"><a data-dc-tpl="93" class="cl" href="Project.dc.html">Roleburn</a></h3><p data-dc-tpl="94" class="sm"><span data-dc-tpl="95" class="sdot" aria-hidden="true"></span><span data-dc-tpl="96">In progress</span><span data-dc-tpl="97" aria-hidden="true">·</span><time data-dc-tpl="98" datetime="2026">2026</time></p></div>
+          <span data-dc-tpl="99" class="td">A daily radar for remote roles that match my CV.</span>
+        </div>
         </li>
 
-        <li data-dc-tpl="99">
-        <a data-dc-tpl="100" class="tile" href="#">
-          <div data-dc-tpl="101" class="pv" style="position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden;">
-            <svg data-dc-tpl="102" class="ill" viewBox="0 0 200 150" aria-hidden="true">
-              <line data-dc-tpl="103" x1="54" y1="68" x2="78" y2="68" class="link"></line>
-              <line data-dc-tpl="104" x1="122" y1="68" x2="146" y2="68" class="link"></line>
-              <rect data-dc-tpl="105" x="10" y="54" width="44" height="28" rx="8" class="node"></rect>
-              <text data-dc-tpl="106" x="32" y="72" class="lbl">#142</text>
-              <rect data-dc-tpl="107" x="78" y="54" width="44" height="28" rx="8" class="node"></rect>
-              <text data-dc-tpl="108" x="100" y="72" class="lbl">PR</text>
-              <rect data-dc-tpl="109" x="146" y="54" width="44" height="28" rx="8" class="node done"></rect>
-              <text data-dc-tpl="110" x="168" y="72" class="lbl light">Review</text>
-              <line data-dc-tpl="111" x1="32" y1="106" x2="168" y2="106" class="track"></line>
-              <circle data-dc-tpl="112" cx="32" cy="106" r="4" class="runner anim"></circle>
+        <li data-dc-tpl="100">
+        <div data-dc-tpl="101" class="tile">
+          <div data-dc-tpl="102" class="pv" style="position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden;">
+            <svg data-dc-tpl="103" class="ill" viewBox="0 0 200 150" aria-hidden="true">
+              <line data-dc-tpl="104" x1="54" y1="68" x2="78" y2="68" class="link"></line>
+              <line data-dc-tpl="105" x1="122" y1="68" x2="146" y2="68" class="link"></line>
+              <rect data-dc-tpl="106" x="10" y="54" width="44" height="28" rx="8" class="node"></rect>
+              <text data-dc-tpl="107" x="32" y="72" class="lbl">#142</text>
+              <rect data-dc-tpl="108" x="78" y="54" width="44" height="28" rx="8" class="node"></rect>
+              <text data-dc-tpl="109" x="100" y="72" class="lbl">PR</text>
+              <rect data-dc-tpl="110" x="146" y="54" width="44" height="28" rx="8" class="node done"></rect>
+              <text data-dc-tpl="111" x="168" y="72" class="lbl light">Review</text>
+              <line data-dc-tpl="112" x1="32" y1="106" x2="168" y2="106" class="track"></line>
+              <circle data-dc-tpl="113" cx="32" cy="106" r="4" class="runner anim"></circle>
             </svg>
           </div>
-          <div data-dc-tpl="113" class="thead"><h3 data-dc-tpl="114" class="tt">work-issue</h3><p data-dc-tpl="115" class="sm"><span data-dc-tpl="116">Experiment</span><span data-dc-tpl="117" aria-hidden="true">·</span><time data-dc-tpl="118" datetime="2026">2026</time></p></div>
-          <span data-dc-tpl="119" class="td">Agents that take a GitHub issue to a reviewed PR.</span>
-        </a>
+          <div data-dc-tpl="114" class="thead"><h3 data-dc-tpl="115" class="tt"><a data-dc-tpl="116" class="cl" href="#">work-issue</a></h3><p data-dc-tpl="117" class="sm"><span data-dc-tpl="118">Experiment</span><span data-dc-tpl="119" aria-hidden="true">·</span><time data-dc-tpl="120" datetime="2026">2026</time></p></div>
+          <span data-dc-tpl="121" class="td">Agents that take a GitHub issue to a reviewed PR.</span>
+        </div>
         </li>
 
-        <li data-dc-tpl="120">
-        <a data-dc-tpl="121" class="tile" href="#">
-          <div data-dc-tpl="122" class="pv" style="position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden;">
-            <svg data-dc-tpl="123" class="ill" viewBox="0 0 200 150" aria-hidden="true">
-              <path data-dc-tpl="124" class="lineA" d="M14 86 C40 58, 62 98, 92 70 S142 46, 186 60"></path>
-              <path data-dc-tpl="125" class="lineB" d="M14 102 C42 94, 70 112, 100 100 S150 92, 186 106"></path>
-              <line data-dc-tpl="126" x1="25" y1="34" x2="25" y2="122" class="scan anim"></line>
-              <text data-dc-tpl="127" x="186" y="50" class="tag" style="text-anchor: end;">grvt</text>
-              <text data-dc-tpl="128" x="186" y="122" class="tag" style="text-anchor: end;">ApeX</text>
+        <li data-dc-tpl="122">
+        <div data-dc-tpl="123" class="tile">
+          <div data-dc-tpl="124" class="pv" style="position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden;">
+            <svg data-dc-tpl="125" class="ill" viewBox="0 0 200 150" aria-hidden="true">
+              <path data-dc-tpl="126" class="lineA" d="M14 86 C40 58, 62 98, 92 70 S142 46, 186 60"></path>
+              <path data-dc-tpl="127" class="lineB" d="M14 102 C42 94, 70 112, 100 100 S150 92, 186 106"></path>
+              <line data-dc-tpl="128" x1="25" y1="34" x2="25" y2="122" class="scan anim"></line>
+              <text data-dc-tpl="129" x="186" y="50" class="tag" style="text-anchor: end;">grvt</text>
+              <text data-dc-tpl="130" x="186" y="122" class="tag" style="text-anchor: end;">ApeX</text>
             </svg>
           </div>
-          <div data-dc-tpl="129" class="thead"><h3 data-dc-tpl="130" class="tt">POL funding spreads</h3><p data-dc-tpl="131" class="sm"><span data-dc-tpl="132">Research</span><span data-dc-tpl="133" aria-hidden="true">·</span><time data-dc-tpl="134" datetime="2026">2026</time></p></div>
-          <span data-dc-tpl="135" class="td">Funding-rate arbitrage on POL perps across DEXes.</span>
-        </a>
+          <div data-dc-tpl="131" class="thead"><h3 data-dc-tpl="132" class="tt"><a data-dc-tpl="133" class="cl" href="#">POL funding spreads</a></h3><p data-dc-tpl="134" class="sm"><span data-dc-tpl="135">Research</span><span data-dc-tpl="136" aria-hidden="true">·</span><time data-dc-tpl="137" datetime="2026">2026</time></p></div>
+          <span data-dc-tpl="138" class="td">Funding-rate arbitrage on POL perps across DEXes.</span>
+        </div>
         </li>
 
       </ul>
     </section>
 
-    <section data-dc-tpl="136" id="work" style="display: flex; flex-direction: column; gap: 8px;">
-      <h2 data-dc-tpl="137" id="work-h" style="margin: 0px 0px 8px; font-size: 18px; font-weight: 600; line-height: 1.35;">Work experience</h2>
-      <ul data-dc-tpl="138" class="list" role="list" style="display: flex; flex-direction: column;">
+    <section data-dc-tpl="139" id="work" style="display: flex; flex-direction: column; gap: 8px;">
+      <h2 data-dc-tpl="140" id="work-h" style="margin: 0px 0px 8px; font-size: 18px; font-weight: 600; line-height: 1.35;">Work experience</h2>
+      <ul data-dc-tpl="141" class="list" role="list" style="display: flex; flex-direction: column;">
         
-          <li data-dc-tpl="140" class="item job open">
-            <button data-dc-tpl="141" class="jobhead" aria-expanded="true">
-              <span data-dc-tpl="142" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="143" datetime="2024"><span class="sc-interp">2024</span></time> – Now</span>
-              <span data-dc-tpl="147" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-                <span data-dc-tpl="148"><span data-dc-tpl="149" style="font-weight: 500;"><span class="sc-interp">Vesu</span></span><span data-dc-tpl="150" class="cmode"><span data-dc-tpl="151" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="152" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
-                <span data-dc-tpl="153" style="color: var(--text-2);"><span class="sc-interp">Engineering Lead</span></span>
+          <li data-dc-tpl="143" class="item job open">
+            <button data-dc-tpl="144" class="jobhead" aria-expanded="true">
+              <span data-dc-tpl="145" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="146" datetime="2024"><span class="sc-interp">2024</span></time> – Now</span>
+              <span data-dc-tpl="150" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+                <span data-dc-tpl="151"><span data-dc-tpl="152" style="font-weight: 500;"><span class="sc-interp">Vesu</span></span><span data-dc-tpl="153" class="cmode"><span data-dc-tpl="154" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="155" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
+                <span data-dc-tpl="156" style="color: var(--text-2);"><span class="sc-interp">Engineering Lead</span></span>
               </span>
-              <svg data-dc-tpl="154" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="155" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="156" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
+              <svg data-dc-tpl="157" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="158" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="159" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
             </button>
-            <div data-dc-tpl="157" class="jobbody">
-              <div data-dc-tpl="158" style="min-height: 0px; overflow: hidden;">
-                <div data-dc-tpl="159" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
-                  <span data-dc-tpl="160" class="jobgut" style="flex: 0 0 112px;"></span>
-                  <div data-dc-tpl="161" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
-                    <ul data-dc-tpl="162" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
+            <div data-dc-tpl="160" class="jobbody">
+              <div data-dc-tpl="161" style="min-height: 0px; overflow: hidden;">
+                <div data-dc-tpl="162" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                  <span data-dc-tpl="163" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <div data-dc-tpl="164" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
+                    <ul data-dc-tpl="165" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="164" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="165" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led engineering from launch to $84.6M in customer assets.</span></li>
+                        <li data-dc-tpl="167" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="168" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led engineering from launch to $84.6M in customer assets.</span></li>
                       
-                        <li data-dc-tpl="164" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="165" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the lender and borrower app, a risk-parameter admin panel and a blockchain-only fallback UI so users can exit positions during an outage, on a shared Ark UI design system.</span></li>
+                        <li data-dc-tpl="167" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="168" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the lender and borrower app, a risk-parameter admin panel and a blockchain-only fallback UI so users can exit positions during an outage, on a shared Ark UI design system.</span></li>
                       
-                        <li data-dc-tpl="164" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="165" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the real-time event-ingestion pipeline, a public API, an RFQ system for liquidations over WebSockets and an MCP server for product data.</span></li>
+                        <li data-dc-tpl="167" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="168" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the real-time event-ingestion pipeline, a public API, an RFQ system for liquidations over WebSockets and an MCP server for product data.</span></li>
                       
-                        <li data-dc-tpl="164" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="165" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Set up issue tracking, CI/CD and releases from zero, mentored the frontend team and introduced the company’s AI development practice.</span></li>
+                        <li data-dc-tpl="167" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="168" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Set up issue tracking, CI/CD and releases from zero, mentored the frontend team and introduced the company’s AI development practice.</span></li>
                       
                     </ul>
                     
@@ -554,27 +557,27 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </div>
           </li>
         
-          <li data-dc-tpl="140" class="item job ">
-            <button data-dc-tpl="141" class="jobhead" aria-expanded="false">
-              <span data-dc-tpl="142" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="143" datetime="2020"><span class="sc-interp">2020</span></time> – <time data-dc-tpl="146" datetime="2024"><span class="sc-interp">2024</span></time></span>
-              <span data-dc-tpl="147" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-                <span data-dc-tpl="148"><span data-dc-tpl="149" style="font-weight: 500;"><span class="sc-interp">Polygon Labs</span></span><span data-dc-tpl="150" class="cmode"><span data-dc-tpl="151" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="152" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
-                <span data-dc-tpl="153" style="color: var(--text-2);"><span class="sc-interp">Staff Frontend Engineer → Tech Lead</span></span>
+          <li data-dc-tpl="143" class="item job ">
+            <button data-dc-tpl="144" class="jobhead" aria-expanded="false">
+              <span data-dc-tpl="145" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="146" datetime="2020"><span class="sc-interp">2020</span></time> – <time data-dc-tpl="149" datetime="2024"><span class="sc-interp">2024</span></time></span>
+              <span data-dc-tpl="150" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+                <span data-dc-tpl="151"><span data-dc-tpl="152" style="font-weight: 500;"><span class="sc-interp">Polygon Labs</span></span><span data-dc-tpl="153" class="cmode"><span data-dc-tpl="154" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="155" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
+                <span data-dc-tpl="156" style="color: var(--text-2);"><span class="sc-interp">Staff Frontend Engineer → Tech Lead</span></span>
               </span>
-              <svg data-dc-tpl="154" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="155" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="156" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
+              <svg data-dc-tpl="157" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="158" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="159" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
             </button>
-            <div data-dc-tpl="157" class="jobbody">
-              <div data-dc-tpl="158" style="min-height: 0px; overflow: hidden;">
-                <div data-dc-tpl="159" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
-                  <span data-dc-tpl="160" class="jobgut" style="flex: 0 0 112px;"></span>
-                  <div data-dc-tpl="161" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
-                    <ul data-dc-tpl="162" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
+            <div data-dc-tpl="160" class="jobbody">
+              <div data-dc-tpl="161" style="min-height: 0px; overflow: hidden;">
+                <div data-dc-tpl="162" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                  <span data-dc-tpl="163" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <div data-dc-tpl="164" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
+                    <ul data-dc-tpl="165" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="164" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="165" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Hermez: built the consumer wallet and block explorer, and contributed to the protocol SDK. Polygon acquired Hermez in 2021.</span></li>
+                        <li data-dc-tpl="167" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="168" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Hermez: built the consumer wallet and block explorer, and contributed to the protocol SDK. Polygon acquired Hermez in 2021.</span></li>
                       
-                        <li data-dc-tpl="164" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="165" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon zkEVM: led the 3-person frontend team across every user-facing product, including the bridge, as it grew to $180M in bridged assets.</span></li>
+                        <li data-dc-tpl="167" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="168" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon zkEVM: led the 3-person frontend team across every user-facing product, including the bridge, as it grew to $180M in bridged assets.</span></li>
                       
-                        <li data-dc-tpl="164" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="165" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon ID: tech lead of a 10-engineer team building the credential issuer, wallet, marketplace and schema tooling.</span></li>
+                        <li data-dc-tpl="167" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="168" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon ID: tech lead of a 10-engineer team building the credential issuer, wallet, marketplace and schema tooling.</span></li>
                       
                     </ul>
                     
@@ -584,23 +587,23 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </div>
           </li>
         
-          <li data-dc-tpl="140" class="item job ">
-            <button data-dc-tpl="141" class="jobhead" aria-expanded="false">
-              <span data-dc-tpl="142" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="143" datetime="2019"><span class="sc-interp">2019</span></time> – <time data-dc-tpl="146" datetime="2020"><span class="sc-interp">2020</span></time></span>
-              <span data-dc-tpl="147" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-                <span data-dc-tpl="148"><span data-dc-tpl="149" style="font-weight: 500;"><span class="sc-interp">Nexiona</span></span><span data-dc-tpl="150" class="cmode"><span data-dc-tpl="151" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="152" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
-                <span data-dc-tpl="153" style="color: var(--text-2);"><span class="sc-interp">Senior Frontend Engineer</span></span>
+          <li data-dc-tpl="143" class="item job ">
+            <button data-dc-tpl="144" class="jobhead" aria-expanded="false">
+              <span data-dc-tpl="145" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="146" datetime="2019"><span class="sc-interp">2019</span></time> – <time data-dc-tpl="149" datetime="2020"><span class="sc-interp">2020</span></time></span>
+              <span data-dc-tpl="150" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+                <span data-dc-tpl="151"><span data-dc-tpl="152" style="font-weight: 500;"><span class="sc-interp">Nexiona</span></span><span data-dc-tpl="153" class="cmode"><span data-dc-tpl="154" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="155" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
+                <span data-dc-tpl="156" style="color: var(--text-2);"><span class="sc-interp">Senior Frontend Engineer</span></span>
               </span>
-              <svg data-dc-tpl="154" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="155" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="156" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
+              <svg data-dc-tpl="157" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="158" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="159" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
             </button>
-            <div data-dc-tpl="157" class="jobbody">
-              <div data-dc-tpl="158" style="min-height: 0px; overflow: hidden;">
-                <div data-dc-tpl="159" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
-                  <span data-dc-tpl="160" class="jobgut" style="flex: 0 0 112px;"></span>
-                  <div data-dc-tpl="161" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
-                    <ul data-dc-tpl="162" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
+            <div data-dc-tpl="160" class="jobbody">
+              <div data-dc-tpl="161" style="min-height: 0px; overflow: hidden;">
+                <div data-dc-tpl="162" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                  <span data-dc-tpl="163" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <div data-dc-tpl="164" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
+                    <ul data-dc-tpl="165" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="164" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="165" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the frontend of MIIMETIQ in React and Redux, used across Europe by companies including Celsa Group and Grifols.</span></li>
+                        <li data-dc-tpl="167" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="168" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the frontend of MIIMETIQ in React and Redux, used across Europe by companies including Celsa Group and Grifols.</span></li>
                       
                     </ul>
                     
@@ -610,25 +613,25 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </div>
           </li>
         
-          <li data-dc-tpl="140" class="item job ">
-            <button data-dc-tpl="141" class="jobhead" aria-expanded="false">
-              <span data-dc-tpl="142" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="143" datetime="2018"><span class="sc-interp">2018</span></time> – <time data-dc-tpl="146" datetime="2019"><span class="sc-interp">2019</span></time></span>
-              <span data-dc-tpl="147" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-                <span data-dc-tpl="148"><span data-dc-tpl="149" style="font-weight: 500;"><span class="sc-interp">Netex Learning</span></span><span data-dc-tpl="150" class="cmode"><span data-dc-tpl="151" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="152" class="vh">, </span><span class="sc-interp">On-site, A Coruña</span></span></span>
-                <span data-dc-tpl="153" style="color: var(--text-2);"><span class="sc-interp">Lead Frontend Engineer</span></span>
+          <li data-dc-tpl="143" class="item job ">
+            <button data-dc-tpl="144" class="jobhead" aria-expanded="false">
+              <span data-dc-tpl="145" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="146" datetime="2018"><span class="sc-interp">2018</span></time> – <time data-dc-tpl="149" datetime="2019"><span class="sc-interp">2019</span></time></span>
+              <span data-dc-tpl="150" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+                <span data-dc-tpl="151"><span data-dc-tpl="152" style="font-weight: 500;"><span class="sc-interp">Netex Learning</span></span><span data-dc-tpl="153" class="cmode"><span data-dc-tpl="154" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="155" class="vh">, </span><span class="sc-interp">On-site, A Coruña</span></span></span>
+                <span data-dc-tpl="156" style="color: var(--text-2);"><span class="sc-interp">Lead Frontend Engineer</span></span>
               </span>
-              <svg data-dc-tpl="154" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="155" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="156" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
+              <svg data-dc-tpl="157" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="158" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="159" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
             </button>
-            <div data-dc-tpl="157" class="jobbody">
-              <div data-dc-tpl="158" style="min-height: 0px; overflow: hidden;">
-                <div data-dc-tpl="159" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
-                  <span data-dc-tpl="160" class="jobgut" style="flex: 0 0 112px;"></span>
-                  <div data-dc-tpl="161" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
-                    <ul data-dc-tpl="162" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
+            <div data-dc-tpl="160" class="jobbody">
+              <div data-dc-tpl="161" style="min-height: 0px; overflow: hidden;">
+                <div data-dc-tpl="162" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                  <span data-dc-tpl="163" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <div data-dc-tpl="164" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
+                    <ul data-dc-tpl="165" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="164" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="165" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led the 4-person Angular team behind Netex Cloud, used by thousands of learners at companies including Amazon and Inditex. Delivered internationalisation and accessibility.</span></li>
+                        <li data-dc-tpl="167" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="168" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led the 4-person Angular team behind Netex Cloud, used by thousands of learners at companies including Amazon and Inditex. Delivered internationalisation and accessibility.</span></li>
                       
-                        <li data-dc-tpl="164" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="165" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led a cross-department initiative to build a shared component library adopted across the company’s products.</span></li>
+                        <li data-dc-tpl="167" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="168" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led a cross-department initiative to build a shared component library adopted across the company’s products.</span></li>
                       
                     </ul>
                     
@@ -638,23 +641,23 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </div>
           </li>
         
-          <li data-dc-tpl="140" class="item job ">
-            <button data-dc-tpl="141" class="jobhead" aria-expanded="false">
-              <span data-dc-tpl="142" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="143" datetime="2017"><span class="sc-interp">2017</span></time> – <time data-dc-tpl="146" datetime="2018"><span class="sc-interp">2018</span></time></span>
-              <span data-dc-tpl="147" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-                <span data-dc-tpl="148"><span data-dc-tpl="149" style="font-weight: 500;"><span class="sc-interp">Ágora Binaria</span></span><span data-dc-tpl="150" class="cmode"><span data-dc-tpl="151" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="152" class="vh">, </span><span class="sc-interp">Hybrid, A Coruña</span></span></span>
-                <span data-dc-tpl="153" style="color: var(--text-2);"><span class="sc-interp">Full-Stack Engineer</span></span>
+          <li data-dc-tpl="143" class="item job ">
+            <button data-dc-tpl="144" class="jobhead" aria-expanded="false">
+              <span data-dc-tpl="145" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="146" datetime="2017"><span class="sc-interp">2017</span></time> – <time data-dc-tpl="149" datetime="2018"><span class="sc-interp">2018</span></time></span>
+              <span data-dc-tpl="150" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+                <span data-dc-tpl="151"><span data-dc-tpl="152" style="font-weight: 500;"><span class="sc-interp">Ágora Binaria</span></span><span data-dc-tpl="153" class="cmode"><span data-dc-tpl="154" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="155" class="vh">, </span><span class="sc-interp">Hybrid, A Coruña</span></span></span>
+                <span data-dc-tpl="156" style="color: var(--text-2);"><span class="sc-interp">Full-Stack Engineer</span></span>
               </span>
-              <svg data-dc-tpl="154" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="155" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="156" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
+              <svg data-dc-tpl="157" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="158" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="159" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
             </button>
-            <div data-dc-tpl="157" class="jobbody">
-              <div data-dc-tpl="158" style="min-height: 0px; overflow: hidden;">
-                <div data-dc-tpl="159" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
-                  <span data-dc-tpl="160" class="jobgut" style="flex: 0 0 112px;"></span>
-                  <div data-dc-tpl="161" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
-                    <ul data-dc-tpl="162" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
+            <div data-dc-tpl="160" class="jobbody">
+              <div data-dc-tpl="161" style="min-height: 0px; overflow: hidden;">
+                <div data-dc-tpl="162" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                  <span data-dc-tpl="163" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <div data-dc-tpl="164" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
+                    <ul data-dc-tpl="165" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="164" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="165" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built full-stack client applications and did performance work on existing Angular codebases.</span></li>
+                        <li data-dc-tpl="167" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="168" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built full-stack client applications and did performance work on existing Angular codebases.</span></li>
                       
                     </ul>
                     
@@ -667,85 +670,85 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
       </ul>
     </section>
 
-    <section data-dc-tpl="170" id="writing" style="display: flex; flex-direction: column; gap: 8px;">
-      <div data-dc-tpl="171" style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-        <h2 data-dc-tpl="172" id="writing-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Writing</h2>
-        <a data-dc-tpl="173" class="more" href="Writing.dc.html"><span data-dc-tpl="174">All posts</span><svg data-dc-tpl="175" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="176" vector-effect="non-scaling-stroke" d="m9 18 6-6-6-6"></path></svg></a>
+    <section data-dc-tpl="173" id="writing" style="display: flex; flex-direction: column; gap: 8px;">
+      <div data-dc-tpl="174" style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+        <h2 data-dc-tpl="175" id="writing-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Writing</h2>
+        <a data-dc-tpl="176" class="more" href="Writing.dc.html"><span data-dc-tpl="177">All posts</span><svg data-dc-tpl="178" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="179" vector-effect="non-scaling-stroke" d="m9 18 6-6-6-6"></path></svg></a>
       </div>
-      <ul data-dc-tpl="177" class="list" role="list" style="display: flex; flex-direction: column;">
-        <li data-dc-tpl="178"><a data-dc-tpl="179" class="item" href="Post.dc.html" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-          <time data-dc-tpl="180" datetime="2026-11" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;">Nov 2026</time>
-          <span data-dc-tpl="181" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-            <span data-dc-tpl="182" style="font-weight: 500;">Rebuilding this site</span>
-            <span data-dc-tpl="183" style="color: var(--text-2);">Why it stayed one column, and how I spent the motion budget.</span>
+      <ul data-dc-tpl="180" class="list" role="list" style="display: flex; flex-direction: column;">
+        <li data-dc-tpl="181"><a data-dc-tpl="182" class="item" href="Post.dc.html" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+          <time data-dc-tpl="183" datetime="2026-11" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;">Nov 2026</time>
+          <span data-dc-tpl="184" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+            <span data-dc-tpl="185" style="font-weight: 500;">Rebuilding this site</span>
+            <span data-dc-tpl="186" style="color: var(--text-2);">Why it stayed one column, and how I spent the motion budget.</span>
           </span>
         </a></li>
-        <li data-dc-tpl="184"><a data-dc-tpl="185" class="item" href="#" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-          <time data-dc-tpl="186" datetime="2026-10" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;">Oct 2026</time>
-          <span data-dc-tpl="187" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-            <span data-dc-tpl="188" style="font-weight: 500;">A job radar made of markdown files</span>
-            <span data-dc-tpl="189" style="color: var(--text-2);">How Roleburn runs on a folder of notes and a few scheduled agents.</span>
+        <li data-dc-tpl="187"><a data-dc-tpl="188" class="item" href="#" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+          <time data-dc-tpl="189" datetime="2026-10" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;">Oct 2026</time>
+          <span data-dc-tpl="190" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+            <span data-dc-tpl="191" style="font-weight: 500;">A job radar made of markdown files</span>
+            <span data-dc-tpl="192" style="color: var(--text-2);">How Roleburn runs on a folder of notes and a few scheduled agents.</span>
           </span>
         </a></li>
-        <li data-dc-tpl="190"><a data-dc-tpl="191" class="item" href="#" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-          <time data-dc-tpl="192" datetime="2026-09" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;">Sep 2026</time>
-          <span data-dc-tpl="193" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-            <span data-dc-tpl="194" style="font-weight: 500;">From GitHub issue to reviewed pull request</span>
-            <span data-dc-tpl="195" style="color: var(--text-2);">Running my side projects through an agent pipeline with work-issue.</span>
+        <li data-dc-tpl="193"><a data-dc-tpl="194" class="item" href="#" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+          <time data-dc-tpl="195" datetime="2026-09" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;">Sep 2026</time>
+          <span data-dc-tpl="196" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+            <span data-dc-tpl="197" style="font-weight: 500;">From GitHub issue to reviewed pull request</span>
+            <span data-dc-tpl="198" style="color: var(--text-2);">Running my side projects through an agent pipeline with work-issue.</span>
           </span>
         </a></li>
       </ul>
     </section>
 
-    <section data-dc-tpl="196" id="speaking" style="display: flex; flex-direction: column; gap: 16px;">
-      <h2 data-dc-tpl="197" id="speaking-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Speaking</h2>
-      <ul data-dc-tpl="198" class="list" role="list" style="display: flex; flex-direction: column;">
-        <li data-dc-tpl="199" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-          <time data-dc-tpl="200" datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3);">Jan 2024</time>
-          <span data-dc-tpl="201" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-            <span data-dc-tpl="202" style="font-weight: 500;">Preserving privacy with Polygon ID profiles</span>
-            <span data-dc-tpl="203" style="color: var(--text-2);">House of ZK, EthDenver</span>
+    <section data-dc-tpl="199" id="speaking" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="200" id="speaking-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Speaking</h2>
+      <ul data-dc-tpl="201" class="list" role="list" style="display: flex; flex-direction: column;">
+        <li data-dc-tpl="202" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+          <time data-dc-tpl="203" datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3);">Jan 2024</time>
+          <span data-dc-tpl="204" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+            <span data-dc-tpl="205" style="font-weight: 500;">Preserving privacy with Polygon ID profiles</span>
+            <span data-dc-tpl="206" style="color: var(--text-2);">House of ZK, EthDenver</span>
           </span>
-          <div data-dc-tpl="204" class="attach"><span data-dc-tpl="205" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="206" class="attach-c"><ul data-dc-tpl="207" class="photos" role="list"><li data-dc-tpl="208"><button data-dc-tpl="209" class="phbtn" type="button" aria-label="Open photo 1 of 1: Preserving privacy with Polygon ID profiles"><img data-dc-tpl="210" src="../assets/talk-hozk.jpg" alt="Elías pointing at the Polygon ID identity state diagram while presenting at House of ZK, EthDenver 2024" loading="lazy"></button></li></ul></div></div>
+          <div data-dc-tpl="207" class="attach"><span data-dc-tpl="208" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="209" class="attach-c"><ul data-dc-tpl="210" class="photos" role="list"><li data-dc-tpl="211"><button data-dc-tpl="212" class="phbtn" type="button" aria-label="Open photo 1 of 1: Preserving privacy with Polygon ID profiles"><img data-dc-tpl="213" src="../assets/talk-hozk.jpg" alt="Elías pointing at the Polygon ID identity state diagram while presenting at House of ZK, EthDenver 2024" loading="lazy"></button></li></ul></div></div>
         </li>
-        <li data-dc-tpl="211" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-          <time data-dc-tpl="212" datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3);">Jan 2024</time>
-          <span data-dc-tpl="213" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-            <span data-dc-tpl="214" style="font-weight: 500;">Zero-knowledge identity with Polygon ID</span>
-            <span data-dc-tpl="215" style="color: var(--text-2);">Polygon AggCave, EthDenver</span>
+        <li data-dc-tpl="214" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+          <time data-dc-tpl="215" datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3);">Jan 2024</time>
+          <span data-dc-tpl="216" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+            <span data-dc-tpl="217" style="font-weight: 500;">Zero-knowledge identity with Polygon ID</span>
+            <span data-dc-tpl="218" style="color: var(--text-2);">Polygon AggCave, EthDenver</span>
           </span>
-          <div data-dc-tpl="216" class="attach"><span data-dc-tpl="217" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="218" class="attach-c"><ul data-dc-tpl="219" class="photos" role="list"><li data-dc-tpl="220"><button data-dc-tpl="221" class="phbtn" type="button" aria-label="Open photo 1 of 1: Zero-knowledge identity with Polygon ID"><img data-dc-tpl="222" src="../assets/talk-aggcave.jpg" alt="Elías, holding a microphone, beside a fellow speaker presenting the main features of Polygon ID at the Polygon Aggregation Cave, EthDenver 2024" loading="lazy"></button></li></ul></div></div>
+          <div data-dc-tpl="219" class="attach"><span data-dc-tpl="220" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="221" class="attach-c"><ul data-dc-tpl="222" class="photos" role="list"><li data-dc-tpl="223"><button data-dc-tpl="224" class="phbtn" type="button" aria-label="Open photo 1 of 1: Zero-knowledge identity with Polygon ID"><img data-dc-tpl="225" src="../assets/talk-aggcave.jpg" alt="Elías, holding a microphone, beside a fellow speaker presenting the main features of Polygon ID at the Polygon Aggregation Cave, EthDenver 2024" loading="lazy"></button></li></ul></div></div>
         </li>
-        <li data-dc-tpl="223" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-          <time data-dc-tpl="224" datetime="2023-07" style="flex: 0 0 112px; color: var(--text-3);">Jul 2023</time>
-          <span data-dc-tpl="225" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-            <span data-dc-tpl="226" style="font-weight: 500;">Issuing verifiable credentials with Polygon ID</span>
-            <span data-dc-tpl="227" style="color: var(--text-2);">Polygon DevX Global Tour, Lisbon</span>
+        <li data-dc-tpl="226" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+          <time data-dc-tpl="227" datetime="2023-07" style="flex: 0 0 112px; color: var(--text-3);">Jul 2023</time>
+          <span data-dc-tpl="228" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+            <span data-dc-tpl="229" style="font-weight: 500;">Issuing verifiable credentials with Polygon ID</span>
+            <span data-dc-tpl="230" style="color: var(--text-2);">Polygon DevX Global Tour, Lisbon</span>
           </span>
-          <div data-dc-tpl="228" class="attach"><span data-dc-tpl="229" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="230" class="attach-c"><ul data-dc-tpl="231" class="photos" role="list"><li data-dc-tpl="232"><button data-dc-tpl="233" class="phbtn" type="button" aria-label="Open photo 1 of 3: Issuing verifiable credentials with Polygon ID"><img data-dc-tpl="234" src="../assets/talk-lisbon-slide.jpg" alt="Elías on stage presenting a slide on traditional identity systems at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></button></li><li data-dc-tpl="235"><button data-dc-tpl="236" class="phbtn" type="button" aria-label="Open photo 2 of 3: Issuing verifiable credentials with Polygon ID"><img data-dc-tpl="237" src="../assets/talk-lisbon-panel.jpg" alt="Elías and two other speakers on stage at the Polygon DevX Global Tour in Lisbon, in front of a slide reading “Issuing Lens Verifiable Credentials using Polygon ID”" loading="lazy"></button></li><li data-dc-tpl="238"><button data-dc-tpl="239" class="phbtn" type="button" aria-label="Open photo 3 of 3: Issuing verifiable credentials with Polygon ID"><img data-dc-tpl="240" src="../assets/talk-lisbon-group.jpg" alt="Elías with the speakers and organisers on stage at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></button></li></ul></div></div>
+          <div data-dc-tpl="231" class="attach"><span data-dc-tpl="232" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="233" class="attach-c"><ul data-dc-tpl="234" class="photos" role="list"><li data-dc-tpl="235"><button data-dc-tpl="236" class="phbtn" type="button" aria-label="Open photo 1 of 3: Issuing verifiable credentials with Polygon ID"><img data-dc-tpl="237" src="../assets/talk-lisbon-slide.jpg" alt="Elías on stage presenting a slide on traditional identity systems at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></button></li><li data-dc-tpl="238"><button data-dc-tpl="239" class="phbtn" type="button" aria-label="Open photo 2 of 3: Issuing verifiable credentials with Polygon ID"><img data-dc-tpl="240" src="../assets/talk-lisbon-panel.jpg" alt="Elías and two other speakers on stage at the Polygon DevX Global Tour in Lisbon, in front of a slide reading “Issuing Lens Verifiable Credentials using Polygon ID”" loading="lazy"></button></li><li data-dc-tpl="241"><button data-dc-tpl="242" class="phbtn" type="button" aria-label="Open photo 3 of 3: Issuing verifiable credentials with Polygon ID"><img data-dc-tpl="243" src="../assets/talk-lisbon-group.jpg" alt="Elías with the speakers and organisers on stage at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></button></li></ul></div></div>
         </li>
       </ul>
     </section>
 
-    <section data-dc-tpl="241" id="teaching" style="display: flex; flex-direction: column; gap: 16px;">
-      <h2 data-dc-tpl="242" id="teaching-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Teaching</h2>
+    <section data-dc-tpl="244" id="teaching" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="245" id="teaching-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Teaching</h2>
       
-      <ul data-dc-tpl="243" class="list courses" role="list">
-        <li data-dc-tpl="244" class="crow">
-          <a data-dc-tpl="245" class="item" href="https://balio.app/curso/defi/" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-            <time data-dc-tpl="246" datetime="2022-03" style="flex: 0 0 112px; color: var(--text-3);">Mar 2022</time>
-            <span data-dc-tpl="247" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 4px;">
-              <span data-dc-tpl="248" style="display: flex; flex-direction: column;">
-                <span data-dc-tpl="249" style="font-weight: 500;">The DeFi revolution<svg data-dc-tpl="250" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="251" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="252" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></span>
-                <span data-dc-tpl="253" style="color: var(--text-2);">Online course in Spanish, Balio</span>
+      <ul data-dc-tpl="246" class="list courses" role="list">
+        <li data-dc-tpl="247" class="crow">
+          <a data-dc-tpl="248" class="item" href="https://balio.app/curso/defi/" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+            <time data-dc-tpl="249" datetime="2022-03" style="flex: 0 0 112px; color: var(--text-3);">Mar 2022</time>
+            <span data-dc-tpl="250" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 4px;">
+              <span data-dc-tpl="251" style="display: flex; flex-direction: column;">
+                <span data-dc-tpl="252" style="font-weight: 500;">The DeFi revolution<svg data-dc-tpl="253" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="254" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="255" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></span>
+                <span data-dc-tpl="256" style="color: var(--text-2);">Online course in Spanish, Balio</span>
               </span>
-              <p data-dc-tpl="254" class="cmeta"><span data-dc-tpl="255" class="crate"><span data-dc-tpl="256" class="vh">Rated 4.7 out of 5 from 26 reviews.</span><span data-dc-tpl="257" class="crate-v" aria-hidden="true"><svg data-dc-tpl="258" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="star"><path data-dc-tpl="259" vector-effect="non-scaling-stroke" d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path></svg><b data-dc-tpl="260">4.7</b><span data-dc-tpl="261">(26 reviews)</span></span></span><span data-dc-tpl="262" aria-hidden="true">·</span><span data-dc-tpl="263">30 lessons</span><span data-dc-tpl="264" aria-hidden="true">·</span><span data-dc-tpl="265">2h 20m</span></p>
+              <p data-dc-tpl="257" class="cmeta"><span data-dc-tpl="258" class="crate"><span data-dc-tpl="259" class="vh">Rated 4.7 out of 5 from 26 reviews.</span><span data-dc-tpl="260" class="crate-v" aria-hidden="true"><svg data-dc-tpl="261" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="star"><path data-dc-tpl="262" vector-effect="non-scaling-stroke" d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path></svg><b data-dc-tpl="263">4.7</b><span data-dc-tpl="264">(26 reviews)</span></span></span><span data-dc-tpl="265" aria-hidden="true">·</span><span data-dc-tpl="266">30 lessons</span><span data-dc-tpl="267" aria-hidden="true">·</span><span data-dc-tpl="268">2h 20m</span></p>
             </span>
           </a>
-          <div data-dc-tpl="266" class="attach"><span data-dc-tpl="267" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="268" class="attach-c">
-            <a data-dc-tpl="269" class="lpc" href="https://www.youtube.com/watch?v=FESgArXJBX0">
-              <span data-dc-tpl="270" class="lpc-img"><img data-dc-tpl="271" src="../assets/course-trailer.jpg" alt="" loading="lazy"><span data-dc-tpl="272" class="play"><svg data-dc-tpl="273" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="play"><path data-dc-tpl="274" vector-effect="non-scaling-stroke" d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path></svg></span></span>
-              <span data-dc-tpl="275" class="lpc-t"><span data-dc-tpl="276" class="lpc-title">Watch the trailer</span><span data-dc-tpl="277" class="lpc-src">YouTube<svg data-dc-tpl="278" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="279" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="280" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></span></span>
+          <div data-dc-tpl="269" class="attach"><span data-dc-tpl="270" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="271" class="attach-c">
+            <a data-dc-tpl="272" class="lpc" href="https://www.youtube.com/watch?v=FESgArXJBX0">
+              <span data-dc-tpl="273" class="lpc-img"><img data-dc-tpl="274" src="../assets/course-trailer.jpg" alt="" loading="lazy"><span data-dc-tpl="275" class="play"><svg data-dc-tpl="276" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="play"><path data-dc-tpl="277" vector-effect="non-scaling-stroke" d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path></svg></span></span>
+              <span data-dc-tpl="278" class="lpc-t"><span data-dc-tpl="279" class="lpc-title">Watch the trailer</span><span data-dc-tpl="280" class="lpc-src">YouTube<svg data-dc-tpl="281" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="282" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="283" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></span></span>
             </a>
           </div></div>
         </li>
@@ -753,38 +756,38 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
     </section>
 
 
-    <section data-dc-tpl="281" style="display: flex; flex-direction: column; gap: 16px;">
-      <h2 data-dc-tpl="282" id="edu-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Education</h2>
-      <div data-dc-tpl="283" style="display: flex; flex-wrap: wrap; gap: 4px 24px;">
-        <span data-dc-tpl="284" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="285" datetime="2013">2013</time> – <time data-dc-tpl="286" datetime="2017">2017</time></span>
-        <span data-dc-tpl="287" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-          <span data-dc-tpl="288" style="font-weight: 500;">BSc Computer Science at University of A Coruña</span>
-          <span data-dc-tpl="289" style="color: var(--text-2);">Specialization in software engineering</span>
+    <section data-dc-tpl="284" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="285" id="edu-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Education</h2>
+      <div data-dc-tpl="286" style="display: flex; flex-wrap: wrap; gap: 4px 24px;">
+        <span data-dc-tpl="287" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="288" datetime="2013">2013</time> – <time data-dc-tpl="289" datetime="2017">2017</time></span>
+        <span data-dc-tpl="290" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+          <span data-dc-tpl="291" style="font-weight: 500;">BSc Computer Science at University of A Coruña</span>
+          <span data-dc-tpl="292" style="color: var(--text-2);">Specialization in software engineering</span>
         </span>
       </div>
     </section>
 
-    <section data-dc-tpl="290" id="contact" class="contact" style="display: flex; flex-direction: column; gap: 12px;">
-      <h2 data-dc-tpl="291" id="contact-h" style="margin: 0px 0px 4px; font-size: 18px; font-weight: 600; line-height: 1.35;">Contact</h2>
-      <address data-dc-tpl="292">
-      <dl data-dc-tpl="293" style="display: flex; flex-direction: column; gap: 12px;">
-      <div data-dc-tpl="294" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
-        <dt data-dc-tpl="295" style="flex: 0 0 112px; color: var(--text-3);">Email</dt>
-        <dd data-dc-tpl="296" style="flex: 1 1 300px; min-width: 0px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-          <a data-dc-tpl="297" href="mailto:eliasgarciadev@gmail.com">eliasgarciadev@gmail.com<svg data-dc-tpl="298" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="299" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="300" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a>
+    <section data-dc-tpl="293" id="contact" class="contact" style="display: flex; flex-direction: column; gap: 12px;">
+      <h2 data-dc-tpl="294" id="contact-h" style="margin: 0px 0px 4px; font-size: 18px; font-weight: 600; line-height: 1.35;">Contact</h2>
+      <address data-dc-tpl="295">
+      <dl data-dc-tpl="296" style="display: flex; flex-direction: column; gap: 12px;">
+      <div data-dc-tpl="297" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
+        <dt data-dc-tpl="298" style="flex: 0 0 112px; color: var(--text-3);">Email</dt>
+        <dd data-dc-tpl="299" style="flex: 1 1 300px; min-width: 0px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <a data-dc-tpl="300" href="mailto:eliasgarciadev@gmail.com">eliasgarciadev@gmail.com<svg data-dc-tpl="301" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="302" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="303" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a>
         </dd>
       </div>
-      <div data-dc-tpl="301" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
-        <dt data-dc-tpl="302" style="flex: 0 0 112px; color: var(--text-3);">GitHub</dt>
-        <dd data-dc-tpl="303" style="flex: 1 1 300px;"><a data-dc-tpl="304" href="https://github.com/elias-garcia">elias-garcia<svg data-dc-tpl="305" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="306" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="307" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a></dd>
+      <div data-dc-tpl="304" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
+        <dt data-dc-tpl="305" style="flex: 0 0 112px; color: var(--text-3);">GitHub</dt>
+        <dd data-dc-tpl="306" style="flex: 1 1 300px;"><a data-dc-tpl="307" href="https://github.com/elias-garcia">elias-garcia<svg data-dc-tpl="308" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="309" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="310" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a></dd>
       </div>
-      <div data-dc-tpl="308" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
-        <dt data-dc-tpl="309" style="flex: 0 0 112px; color: var(--text-3);">LinkedIn</dt>
-        <dd data-dc-tpl="310" style="flex: 1 1 300px;"><a data-dc-tpl="311" href="https://www.linkedin.com/in/elias-garcia-marino">elias-garcia-marino<svg data-dc-tpl="312" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="313" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="314" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a></dd>
+      <div data-dc-tpl="311" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
+        <dt data-dc-tpl="312" style="flex: 0 0 112px; color: var(--text-3);">LinkedIn</dt>
+        <dd data-dc-tpl="313" style="flex: 1 1 300px;"><a data-dc-tpl="314" href="https://www.linkedin.com/in/elias-garcia-marino">elias-garcia-marino<svg data-dc-tpl="315" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="316" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="317" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a></dd>
       </div>
-      <div data-dc-tpl="315" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
-        <dt data-dc-tpl="316" style="flex: 0 0 112px; color: var(--text-3);">X</dt>
-        <dd data-dc-tpl="317" style="flex: 1 1 300px;"><a data-dc-tpl="318" href="https://x.com/eliasgarciadev">@eliasgarciadev<svg data-dc-tpl="319" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="320" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="321" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a></dd>
+      <div data-dc-tpl="318" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
+        <dt data-dc-tpl="319" style="flex: 0 0 112px; color: var(--text-3);">X</dt>
+        <dd data-dc-tpl="320" style="flex: 1 1 300px;"><a data-dc-tpl="321" href="https://x.com/eliasgarciadev">@eliasgarciadev<svg data-dc-tpl="322" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="323" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="324" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a></dd>
       </div>
       </dl>
       </address>
@@ -792,13 +795,13 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 
   </main>
 
-  <footer data-dc-tpl="322" style="margin-top: var(--space-footer); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);">
-    <div data-dc-tpl="323" style="max-width: 688px; margin: 0px auto; padding: 12px max(24px, env(safe-area-inset-right, 0px)) 12px max(24px, env(safe-area-inset-left, 0px)); min-height: 64px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: 14px; color: var(--text-3);">
-      <span data-dc-tpl="324" style="display: flex; align-items: center; gap: 12px;">
-        <svg data-dc-tpl="325" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="326" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="327" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="328" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="329" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="330" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
+  <footer data-dc-tpl="325" style="margin-top: var(--space-footer); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);">
+    <div data-dc-tpl="326" style="max-width: 688px; margin: 0px auto; padding: 12px max(24px, env(safe-area-inset-right, 0px)) 12px max(24px, env(safe-area-inset-left, 0px)); min-height: 64px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: 14px; color: var(--text-3);">
+      <span data-dc-tpl="327" style="display: flex; align-items: center; gap: 12px;">
+        <svg data-dc-tpl="328" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="329" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="330" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="331" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="332" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="333" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
         Elías García, 2026
       </span>
-      <span data-dc-tpl="331" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="332"><time data-dc-tpl="333" datetime="02:22"><span class="sc-interp">02:22</span></time> in Portugal</span><span data-dc-tpl="334" aria-hidden="true">·</span><span data-dc-tpl="335"><span class="sc-interp">1h behind you</span></span></span>
+      <span data-dc-tpl="334" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="335"><time data-dc-tpl="336" datetime="02:59"><span class="sc-interp">02:59</span></time> in Portugal</span><span data-dc-tpl="337" aria-hidden="true">·</span><span data-dc-tpl="338"><span class="sc-interp">1h behind you</span></span></span>
     </div>
   </footer>
 
@@ -807,97 +810,97 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 
   
   
-    <div data-dc-tpl="385" style="position: fixed; inset: 0px; z-index: var(--z-dialog); display: flex; justify-content: center; align-items: flex-start; padding: 96px 16px 0px;">
-      <button data-dc-tpl="386" class="pscrim" aria-label="Close search"></button>
-      <div data-dc-tpl="387" class="ppanel" role="dialog" aria-label="Search" style="position: relative; width: 100%; max-width: 560px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-overlay); overflow: hidden;">
-        <label data-dc-tpl="388" style="display: flex; align-items: center; gap: 12px; padding: 0px 16px; height: 56px; border-bottom: 1px solid var(--line);">
-          <svg data-dc-tpl="389" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="search" style="fill: none; stroke: var(--text-3); stroke-width: 1.5; flex: 0 0 auto;"><path data-dc-tpl="390" vector-effect="non-scaling-stroke" d="m21 21-4.34-4.34"></path><circle data-dc-tpl="391" vector-effect="non-scaling-stroke" cx="11" cy="11" r="8"></circle></svg>
-          <span data-dc-tpl="392" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px);">Search posts and projects</span>
+    <div data-dc-tpl="388" style="position: fixed; inset: 0px; z-index: var(--z-dialog); display: flex; justify-content: center; align-items: flex-start; padding: 96px 16px 0px;">
+      <button data-dc-tpl="389" class="pscrim" aria-label="Close search"></button>
+      <div data-dc-tpl="390" class="ppanel" role="dialog" aria-label="Search" style="position: relative; width: 100%; max-width: 560px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-overlay); overflow: hidden;">
+        <label data-dc-tpl="391" style="display: flex; align-items: center; gap: 12px; padding: 0px 16px; height: 56px; border-bottom: 1px solid var(--line);">
+          <svg data-dc-tpl="392" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="search" style="fill: none; stroke: var(--text-3); stroke-width: 1.5; flex: 0 0 auto;"><path data-dc-tpl="393" vector-effect="non-scaling-stroke" d="m21 21-4.34-4.34"></path><circle data-dc-tpl="394" vector-effect="non-scaling-stroke" cx="11" cy="11" r="8"></circle></svg>
+          <span data-dc-tpl="395" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px);">Search posts and projects</span>
           
-          <input data-dc-tpl="395" class="pin" type="text" enterkeyhint="go" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Search posts and projects" role="combobox" aria-expanded="true" aria-controls="pal-list" aria-activedescendant="pal-0" autocomplete="off" value="">
+          <input data-dc-tpl="398" class="pin" type="text" enterkeyhint="go" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Search posts and projects" role="combobox" aria-expanded="true" aria-controls="pal-list" aria-activedescendant="pal-0" autocomplete="off" value="">
           
-          <span data-dc-tpl="398" class="pk">esc</span>
+          <span data-dc-tpl="401" class="pk">esc</span>
         </label>
         
         
-        <div data-dc-tpl="405" id="pal-list" role="listbox" aria-label="Results" style="max-height: min(440px, 100dvh - 220px); overscroll-behavior: contain; overflow-y: auto; padding: 4px 8px 8px;">
+        <div data-dc-tpl="408" id="pal-list" role="listbox" aria-label="Results" style="max-height: min(440px, 100dvh - 220px); overscroll-behavior: contain; overflow-y: auto; padding: 4px 8px 8px;">
           
-            <div data-dc-tpl="407" role="group" aria-label="Go to">
-              <div data-dc-tpl="408" class="pgrp"><span class="sc-interp">Go to</span></div>
+            <div data-dc-tpl="410" role="group" aria-label="Go to">
+              <div data-dc-tpl="411" class="pgrp"><span class="sc-interp">Go to</span></div>
               
-                <a data-dc-tpl="410" class="popt act" id="pal-0" role="option" aria-selected="true" href="Main.dc.html">
-                  <span data-dc-tpl="411" class="pic" aria-hidden="true"><svg data-dc-tpl="431" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-right"><path data-dc-tpl="432" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="433" vector-effect="non-scaling-stroke" d="m12 5 7 7-7 7"></path></svg></span>
-                  <span data-dc-tpl="477" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="478" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="483"><span class="sc-interp">Home</span></span></span>
-                    <span data-dc-tpl="485" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="490"><span class="sc-interp">About me, work experience, talks and contact</span></span></span>
+                <a data-dc-tpl="413" class="popt act" id="pal-0" role="option" aria-selected="true" href="Main.dc.html">
+                  <span data-dc-tpl="414" class="pic" aria-hidden="true"><svg data-dc-tpl="434" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-right"><path data-dc-tpl="435" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="436" vector-effect="non-scaling-stroke" d="m12 5 7 7-7 7"></path></svg></span>
+                  <span data-dc-tpl="480" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="481" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="486"><span class="sc-interp">Home</span></span></span>
+                    <span data-dc-tpl="488" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="493"><span class="sc-interp">About me, work experience, talks and contact</span></span></span>
                   </span>
-                  <span data-dc-tpl="491" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
-                  <span data-dc-tpl="492" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="494" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
+                  <span data-dc-tpl="495" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
-                <a data-dc-tpl="410" class="popt " id="pal-1" role="option" aria-selected="false" href="ProjectsIndex.dc.html">
-                  <span data-dc-tpl="411" class="pic" aria-hidden="true"><svg data-dc-tpl="431" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-right"><path data-dc-tpl="432" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="433" vector-effect="non-scaling-stroke" d="m12 5 7 7-7 7"></path></svg></span>
-                  <span data-dc-tpl="477" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="478" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="483"><span class="sc-interp">Projects</span></span></span>
-                    <span data-dc-tpl="485" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="490"><span class="sc-interp">Side projects</span></span></span>
+                <a data-dc-tpl="413" class="popt " id="pal-1" role="option" aria-selected="false" href="ProjectsIndex.dc.html">
+                  <span data-dc-tpl="414" class="pic" aria-hidden="true"><svg data-dc-tpl="434" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-right"><path data-dc-tpl="435" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="436" vector-effect="non-scaling-stroke" d="m12 5 7 7-7 7"></path></svg></span>
+                  <span data-dc-tpl="480" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="481" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="486"><span class="sc-interp">Projects</span></span></span>
+                    <span data-dc-tpl="488" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="493"><span class="sc-interp">Side projects</span></span></span>
                   </span>
-                  <span data-dc-tpl="491" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
-                  <span data-dc-tpl="492" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="494" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
+                  <span data-dc-tpl="495" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
-                <a data-dc-tpl="410" class="popt " id="pal-2" role="option" aria-selected="false" href="Writing.dc.html">
-                  <span data-dc-tpl="411" class="pic" aria-hidden="true"><svg data-dc-tpl="431" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-right"><path data-dc-tpl="432" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="433" vector-effect="non-scaling-stroke" d="m12 5 7 7-7 7"></path></svg></span>
-                  <span data-dc-tpl="477" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="478" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="483"><span class="sc-interp">Writing</span></span></span>
-                    <span data-dc-tpl="485" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="490"><span class="sc-interp">All posts</span></span></span>
+                <a data-dc-tpl="413" class="popt " id="pal-2" role="option" aria-selected="false" href="Writing.dc.html">
+                  <span data-dc-tpl="414" class="pic" aria-hidden="true"><svg data-dc-tpl="434" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-right"><path data-dc-tpl="435" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="436" vector-effect="non-scaling-stroke" d="m12 5 7 7-7 7"></path></svg></span>
+                  <span data-dc-tpl="480" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="481" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="486"><span class="sc-interp">Writing</span></span></span>
+                    <span data-dc-tpl="488" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="493"><span class="sc-interp">All posts</span></span></span>
                   </span>
-                  <span data-dc-tpl="491" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
-                  <span data-dc-tpl="492" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="494" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
+                  <span data-dc-tpl="495" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
             </div>
           
-            <div data-dc-tpl="407" role="group" aria-label="Actions">
-              <div data-dc-tpl="408" class="pgrp"><span class="sc-interp">Actions</span></div>
+            <div data-dc-tpl="410" role="group" aria-label="Actions">
+              <div data-dc-tpl="411" class="pgrp"><span class="sc-interp">Actions</span></div>
               
-                <a data-dc-tpl="410" class="popt " id="pal-3" role="option" aria-selected="false" href="mailto:eliasgarciadev@gmail.com">
-                  <span data-dc-tpl="411" class="pic" aria-hidden="true"><svg data-dc-tpl="459" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="mail"><path data-dc-tpl="460" vector-effect="non-scaling-stroke" d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect data-dc-tpl="461" vector-effect="non-scaling-stroke" x="2" y="4" width="20" height="16" rx="2"></rect></svg></span>
-                  <span data-dc-tpl="477" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="478" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="483"><span class="sc-interp">Send me an email</span></span></span>
-                    <span data-dc-tpl="485" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="490"><span class="sc-interp">eliasgarciadev@gmail.com</span></span></span>
+                <a data-dc-tpl="413" class="popt " id="pal-3" role="option" aria-selected="false" href="mailto:eliasgarciadev@gmail.com">
+                  <span data-dc-tpl="414" class="pic" aria-hidden="true"><svg data-dc-tpl="462" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="mail"><path data-dc-tpl="463" vector-effect="non-scaling-stroke" d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect data-dc-tpl="464" vector-effect="non-scaling-stroke" x="2" y="4" width="20" height="16" rx="2"></rect></svg></span>
+                  <span data-dc-tpl="480" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="481" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="486"><span class="sc-interp">Send me an email</span></span></span>
+                    <span data-dc-tpl="488" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="493"><span class="sc-interp">eliasgarciadev@gmail.com</span></span></span>
                   </span>
-                  <span data-dc-tpl="491" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
-                  <span data-dc-tpl="492" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="494" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
+                  <span data-dc-tpl="495" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
-                <a data-dc-tpl="410" class="popt " id="pal-4" role="option" aria-selected="false" href="#">
-                  <span data-dc-tpl="411" class="pic" aria-hidden="true"><svg data-dc-tpl="435" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="download"><path data-dc-tpl="436" vector-effect="non-scaling-stroke" d="M12 15V3"></path><path data-dc-tpl="437" vector-effect="non-scaling-stroke" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path data-dc-tpl="438" vector-effect="non-scaling-stroke" d="m7 10 5 5 5-5"></path></svg></span>
-                  <span data-dc-tpl="477" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="478" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="483"><span class="sc-interp">Download CV</span></span></span>
-                    <span data-dc-tpl="485" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="490"><span class="sc-interp">PDF or Markdown</span></span></span>
+                <a data-dc-tpl="413" class="popt " id="pal-4" role="option" aria-selected="false" href="#">
+                  <span data-dc-tpl="414" class="pic" aria-hidden="true"><svg data-dc-tpl="438" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="download"><path data-dc-tpl="439" vector-effect="non-scaling-stroke" d="M12 15V3"></path><path data-dc-tpl="440" vector-effect="non-scaling-stroke" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path data-dc-tpl="441" vector-effect="non-scaling-stroke" d="m7 10 5 5 5-5"></path></svg></span>
+                  <span data-dc-tpl="480" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="481" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="486"><span class="sc-interp">Download CV</span></span></span>
+                    <span data-dc-tpl="488" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="493"><span class="sc-interp">PDF or Markdown</span></span></span>
                   </span>
-                  <span data-dc-tpl="491" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
-                  <span data-dc-tpl="492" class="pret" aria-hidden="true"><span class="sc-interp">›</span></span>
+                  <span data-dc-tpl="494" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
+                  <span data-dc-tpl="495" class="pret" aria-hidden="true"><span class="sc-interp">›</span></span>
                 </a>
               
-                <a data-dc-tpl="410" class="popt " id="pal-5" role="option" aria-selected="false" href="#">
-                  <span data-dc-tpl="411" class="pic" aria-hidden="true"><svg data-dc-tpl="468" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="rss"><path data-dc-tpl="469" vector-effect="non-scaling-stroke" d="M4 11a9 9 0 0 1 9 9"></path><path data-dc-tpl="470" vector-effect="non-scaling-stroke" d="M4 4a16 16 0 0 1 16 16"></path><circle data-dc-tpl="471" vector-effect="non-scaling-stroke" cx="5" cy="19" r="1" style="fill: currentcolor;"></circle></svg></span>
-                  <span data-dc-tpl="477" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="478" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="483"><span class="sc-interp">Subscribe with RSS</span></span></span>
-                    <span data-dc-tpl="485" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="490"><span class="sc-interp">Get new posts in your reader</span></span></span>
+                <a data-dc-tpl="413" class="popt " id="pal-5" role="option" aria-selected="false" href="#">
+                  <span data-dc-tpl="414" class="pic" aria-hidden="true"><svg data-dc-tpl="471" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="rss"><path data-dc-tpl="472" vector-effect="non-scaling-stroke" d="M4 11a9 9 0 0 1 9 9"></path><path data-dc-tpl="473" vector-effect="non-scaling-stroke" d="M4 4a16 16 0 0 1 16 16"></path><circle data-dc-tpl="474" vector-effect="non-scaling-stroke" cx="5" cy="19" r="1" style="fill: currentcolor;"></circle></svg></span>
+                  <span data-dc-tpl="480" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="481" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="486"><span class="sc-interp">Subscribe with RSS</span></span></span>
+                    <span data-dc-tpl="488" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="493"><span class="sc-interp">Get new posts in your reader</span></span></span>
                   </span>
-                  <span data-dc-tpl="491" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
-                  <span data-dc-tpl="492" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="494" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
+                  <span data-dc-tpl="495" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
             </div>
           
         </div>
-        <div data-dc-tpl="493" style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--surface); font-size: 12px; color: var(--text-3);">
-          <span data-dc-tpl="494" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="495" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="496" class="pk">↑</span><span data-dc-tpl="497" class="pk">↓</span></span>to move</span>
-          <span data-dc-tpl="498" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="499" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="500" class="pk">↵</span></span>to open</span>
+        <div data-dc-tpl="496" style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--surface); font-size: 12px; color: var(--text-3);">
+          <span data-dc-tpl="497" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="498" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="499" class="pk">↑</span><span data-dc-tpl="500" class="pk">↓</span></span>to move</span>
+          <span data-dc-tpl="501" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="502" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="503" class="pk">↵</span></span>to open</span>
           
-          <span data-dc-tpl="505" style="margin-left: auto; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
+          <span data-dc-tpl="508" style="margin-left: auto; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
         </div>
       </div>
     </div>

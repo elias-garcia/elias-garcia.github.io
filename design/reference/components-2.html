@@ -10,7 +10,7 @@ a,button,summary,label,[role="button"]{touch-action:manipulation}
 button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user-select:none}
 .phbtn img{-webkit-touch-callout:none}
 /* touch: text links and rows dim while pressed (instantly), then fade back */
-@media (hover:none),(pointer:coarse){a:active:not(.button,.tile,.card,.pn,.lpc,.topic,.item a){opacity:.6}.list .item:has(a:active){opacity:.6;transition:none}}
+@media (hover:none),(pointer:coarse){a:active:not(.button,.tile,.card,.cl,.pn,.lpc,.topic,.item a){opacity:.6}.list .item:has(a:active){opacity:.6;transition:none}}
 
 :root{--space-page:64px;--space-section:80px;--space-footer:96px}
 .site main p:not([class]):not([style*="font-size"]){line-height:1.6}
@@ -100,7 +100,7 @@ a{color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){.tile:hover .pv{border-color:var(--line-strong)}}
 .tile:active .pv{transform:scale(.99)}
 .anim{animation-play-state:paused !important}
-.tile:focus-visible .anim{animation-play-state:running !important}@media (hover:hover) and (pointer:fine){.tile:hover .anim{animation-play-state:running !important}}
+.tile:has(.cl:focus-visible) .anim{animation-play-state:running !important}@media (hover:hover) and (pointer:fine){.tile:hover .anim{animation-play-state:running !important}}
 .ill{width:100%;height:100%;display:block}
 .ring{fill:none;stroke:var(--line);stroke-width:1}
 .wedge{fill:var(--accent);opacity:.14}
@@ -525,7 +525,7 @@ a{color:var(--text);text-decoration:none}
 .card .go svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.card:hover .go svg{transform:translateX(2px)}}
 .anim{animation-play-state:paused !important}
-.card:focus-visible .anim{animation-play-state:running !important}@media (hover:hover) and (pointer:fine){.card:hover .anim{animation-play-state:running !important}}
+.card:has(.cl:focus-visible) .anim{animation-play-state:running !important}@media (hover:hover) and (pointer:fine){.card:hover .anim{animation-play-state:running !important}}
 .ill{width:100%;height:100%;display:block}
 .ring{fill:none;stroke:var(--line);stroke-width:1}
 .wedge{fill:var(--accent-c);opacity:.14}
@@ -860,7 +860,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .trow .ct{min-width:0}
 .trow .go{display:inline-flex;align-items:center;gap:4px;flex:none;font-size:14px;white-space:nowrap;color:var(--text-2);transition:color var(--dur) var(--ease)}
 .garrow{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
-.card:focus-visible .trow .go{color:var(--accent-c)}
+.card:has(.cl:focus-visible) .trow .go{color:var(--accent-c)}
 @media (hover: hover) and (pointer: fine){
 .card:hover .trow .go{color:var(--accent-c)}
 .card:hover .garrow{transform:translateX(2px)}
@@ -989,6 +989,9 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .prose > section:not(:first-child){margin-top:24px}
 .prose section > pre{margin-top:8px !important}
 .prose section > p + p{margin-top:0}
+
+/* title-only link: the title's link is stretched over the card or tile with ::after, so the whole card is still one target; the focus ring is drawn on that ::after, round the card */
+.card,.tile{position:relative}.cl{color:inherit}.cl::after{content:"";position:absolute;inset:0}.site .cl:focus-visible{outline:none}.site .cl:focus-visible::after{outline:2px solid var(--accent-c);outline-offset:3px}
 </style>
 </head><body>
 <div data-dc-tpl="3" class="site"><main data-dc-tpl="4" class="ds">
@@ -1118,7 +1121,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
       
     </div>
     <div data-dc-tpl="197" class="demo"><ul data-dc-tpl="198" class="tiles" role="list" style="display: grid; grid-template-columns: 1fr; gap: 4px 20px; max-width: 240px;"><li data-dc-tpl="199">
-        <a data-dc-tpl="200" class="tile" href="Project.dc.html">
+        <div data-dc-tpl="200" class="tile">
           <div data-dc-tpl="201" class="pv" style="position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); overflow: hidden; view-transition-name: roleburn-preview;">
             <svg data-dc-tpl="202" class="ill" viewBox="0 0 200 150" aria-hidden="true">
               <circle data-dc-tpl="203" cx="100" cy="75" r="56" class="ring"></circle>
@@ -1133,65 +1136,65 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
               <circle data-dc-tpl="213" cx="54" cy="70" r="2.5" class="miss"></circle>
             </svg>
             </div>
-          <div data-dc-tpl="214" class="thead"><h3 data-dc-tpl="215" class="tt">Roleburn</h3><p data-dc-tpl="216" class="sm"><span data-dc-tpl="217" class="sdot" aria-hidden="true"></span><span data-dc-tpl="218">In progress</span><span data-dc-tpl="219" aria-hidden="true">·</span><time data-dc-tpl="220" datetime="2026">2026</time></p></div>
-          <span data-dc-tpl="221" class="td">A daily radar for remote roles that match my CV.</span>
-        </a>
+          <div data-dc-tpl="214" class="thead"><h3 data-dc-tpl="215" class="tt"><a data-dc-tpl="216" class="cl" href="Project.dc.html">Roleburn</a></h3><p data-dc-tpl="217" class="sm"><span data-dc-tpl="218" class="sdot" aria-hidden="true"></span><span data-dc-tpl="219">In progress</span><span data-dc-tpl="220" aria-hidden="true">·</span><time data-dc-tpl="221" datetime="2026">2026</time></p></div>
+          <span data-dc-tpl="222" class="td">A daily radar for remote roles that match my CV.</span>
+        </div>
         </li></ul>
     </div>
   </section>
-  <section data-dc-tpl="222" class="spec" aria-labelledby="c-card">
-    <div data-dc-tpl="223" class="spec-h">
-      <h3 data-dc-tpl="224" id="c-card">Project card</h3>
-      <p data-dc-tpl="225" class="spec-u">Preview, title with “View project” on its line (desktop only), the status line, description. The newest spans the full width when the count is odd (desktop only); on phones all cards are equal.</p>
-      <p data-dc-tpl="226" class="spec-w">Used on: Projects</p>
+  <section data-dc-tpl="223" class="spec" aria-labelledby="c-card">
+    <div data-dc-tpl="224" class="spec-h">
+      <h3 data-dc-tpl="225" id="c-card">Project card</h3>
+      <p data-dc-tpl="226" class="spec-u">Preview, title with “View project” on its line (desktop only), the status line, description. The newest spans the full width when the count is odd (desktop only); on phones all cards are equal.</p>
+      <p data-dc-tpl="227" class="spec-w">Used on: Projects</p>
       
     </div>
-    <div data-dc-tpl="227" class="demo"><ul data-dc-tpl="228" class="grid" role="list" style="grid-template-columns: 1fr; max-width: 360px;"><li data-dc-tpl="229">
-      <a data-dc-tpl="230" class="card" href="Project.dc.html">
-        <div data-dc-tpl="231" class="pv" style="view-transition-name: roleburn-preview;">
-          <svg data-dc-tpl="232" class="ill" viewBox="0 0 200 150" aria-hidden="true">
-            <g data-dc-tpl="233">
-              <circle data-dc-tpl="234" cx="100" cy="62" r="52" class="ring"></circle>
-              <circle data-dc-tpl="235" cx="100" cy="62" r="34" class="ring"></circle>
-              <circle data-dc-tpl="236" cx="100" cy="62" r="16" class="ring"></circle>
-              <g data-dc-tpl="237" class="sweep anim"><path data-dc-tpl="238" class="wedge" d="M100 62 L100 10 A52 52 0 0 1 145 36 Z"></path></g>
-              <circle data-dc-tpl="239" cx="126" cy="34" r="3.5" class="hit"></circle>
-              <circle data-dc-tpl="240" cx="72" cy="86" r="3.5" class="hit"></circle>
-              <circle data-dc-tpl="241" cx="132" cy="84" r="2.5" class="miss"></circle>
-              <circle data-dc-tpl="242" cx="78" cy="38" r="2.5" class="miss"></circle>
-              <circle data-dc-tpl="243" cx="108" cy="104" r="2.5" class="miss"></circle>
-              <circle data-dc-tpl="244" cx="56" cy="58" r="2.5" class="miss"></circle>
+    <div data-dc-tpl="228" class="demo"><ul data-dc-tpl="229" class="grid" role="list" style="grid-template-columns: 1fr; max-width: 360px;"><li data-dc-tpl="230">
+      <div data-dc-tpl="231" class="card">
+        <div data-dc-tpl="232" class="pv" style="view-transition-name: roleburn-preview;">
+          <svg data-dc-tpl="233" class="ill" viewBox="0 0 200 150" aria-hidden="true">
+            <g data-dc-tpl="234">
+              <circle data-dc-tpl="235" cx="100" cy="62" r="52" class="ring"></circle>
+              <circle data-dc-tpl="236" cx="100" cy="62" r="34" class="ring"></circle>
+              <circle data-dc-tpl="237" cx="100" cy="62" r="16" class="ring"></circle>
+              <g data-dc-tpl="238" class="sweep anim"><path data-dc-tpl="239" class="wedge" d="M100 62 L100 10 A52 52 0 0 1 145 36 Z"></path></g>
+              <circle data-dc-tpl="240" cx="126" cy="34" r="3.5" class="hit"></circle>
+              <circle data-dc-tpl="241" cx="72" cy="86" r="3.5" class="hit"></circle>
+              <circle data-dc-tpl="242" cx="132" cy="84" r="2.5" class="miss"></circle>
+              <circle data-dc-tpl="243" cx="78" cy="38" r="2.5" class="miss"></circle>
+              <circle data-dc-tpl="244" cx="108" cy="104" r="2.5" class="miss"></circle>
+              <circle data-dc-tpl="245" cx="56" cy="58" r="2.5" class="miss"></circle>
             </g>
           </svg>
           
         </div>
-        <div data-dc-tpl="245" class="thead"><div data-dc-tpl="246" class="trow"><h2 data-dc-tpl="247" class="ct" style="margin: 0px; font-size: 16px; font-weight: 500;">Roleburn</h2><span data-dc-tpl="248" class="go"><span data-dc-tpl="249" class="gl">View project</span><svg data-dc-tpl="250" class="garrow" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="251" vector-effect="non-scaling-stroke" d="m9 18 6-6-6-6"></path></svg></span></div><p data-dc-tpl="252" class="sm"><span data-dc-tpl="253" class="sdot" aria-hidden="true"></span><span data-dc-tpl="254">In progress</span><span data-dc-tpl="255" aria-hidden="true">·</span><time data-dc-tpl="256" datetime="2026">2026</time></p></div>
-        <p data-dc-tpl="257" class="cd" style="margin: 0px; font-size: 16px; color: var(--text-2);">A daily radar for remote roles in Web3, payments and AI that match my CV. A folder of markdown files plus scheduled agents in Claude Cowork, soon open source.</p>
+        <div data-dc-tpl="246" class="thead"><div data-dc-tpl="247" class="trow"><h2 data-dc-tpl="248" class="ct" style="margin: 0px; font-size: 16px; font-weight: 500;"><a data-dc-tpl="249" class="cl" href="Project.dc.html">Roleburn</a></h2><span data-dc-tpl="250" class="go" aria-hidden="true"><span data-dc-tpl="251" class="gl">View project</span><svg data-dc-tpl="252" class="garrow" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="253" vector-effect="non-scaling-stroke" d="m9 18 6-6-6-6"></path></svg></span></div><p data-dc-tpl="254" class="sm"><span data-dc-tpl="255" class="sdot" aria-hidden="true"></span><span data-dc-tpl="256">In progress</span><span data-dc-tpl="257" aria-hidden="true">·</span><time data-dc-tpl="258" datetime="2026">2026</time></p></div>
+        <p data-dc-tpl="259" class="cd" style="margin: 0px; font-size: 16px; color: var(--text-2);">A daily radar for remote roles in Web3, payments and AI that match my CV. A folder of markdown files plus scheduled agents in Claude Cowork, soon open source.</p>
         
-      </a>
+      </div>
       </li></ul>
     </div>
   </section>
-  <section data-dc-tpl="258" class="spec" aria-labelledby="c-status">
-    <div data-dc-tpl="259" class="spec-h">
-      <h3 data-dc-tpl="260" id="c-status">Project status</h3>
-      <p data-dc-tpl="261" class="spec-u">A 14px grey line under the project’s title: the stage, a dot, the year. Only “In progress” gets the 8px indigo dot, which never pulses (pulsing is kept for “Open to remote roles”). The text always carries the meaning; the dot is decorative.</p>
-      <p data-dc-tpl="262" class="spec-w">Used on: project tiles (Home) and project cards (Projects)</p>
+  <section data-dc-tpl="260" class="spec" aria-labelledby="c-status">
+    <div data-dc-tpl="261" class="spec-h">
+      <h3 data-dc-tpl="262" id="c-status">Project status</h3>
+      <p data-dc-tpl="263" class="spec-u">A 14px grey line under the project’s title: the stage, a dot, the year. Only “In progress” gets the 8px indigo dot, which never pulses (pulsing is kept for “Open to remote roles”). The text always carries the meaning; the dot is decorative.</p>
+      <p data-dc-tpl="264" class="spec-w">Used on: project tiles (Home) and project cards (Projects)</p>
     </div>
-    <div data-dc-tpl="263" class="demo"><p data-dc-tpl="264" class="sm"><span data-dc-tpl="265" class="sdot" aria-hidden="true"></span><span data-dc-tpl="266">In progress</span><span data-dc-tpl="267" aria-hidden="true">·</span><time data-dc-tpl="268" datetime="2026">2026</time></p><p data-dc-tpl="269" class="sm"><span data-dc-tpl="270">Experiment</span><span data-dc-tpl="271" aria-hidden="true">·</span><time data-dc-tpl="272" datetime="2026">2026</time></p><p data-dc-tpl="273" class="sm"><span data-dc-tpl="274">Research</span><span data-dc-tpl="275" aria-hidden="true">·</span><time data-dc-tpl="276" datetime="2026">2026</time></p>
+    <div data-dc-tpl="265" class="demo"><p data-dc-tpl="266" class="sm"><span data-dc-tpl="267" class="sdot" aria-hidden="true"></span><span data-dc-tpl="268">In progress</span><span data-dc-tpl="269" aria-hidden="true">·</span><time data-dc-tpl="270" datetime="2026">2026</time></p><p data-dc-tpl="271" class="sm"><span data-dc-tpl="272">Experiment</span><span data-dc-tpl="273" aria-hidden="true">·</span><time data-dc-tpl="274" datetime="2026">2026</time></p><p data-dc-tpl="275" class="sm"><span data-dc-tpl="276">Research</span><span data-dc-tpl="277" aria-hidden="true">·</span><time data-dc-tpl="278" datetime="2026">2026</time></p>
     </div>
   </section>
-  <section data-dc-tpl="277" class="spec" aria-labelledby="c-pn">
-    <div data-dc-tpl="278" class="spec-h">
-      <h3 data-dc-tpl="279" id="c-pn">Previous / next card</h3>
-      <p data-dc-tpl="280" class="spec-u">Bordered; the chevron sits on the side it leads to.</p>
-      <p data-dc-tpl="281" class="spec-w">Used on: case studies, posts</p>
+  <section data-dc-tpl="279" class="spec" aria-labelledby="c-pn">
+    <div data-dc-tpl="280" class="spec-h">
+      <h3 data-dc-tpl="281" id="c-pn">Previous / next card</h3>
+      <p data-dc-tpl="282" class="spec-u">Bordered; the chevron sits on the side it leads to.</p>
+      <p data-dc-tpl="283" class="spec-w">Used on: case studies, posts</p>
       
     </div>
-    <div data-dc-tpl="282" class="demo"><nav data-dc-tpl="283" aria-label="More posts" style="">
-        <a data-dc-tpl="284" class="pn prev" href="#" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-lg);">
-          <span data-dc-tpl="285" style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-3);"><svg data-dc-tpl="286" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-left"><path data-dc-tpl="287" vector-effect="non-scaling-stroke" d="m15 18-6-6 6-6"></path></svg>Previous post</span>
-          <span data-dc-tpl="288" style="font-weight: 500;">A job radar made of markdown files</span>
+    <div data-dc-tpl="284" class="demo"><nav data-dc-tpl="285" aria-label="More posts" style="">
+        <a data-dc-tpl="286" class="pn prev" href="#" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-lg);">
+          <span data-dc-tpl="287" style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-3);"><svg data-dc-tpl="288" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-left"><path data-dc-tpl="289" vector-effect="non-scaling-stroke" d="m15 18-6-6 6-6"></path></svg>Previous post</span>
+          <span data-dc-tpl="290" style="font-weight: 500;">A job radar made of markdown files</span>
         </a>
       </nav>
     </div>
@@ -1199,50 +1202,50 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
     </div>
   </section>
 
-  <section data-dc-tpl="289" class="group" aria-labelledby="g3">
-    <h2 data-dc-tpl="290" id="g3" class="group-h">Text and metadata</h2>
-    <div data-dc-tpl="291" class="specs">
-  <section data-dc-tpl="292" class="spec" aria-labelledby="c-meta">
-    <div data-dc-tpl="293" class="spec-h">
-      <h3 data-dc-tpl="294" id="c-meta">Metadata line</h3>
-      <p data-dc-tpl="295" class="spec-u">Grey items with a dot between; a dot never ends a line. The topic links to the filtered list.</p>
-      <p data-dc-tpl="296" class="spec-w">Used on: posts, Writing</p>
+  <section data-dc-tpl="291" class="group" aria-labelledby="g3">
+    <h2 data-dc-tpl="292" id="g3" class="group-h">Text and metadata</h2>
+    <div data-dc-tpl="293" class="specs">
+  <section data-dc-tpl="294" class="spec" aria-labelledby="c-meta">
+    <div data-dc-tpl="295" class="spec-h">
+      <h3 data-dc-tpl="296" id="c-meta">Metadata line</h3>
+      <p data-dc-tpl="297" class="spec-u">Grey items with a dot between; a dot never ends a line. The topic links to the filtered list.</p>
+      <p data-dc-tpl="298" class="spec-w">Used on: posts, Writing</p>
       
     </div>
-    <div data-dc-tpl="297" class="demo"><div data-dc-tpl="298" class="meta" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 14px; color: var(--text-3);">
-            <time data-dc-tpl="299" datetime="2026-11-09"><span data-dc-tpl="300" class="dlong">November 9, 2026</span><span data-dc-tpl="301" class="dshort">Nov 9, 2026</span></time>
-            <span data-dc-tpl="302" class="grp"><span data-dc-tpl="303" aria-hidden="true">·</span><a data-dc-tpl="304" class="topiclink" href="Writing.dc.html" aria-label="More posts about Design engineering">Design engineering</a></span>
-            <span data-dc-tpl="305" class="grp"><span data-dc-tpl="306" aria-hidden="true">·</span><span data-dc-tpl="307">4 min read</span></span>
+    <div data-dc-tpl="299" class="demo"><div data-dc-tpl="300" class="meta" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 14px; color: var(--text-3);">
+            <time data-dc-tpl="301" datetime="2026-11-09"><span data-dc-tpl="302" class="dlong">November 9, 2026</span><span data-dc-tpl="303" class="dshort">Nov 9, 2026</span></time>
+            <span data-dc-tpl="304" class="grp"><span data-dc-tpl="305" aria-hidden="true">·</span><a data-dc-tpl="306" class="topiclink" href="Writing.dc.html" aria-label="More posts about Design engineering">Design engineering</a></span>
+            <span data-dc-tpl="307" class="grp"><span data-dc-tpl="308" aria-hidden="true">·</span><span data-dc-tpl="309">4 min read</span></span>
           </div>
     </div>
   </section>
-  <section data-dc-tpl="308" class="spec wide" aria-labelledby="c-facts">
-    <div data-dc-tpl="309" class="spec-h">
-      <h3 data-dc-tpl="310" id="c-facts">Project facts</h3>
-      <p data-dc-tpl="311" class="spec-u">Year · Status · Links in three equal columns. Below 640px, one fact per row: the 14px label in a 112px column (like the lists’ date column), the 14px value beside it on the same baseline, 12px between rows. Links are named by destination and marked ↗; when they don’t fit beside each other they wrap under the first.</p>
-      <p data-dc-tpl="312" class="spec-w">Used on: case studies</p>
+  <section data-dc-tpl="310" class="spec wide" aria-labelledby="c-facts">
+    <div data-dc-tpl="311" class="spec-h">
+      <h3 data-dc-tpl="312" id="c-facts">Project facts</h3>
+      <p data-dc-tpl="313" class="spec-u">Year · Status · Links in three equal columns. Below 640px, one fact per row: the 14px label in a 112px column (like the lists’ date column), the 14px value beside it on the same baseline, 12px between rows. Links are named by destination and marked ↗; when they don’t fit beside each other they wrap under the first.</p>
+      <p data-dc-tpl="314" class="spec-w">Used on: case studies</p>
       
     </div>
-    <div data-dc-tpl="313" class="demo"><dl data-dc-tpl="314" class="facts" style="margin: 0px; padding: 16px 0px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
-         <div data-dc-tpl="315" class="fact"><dt data-dc-tpl="316">Year</dt><dd data-dc-tpl="317"><time data-dc-tpl="318" datetime="2026">2026</time></dd></div>
-         <div data-dc-tpl="319" class="fact"><dt data-dc-tpl="320">Status</dt><dd data-dc-tpl="321">In progress</dd></div>
-         <div data-dc-tpl="322" class="fact links"><dt data-dc-tpl="323">Links</dt><dd data-dc-tpl="324"><a data-dc-tpl="325" class="factlink" href="#">Website<svg data-dc-tpl="326" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="327" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="328" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a><a data-dc-tpl="329" class="factlink" href="#">GitHub<svg data-dc-tpl="330" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="331" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="332" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a></dd></div>
+    <div data-dc-tpl="315" class="demo"><dl data-dc-tpl="316" class="facts" style="margin: 0px; padding: 16px 0px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+         <div data-dc-tpl="317" class="fact"><dt data-dc-tpl="318">Year</dt><dd data-dc-tpl="319"><time data-dc-tpl="320" datetime="2026">2026</time></dd></div>
+         <div data-dc-tpl="321" class="fact"><dt data-dc-tpl="322">Status</dt><dd data-dc-tpl="323">In progress</dd></div>
+         <div data-dc-tpl="324" class="fact links"><dt data-dc-tpl="325">Links</dt><dd data-dc-tpl="326"><a data-dc-tpl="327" class="factlink" href="#">Website<svg data-dc-tpl="328" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="329" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="330" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a><a data-dc-tpl="331" class="factlink" href="#">GitHub<svg data-dc-tpl="332" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="333" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="334" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a></dd></div>
        </dl>
     </div>
   </section>
-  <section data-dc-tpl="333" class="spec" aria-labelledby="c-author">
-    <div data-dc-tpl="334" class="spec-h">
-      <h3 data-dc-tpl="335" id="c-author">Author footer</h3>
-      <p data-dc-tpl="336" class="spec-u">Ends every post: photo, name (links home) and role.</p>
-      <p data-dc-tpl="337" class="spec-w">Used on: posts</p>
+  <section data-dc-tpl="335" class="spec" aria-labelledby="c-author">
+    <div data-dc-tpl="336" class="spec-h">
+      <h3 data-dc-tpl="337" id="c-author">Author footer</h3>
+      <p data-dc-tpl="338" class="spec-u">Ends every post: photo, name (links home) and role.</p>
+      <p data-dc-tpl="339" class="spec-w">Used on: posts</p>
       
     </div>
-    <div data-dc-tpl="338" class="demo"><footer data-dc-tpl="339" style="padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
-        <div data-dc-tpl="340" style="display: flex; align-items: center; gap: 12px;">
-          <img data-dc-tpl="341" src="../assets/avatar.jpg" alt="" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block;">
-          <address data-dc-tpl="342" style="font-style: normal; display: flex; flex-direction: column; line-height: 1.35;">
-            <a data-dc-tpl="343" href="Main.dc.html" rel="author" style="font-weight: 500; font-size: 14px;">Elías García</a>
-            <span data-dc-tpl="344" style="font-size: 14px; color: var(--text-3);">Software engineer</span>
+    <div data-dc-tpl="340" class="demo"><footer data-dc-tpl="341" style="padding-top: 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+        <div data-dc-tpl="342" style="display: flex; align-items: center; gap: 12px;">
+          <img data-dc-tpl="343" src="../assets/avatar.jpg" alt="" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block;">
+          <address data-dc-tpl="344" style="font-style: normal; display: flex; flex-direction: column; line-height: 1.35;">
+            <a data-dc-tpl="345" href="Main.dc.html" rel="author" style="font-weight: 500; font-size: 14px;">Elías García</a>
+            <span data-dc-tpl="346" style="font-size: 14px; color: var(--text-3);">Software engineer</span>
           </address>
         </div>
       </footer>
@@ -1251,45 +1254,45 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
     </div>
   </section>
 
-  <section data-dc-tpl="345" class="group" aria-labelledby="g4">
-    <h2 data-dc-tpl="346" id="g4" class="group-h">Prose</h2>
-    <div data-dc-tpl="347" class="specs">
-  <section data-dc-tpl="348" class="spec wide" aria-labelledby="c-prose">
-    <div data-dc-tpl="349" class="spec-h">
-      <h3 data-dc-tpl="350" id="c-prose">Heading, paragraph, link, footnote</h3>
-      <p data-dc-tpl="351" class="spec-w">Every other Markdown element (lists, quotes, tables, inline code, checklists, callouts) is on the Prose reference artboard.</p>
-      <p data-dc-tpl="352" class="spec-u">Section headings get a # anchor on hover. Links inside prose are indigo with a soft underline and never carry the ↗ arrow; the arrow is only for standalone links (contact rows, the course row, project facts). Footnote markers are links to a Notes section at the end of the article, below a short 64px rule (numbered, 14px grey). Each note ends with a ↩ link (24px target) back to its marker, which lands a third of the way down the screen. Arriving at a note or back at a marker briefly lights it up. No popovers. Rhythm: 24px between paragraphs; 48px above an h2 and 16px below it, 32px above an h3 and 12px below, 24px above an h4 and 8px below; 32px around figures, code blocks and tables; 8px between list items.</p>
-      <p data-dc-tpl="353" class="spec-w">Used on: posts, case studies</p>
-      <span data-dc-tpl="354" class="mdx">MDX: <code data-dc-tpl="355">h2 · p · a · footnotes</code></span>
+  <section data-dc-tpl="347" class="group" aria-labelledby="g4">
+    <h2 data-dc-tpl="348" id="g4" class="group-h">Prose</h2>
+    <div data-dc-tpl="349" class="specs">
+  <section data-dc-tpl="350" class="spec wide" aria-labelledby="c-prose">
+    <div data-dc-tpl="351" class="spec-h">
+      <h3 data-dc-tpl="352" id="c-prose">Heading, paragraph, link, footnote</h3>
+      <p data-dc-tpl="353" class="spec-w">Every other Markdown element (lists, quotes, tables, inline code, checklists, callouts) is on the Prose reference artboard.</p>
+      <p data-dc-tpl="354" class="spec-u">Section headings get a # anchor on hover. Links inside prose are indigo with a soft underline and never carry the ↗ arrow; the arrow is only for standalone links (contact rows, the course row, project facts). Footnote markers are links to a Notes section at the end of the article, below a short 64px rule (numbered, 14px grey). Each note ends with a ↩ link (24px target) back to its marker, which lands a third of the way down the screen. Arriving at a note or back at a marker briefly lights it up. No popovers. Rhythm: 24px between paragraphs; 48px above an h2 and 16px below it, 32px above an h3 and 12px below, 24px above an h4 and 8px below; 32px around figures, code blocks and tables; 8px between list items.</p>
+      <p data-dc-tpl="355" class="spec-w">Used on: posts, case studies</p>
+      <span data-dc-tpl="356" class="mdx">MDX: <code data-dc-tpl="357">h2 · p · a · footnotes</code></span>
     </div>
-    <div data-dc-tpl="356" class="demo"><div data-dc-tpl="357" class="body" style="display: flex; flex-direction: column; gap: 16px;">
-         <h2 data-dc-tpl="358" id="demo-h" class="h"><a data-dc-tpl="359" class="anchor" href="#demo-h" aria-label="Link to this section">#</a>Spending the motion budget</h2>
-         <p data-dc-tpl="360" style="margin: 0px;">I wanted the site to feel crafted without feeling busy, so motion follows <a data-dc-tpl="361" href="#">a few rules</a>. Pages arrive in one quick motion.</p>
-         <p data-dc-tpl="362" style="margin: 0px; font-size: 18px; line-height: 1.7; color: var(--text-2);">A sentence with a footnote marker<a data-dc-tpl="363" class="fn" href="#" role="doc-noteref" aria-label="Note 1">1</a>, which links to the Notes section at the end of the post.</p>
+    <div data-dc-tpl="358" class="demo"><div data-dc-tpl="359" class="body" style="display: flex; flex-direction: column; gap: 16px;">
+         <h2 data-dc-tpl="360" id="demo-h" class="h"><a data-dc-tpl="361" class="anchor" href="#demo-h" aria-label="Link to this section">#</a>Spending the motion budget</h2>
+         <p data-dc-tpl="362" style="margin: 0px;">I wanted the site to feel crafted without feeling busy, so motion follows <a data-dc-tpl="363" href="#">a few rules</a>. Pages arrive in one quick motion.</p>
+         <p data-dc-tpl="364" style="margin: 0px; font-size: 18px; line-height: 1.7; color: var(--text-2);">A sentence with a footnote marker<a data-dc-tpl="365" class="fn" href="#" role="doc-noteref" aria-label="Note 1">1</a>, which links to the Notes section at the end of the post.</p>
        </div>
     </div>
   </section>
-  <section data-dc-tpl="364" class="spec wide" aria-labelledby="c-code">
-    <div data-dc-tpl="365" class="spec-h">
-      <h3 data-dc-tpl="366" id="c-code">Code block</h3>
-      <p data-dc-tpl="367" class="spec-u">A bordered block on the surface colour with a header bar: the language on the left, Copy on the right. Minimal indigo syntax theme (keywords indigo, values deeper indigo, names in the text colour, comments and punctuation grey); highlighted lines get a light indigo background and a rule on the left.</p>
-      <p data-dc-tpl="368" class="spec-w">Used on: posts, case studies</p>
-      <span data-dc-tpl="369" class="mdx">MDX: <code data-dc-tpl="370">pre / code</code></span>
+  <section data-dc-tpl="366" class="spec wide" aria-labelledby="c-code">
+    <div data-dc-tpl="367" class="spec-h">
+      <h3 data-dc-tpl="368" id="c-code">Code block</h3>
+      <p data-dc-tpl="369" class="spec-u">A bordered block on the surface colour with a header bar: the language on the left, Copy on the right. Minimal indigo syntax theme (keywords indigo, values deeper indigo, names in the text colour, comments and punctuation grey); highlighted lines get a light indigo background and a rule on the left.</p>
+      <p data-dc-tpl="370" class="spec-w">Used on: posts, case studies</p>
+      <span data-dc-tpl="371" class="mdx">MDX: <code data-dc-tpl="372">pre / code</code></span>
     </div>
-    <div data-dc-tpl="371" class="demo"><div data-dc-tpl="372" class="body">      <div data-dc-tpl="373" class="codeblock">
-        <div data-dc-tpl="374" class="code-h"><span data-dc-tpl="375" class="lang">CSS</span><button data-dc-tpl="376" class="button" type="button" style="background: var(--bg);"><span data-dc-tpl="377" class="sw"><span data-dc-tpl="378" class="sw-a">Copy</span><span data-dc-tpl="379" class="sw-b" aria-hidden="true">Copied</span></span></button></div>
-        <pre data-dc-tpl="380" tabindex="0" role="region" aria-label="CSS for the page entrance"><code data-dc-tpl="381"><span data-dc-tpl="382" class="line"><span data-dc-tpl="383" class="tk-c">/* the page arrives as one piece */</span></span><span data-dc-tpl="384" class="line"><span data-dc-tpl="385" class="tk-k">@keyframes</span> <span data-dc-tpl="386" class="tk-n">page-in</span> <span data-dc-tpl="387" class="tk-p">{</span></span><span data-dc-tpl="388" class="line">  <span data-dc-tpl="389" class="tk-n">from</span> <span data-dc-tpl="390" class="tk-p">{</span> <span data-dc-tpl="391" class="tk-n">opacity</span><span data-dc-tpl="392" class="tk-p">:</span> <span data-dc-tpl="393" class="tk-s">0</span><span data-dc-tpl="394" class="tk-p">;</span> <span data-dc-tpl="395" class="tk-n">transform</span><span data-dc-tpl="396" class="tk-p">:</span> translateY<span data-dc-tpl="397" class="tk-p">(</span><span data-dc-tpl="398" class="tk-s">6px</span><span data-dc-tpl="399" class="tk-p">)</span><span data-dc-tpl="400" class="tk-p">;</span> <span data-dc-tpl="401" class="tk-p">}</span></span><span data-dc-tpl="402" class="line"><span data-dc-tpl="403" class="tk-p">}</span></span><span data-dc-tpl="404" class="line"><span data-dc-tpl="405" class="tk-k">@keyframes</span> <span data-dc-tpl="406" class="tk-n">page-fade</span> <span data-dc-tpl="407" class="tk-p">{</span></span><span data-dc-tpl="408" class="line">  <span data-dc-tpl="409" class="tk-n">from</span> <span data-dc-tpl="410" class="tk-p">{</span> <span data-dc-tpl="411" class="tk-n">opacity</span><span data-dc-tpl="412" class="tk-p">:</span> <span data-dc-tpl="413" class="tk-s">0</span><span data-dc-tpl="414" class="tk-p">;</span> <span data-dc-tpl="415" class="tk-p">}</span></span><span data-dc-tpl="416" class="line"><span data-dc-tpl="417" class="tk-p">}</span></span><span data-dc-tpl="418" class="line"><span data-dc-tpl="419" class="tk-n">main</span> <span data-dc-tpl="420" class="tk-p">{</span></span><span data-dc-tpl="421" class="line">  <span data-dc-tpl="422" class="tk-n">animation</span><span data-dc-tpl="423" class="tk-p">:</span> page-in <span data-dc-tpl="424" class="tk-s">250ms</span> cubic-bezier<span data-dc-tpl="425" class="tk-p">(</span><span data-dc-tpl="426" class="tk-s">.22</span><span data-dc-tpl="427" class="tk-p">,</span> <span data-dc-tpl="428" class="tk-s">1</span><span data-dc-tpl="429" class="tk-p">,</span> <span data-dc-tpl="430" class="tk-s">.36</span><span data-dc-tpl="431" class="tk-p">,</span> <span data-dc-tpl="432" class="tk-s">1</span><span data-dc-tpl="433" class="tk-p">)</span> backwards<span data-dc-tpl="434" class="tk-p">;</span></span><span data-dc-tpl="435" class="line"><span data-dc-tpl="436" class="tk-p">}</span></span><span data-dc-tpl="437" class="line"><span data-dc-tpl="438" class="tk-k">@view-transition</span> <span data-dc-tpl="439" class="tk-p">{</span> <span data-dc-tpl="440" class="tk-n">navigation</span><span data-dc-tpl="441" class="tk-p">:</span> auto<span data-dc-tpl="442" class="tk-p">;</span> <span data-dc-tpl="443" class="tk-p">}</span></span><span data-dc-tpl="444" class="line"><span data-dc-tpl="445" class="tk-c">/* reduced motion: still a fade, just no movement */</span></span><span data-dc-tpl="446" class="line"><span data-dc-tpl="447" class="tk-k">@media</span> <span data-dc-tpl="448" class="tk-p">(</span><span data-dc-tpl="449" class="tk-n">prefers-reduced-motion</span><span data-dc-tpl="450" class="tk-p">:</span> reduce<span data-dc-tpl="451" class="tk-p">)</span> <span data-dc-tpl="452" class="tk-p">{</span></span><span data-dc-tpl="453" class="line">  <span data-dc-tpl="454" class="tk-n">main</span> <span data-dc-tpl="455" class="tk-p">{</span> <span data-dc-tpl="456" class="tk-n">animation</span><span data-dc-tpl="457" class="tk-p">:</span> page-fade <span data-dc-tpl="458" class="tk-s">150ms</span> ease-out backwards<span data-dc-tpl="459" class="tk-p">;</span> <span data-dc-tpl="460" class="tk-p">}</span></span><span data-dc-tpl="461" class="line"><span data-dc-tpl="462" class="tk-p">}</span></span></code></pre>
+    <div data-dc-tpl="373" class="demo"><div data-dc-tpl="374" class="body">      <div data-dc-tpl="375" class="codeblock">
+        <div data-dc-tpl="376" class="code-h"><span data-dc-tpl="377" class="lang">CSS</span><button data-dc-tpl="378" class="button" type="button" style="background: var(--bg);"><span data-dc-tpl="379" class="sw"><span data-dc-tpl="380" class="sw-a">Copy</span><span data-dc-tpl="381" class="sw-b" aria-hidden="true">Copied</span></span></button></div>
+        <pre data-dc-tpl="382" tabindex="0" role="region" aria-label="CSS for the page entrance"><code data-dc-tpl="383"><span data-dc-tpl="384" class="line"><span data-dc-tpl="385" class="tk-c">/* the page arrives as one piece */</span></span><span data-dc-tpl="386" class="line"><span data-dc-tpl="387" class="tk-k">@keyframes</span> <span data-dc-tpl="388" class="tk-n">page-in</span> <span data-dc-tpl="389" class="tk-p">{</span></span><span data-dc-tpl="390" class="line">  <span data-dc-tpl="391" class="tk-n">from</span> <span data-dc-tpl="392" class="tk-p">{</span> <span data-dc-tpl="393" class="tk-n">opacity</span><span data-dc-tpl="394" class="tk-p">:</span> <span data-dc-tpl="395" class="tk-s">0</span><span data-dc-tpl="396" class="tk-p">;</span> <span data-dc-tpl="397" class="tk-n">transform</span><span data-dc-tpl="398" class="tk-p">:</span> translateY<span data-dc-tpl="399" class="tk-p">(</span><span data-dc-tpl="400" class="tk-s">6px</span><span data-dc-tpl="401" class="tk-p">)</span><span data-dc-tpl="402" class="tk-p">;</span> <span data-dc-tpl="403" class="tk-p">}</span></span><span data-dc-tpl="404" class="line"><span data-dc-tpl="405" class="tk-p">}</span></span><span data-dc-tpl="406" class="line"><span data-dc-tpl="407" class="tk-k">@keyframes</span> <span data-dc-tpl="408" class="tk-n">page-fade</span> <span data-dc-tpl="409" class="tk-p">{</span></span><span data-dc-tpl="410" class="line">  <span data-dc-tpl="411" class="tk-n">from</span> <span data-dc-tpl="412" class="tk-p">{</span> <span data-dc-tpl="413" class="tk-n">opacity</span><span data-dc-tpl="414" class="tk-p">:</span> <span data-dc-tpl="415" class="tk-s">0</span><span data-dc-tpl="416" class="tk-p">;</span> <span data-dc-tpl="417" class="tk-p">}</span></span><span data-dc-tpl="418" class="line"><span data-dc-tpl="419" class="tk-p">}</span></span><span data-dc-tpl="420" class="line"><span data-dc-tpl="421" class="tk-n">main</span> <span data-dc-tpl="422" class="tk-p">{</span></span><span data-dc-tpl="423" class="line">  <span data-dc-tpl="424" class="tk-n">animation</span><span data-dc-tpl="425" class="tk-p">:</span> page-in <span data-dc-tpl="426" class="tk-s">250ms</span> cubic-bezier<span data-dc-tpl="427" class="tk-p">(</span><span data-dc-tpl="428" class="tk-s">.22</span><span data-dc-tpl="429" class="tk-p">,</span> <span data-dc-tpl="430" class="tk-s">1</span><span data-dc-tpl="431" class="tk-p">,</span> <span data-dc-tpl="432" class="tk-s">.36</span><span data-dc-tpl="433" class="tk-p">,</span> <span data-dc-tpl="434" class="tk-s">1</span><span data-dc-tpl="435" class="tk-p">)</span> backwards<span data-dc-tpl="436" class="tk-p">;</span></span><span data-dc-tpl="437" class="line"><span data-dc-tpl="438" class="tk-p">}</span></span><span data-dc-tpl="439" class="line"><span data-dc-tpl="440" class="tk-k">@view-transition</span> <span data-dc-tpl="441" class="tk-p">{</span> <span data-dc-tpl="442" class="tk-n">navigation</span><span data-dc-tpl="443" class="tk-p">:</span> auto<span data-dc-tpl="444" class="tk-p">;</span> <span data-dc-tpl="445" class="tk-p">}</span></span><span data-dc-tpl="446" class="line"><span data-dc-tpl="447" class="tk-c">/* reduced motion: still a fade, just no movement */</span></span><span data-dc-tpl="448" class="line"><span data-dc-tpl="449" class="tk-k">@media</span> <span data-dc-tpl="450" class="tk-p">(</span><span data-dc-tpl="451" class="tk-n">prefers-reduced-motion</span><span data-dc-tpl="452" class="tk-p">:</span> reduce<span data-dc-tpl="453" class="tk-p">)</span> <span data-dc-tpl="454" class="tk-p">{</span></span><span data-dc-tpl="455" class="line">  <span data-dc-tpl="456" class="tk-n">main</span> <span data-dc-tpl="457" class="tk-p">{</span> <span data-dc-tpl="458" class="tk-n">animation</span><span data-dc-tpl="459" class="tk-p">:</span> page-fade <span data-dc-tpl="460" class="tk-s">150ms</span> ease-out backwards<span data-dc-tpl="461" class="tk-p">;</span> <span data-dc-tpl="462" class="tk-p">}</span></span><span data-dc-tpl="463" class="line"><span data-dc-tpl="464" class="tk-p">}</span></span></code></pre>
       </div></div>
     </div>
   </section>
-  <section data-dc-tpl="463" class="spec" aria-labelledby="c-figure">
-    <div data-dc-tpl="464" class="spec-h">
-      <h3 data-dc-tpl="465" id="c-figure">Figure</h3>
-      <p data-dc-tpl="466" class="spec-u">Image or illustration with a short caption below in grey.</p>
-      <p data-dc-tpl="467" class="spec-w">Used on: Home (Speaking), case studies</p>
-      <span data-dc-tpl="468" class="mdx">MDX: <code data-dc-tpl="469">img / Figure</code></span>
+  <section data-dc-tpl="465" class="spec" aria-labelledby="c-figure">
+    <div data-dc-tpl="466" class="spec-h">
+      <h3 data-dc-tpl="467" id="c-figure">Figure</h3>
+      <p data-dc-tpl="468" class="spec-u">Image or illustration with a short caption below in grey.</p>
+      <p data-dc-tpl="469" class="spec-w">Used on: Home (Speaking), case studies</p>
+      <span data-dc-tpl="470" class="mdx">MDX: <code data-dc-tpl="471">img / Figure</code></span>
     </div>
-    <div data-dc-tpl="470" class="demo"><figure data-dc-tpl="471" style="margin: 0px; display: flex; flex-direction: column; gap: 8px; max-width: 420px;"><div data-dc-tpl="472" style="aspect-ratio: 16 / 9; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--surface);"></div><figcaption data-dc-tpl="473" style="font-size: 14px; color: var(--text-3);">Explaining identity systems at the Polygon DevX Global Tour, 2023.</figcaption></figure>
+    <div data-dc-tpl="472" class="demo"><figure data-dc-tpl="473" style="margin: 0px; display: flex; flex-direction: column; gap: 8px; max-width: 420px;"><div data-dc-tpl="474" style="aspect-ratio: 16 / 9; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--surface);"></div><figcaption data-dc-tpl="475" style="font-size: 14px; color: var(--text-3);">Explaining identity systems at the Polygon DevX Global Tour, 2023.</figcaption></figure>
     </div>
   </section>
     </div>
