@@ -55,7 +55,6 @@ One page per step. Each step builds the components that page needs (DESIGN.md §
 - Public links for the three projects.
 - The work-issue and POL funding spreads case studies: placeholders that only restate each project's description, with TODOs and a figure placeholder.
 - `public/cv.pdf`: add the location, the work modes and the talk months, to match `/cv.md`.
-- "Rebuilding this site" says feedback stays under 300 milliseconds; the design caps it at 250ms.
 
 ## Going live
 
