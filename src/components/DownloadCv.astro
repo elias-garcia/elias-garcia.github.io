@@ -8,12 +8,7 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
 ---
 
 <div class="download">
-  <Button
-    class="trigger"
-    popovertarget="cv-formats"
-    aria-controls="cv-formats"
-    data-cv-button
-  >
+  <Button popovertarget="cv-formats" aria-controls="cv-formats" data-cv-button>
     {copy.downloadCv}
     <Icon name="chevron-down" class="chevron" />
   </Button>
@@ -187,9 +182,13 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
 </script>
 
 <style>
+  /* The menu hangs from this box, not from the button: the button shrinks
+     while it's pressed, and the menu would move with it. */
   .download {
     --menu-scale: 0.97;
     --menu-w: 320px;
+
+    anchor-name: --cv-button;
   }
 
   .chevron {
@@ -206,10 +205,6 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
     :global(.button:has(+ .formats[data-keyboard])) & {
       transition: none;
     }
-  }
-
-  .download :global(.trigger) {
-    anchor-name: --cv-button;
   }
 
   .formats {
