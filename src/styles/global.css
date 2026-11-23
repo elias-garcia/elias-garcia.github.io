@@ -199,6 +199,16 @@ p {
   animation: page-out var(--dur-fast) var(--ease-settle) both;
 }
 
+/* While a transition runs, a click lands on no link, so it ends with the
+   fade-out instead of running the browser's 250ms on the page and the
+   header. */
+::view-transition-group(root),
+::view-transition-group(site-header),
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation-duration: var(--dur-fast);
+}
+
 ::view-transition-new(root) {
   animation: none;
 }
