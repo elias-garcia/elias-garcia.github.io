@@ -118,12 +118,6 @@ const copy = await getViewerCopy();
   } from "../lib/gestures.ts";
   import { hasStrings } from "../lib/guards.ts";
   import {
-    canTravel,
-    isTravellingBack,
-    skipTravel,
-    travelBetween,
-  } from "../lib/photo-travel.ts";
-  import {
     clearZooms,
     isZoomedIn,
     loadZoom,
@@ -168,7 +162,6 @@ const copy = await getViewerCopy();
     let photos: HTMLButtonElement[] = [];
     let slides: HTMLElement[] = [];
     let images: HTMLImageElement[] = [];
-    let opener: HTMLButtonElement | undefined;
     let current = 0;
     let talkTitle = "";
     // Puts a photo moved past the end of the row for a wrap back in its
@@ -291,18 +284,6 @@ const copy = await getViewerCopy();
       }
     };
 
-    // A thumbnail scrolled out of its strip (on phones) is no place to
-    // travel back to.
-    const inStrip = (photo: HTMLButtonElement | undefined) => {
-      const strip = photo?.closest("[data-viewer-talk]");
-      if (photo === undefined || strip === null || strip === undefined) {
-        return false;
-      }
-      const box = photo.getBoundingClientRect();
-      const bounds = strip.getBoundingClientRect();
-      return box.left >= bounds.left - 1 && box.right <= bounds.right + 1;
-    };
-
     // On phones the status bar turns as dark as the viewer while it's open,
     // like a native photo viewer's, and back when it closes.
     const darkenStatusBar = () => {
@@ -343,13 +324,11 @@ const copy = await getViewerCopy();
     };
 
     // From the keyboard it closes at once. Dragged down, it carries on down
-    // as it fades. Otherwise the photo travels back into the thumbnail of the
-    // photo on screen, which may not be the one that opened the viewer.
+    // as it fades. Otherwise it fades out where it is.
     const close = (how: "key" | "drag" | "pointer") => {
-      if (!dialog.open || isClosing(dialog) || isTravellingBack()) {
+      if (!dialog.open || isClosing(dialog)) {
         return;
       }
-      skipTravel();
       settleWrap();
       const shut = () => {
         dialog.close();
@@ -369,21 +348,7 @@ const copy = await getViewerCopy();
         void closeTopLayer(dialog, shut);
         return;
       }
-      const photo = photos[current];
-      const thumbnail = (inStrip(photo) ? photo : opener)?.querySelector("img");
-      const image = images[current];
-      if (canTravel() && thumbnail && image !== undefined) {
-        travelBetween(
-          image,
-          () => {
-            instantly(shut);
-            return thumbnail;
-          },
-          true,
-        );
-      } else {
-        void closeTopLayer(dialog, shut);
-      }
+      void closeTopLayer(dialog, shut);
     };
 
     const open = (button: HTMLButtonElement, { key = false } = {}) => {
@@ -391,8 +356,6 @@ const copy = await getViewerCopy();
       if (talk === null) {
         return;
       }
-      skipTravel();
-      opener = button;
       // The last close's drag stays until now, so the viewer could leave
       // from where it was dropped.
       endDrag();
@@ -419,7 +382,6 @@ const copy = await getViewerCopy();
       );
       buildSlides();
       show(photos.indexOf(button));
-      const thumbnail = button.querySelector("img");
       const reveal = () => {
         dialog.showModal();
         // The viewer itself takes focus, not ×: ← → then change photos
@@ -431,15 +393,6 @@ const copy = await getViewerCopy();
       };
       if (key) {
         instantly(reveal);
-      } else if (canTravel() && thumbnail !== null) {
-        travelBetween(
-          thumbnail,
-          () => {
-            reveal();
-            return images[current];
-          },
-          false,
-        );
       } else {
         reveal();
       }
@@ -546,10 +499,21 @@ const copy = await getViewerCopy();
       restoreStatusBar();
       resetZoom(images[current]);
       entry.closed();
-      // Safari doesn't focus a button on click, so the browser can't return
-      // focus to it. The page stays where it was, even with the photo under
-      // the sticky header.
-      opener?.focus({ preventScroll: true });
+      // Back to the thumbnail of the photo on screen, which may not be the
+      // one that opened the viewer. Safari doesn't focus a button on click,
+      // so the browser can't do it. Scrolled out of its strip (on phones),
+      // the strip slides to it; the page stays where it was, even with the
+      // photo under the sticky header.
+      const photo = photos[current];
+      const strip = photo?.closest("[data-viewer-talk]");
+      if (photo !== undefined && strip !== null && strip !== undefined) {
+        const box = photo.getBoundingClientRect();
+        const bounds = strip.getBoundingClientRect();
+        if (box.left < bounds.left || box.right > bounds.right) {
+          strip.scrollBy({ left: box.left - bounds.left });
+        }
+      }
+      photo?.focus({ preventScroll: true });
     });
 
     // A click from Enter or Space has no pointer behind it (`detail` 0).
@@ -787,11 +751,11 @@ const copy = await getViewerCopy();
     }
   }
 
-  /* Opening, the card fades in and grows slightly while the photo travels
-     into it (the script), and the backdrop fades in. With reduced motion
-     they only fade. */
+  /* Opening, a centred dialog fades in from its own centre: the card grows
+     slightly as it does, and the backdrop fades in. With reduced motion,
+     and on phones, they only fade. */
   .viewer[open] {
-    transition: opacity var(--dur-slow) var(--ease-settle);
+    transition: opacity var(--dur) var(--ease-settle);
 
     @starting-style {
       opacity: 0;
@@ -809,8 +773,8 @@ const copy = await getViewerCopy();
   @media (prefers-reduced-motion: no-preference) {
     .viewer[open] {
       transition:
-        opacity var(--dur-slow) var(--ease-settle),
-        scale var(--dur-slow) var(--ease-settle);
+        opacity var(--dur) var(--ease-settle),
+        scale var(--dur) var(--ease-settle);
 
       @starting-style {
         scale: var(--viewer-scale);
@@ -818,14 +782,14 @@ const copy = await getViewerCopy();
     }
   }
 
-  /* Closing without the photo travelling, both fade out. Where a closing
+  /* Closing, both fade out, faster than they came in. Where a closing
      dialog can stay in the top layer until it's done (`overlay`), CSS fades
      it out by itself... */
   @supports (overlay: auto) {
     .viewer,
     .viewer::backdrop {
       transition-property: opacity, overlay, display;
-      transition-duration: var(--dur);
+      transition-duration: var(--dur-fast);
       transition-timing-function: var(--ease-settle);
       transition-behavior: allow-discrete;
     }
@@ -837,30 +801,16 @@ const copy = await getViewerCopy();
   }
 
   /* ...elsewhere, src/lib/top-layer.ts fades it out while it's still open,
-     then closes it. */
-  .viewer[data-closing],
-  .viewer[data-closing]::backdrop {
+     then closes it. `[open]` outranks the phone viewer's opening timing;
+     dragged down, it keeps its own timing on the way out. */
+  .viewer[open][data-closing],
+  .viewer[open][data-closing]::backdrop {
     opacity: 0;
-    transition: opacity var(--dur) var(--ease-settle);
   }
 
-  /* The photo travelling between its thumbnail and the frame. */
-  :global(::view-transition-group(viewer-photo)) {
-    animation-duration: var(--dur-slow);
-    animation-timing-function: var(--ease-settle);
-  }
-
-  :global(
-    :root[data-viewer-travel="closing"]::view-transition-group(viewer-photo)
-  ) {
-    animation-duration: var(--dur);
-  }
-
-  /* Closing, the card and the backdrop are only in the old page: it fades
-     out above the new one, instead of under it as between pages. */
-  :global(:root[data-viewer-travel="closing"]::view-transition-old(root)) {
-    z-index: var(--z-viewer-closing);
-    animation: page-out var(--dur) var(--ease-settle) both;
+  .viewer[open][data-closing]:not([data-leaving]),
+  .viewer[open][data-closing]:not([data-leaving])::backdrop {
+    transition: opacity var(--dur-fast) var(--ease-settle);
   }
 
   .figure {
@@ -1067,13 +1017,14 @@ const copy = await getViewerCopy();
       }
     }
 
-    /* Let go, the viewer and the backdrop spring back. Dragged far enough,
-       the viewer carries on down as it fades out. */
+    /* Opening, the black viewer and the photo only fade in: a full-screen
+       photo that grows looks like a glitch. Let go, the viewer and the
+       backdrop spring back. Dragged far enough, the viewer carries on down
+       as it fades out. */
     @media (prefers-reduced-motion: no-preference) {
       .viewer[open] {
         transition:
-          opacity var(--dur-slow) var(--ease-settle),
-          scale var(--dur-slow) var(--ease-settle),
+          opacity var(--dur) var(--ease-settle),
           translate var(--dur-slow) var(--ease-settle);
 
         &::backdrop {

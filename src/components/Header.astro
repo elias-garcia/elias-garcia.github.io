@@ -75,12 +75,6 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
     background: var(--header-bg);
     backdrop-filter: var(--header-backdrop);
     view-transition-name: site-header;
-
-    /* While a photo travels into the image viewer or out of it, the header
-       stays part of the page, under the viewer's backdrop. */
-    :global(:root[data-viewer-travel]) & {
-      view-transition-name: none;
-    }
   }
 
   /* Grows with the page's scroll, where scroll-driven animations exist. */

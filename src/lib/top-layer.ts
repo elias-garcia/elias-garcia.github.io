@@ -1,8 +1,8 @@
-// The image viewer fades out when it closes without its photo travelling
-// (DESIGN.md §3). Where a closing element can stay in the top layer until its
-// fade is done (`overlay` and a `display` transition), CSS does it alone.
-// Elsewhere (Safari, Firefox) the element fades out while it's still open
-// (`data-closing`), and closes afterwards.
+// The image viewer fades out when it closes (DESIGN.md §3). Where a closing
+// element can stay in the top layer until its fade is done (`overlay` and a
+// `display` transition), CSS does it alone. Elsewhere (Safari, Firefox) the
+// element fades out while it's still open (`data-closing`), and closes
+// afterwards.
 
 let cssFadesOut: boolean | undefined;
 
