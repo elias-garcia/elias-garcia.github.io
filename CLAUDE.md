@@ -21,15 +21,19 @@ Markup follows the HTML specification, even where the reference HTML does someth
 - Astro 7 with static output, TypeScript (`astro/tsconfigs/strictest`), MDX, plain CSS with no framework.
 - Icons: Lucide through `@lucide/astro`.
 - ESLint, Prettier, html-validate, Playwright + axe, Lighthouse CI.
-- GitHub Actions: `ci.yml` runs every check below on pull requests, plus the internal links and anchors (lychee); `links.yml` checks the links to other sites on the first of each month.
+- GitHub Actions: `ci.yml` runs every check on pull requests, with Lighthouse and the internal links and anchors (lychee); `links.yml` checks the links to other sites on the first of each month.
 - Node 26, pinned with `engines.node`.
 - Vercel through Git: `main` deploys to production (`eliasgarcia.dev`), other branches get previews. The build is plain static files in `dist/`, with no adapter.
 
 ## Verify before finishing
 
-`npm run format && npm run lint && npm test && npm run build && npm run html && npm run a11y`
+`npm run format && npm run lint && npm test && npm run build && npm run html`
 
-`test` runs the unit tests (`src/lib/*.test.ts`, Node's own test runner); `build` type-checks with `astro check`; `html` validates the built pages against the HTML specification (html-validate's `standard` preset); `a11y` runs axe on every page and state, in both themes and at three widths.
+`test` runs the unit tests (`src/lib/*.test.ts`, Node's own test runner); `build` type-checks with `astro check`; `html` validates the built pages against the HTML specification (html-validate's `standard` preset).
+
+When a change touches what a visitor sees (markup, styles, content, an interactive state), also run `npm run a11y`: axe on every page and state, in both themes and at three widths.
+
+CI runs all of these on every pull request, with the two checks that only run there: Lighthouse (`npm run lighthouse`, one run per page) and the internal links and anchors. Run Lighthouse here (after `npm run build`) only to look into a failure there.
 
 ## Principles
 
@@ -97,7 +101,8 @@ design/         # design handoff (reference only)
 ## Process
 
 - Committing, pushing and deploying always need an explicit ask. Pushing to `main` deploys to production.
-- Before committing, run `npm run lighthouse` (after `npm run build`) and the `reviewer` agent (`.claude/agents/reviewer.md`) on the changes. Fix every Lighthouse failure and every "must fix" finding, or explain why not.
+- Before committing, run the `reviewer` agent (`.claude/agents/reviewer.md`) on the changes, unless the commit only changes documents (this file, `PLAN.md`) or `design/`. Fix every "must fix" finding, or explain why not.
+- Changes reach `main` through a pull request, so CI has run on them before they deploy.
 - Conventional commits, one logical change per commit.
 - New dependencies only when the task needs them. Always install the latest version.
 - No secrets in the repo, and no third-party scripts without a clear reason.

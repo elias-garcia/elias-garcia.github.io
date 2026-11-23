@@ -1,6 +1,6 @@
 ---
 name: reviewer
-description: Reviews the uncommitted changes against this project's rules (CLAUDE.md, DESIGN.md) before a commit. Use before every commit. Reports findings; never modifies files.
+description: Reviews the uncommitted changes against this project's rules (CLAUDE.md, DESIGN.md) before a commit. Use before every commit that changes more than documents or `design/`. Reports findings; never modifies files.
 tools: Read, Grep, Glob, Bash
 model: inherit
 ---
