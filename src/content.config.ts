@@ -135,7 +135,7 @@ const projects = defineCollection({
       cover: z.discriminatedUnion("kind", [
         z.object({
           kind: z.literal("illustration"),
-          name: z.enum(["roleburn", "work-issue", "pol-funding-spreads"]),
+          name: z.enum(["roleburn", "work-issue"]),
         }),
         z.object({
           kind: z.literal("image"),
