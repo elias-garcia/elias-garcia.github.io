@@ -417,7 +417,7 @@ Screenshots for each: `screenshots/<page>.{desktop,phone}.{light,dark}.png`.
 ### Home (`/`)
 1. **Intro.** Avatar (104px; 80px on phones, above the text), name (page title, `h1`), "Software engineer in Porto, Portugal" (one sentence, `--text-2`; no separator here, the "·" is for rows of facts), then **Download CV** menu button and "Open to remote roles" with an indigo dot that pings once when the page opens (a ring scaling 1 → 2.6 while fading, 2.4s) and then rests.
 2. **About.** Two paragraphs.
-3. **Projects.** Three tiles + "All projects ›".
+3. **Projects.** The first three projects in the Projects order as tiles + "All projects ›". With one or two projects the tiles keep their size and sit from the left, leaving the other columns empty (like the talk photos); they never stretch to fill the row.
 4. **Work experience.** Five expandable rows, Vesu open.
 5. **Writing.** The three newest posts as list rows (date "Nov 2026") + "All posts ›".
 6. **Speaking.** Three talks as **plain rows** (no recordings exist), dated by month ("Jan 2024", "Jul 2023"), each with a **photo attachment**: House of ZK one photo, AggCave one, Lisbon three. No section photo above the list.
@@ -428,7 +428,7 @@ Screenshots for each: `screenshots/<page>.{desktop,phone}.{light,dark}.png`.
 Sections are plain `<section>` elements, **not labelled**, with `h2` headings at the text size (16/500, `--text`), `--space-section` apart (80, 64 on phones); the intro is a `<header>`. The space above a heading and its place at the left edge mark the section; don't make the headings bigger.
 
 ### Projects (`/projects`)
-Intro (title, one line), then the card grid: one per row on phones, two per row from 640px with the first spanning both when the count is odd. Order: projects in progress first, then the rest; each group by year, newest first, then by title. Every card shows "View project ›" on the title row (from 640px).
+Intro (title, one line), then the card grid: one per row on phones, two per row from 640px with the first spanning both when the count is odd. That covers small counts too: one project is a single full-width card (16:7), two are two half cards side by side. Order: projects in progress first, then the rest; each group by year, newest first, then by title. Every card shows "View project ›" on the title row (from 640px).
 
 ### Case study (`/projects/roleburn`)
 Back link "‹ Projects", title (display) and lead (the project's description, full column width), project facts, then the **cover** (see Project cover): the same picture as the project's card, which morphs into it. Then the article: Why I built it, How it works (with a folder-tree code block, the Roleburn figure and a placeholder figure), What's next. **The facts come before the cover:** they describe the project like the status line under a card's title, and the links stay on the first screen. The layout is the same for every project; only the cover and the article change. Previous/next at the end ("Previous", "Next") moves between projects that have a case study, in the Projects order.
