@@ -203,19 +203,27 @@ p {
   animation: none;
 }
 
-/* A project preview morphs into its case study hero. Without a partner on
-   the other page (the hero leaving for Writing, say), each half moves like
-   the rest of the page. */
-::view-transition-group(roleburn-preview) {
+/* A project's cover morphs between its tile or card and its case study.
+   Their shapes differ (4:3 and 16:7), so each picture is cropped as it
+   moves, never stretched. Without a partner on the other page (the case
+   study leaving for Writing, say), each half moves like the rest of the
+   page. */
+::view-transition-group(*.project-cover) {
   animation-duration: var(--dur-morph);
   animation-timing-function: var(--ease-settle);
 }
 
-::view-transition-old(roleburn-preview):only-child {
+::view-transition-old(*.project-cover),
+::view-transition-new(*.project-cover) {
+  block-size: 100%;
+  object-fit: cover;
+}
+
+::view-transition-old(*.project-cover):only-child {
   animation: page-out var(--dur-fast) var(--ease-settle) both;
 }
 
-::view-transition-new(roleburn-preview):only-child {
+::view-transition-new(*.project-cover):only-child {
   animation: page-in var(--dur-slow) var(--ease-settle) both;
 }
 

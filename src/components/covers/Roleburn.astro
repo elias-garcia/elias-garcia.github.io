@@ -1,10 +1,12 @@
 ---
 type Props = {
-  // The featured card on Projects: the same radar in a 16:7 drawing.
+  // The featured card on Projects and the case study: the same radar in a
+  // 16:7 drawing.
   wide?: boolean;
+  inHeader?: boolean;
 };
 
-const { wide = false } = Astro.props;
+const { wide = false, inHeader = false } = Astro.props;
 
 const drawings = {
   standard: {
@@ -47,7 +49,7 @@ const [centerX, centerY] = center;
 ---
 
 <svg
-  class:list={["illustration", { wide }]}
+  class:list={["illustration", { wide, "in-header": inHeader }]}
   viewBox={viewBox}
   aria-hidden="true"
 >
@@ -70,12 +72,17 @@ const [centerX, centerY] = center;
     --dur-sweep: 3s;
   }
 
-  /* Below 640px every card is equal: both drawings fill a 16:7 preview by
-     height, so 124 / 150 brings the wide one to the standard one's scale. */
+  /* Below 640px every card is equal, and the case study's cover is 16:7
+     too: both drawings fill a 16:7 box by height, so 124 / 150 brings the
+     wide one to the standard one's scale. */
   .wide {
     @media (width < 40rem) {
       scale: calc(124 / 150);
     }
+  }
+
+  .in-header {
+    scale: calc(124 / 150);
   }
 
   .ring {

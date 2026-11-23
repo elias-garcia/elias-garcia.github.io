@@ -1,0 +1,103 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import { coverName } from "../lib/content.ts";
+import PolFundingSpreads from "./covers/PolFundingSpreads.astro";
+import Roleburn from "./covers/Roleburn.astro";
+import WorkIssue from "./covers/WorkIssue.astro";
+
+type Props = {
+  project: CollectionEntry<"projects">;
+  // A Home tile, a Projects card or the case study's header (DESIGN.md,
+  // Project cover).
+  variant: "tile" | "card" | "header";
+  // The featured card on Projects: 16:7 from 640px.
+  wide?: boolean;
+};
+
+const { project, variant, wide = false } = Astro.props;
+const { cover } = project.data;
+const header = variant === "header";
+const name = coverName(project);
+
+const illustrations = {
+  roleburn: Roleburn,
+  "work-issue": WorkIssue,
+  "pol-funding-spreads": PolFundingSpreads,
+};
+const Illustration =
+  cover.kind === "illustration" ? illustrations[cover.name] : undefined;
+
+// As wide as the column on phones; from 640px, a third of it on a tile, half
+// on a card, all of it on a featured card and on the case study.
+const fullColumn = "(max-width: 687px) calc(100vw - 48px), 640px";
+const sizes =
+  header || wide
+    ? fullColumn
+    : variant === "tile"
+      ? "(max-width: 639px) calc(100vw - 48px), 198px"
+      : "(max-width: 639px) calc(100vw - 48px), 308px";
+---
+
+<div
+  class:list={["cover", variant, { wide }]}
+  data-morph={header ? undefined : name}
+  style={header ? `view-transition-name: ${name}` : undefined}
+>
+  {cover.kind === "image" ? (
+    <Image
+      class="image"
+      src={cover.src}
+      alt={header ? cover.alt : ""}
+      widths={header ? [640, 960, 1280] : [400, 640, 960, 1280]}
+      sizes={sizes}
+      priority={header}
+    />
+  ) : (
+    Illustration && <Illustration wide={header || wide} inHeader={header} />
+  )}
+</div>
+
+<style>
+  .cover {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    /* The morph's timing and crop (global.css). */
+    view-transition-class: project-cover;
+
+    &.wide,
+    &.header {
+      aspect-ratio: 16 / 7;
+    }
+
+    @media (width < 40rem) {
+      aspect-ratio: 16 / 7;
+    }
+
+    :global(.illustration),
+    .image {
+      display: block;
+      inline-size: 100%;
+      block-size: 100%;
+    }
+
+    .image {
+      object-fit: cover;
+    }
+  }
+
+  /* On a tile or card the illustration only moves when the card says so
+     (a hover or focus rule there outranks this one); on the case study it
+     runs one cycle as the page opens, then rests. */
+  .cover :global([data-loop]) {
+    animation-play-state: paused;
+  }
+
+  .header :global([data-loop]) {
+    animation-play-state: running;
+    animation-iteration-count: 1;
+  }
+</style>

@@ -3,8 +3,8 @@ import DisplayTitle from "./DisplayTitle.astro";
 import Prose from "./mdx/Prose.astro";
 
 // What a post and a case study share: the way back with an action beside
-// it, the title and what sits under it, facts, the content (the default
-// slot, set as prose), and what closes the page.
+// it, the title and what sits under it, facts, a cover, the content (the
+// default slot, set as prose), and what closes the page.
 type Props = {
   title: string;
 };
@@ -25,6 +25,7 @@ const facts = Astro.slots.has("facts");
         <slot name="intro" />
       </header>
       <slot name="facts" />
+      <slot name="cover" />
     </div>
     <Prose>
       <slot />

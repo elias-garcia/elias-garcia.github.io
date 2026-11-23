@@ -122,19 +122,34 @@ const writing = defineCollection({
   }),
 });
 
+// A file whose name starts with "_" is a sample: it shows in `npm run dev`
+// only.
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/projects" }),
-  schema: z.object({
-    title: z.string(),
-    summary: z.string(),
-    description: z.string(),
-    illustration: z.enum(["roleburn", "work-issue", "pol-funding-spreads"]),
-    status: z.enum(["In progress", "Experiment", "Research"]),
-    year: z.number().int(),
-    links: z.array(link),
-    // A draft case study shows in `npm run dev` only; the project still lists.
-    draft: z.boolean().default(false),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      summary: z.string(),
+      description: z.string(),
+      // The project's picture, on its tile, its card and its case study.
+      cover: z.discriminatedUnion("kind", [
+        z.object({
+          kind: z.literal("illustration"),
+          name: z.enum(["roleburn", "work-issue", "pol-funding-spreads"]),
+        }),
+        z.object({
+          kind: z.literal("image"),
+          src: image(),
+          alt: z.string().min(1),
+        }),
+      ]),
+      status: z.enum(["In progress", "Experiment", "Research"]),
+      year: z.number().int(),
+      links: z.array(link),
+      // A draft case study shows in `npm run dev` only; the project still
+      // lists.
+      draft: z.boolean().default(false),
+    }),
 });
 
 const pages = defineCollection({

@@ -3,7 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import { getProjectCopy, hasCaseStudy } from "../lib/content.ts";
 import { routes } from "../lib/routes.ts";
 import Icon from "./Icon.astro";
-import ProjectPreview from "./ProjectPreview.astro";
+import ProjectCover from "./ProjectCover.astro";
 import ProjectStatus from "./ProjectStatus.astro";
 
 type Props = {
@@ -15,15 +15,18 @@ type Props = {
 };
 
 const { project, tile = false, wide = false } = Astro.props;
-const { title, summary, description, status, year, illustration } =
-  project.data;
+const { title, summary, description, status, year } = project.data;
 const href = hasCaseStudy(project) ? routes.project(project.id) : undefined;
 const copy = await getProjectCopy();
 const Title = tile ? "h3" : "h2";
 ---
 
 <li class:list={["card", { wide, linked: href !== undefined }]}>
-  <ProjectPreview illustration={illustration} wide={wide} />
+  <ProjectCover
+    project={project}
+    variant={tile ? "tile" : "card"}
+    wide={wide}
+  />
   <div class="head">
     <div class="title-row">
       <Title class="title">
@@ -58,7 +61,7 @@ const Title = tile ? "h3" : "h2";
     align-content: start;
     row-gap: var(--space-2);
 
-    :global(.preview) {
+    :global(.cover) {
       margin-block-end: var(--space-2);
     }
   }
@@ -149,10 +152,10 @@ const Title = tile ? "h3" : "h2";
     }
   }
 
-  /* The preview reacts to the card's link: hover never moves the card, its
+  /* The cover reacts to the card's link: hover never moves the card, its
      border darkens and its illustration plays, as it does while focused. */
   .linked {
-    :global(.preview) {
+    :global(.cover) {
       transition: border-color var(--dur) var(--ease);
     }
 
@@ -161,7 +164,7 @@ const Title = tile ? "h3" : "h2";
     }
 
     @media (hover: hover) and (pointer: fine) {
-      &:hover :global(.preview) {
+      &:hover :global(.cover) {
         border-color: var(--line-strong);
       }
 
@@ -171,13 +174,13 @@ const Title = tile ? "h3" : "h2";
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      :global(.preview) {
+      :global(.cover) {
         transition:
           border-color var(--dur) var(--ease),
           scale var(--dur) var(--ease-settle);
       }
 
-      &:active :global(.preview) {
+      &:active :global(.cover) {
         scale: var(--press-scale-tile);
       }
     }

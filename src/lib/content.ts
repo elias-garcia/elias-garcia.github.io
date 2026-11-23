@@ -73,8 +73,14 @@ export async function getEducation() {
   );
 }
 
+// Drafts and samples show in `npm run dev`, never in production.
+const showsHidden = import.meta.env.DEV;
+
 export async function getProjects() {
-  const projects = await getCollection("projects");
+  const projects = await getCollection(
+    "projects",
+    ({ id }) => showsHidden || !id.startsWith("_"),
+  );
   const inProgress = (project: CollectionEntry<"projects">) =>
     project.data.status === "In progress" ? 0 : 1;
   return projects.sort(
@@ -82,10 +88,15 @@ export async function getProjects() {
   );
 }
 
+// The view transition name a project's cover takes on its tile or card and
+// on its case study, so one morphs into the other (DESIGN.md §2.5).
+export function coverName(project: CollectionEntry<"projects">): string {
+  return `project-${project.id}`;
+}
+
 export function hasCaseStudy(project: CollectionEntry<"projects">): boolean {
   return (
-    (import.meta.env.DEV || !project.data.draft) &&
-    (project.body ?? "").trim() !== ""
+    (showsHidden || !project.data.draft) && (project.body ?? "").trim() !== ""
   );
 }
 
@@ -99,7 +110,7 @@ function byNewest(
 export async function getPosts() {
   const posts = await getCollection(
     "writing",
-    ({ data }) => import.meta.env.DEV || !data.draft,
+    ({ data }) => showsHidden || !data.draft,
   );
   return posts.sort(byNewest);
 }

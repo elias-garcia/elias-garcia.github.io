@@ -86,10 +86,11 @@ design/         # design handoff (reference only)
 
 ## Content
 
-- `src/content/` is the single source of content. Never hardcode copy in components or duplicate it in another file. Each post or project is one file with its metadata in the frontmatter. Interface text lives there too, one file per part of the site, each read through its getter in `src/lib/content.ts`; sentences with a variable part are templates filled with `fill()`. The labels inside a drawing (the project illustrations, a case study hero) are part of the drawing and stay in it.
+- `src/content/` is the single source of content. Never hardcode copy in components or duplicate it in another file. Each post or project is one file with its metadata in the frontmatter. Interface text lives there too, one file per part of the site, each read through its getter in `src/lib/content.ts`; sentences with a variable part are templates filled with `fill()`. The labels inside a drawing (the project covers, the Roleburn figure) are part of the drawing and stay in it.
 - Never store what can be derived, like topic counts, reading time or whether a project has a case study (it has a body).
 - Topics are not case sensitive (`AI` and `ai` are one topic); the label is the newest post's spelling.
-- Posts with `draft: true` show in `npm run dev` and are left out of the production build. A project with `draft: true` keeps its card, but its case study is left out the same way.
+- Posts with `draft: true` show in `npm run dev` and are left out of the production build. A project with `draft: true` keeps its card, but its case study is left out the same way. A project file whose name starts with `_` is a sample for `npm run dev` only, like the prose reference post.
+- A project's cover (DESIGN.md, Project cover) is rendered by `ProjectCover` and named for the morph by `coverName()`: never type a `project-…` transition name by hand.
 - `public/cv.pdf` is made by hand. When the work, talks or education content changes, say that the PDF needs updating too.
 - Don't invent facts, numbers or links. Leave a clear TODO where something is missing.
 

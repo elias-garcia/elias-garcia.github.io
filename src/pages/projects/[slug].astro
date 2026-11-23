@@ -5,6 +5,7 @@ import Article from "../../components/Article.astro";
 import BackLink from "../../components/BackLink.astro";
 import { mdxComponents } from "../../components/mdx/index.ts";
 import PreviousNext from "../../components/PreviousNext.astro";
+import ProjectCover from "../../components/ProjectCover.astro";
 import ProjectFacts from "../../components/ProjectFacts.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
@@ -46,6 +47,7 @@ const [{ Content }, projects, copy] = await Promise.all([
       {description}
     </p>
     <ProjectFacts slot="facts" year={year} status={status} links={links} />
+    <ProjectCover slot="cover" project={project} variant="header" />
     <Content components={mdxComponents} />
     <PreviousNext
       slot="end"
