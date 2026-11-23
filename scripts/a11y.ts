@@ -248,7 +248,17 @@ async function checkVariant(
 }
 
 try {
-  const variants = (await listPages()).flatMap((path) =>
+  const pages = await listPages();
+  // A page that was renamed or is no longer built would take its states
+  // with it, without a word.
+  for (const path of Object.keys(states)) {
+    if (!pages.includes(path)) {
+      failures.push(
+        `${path}: has states to check but isn't a built page; move or remove them`,
+      );
+    }
+  }
+  const variants = pages.flatMap((path) =>
     widths.flatMap((width) =>
       colorSchemes.map(
         (colorScheme) => () => checkVariant(path, width, colorScheme),
