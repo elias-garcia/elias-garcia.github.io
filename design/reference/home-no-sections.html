@@ -1,0 +1,712 @@
+<!doctype html><html lang="en"><head>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta charset="utf-8">
+<title>Elías García — Home</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap">
+<style>
+/* phones: the platform layer. No grey tap flash (every control has its own :active), no double-tap delay,
+   controls aren't text you can long-press-select, and no font inflation in landscape */
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+a,button,summary,label,[role="button"]{touch-action:manipulation}
+button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user-select:none}
+.phbtn img{-webkit-touch-callout:none}
+/* touch: text links and rows dim while pressed (instantly), then fade back */
+@media (hover:none),(pointer:coarse){a:active:not(.button,.tile,.card,.cl,.pn,.lpc,.topic,.item a){opacity:.6}.list .item:has(a:active){opacity:.6;transition:none}}
+
+:root{--space-page:64px;--space-section:80px;--space-footer:96px}
+.site main p:not([class]):not([style*="font-size"]){line-height:1.6}
+@media (max-width: 639.98px){:root{--space-page:32px;--space-section:64px;--space-footer:64px}}
+
+/* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
+   bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
+   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
+:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-slow:250ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent-c:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+
+body{margin:0;background:var(--bg)}
+a{color:var(--text);text-decoration:none}
+@media (hover:hover) and (pointer:fine){a:hover{color:var(--accent-c)}}
+.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.site *{box-sizing:border-box}
+.site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
+.site p{text-wrap:pretty}
+
+/* one orchestrated load moment */
+
+/* nav underline fades in */
+.nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
+@media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
+.nav a[aria-current]{color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent-c)}}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
+
+.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
+.kbd:active{transform:scale(.97)}
+
+/* avatar crossfade by career era */
+.av{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* availability dot */
+.dot{position:relative;width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+.dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:ping 2.4s cubic-bezier(0,0,.2,1) 1 both}
+@keyframes ping{0%{transform:scale(1);opacity:.45}80%,100%{transform:scale(2.6);opacity:0}}
+
+/* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
+.button:active{transform:scale(.97)}
+.button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.button svg circle{fill:currentColor}
+
+/* lists: hovering one row quiets the others */
+.list .item{transition:opacity var(--dur) var(--ease)}
+@media (hover:hover) and (pointer:fine){.list:has(.item:hover) .item:not(:hover){opacity:.45}}
+
+/* jobs expand in place */
+.jobhead{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px 24px;width:100%;padding:12px 0;margin:0;background:none;border:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.jobbody{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--dur-slow) var(--ease-settle),opacity var(--dur) var(--ease-settle)}
+.job.open .jobbody{grid-template-rows:1fr;opacity:1}
+.chev{width:16px;height:16px;margin-top:4px;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;transition:transform var(--dur-slow) var(--ease-settle),stroke var(--dur) var(--ease)}
+@media (hover:hover) and (pointer:fine){.jobhead:hover .chev{stroke:var(--text)}}
+.job.open .chev{transform:rotate(45deg)}
+
+/* project tiles: previews run only while hovered */
+/* "see more" links: same hover as the header nav, plus a small arrow that nudges */
+.more{display:inline-flex;align-items:center;gap:4px;font-size:14px;color:var(--text-2);transition:color var(--dur) var(--ease)}
+@media (hover:hover) and (pointer:fine){.more:hover{color:var(--text)}}
+.more span{position:relative}
+.more span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.more:hover span::after{opacity:1}}
+.more svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
+@media (hover:hover) and (pointer:fine){.more:hover svg{transform:translateX(2px)}}
+/* tiles share rows (preview, title, description): a long title never pushes its neighbours out of line */
+.tiles .tile{display:grid;grid-template-rows:subgrid;grid-row:span 3;align-content:start}
+@media (max-width: 639.98px){.tiles .tile{padding-bottom:28px}.tiles > li:last-child .tile{padding-bottom:0}}
+.tile .pv{margin-bottom:12px}
+.tile .tt{font-weight:500;line-height:1.35;text-wrap:balance}
+.tile .td{font-size:16px;color:var(--text-2);line-height:1.5}
+.st{position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:var(--r-full);background:color-mix(in oklch, var(--bg) 92%, transparent);border:1px solid var(--line);font-size:12px;color:var(--text-2);backdrop-filter:blur(4px)}
+.tile .pv{transition:transform var(--dur) var(--ease-settle),border-color var(--dur) var(--ease)}
+@media (hover:hover) and (pointer:fine){.tile:hover .pv{border-color:var(--line-strong)}}
+.tile:active .pv{transform:scale(.99)}
+.anim{animation-play-state:paused !important}
+.tile:has(.cl:focus-visible) .anim{animation-play-state:running !important}@media (hover:hover) and (pointer:fine){.tile:hover .anim{animation-play-state:running !important}}
+.ill{width:100%;height:100%;display:block}
+.ring{fill:none;stroke:var(--line);stroke-width:1}
+.wedge{fill:var(--accent);opacity:.14}
+.sweep{transform-origin:100px 75px;transform-box:view-box;animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hit{fill:var(--accent)}
+.miss{fill:var(--line-strong)}
+.node{fill:var(--bg);stroke:var(--line-strong);stroke-width:1}
+.node.done{fill:var(--accent);stroke:var(--accent)}
+.lbl{font-size:10px;font-weight:500;text-anchor:middle;fill:var(--text-2);font-family:inherit}
+.lbl.light{fill:var(--bg)}
+.link{stroke:var(--line-strong);stroke-width:1}
+.track{stroke:var(--line);stroke-width:1;stroke-dasharray:2 4}
+.runner{fill:var(--accent);transform-box:fill-box;animation:travel 2.4s cubic-bezier(.65,0,.35,1) infinite}
+@keyframes travel{0%{transform:translateX(0)}42%,58%{transform:translateX(68px)}100%{transform:translateX(136px)}}
+.lineA{fill:none;stroke:var(--accent);stroke-width:1.5}
+.lineB{fill:none;stroke:var(--text-3);stroke-width:1.5}
+.scan{stroke:var(--text);stroke-opacity:.3;stroke-width:1;stroke-dasharray:3 3;animation:scan 2.8s ease-in-out infinite alternate}
+@keyframes scan{from{transform:translateX(0)}to{transform:translateX(150px)}}
+.tag{font-size:10px;font-family:inherit;fill:var(--text-3)}
+
+
+@media (prefers-reduced-motion:reduce){
+.dot::after,.anim{animation:none !important}
+.jobbody,.chev,.tile .pv{transition:opacity var(--dur) var(--ease)}
+}
+
+/* search menu */
+@keyframes palFade{from{opacity:0}}
+.pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default}
+/* search opens and closes instantly: it is a keyboard shortcut */
+.pin{padding:0;flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:16px;color:var(--text);background:transparent;height:100%}
+.pin::placeholder{color:var(--text-3)}
+.ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
+.pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
+.popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none}
+@media (hover:hover) and (pointer:fine){.popt:hover{color:var(--text)}}
+.popt.act{background:var(--tint)}
+.pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2)}
+.popt.act .pic{background:var(--bg);color:var(--accent-c)}
+.pic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0}
+.popt.act .pret{opacity:1}
+mark.phl{background:none;color:var(--accent-c);font-weight:600;padding:0}
+.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
+.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+.pclear:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.pclear:hover{background:var(--control-hover);color:var(--text)}}
+
+
+/* page entrance: the content arrives as one piece, fast; the header never moves */
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
+@keyframes pageFade{from{opacity:0}}
+main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backwards}
+/* between pages: the header stays put, the content cross-fades */
+@view-transition{navigation:auto}
+.site > header{view-transition-name:site-header}
+::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
+::view-transition-new(root){animation:none}
+@keyframes vtOut{to{opacity:0}}
+::view-transition-group(project-roleburn){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}::view-transition-old(project-roleburn),::view-transition-new(project-roleburn){height:100%;object-fit:cover}
+@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
+
+
+/* footer sits after the content, and at the bottom of the window when a page is short (never fixed) */
+.site{display:flex;flex-direction:column}
+.site > main{flex:1 0 auto;width:100%}
+.site > footer{width:100%;flex-shrink:0}
+@media (prefers-color-scheme: dark){
+:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent-c:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
+.site{--accent:var(--accent-c) !important}
+img:not([src$=".svg"]){filter:brightness(.92)}
+}
+
+/* final pass: motion and UX polish */
+html{scroll-padding-top:80px}
+::selection{background:var(--tint-strong);color:var(--text)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:translate var(--dur) var(--ease-settle)}
+.skip:focus{translate:0 0;color:var(--bg)}
+@media (prefers-reduced-motion:reduce){.skip{transition:none}}
+/* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
+/* phones: search shows just the icon, and pages start closer to the top */
+@media (max-width: 639.98px){
+.kbd{width:36px;padding:0;justify-content:center}
+.kbd span{display:none}
+.nav{gap:16px !important}
+.site > main{padding-top:var(--space-page) !important}
+}
+
+/* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+.pcrumb:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.pcrumb:hover{background:var(--control-hover);color:var(--text)}}
+.pret{text-align:center}
+
+/* Download CV: menu button. Same button, a chevron, and a small menu that explains each format */
+.cvwrap{position:relative;display:inline-flex}
+.cvchev{margin-right:-4px;transition:transform var(--dur) var(--ease)}
+.cvchev.up{transform:rotate(180deg)}
+.cvscrim{position:fixed;inset:0;z-index:var(--z-menu);border:0;padding:0;background:transparent;cursor:default}
+.cvmenu{position:absolute;top:calc(100% + 8px);left:0;z-index:calc(var(--z-menu) + 1);width:320px;max-width:calc(100vw - 48px);display:flex;flex-direction:column;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);transform-origin:top left;transition:opacity var(--dur) var(--ease-settle),transform var(--dur) var(--ease-settle)}
+@starting-style{.cvmenu{opacity:0;transform:scale(.97) translateY(-4px)}}
+/* opened from the keyboard: the menu appears at once and the chevron flips at once */
+.cvmenu.kb,.cvchev.kb{transition:none}
+.cvitem{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;outline:none}
+.cvitem:focus-visible{background:var(--tint)}@media (hover:hover) and (pointer:fine){.cvitem:hover{background:var(--tint)}}
+.cvitem:focus-visible .pic{background:var(--bg);color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.cvitem:hover .pic{background:var(--bg);color:var(--accent-c)}}
+.cvtext{display:flex;flex-direction:column;gap:0;line-height:1.35;min-width:0}
+.cvtitle{font-size:14px}
+.cvsize{margin-left:4px;font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums}
+.cvdesc{font-size:12px;color:var(--text-2)}
+@media (prefers-reduced-motion:reduce){.cvmenu{transition:none}.cvchev{transition:none}}
+
+
+/* semantic lists keep the existing look: no bullets, no indent. role="list" keeps list semantics in Safari */
+ul.list,ul.tiles{list-style:none;margin:0;padding:0}
+ul.tiles > li{display:grid;grid-template-rows:subgrid;grid-row:span 3}
+.tile .tt{margin:0;font-size:inherit}
+.contact dl,.contact dd{margin:0}
+address{font-style:normal}
+
+/* touch screens: 44px hit areas without changing how anything looks */
+@media (pointer: coarse){
+.nav a,.more,.topiclink,.factlink,.button,.topic,.kbd,.fn,.back,.contact a,.pcrumb,.pclear{position:relative}
+.nav a::before,.more::before,.topiclink::before,.factlink::before,.button::before,.topic::before,.kbd::before,.fn::before,.back::before,.contact a::before,.pcrumb::before,.pclear::before{content:"";position:absolute;left:0;right:0;top:50%;height:44px;min-width:44px;transform:translate(0,-50%)}
+.fn::before{left:50%;right:auto;width:44px;transform:translate(-50%,-50%)}
+}
+
+/* work rows: date, text and + on one line; below Tailwind sm (640px) the + stays beside the date and the text drops below */
+.jobhead{display:grid;grid-template-columns:112px minmax(0,1fr) auto;grid-template-areas:"date text icon";column-gap:24px;row-gap:4px;align-items:start}
+.jobhead > :nth-child(1){grid-area:date}
+.jobhead > :nth-child(2){grid-area:text}
+.jobhead > .chev{grid-area:icon}
+@media (max-width: 639.98px){.jobhead{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"date icon" "text text"}}
+
+/* footer time: Portugal's time and how far it is from the visitor's own clock.
+   Phones keep one row: the offset (the dot and "5h ahead of you") is left out */
+@media (max-width: 639.98px){.clock > span:nth-child(n+2){display:none}}
+
+/* external-link arrow: a 12px icon like the see-more chevron, quieter than the text, nudging toward where it goes */
+.ext{display:inline-block;width:12px;height:12px;margin-left:4px;vertical-align:-1px;flex:none;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+a:focus-visible .ext{stroke:currentColor}@media (hover:hover) and (pointer:fine){a:hover .ext{stroke:currentColor}}
+@media (hover: hover) and (pointer: fine){a:hover .ext{transform:translate(1px,-1px)}}
+@media (prefers-reduced-motion:reduce){.ext{transition:none}@media (hover:hover) and (pointer:fine){a:hover .ext{transform:none}}}
+
+/* intro photo: 104px matches the height of the name, title and button row beside it; phones stack it above the text at 80px */
+@media (max-width: 639.98px){.avbox{width:80px !important;height:80px !important}}
+
+/* search is a modal: while it is open the page behind it does not scroll */
+html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
+
+/* jumping to a #link scrolls smoothly (heading anchors, footnotes, back links, skip link); instant with reduced motion */
+@media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
+
+/* project tiles: one per row with wide 16:7 previews below Tailwind sm (640px), three in a row from sm. No two-column stage, so no orphan tile */
+ul.tiles{grid-template-columns:minmax(0,1fr)}
+@media (min-width: 640px){ul.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width: 639.98px){.tile .pv{aspect-ratio:16 / 7 !important}}
+
+/* below Tailwind sm (640px): one tile per row, so previews use the wide 16:7 shape (illustrations stay at their desktop size on phones),
+   and the intro photo always sits above the name at 80px; from sm it sits beside it at 104px */
+@media (max-width: 639.98px){
+div:has(> .avbox){flex-direction:column !important;align-items:flex-start !important;gap:16px !important}
+}
+
+
+/* work rows: below Tailwind sm the open row drops its empty date column, so the bullets start under the company name like the header does */
+@media (max-width: 639.98px){.jobgut{display:none}}
+
+/* project status: a 13px line under the title ("In progress · 2026"), never a pill on the preview.
+   Text carries the meaning; a small static indigo dot marks projects that are in progress (no pulse: pulsing is kept for "Open to remote roles") */
+.thead{display:flex;flex-direction:column;gap:4px;min-width:0}
+.sm{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:14px;line-height:1.5;color:var(--text-3)}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--accent-c);flex:none}
+
+/* tiles: 8px between the status line and the description, as on Projects (the tile grid rows are only 4px apart) */
+.tile .thead{padding-bottom:4px}
+
+/* Teaching: course rows. Rating: one neutral star, score and review count; the spoken version is in .vh */
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cmeta{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:14px;line-height:1.5;color:var(--text-3)}
+.crate,.crate-v{display:inline-flex;align-items:center;gap:4px}
+.crate svg{width:12px;height:12px;fill:var(--text);flex:none}
+.crate b{font-weight:500;color:var(--text)}
+@media (max-width: 639.98px){}
+.play{position:absolute;inset:0;margin:auto;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:color-mix(in oklch, var(--bg) 92%, transparent);border:1px solid var(--line);color:var(--text);backdrop-filter:blur(4px);transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.play svg{width:16px;height:16px;fill:currentColor;margin-left:2px}
+
+@media (max-width: 639.98px){}
+
+/* course rows: the usual list row, with media attached underneath. The attachment wraps exactly like its row (an empty 112px date column), so it always lines up with the text above it.
+   The attachment is a video preview: thumbnail with a play button, then what it is and where it goes; it spans the text column like a row of photos */
+.courses{list-style:none;margin:0;padding:0}
+.attach{display:flex;flex-wrap:wrap;column-gap:24px;margin-bottom:12px}
+.attach-gut{flex:0 0 112px}
+.attach-c{flex:1 1 300px;min-width:0}
+.lpc{display:flex;align-items:center;width:100%;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);overflow:hidden;color:inherit;text-decoration:none;transition:border-color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.lpc:active{transform:scale(.99)}
+.lpc:focus-visible{border-color:var(--line-strong)}@media (hover:hover) and (pointer:fine){.lpc:hover{border-color:var(--line-strong)}}
+.lpc-img{position:relative;flex:none;width:calc((100% - 14px) / 3);aspect-ratio:3 / 2;background:var(--surface);border-right:1px solid var(--line)}
+.lpc-img img{display:block;width:100%;height:100%;object-fit:cover}
+.lpc .play{width:32px;height:32px}
+.lpc .play svg{width:12px;height:12px}
+.lpc:focus-visible .play{background:var(--text);color:var(--bg);border-color:var(--text)}@media (hover:hover) and (pointer:fine){.lpc:hover .play{background:var(--text);color:var(--bg);border-color:var(--text)}}
+.lpc-t{display:flex;flex-direction:column;gap:0;padding:0 16px;min-width:0}
+.lpc-title{font-size:14px;font-weight:500;line-height:1.35;color:var(--text)}
+.lpc-src{font-size:14px;line-height:1.5;color:var(--text-3)}
+.lpc:focus-visible .lpc-title{color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.lpc:hover .lpc-title{color:var(--accent-c)}}
+
+/* attachments on list rows: every attachment image has one size and shape: a third of the text column (a slot in the row of three), 3:2.
+   Photos sit in a row of three (fewer stay left-aligned); the video preview's thumbnail fills the first slot, so it lines up with the photos */
+.list li > .attach{flex:1 1 100%;margin:8px 0 0}
+.photos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.photos img{display:block;width:100%;aspect-ratio:3 / 2;object-fit:cover;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
+
+
+/* work mode: plain grey text after the company name ("Polygon Labs · Remote", "Netex Learning · On-site, A Coruña"); no chips, icons or colour. The "·" has 8px each side; screen readers hear a comma */
+.wsep{margin:0 8px;color:var(--text-3)}
+
+.cmode{font-size:14px;font-weight:400;color:var(--text-3)}
+
+
+/* image viewer. Thumbnails are real buttons; the viewer is a modal dialog: focus moves to Close on open and returns
+   to the thumbnail on close; Tab stays inside; Esc, the × and the backdrop close it; ← → and swipe move; swipe down closes. No counter or arrows for one photo */
+.phbtn{display:block;width:100%;padding:0;border:0;background:none;border-radius:var(--r-md);cursor:zoom-in}
+.phbtn img{transition:opacity var(--dur) var(--ease)}
+@media (hover: hover) and (pointer: fine){.phbtn:hover img{opacity:.88}}
+html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
+.vwrap{position:fixed;inset:0;z-index:var(--z-dialog);display:flex;align-items:center;justify-content:center;padding:24px}
+.vscrim{position:fixed;inset:0;border:0;padding:0;margin:0;cursor:zoom-out;animation:palFade var(--dur) var(--ease-settle) both}
+.vdlg{position:relative;outline:none;animation:vwIn var(--dur-slow) var(--ease-settle) both}
+/* the viewer itself takes focus on open (tabindex -1); it's not a control, so it never shows the ring: × ‹ › do */
+.vwrap .vdlg:focus,.vwrap .vdlg:focus-visible{outline:none}
+@keyframes vwIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
+.vfig{margin:0;display:flex;flex-direction:column}
+.vimg{display:block;width:100%;height:100%;object-fit:cover}
+/* every photo of the talk sits in the frame. Desktop: stacked, the current one fades in. Phones: side by side, the row follows the finger */
+.vimgbox{position:relative;overflow:hidden}
+.vtrack{position:absolute;inset:0}
+.vslide{position:absolute;inset:0;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.vslide.on{opacity:1}
+.vwrap .vslide.on{view-transition-name:vw-photo}
+::view-transition-group(vw-photo){animation-duration:var(--dur-slow);animation-timing-function:var(--ease-settle)}
+.vw-closing::view-transition-group(vw-photo){animation-duration:var(--dur)}
+/* keyboard: opening, Esc and ← → are instant */
+.vwrap.kb .vdlg,.vwrap.kb .vscrim{animation:none !important}
+.vwrap.kb .vslide,.vwrap.kb .vtrack{transition:none !important;animation:none !important}
+.vcap{display:flex;flex-direction:column;gap:2px;min-width:0}
+.vtitle{font-size:16px;font-weight:500;line-height:1.35;color:var(--text)}
+.vmeta{display:flex;flex-wrap:wrap;column-gap:8px;font-size:14px;line-height:1.5;color:var(--text-3)}
+.vcount{font-variant-numeric:tabular-nums}
+.vbtn{position:absolute;z-index:1;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:color-mix(in oklch, var(--bg) 92%, transparent);color:var(--text);backdrop-filter:blur(4px);cursor:pointer;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.vbtn:active{transform:scale(.97)}
+.vbtn svg{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+@media (hover:hover) and (pointer:fine){.vbtn:hover{border-color:var(--line-strong);background:var(--bg)}}
+/* the viewer is a card in the search palette's language: the photo on top of a bordered card, caption below, a footer with key hints */
+.vw-card .vscrim{background:var(--scrim);backdrop-filter:blur(2px)}
+.vw-card{--vw-w:min(840px, max(70vw, min(100vw - 48px, 560px)), calc((100dvh - 176px) * 1.5))}
+.vw-card .vdlg{width:var(--vw-w);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);overflow:hidden}
+.vw-card .vimgbox{aspect-ratio:3 / 2;background:var(--surface);border-bottom:1px solid var(--line)}
+.vw-card .vcap{padding:16px 20px}
+.vw-card .vclose{top:12px;right:12px}
+.vw-card .vprev{left:12px;top:calc(var(--vw-w) / 3);margin-top:-20px}
+.vw-card .vnext{right:12px;top:calc(var(--vw-w) / 3);margin-top:-20px}
+.vfoot{display:flex;justify-content:space-between;gap:16px;height:44px;align-items:center;padding:0 20px;border-top:1px solid var(--line);font-size:12px;color:var(--text-3)}
+.vfoot > span{display:inline-flex;align-items:center;gap:8px}
+.vkeys{display:inline-flex;gap:4px}
+/* phones (< 640px): the platform photo viewer. Always dark (photos read best on black), photo edge to edge, caption and controls at the bottom within thumb reach.
+   A visible close button; swipe sideways AND buttons to move (WCAG 2.5.1); drag down to close, the photo follows the finger (the button is the alternative, WCAG 2.5.7). Production: the back gesture closes it, pinch zooms */
+/* the viewer is dark in both themes: its own fixed colours */
+:root{--viewer-bg:#000000;--viewer-text:#F4F4F5;--viewer-text-2:#9F9FA9;--viewer-control:rgb(255 255 255 / .12);--viewer-dot:rgb(255 255 255 / .32)}
+.vmnav{display:none}
+@media (max-width: 639.98px){
+.vprev,.vnext,.vfoot{display:none}
+.vwrap{padding:0;align-items:stretch}
+.vw-card .vscrim{background:var(--viewer-bg);backdrop-filter:none;transition:opacity var(--dur) var(--ease-settle)}
+.vwrap.drag .vscrim{transition:none}
+.vw-card .vdlg{width:100%;height:100%;display:flex;flex-direction:column;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible;padding:0 0 calc(16px + env(safe-area-inset-bottom, 0px));touch-action:none;transition:translate var(--dur-slow) var(--ease-settle)}
+.vwrap.out .vdlg{transition-duration:var(--dur)}
+.vwrap.drag .vdlg{transition:none}
+.vw-card .vclose{top:calc(8px + env(safe-area-inset-top, 0px));right:calc(8px + env(safe-area-inset-right, 0px));width:44px;height:44px;border-color:transparent;background:var(--viewer-control);color:var(--viewer-text)}
+.vw-card .vfig{flex:1;min-height:0;padding-top:60px}
+.vw-card .vimgbox{flex:0 1 auto;min-height:0;margin:auto 0;border:0;background:transparent;aspect-ratio:3 / 2}
+.vw-card .vcap{padding:24px 20px 0}
+.vw-card .vtitle{color:var(--viewer-text)}
+.vw-card .vmeta{color:var(--viewer-text-2)}
+.vmnav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px calc(8px + env(safe-area-inset-right, 0px)) 0 calc(8px + env(safe-area-inset-left, 0px))}
+.vmnav .vbtn{position:static;flex:none;width:44px;height:44px;border-color:transparent;background:var(--viewer-control);color:var(--viewer-text)}
+.vdots{display:flex;gap:8px}
+.vdot{width:6px;height:6px;border-radius:50%;background:var(--viewer-dot);transition:background var(--dur) var(--ease)}
+.vdot.on{background:var(--viewer-text)}
+.vtrack{display:flex;translate:calc(var(--vi) * -100% + var(--vdx, 0px)) 0;transition:translate var(--dur-slow) var(--ease-settle)}
+.vwrap.dragx .vtrack{transition:none}
+/* wrapping around (last → first with ›): the row keeps sliding the way the button points; the photo it wraps to sits one step past the end, then everything snaps back unseen */
+.vslide{translate:calc(var(--vshift, 0) * 100%) 0}
+.vwrap.snap .vtrack{transition:none}
+.vslide{position:relative;inset:auto;flex:0 0 100%;opacity:1;transition:none}
+}
+/* photo attachments, narrow rows: when the row is too narrow for the date column (the same 436px at which the date moves above the title),
+   the photos show full width in the page instead of as thumbnails; several scroll sideways inside the text column with the next one peeking.
+   Rows with the date column beside them (laptop, tablet) keep the row of thumbnails. Decided by the row's own width, not a new screen breakpoint */
+.attach{container:attach / inline-size}
+@container attach (max-width: 435.98px){
+.photos{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:8px;scrollbar-width:none;overscroll-behavior-x:contain}
+.photos::-webkit-scrollbar{display:none}
+.photos > li{flex:0 0 calc(100% - 40px);scroll-snap-align:start}
+.photos > li:only-child{flex-basis:100%}
+}
+@media (prefers-reduced-motion:reduce){.vdlg{animation:palFade var(--dur) var(--ease-settle) both;transition:none}.vscrim{animation:none}.vtrack{display:block !important;translate:none !important;transition:none !important}.vslide{position:absolute !important;inset:0 !important;flex:none !important;translate:none !important;opacity:0 !important;transition:opacity var(--dur) var(--ease-settle) !important}.vslide.on{opacity:1 !important}}
+
+/* title-only link: the title's link is stretched over the card or tile with ::after, so the whole card is still one target; the focus ring is drawn on that ::after, round the card */
+.card,.tile{position:relative}.cl{color:inherit}.cl::after{content:"";position:absolute;inset:0}.site .cl:focus-visible{outline:none}.site .cl:focus-visible::after{outline:2px solid var(--accent-c);outline-offset:3px}
+</style>
+</head><body>
+<div data-dc-tpl="3" class="site" style="--accent: #4F39F6; min-height: 100svh; background: var(--bg);">
+  <a data-dc-tpl="4" class="skip" href="#top">Skip to content</a>
+
+
+  <header data-dc-tpl="5" style="position: sticky; top: 0px; z-index: var(--z-header); background: color-mix(in oklch, var(--bg) 82%, transparent); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line);">
+    <div data-dc-tpl="6" style="max-width: 688px; margin: 0px auto; padding: 0 max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px)); height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+      <a data-dc-tpl="7" href="#top" aria-label="Elías García, home" style="display: flex; align-items: center; height: 44px;">
+        <svg data-dc-tpl="8" viewBox="0 0 35.44 60" width="16.54" height="28" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="9" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="10" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="11" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="12" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="13" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
+      </a>
+      <div data-dc-tpl="14" style="display: flex; align-items: center;">
+        <button data-dc-tpl="15" class="kbd" aria-label="Search the site" aria-keyshortcuts="Meta+K Control+K">
+          <svg data-dc-tpl="16" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="search" style="fill: none; stroke: currentcolor; stroke-width: 1.5;"><path data-dc-tpl="17" vector-effect="non-scaling-stroke" d="m21 21-4.34-4.34"></path><circle data-dc-tpl="18" vector-effect="non-scaling-stroke" cx="11" cy="11" r="8"></circle></svg>
+          <span data-dc-tpl="19">⌘K</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main data-dc-tpl="20" id="top" style="max-width: 688px; margin: 0px auto; padding: var(--space-page) max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: var(--space-section);">
+
+    <header data-dc-tpl="21" style="display: flex; flex-direction: column; gap: 32px;">
+      <div data-dc-tpl="22" style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+        <div data-dc-tpl="23" class="avbox" style="position: relative; width: 104px; height: 104px; border-radius: 50%; overflow: hidden; background: var(--control); flex: 0 0 auto;">
+          <img data-dc-tpl="24" class="av" src="../assets/avatar.jpg" alt="Elías García">
+        </div>
+        <div data-dc-tpl="25" style="display: flex; flex-direction: column; gap: 4px; min-width: 0px;">
+          <h1 data-dc-tpl="26" style="margin: 0px; font-size: 20px; line-height: 1.35; font-weight: 600; letter-spacing: -0.01em;">Elías García</h1>
+          <p data-dc-tpl="27" style="margin: 0px; color: var(--text-2);">Software engineer in Porto, Portugal</p>
+          <div data-dc-tpl="28" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+            <span data-dc-tpl="29" class="cvwrap">
+              <button data-dc-tpl="30" class="button" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="cv-menu">Download CV<svg data-dc-tpl="31" class="cvchev " viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-down"><path data-dc-tpl="32" vector-effect="non-scaling-stroke" d="m6 9 6 6 6-6"></path></svg></button>
+              
+            </span>
+            <span data-dc-tpl="59" style="display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0px 4px; font-size: 14px; color: var(--text-2);"><span data-dc-tpl="60" class="dot" aria-hidden="true"></span>Open to remote roles</span>
+          </div>
+        </div>
+      </div>
+
+      <div data-dc-tpl="61" style="display: flex; flex-direction: column; gap: 16px;">
+        <h2 data-dc-tpl="62" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">About</h2>
+        <p data-dc-tpl="63" style="margin: 0px; color: var(--text-2);">I’ve spent nine years building products end to end, from real-time data pipelines and APIs to the interfaces on top. Most recently I led engineering at Vesu, a lending protocol on Starknet. Before that, four years at Polygon Labs, leading the frontend of Polygon zkEVM and the team behind Polygon ID.</p>
+        <p data-dc-tpl="64" style="margin: 0px; color: var(--text-2);">These days I’m also exploring how AI agents change the way small teams ship. This site is where I keep the projects and notes.</p>
+      </div>
+    </header>
+
+    <section data-dc-tpl="65" id="work" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="66" id="work-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Work experience</h2>
+      <ul data-dc-tpl="67" class="list" role="list" style="display: flex; flex-direction: column;">
+        
+          <li data-dc-tpl="69" class="item job open">
+            <button data-dc-tpl="70" class="jobhead" aria-expanded="true">
+              <span data-dc-tpl="71" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="72" datetime="2024"><span class="sc-interp">2024</span></time> – Now</span>
+              <span data-dc-tpl="76" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+                <span data-dc-tpl="77"><span data-dc-tpl="78" style="font-weight: 500;"><span class="sc-interp">Vesu</span></span><span data-dc-tpl="79" class="cmode"><span data-dc-tpl="80" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="81" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
+                <span data-dc-tpl="82" style="color: var(--text-2);"><span class="sc-interp">Engineering Lead</span></span>
+              </span>
+              <svg data-dc-tpl="83" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="84" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="85" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
+            </button>
+            <div data-dc-tpl="86" class="jobbody">
+              <div data-dc-tpl="87" style="min-height: 0px; overflow: hidden;">
+                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                  <span data-dc-tpl="89" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <div data-dc-tpl="90" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
+                    <ul data-dc-tpl="91" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
+                      
+                        <li data-dc-tpl="93" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="94" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led engineering from launch to $84.6M in customer assets.</span></li>
+                      
+                        <li data-dc-tpl="93" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="94" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the lender and borrower app, a risk-parameter admin panel and a blockchain-only fallback UI so users can exit positions during an outage, on a shared Ark UI design system.</span></li>
+                      
+                        <li data-dc-tpl="93" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="94" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the real-time event-ingestion pipeline, a public API, an RFQ system for liquidations over WebSockets and an MCP server for product data.</span></li>
+                      
+                        <li data-dc-tpl="93" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="94" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Set up issue tracking, CI/CD and releases from zero, mentored the frontend team and introduced the company’s AI development practice.</span></li>
+                      
+                    </ul>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        
+          <li data-dc-tpl="69" class="item job ">
+            <button data-dc-tpl="70" class="jobhead" aria-expanded="false">
+              <span data-dc-tpl="71" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="72" datetime="2020"><span class="sc-interp">2020</span></time> – <time data-dc-tpl="75" datetime="2024"><span class="sc-interp">2024</span></time></span>
+              <span data-dc-tpl="76" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+                <span data-dc-tpl="77"><span data-dc-tpl="78" style="font-weight: 500;"><span class="sc-interp">Polygon Labs</span></span><span data-dc-tpl="79" class="cmode"><span data-dc-tpl="80" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="81" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
+                <span data-dc-tpl="82" style="color: var(--text-2);"><span class="sc-interp">Staff Frontend Engineer → Tech Lead</span></span>
+              </span>
+              <svg data-dc-tpl="83" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="84" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="85" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
+            </button>
+            <div data-dc-tpl="86" class="jobbody">
+              <div data-dc-tpl="87" style="min-height: 0px; overflow: hidden;">
+                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                  <span data-dc-tpl="89" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <div data-dc-tpl="90" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
+                    <ul data-dc-tpl="91" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
+                      
+                        <li data-dc-tpl="93" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="94" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Hermez: built the consumer wallet and block explorer, and contributed to the protocol SDK. Polygon acquired Hermez in 2021.</span></li>
+                      
+                        <li data-dc-tpl="93" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="94" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon zkEVM: led the 3-person frontend team across every user-facing product, including the bridge, as it grew to $180M in bridged assets.</span></li>
+                      
+                        <li data-dc-tpl="93" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="94" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon ID: tech lead of a 10-engineer team building the credential issuer, wallet, marketplace and schema tooling.</span></li>
+                      
+                    </ul>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        
+          <li data-dc-tpl="69" class="item job ">
+            <button data-dc-tpl="70" class="jobhead" aria-expanded="false">
+              <span data-dc-tpl="71" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="72" datetime="2019"><span class="sc-interp">2019</span></time> – <time data-dc-tpl="75" datetime="2020"><span class="sc-interp">2020</span></time></span>
+              <span data-dc-tpl="76" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+                <span data-dc-tpl="77"><span data-dc-tpl="78" style="font-weight: 500;"><span class="sc-interp">Nexiona</span></span><span data-dc-tpl="79" class="cmode"><span data-dc-tpl="80" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="81" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
+                <span data-dc-tpl="82" style="color: var(--text-2);"><span class="sc-interp">Senior Frontend Engineer</span></span>
+              </span>
+              <svg data-dc-tpl="83" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="84" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="85" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
+            </button>
+            <div data-dc-tpl="86" class="jobbody">
+              <div data-dc-tpl="87" style="min-height: 0px; overflow: hidden;">
+                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                  <span data-dc-tpl="89" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <div data-dc-tpl="90" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
+                    <ul data-dc-tpl="91" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
+                      
+                        <li data-dc-tpl="93" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="94" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the frontend of MIIMETIQ in React and Redux, used across Europe by companies including Celsa Group and Grifols.</span></li>
+                      
+                    </ul>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        
+          <li data-dc-tpl="69" class="item job ">
+            <button data-dc-tpl="70" class="jobhead" aria-expanded="false">
+              <span data-dc-tpl="71" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="72" datetime="2018"><span class="sc-interp">2018</span></time> – <time data-dc-tpl="75" datetime="2019"><span class="sc-interp">2019</span></time></span>
+              <span data-dc-tpl="76" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+                <span data-dc-tpl="77"><span data-dc-tpl="78" style="font-weight: 500;"><span class="sc-interp">Netex Learning</span></span><span data-dc-tpl="79" class="cmode"><span data-dc-tpl="80" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="81" class="vh">, </span><span class="sc-interp">On-site, A Coruña</span></span></span>
+                <span data-dc-tpl="82" style="color: var(--text-2);"><span class="sc-interp">Lead Frontend Engineer</span></span>
+              </span>
+              <svg data-dc-tpl="83" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="84" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="85" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
+            </button>
+            <div data-dc-tpl="86" class="jobbody">
+              <div data-dc-tpl="87" style="min-height: 0px; overflow: hidden;">
+                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                  <span data-dc-tpl="89" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <div data-dc-tpl="90" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
+                    <ul data-dc-tpl="91" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
+                      
+                        <li data-dc-tpl="93" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="94" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led the 4-person Angular team behind Netex Cloud, used by thousands of learners at companies including Amazon and Inditex. Delivered internationalisation and accessibility.</span></li>
+                      
+                        <li data-dc-tpl="93" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="94" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led a cross-department initiative to build a shared component library adopted across the company’s products.</span></li>
+                      
+                    </ul>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        
+          <li data-dc-tpl="69" class="item job ">
+            <button data-dc-tpl="70" class="jobhead" aria-expanded="false">
+              <span data-dc-tpl="71" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="72" datetime="2017"><span class="sc-interp">2017</span></time> – <time data-dc-tpl="75" datetime="2018"><span class="sc-interp">2018</span></time></span>
+              <span data-dc-tpl="76" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+                <span data-dc-tpl="77"><span data-dc-tpl="78" style="font-weight: 500;"><span class="sc-interp">Ágora Binaria</span></span><span data-dc-tpl="79" class="cmode"><span data-dc-tpl="80" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="81" class="vh">, </span><span class="sc-interp">Hybrid, A Coruña</span></span></span>
+                <span data-dc-tpl="82" style="color: var(--text-2);"><span class="sc-interp">Full-Stack Engineer</span></span>
+              </span>
+              <svg data-dc-tpl="83" class="chev" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="plus"><path data-dc-tpl="84" vector-effect="non-scaling-stroke" d="M5 12h14"></path><path data-dc-tpl="85" vector-effect="non-scaling-stroke" d="M12 5v14"></path></svg>
+            </button>
+            <div data-dc-tpl="86" class="jobbody">
+              <div data-dc-tpl="87" style="min-height: 0px; overflow: hidden;">
+                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                  <span data-dc-tpl="89" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <div data-dc-tpl="90" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
+                    <ul data-dc-tpl="91" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
+                      
+                        <li data-dc-tpl="93" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="94" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built full-stack client applications and did performance work on existing Angular codebases.</span></li>
+                      
+                    </ul>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        
+      </ul>
+    </section>
+
+    <section data-dc-tpl="99" id="speaking" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="100" id="speaking-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Speaking</h2>
+      <ul data-dc-tpl="101" class="list" role="list" style="display: flex; flex-direction: column;">
+        <li data-dc-tpl="102" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+          <time data-dc-tpl="103" datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3);">Jan 2024</time>
+          <span data-dc-tpl="104" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+            <span data-dc-tpl="105" style="font-weight: 500;">Preserving privacy with Polygon ID profiles</span>
+            <span data-dc-tpl="106" style="color: var(--text-2);">House of ZK, EthDenver</span>
+          </span>
+          <div data-dc-tpl="107" class="attach"><span data-dc-tpl="108" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="109" class="attach-c"><ul data-dc-tpl="110" class="photos" role="list"><li data-dc-tpl="111"><button data-dc-tpl="112" class="phbtn" type="button" aria-label="Open photo 1 of 1: Preserving privacy with Polygon ID profiles"><img data-dc-tpl="113" src="../assets/talk-hozk.jpg" alt="Elías pointing at the Polygon ID identity state diagram while presenting at House of ZK, EthDenver 2024" loading="lazy"></button></li></ul></div></div>
+        </li>
+        <li data-dc-tpl="114" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+          <time data-dc-tpl="115" datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3);">Jan 2024</time>
+          <span data-dc-tpl="116" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+            <span data-dc-tpl="117" style="font-weight: 500;">Zero-knowledge identity with Polygon ID</span>
+            <span data-dc-tpl="118" style="color: var(--text-2);">Polygon AggCave, EthDenver</span>
+          </span>
+          <div data-dc-tpl="119" class="attach"><span data-dc-tpl="120" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="121" class="attach-c"><ul data-dc-tpl="122" class="photos" role="list"><li data-dc-tpl="123"><button data-dc-tpl="124" class="phbtn" type="button" aria-label="Open photo 1 of 1: Zero-knowledge identity with Polygon ID"><img data-dc-tpl="125" src="../assets/talk-aggcave.jpg" alt="Elías, holding a microphone, beside a fellow speaker presenting the main features of Polygon ID at the Polygon Aggregation Cave, EthDenver 2024" loading="lazy"></button></li></ul></div></div>
+        </li>
+        <li data-dc-tpl="126" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+          <time data-dc-tpl="127" datetime="2023-07" style="flex: 0 0 112px; color: var(--text-3);">Jul 2023</time>
+          <span data-dc-tpl="128" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+            <span data-dc-tpl="129" style="font-weight: 500;">Issuing verifiable credentials with Polygon ID</span>
+            <span data-dc-tpl="130" style="color: var(--text-2);">Polygon DevX Global Tour, Lisbon</span>
+          </span>
+          <div data-dc-tpl="131" class="attach"><span data-dc-tpl="132" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="133" class="attach-c"><ul data-dc-tpl="134" class="photos" role="list"><li data-dc-tpl="135"><button data-dc-tpl="136" class="phbtn" type="button" aria-label="Open photo 1 of 3: Issuing verifiable credentials with Polygon ID"><img data-dc-tpl="137" src="../assets/talk-lisbon-slide.jpg" alt="Elías on stage presenting a slide on traditional identity systems at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></button></li><li data-dc-tpl="138"><button data-dc-tpl="139" class="phbtn" type="button" aria-label="Open photo 2 of 3: Issuing verifiable credentials with Polygon ID"><img data-dc-tpl="140" src="../assets/talk-lisbon-panel.jpg" alt="Elías and two other speakers on stage at the Polygon DevX Global Tour in Lisbon, in front of a slide reading “Issuing Lens Verifiable Credentials using Polygon ID”" loading="lazy"></button></li><li data-dc-tpl="141"><button data-dc-tpl="142" class="phbtn" type="button" aria-label="Open photo 3 of 3: Issuing verifiable credentials with Polygon ID"><img data-dc-tpl="143" src="../assets/talk-lisbon-group.jpg" alt="Elías with the speakers and organisers on stage at the Polygon DevX Global Tour in Lisbon, 2023" loading="lazy"></button></li></ul></div></div>
+        </li>
+      </ul>
+    </section>
+
+    <section data-dc-tpl="144" id="teaching" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="145" id="teaching-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Teaching</h2>
+      
+      <ul data-dc-tpl="146" class="list courses" role="list">
+        <li data-dc-tpl="147" class="crow">
+          <a data-dc-tpl="148" class="item" href="https://balio.app/curso/defi/" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+            <time data-dc-tpl="149" datetime="2022-03" style="flex: 0 0 112px; color: var(--text-3);">Mar 2022</time>
+            <span data-dc-tpl="150" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 4px;">
+              <span data-dc-tpl="151" style="display: flex; flex-direction: column;">
+                <span data-dc-tpl="152" style="font-weight: 500;">The DeFi revolution<svg data-dc-tpl="153" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="154" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="155" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></span>
+                <span data-dc-tpl="156" style="color: var(--text-2);">Online course in Spanish, Balio</span>
+              </span>
+              <p data-dc-tpl="157" class="cmeta"><span data-dc-tpl="158" class="crate"><span data-dc-tpl="159" class="vh">Rated 4.7 out of 5 from 26 reviews.</span><span data-dc-tpl="160" class="crate-v" aria-hidden="true"><svg data-dc-tpl="161" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="star"><path data-dc-tpl="162" vector-effect="non-scaling-stroke" d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path></svg><b data-dc-tpl="163">4.7</b><span data-dc-tpl="164">(26 reviews)</span></span></span><span data-dc-tpl="165" aria-hidden="true">·</span><span data-dc-tpl="166">30 lessons</span><span data-dc-tpl="167" aria-hidden="true">·</span><span data-dc-tpl="168">2h 20m</span></p>
+            </span>
+          </a>
+          <div data-dc-tpl="169" class="attach"><span data-dc-tpl="170" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="171" class="attach-c">
+            <a data-dc-tpl="172" class="lpc" href="https://www.youtube.com/watch?v=FESgArXJBX0">
+              <span data-dc-tpl="173" class="lpc-img"><img data-dc-tpl="174" src="../assets/course-trailer.jpg" alt="" loading="lazy"><span data-dc-tpl="175" class="play"><svg data-dc-tpl="176" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="play"><path data-dc-tpl="177" vector-effect="non-scaling-stroke" d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path></svg></span></span>
+              <span data-dc-tpl="178" class="lpc-t"><span data-dc-tpl="179" class="lpc-title">Watch the trailer</span><span data-dc-tpl="180" class="lpc-src">YouTube<svg data-dc-tpl="181" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="182" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="183" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></span></span>
+            </a>
+          </div></div>
+        </li>
+      </ul>
+    </section>
+
+
+    <section data-dc-tpl="184" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="185" id="edu-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Education</h2>
+      <div data-dc-tpl="186" style="display: flex; flex-wrap: wrap; gap: 4px 24px;">
+        <span data-dc-tpl="187" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="188" datetime="2013">2013</time> – <time data-dc-tpl="189" datetime="2017">2017</time></span>
+        <span data-dc-tpl="190" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+          <span data-dc-tpl="191" style="font-weight: 500;">BSc Computer Science at University of A Coruña</span>
+          <span data-dc-tpl="192" style="color: var(--text-2);">Specialization in software engineering</span>
+        </span>
+      </div>
+    </section>
+
+    <section data-dc-tpl="193" id="contact" class="contact" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="194" id="contact-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Contact</h2>
+      <address data-dc-tpl="195">
+      <dl data-dc-tpl="196" style="display: flex; flex-direction: column; gap: 12px;">
+      <div data-dc-tpl="197" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
+        <dt data-dc-tpl="198" style="flex: 0 0 112px; color: var(--text-3);">Email</dt>
+        <dd data-dc-tpl="199" style="flex: 1 1 300px; min-width: 0px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <a data-dc-tpl="200" href="mailto:eliasgarciadev@gmail.com">eliasgarciadev@gmail.com<svg data-dc-tpl="201" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="202" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="203" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a>
+        </dd>
+      </div>
+      <div data-dc-tpl="204" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
+        <dt data-dc-tpl="205" style="flex: 0 0 112px; color: var(--text-3);">GitHub</dt>
+        <dd data-dc-tpl="206" style="flex: 1 1 300px;"><a data-dc-tpl="207" href="https://github.com/elias-garcia">elias-garcia<svg data-dc-tpl="208" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="209" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="210" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a></dd>
+      </div>
+      <div data-dc-tpl="211" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
+        <dt data-dc-tpl="212" style="flex: 0 0 112px; color: var(--text-3);">LinkedIn</dt>
+        <dd data-dc-tpl="213" style="flex: 1 1 300px;"><a data-dc-tpl="214" href="https://www.linkedin.com/in/elias-garcia-marino">elias-garcia-marino<svg data-dc-tpl="215" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="216" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="217" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a></dd>
+      </div>
+      <div data-dc-tpl="218" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
+        <dt data-dc-tpl="219" style="flex: 0 0 112px; color: var(--text-3);">X</dt>
+        <dd data-dc-tpl="220" style="flex: 1 1 300px;"><a data-dc-tpl="221" href="https://x.com/eliasgarciadev">@eliasgarciadev<svg data-dc-tpl="222" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="223" vector-effect="non-scaling-stroke" d="M7 7h10v10"></path><path data-dc-tpl="224" vector-effect="non-scaling-stroke" d="M7 17 17 7"></path></svg></a></dd>
+      </div>
+      </dl>
+      </address>
+    </section>
+
+  </main>
+
+  <footer data-dc-tpl="225" style="margin-top: var(--space-footer); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);">
+    <div data-dc-tpl="226" style="max-width: 688px; margin: 0px auto; padding: 12px max(24px, env(safe-area-inset-right, 0px)) 12px max(24px, env(safe-area-inset-left, 0px)); min-height: 64px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: 14px; color: var(--text-3);">
+      <span data-dc-tpl="227" style="display: flex; align-items: center; gap: 12px;">
+        <svg data-dc-tpl="228" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="229" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="230" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="231" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="232" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="233" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
+        Elías García, 2026
+      </span>
+      <span data-dc-tpl="234" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="235"><time data-dc-tpl="236" datetime="16:16"><span class="sc-interp">16:16</span></time> in Portugal</span><span data-dc-tpl="237" aria-hidden="true">·</span><span data-dc-tpl="238"><span class="sc-interp">1h behind you</span></span></span>
+    </div>
+  </footer>
+
+
+
+
+  
+  </div>
+</body></html>
