@@ -112,7 +112,7 @@
   /* ---- Motion: UI feedback never exceeds 250ms ---- */
   --dur-fast: 100ms; /* old page fading out */
   --dur: 150ms; /* press, hover, colour/opacity, hover underlines, Download CV menu, viewer closing */
-  --dur-slow: 250ms; /* page entrance, expanding rows, viewer opening */
+  --dur-slow: 250ms; /* page entrance, expanding rows, viewer opening, project morph */
   --ease: ease-out; /* hover and colour changes only */
   /* Everything that enters, leaves or moves. */
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
@@ -122,7 +122,6 @@
   --press-scale-tile: 0.99;
   --entrance-offset: 6px;
   --dur-flash: 2s; /* a footnote marker or a note you arrive at lights up, then fades; a deliberate exception */
-  --dur-morph: 400ms; /* a project's tile or card morphing into its case study's cover, a deliberate exception */
 
   /* ---- Elevation and layers ---- */
   /* Things that float: search dialog, image viewer card, Download CV menu. */

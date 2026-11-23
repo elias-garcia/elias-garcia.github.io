@@ -1,7 +1,8 @@
 ---
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
-import { coverName } from "../lib/content.ts";
+import { coverName, getHomeProjects } from "../lib/content.ts";
+import { routes } from "../lib/routes.ts";
 import Roleburn from "./covers/Roleburn.astro";
 import WorkIssue from "./covers/WorkIssue.astro";
 
@@ -18,6 +19,15 @@ const { project, variant, wide = false } = Astro.props;
 const { cover } = project.data;
 const header = variant === "header";
 const name = coverName(project);
+// The pages whose tile or card morphs into this cover.
+const partners = header
+  ? [
+      routes.projects,
+      ...((await getHomeProjects()).some(({ id }) => id === project.id)
+        ? [routes.home]
+        : []),
+    ].join(" ")
+  : undefined;
 
 const illustrations = {
   roleburn: Roleburn,
@@ -39,8 +49,8 @@ const sizes =
 
 <div
   class:list={["cover", variant, { wide }]}
-  data-morph={header ? undefined : name}
-  style={header ? `view-transition-name: ${name}` : undefined}
+  data-morph={name}
+  data-morph-partners={partners}
 >
   {cover.kind === "image" ? (
     <Image

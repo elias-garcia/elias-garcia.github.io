@@ -1,34 +1,37 @@
 ---
-// A project's tile or card morphs into its case study's cover, which always
-// carries the transition name. The tile or card only gets the name on
-// navigations to or from the page its link opens, so Home and Projects don't
-// morph into each other.
+// A project's tile or card morphs into its case study's cover and back.
+// Nothing carries the transition name at rest. Each page names its half only
+// when the other page has the partner: a tile or card when the other page is
+// the case study its link opens, the cover when the other page is one of its
+// `data-morph-partners`. Any other arrival has no name, so it isn't held up
+// by a transition with nothing to morph (DESIGN.md, Project cover).
 // pagereveal fires before the first render, so this is an inline script in
 // <head>, not a deferred module.
 ---
 
 <script is:inline>
   {
-    const nameMorphingPreview = (url, transition) => {
+    const nameMorphing = (url, transition) => {
       if (transition === null || typeof url !== "string") {
         return;
       }
-      const preview = document.querySelector(
-        `li:has(a[href="${new URL(url).pathname}"]) > [data-morph]`,
-      );
-      if (preview === null) {
+      const path = new URL(url).pathname;
+      const element =
+        document.querySelector(`li:has(a[href="${path}"]) > [data-morph]`) ??
+        document.querySelector(`[data-morph-partners~="${path}"]`);
+      if (element === null) {
         return;
       }
-      preview.style.viewTransitionName = preview.dataset.morph;
+      element.style.viewTransitionName = element.dataset.morph;
       transition.finished.finally(() => {
-        preview.style.removeProperty("view-transition-name");
+        element.style.removeProperty("view-transition-name");
       });
     };
     addEventListener("pageswap", (event) => {
-      nameMorphingPreview(event.activation?.entry.url, event.viewTransition);
+      nameMorphing(event.activation?.entry.url, event.viewTransition);
     });
     addEventListener("pagereveal", (event) => {
-      nameMorphingPreview(
+      nameMorphing(
         window.navigation?.activation?.from?.url,
         event.viewTransition,
       );

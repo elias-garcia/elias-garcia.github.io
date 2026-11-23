@@ -86,6 +86,11 @@ export async function getProjects() {
   );
 }
 
+// Home shows the first few projects as tiles, the rest only on Projects.
+export async function getHomeProjects() {
+  return (await getProjects()).slice(0, 3);
+}
+
 // The view transition name a project's cover takes on its tile or card and
 // on its case study, so one morphs into the other (DESIGN.md §2.5).
 export function coverName(project: CollectionEntry<"projects">): string {
