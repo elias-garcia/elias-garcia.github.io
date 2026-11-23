@@ -1,6 +1,7 @@
 import { AxeBuilder } from "@axe-core/playwright";
 import { preview } from "astro";
 import { readdir } from "node:fs/promises";
+import { availableParallelism } from "node:os";
 import { chromium, type Page } from "playwright";
 
 // Clicks a post's Copy page button with a clipboard that takes the text or
@@ -24,6 +25,8 @@ async function copyPage(
       window.clearTimeout(id);
     }
   });
+  // Under load the label may have gone back before its timer was cancelled.
+  await page.locator(`[data-copy-state="${outcome}"]`).first().waitFor();
 }
 
 // Interactive states to check on top of each page's initial state.
@@ -210,41 +213,59 @@ const server = await preview({ logLevel: "warn" });
 const origin = `http://localhost:${String(server.port)}`;
 const browser = await chromium.launch({ channel: "chrome" });
 
-try {
-  for (const path of await listPages()) {
-    for (const width of widths) {
-      for (const colorScheme of colorSchemes) {
-        const where = `${path} at ${String(width)}px, ${colorScheme}`;
-        const context = await inStep(where, "opening the page", () =>
-          browser.newContext({ viewport: { width, height: 800 }, colorScheme }),
-        );
-        const page = await inStep(where, "opening the page", () =>
-          context.newPage(),
-        );
-        const response = await inStep(where, "loading the page", () =>
-          page.goto(`${origin}${path}`, { waitUntil: "load" }),
-        );
-        // The preview server serves every built page with 200, including /404.
-        if (response?.status() !== 200) {
-          failures.push(
-            `${where}: responded ${String(response?.status())}, expected 200`,
-          );
-        }
-
-        await inStep(where, "initial state", () => check(page, where));
-        for (const state of states[path] ?? []) {
-          await inStep(where, state.name, async () => {
-            await state.open(page);
-            // Hover effects (like dimmed rows) are not part of the state.
-            await page.mouse.move(0, 0);
-            await check(page, `${where}, ${state.name}`);
-          });
-        }
-
-        await inStep(where, "closing the page", () => context.close());
-      }
-    }
+// One page at one width in one theme, through its states.
+async function checkVariant(
+  path: string,
+  width: number,
+  colorScheme: (typeof colorSchemes)[number],
+): Promise<void> {
+  const where = `${path} at ${String(width)}px, ${colorScheme}`;
+  const context = await inStep(where, "opening the page", () =>
+    browser.newContext({ viewport: { width, height: 800 }, colorScheme }),
+  );
+  const page = await inStep(where, "opening the page", () => context.newPage());
+  const response = await inStep(where, "loading the page", () =>
+    page.goto(`${origin}${path}`, { waitUntil: "load" }),
+  );
+  // The preview server serves every built page with 200, including /404.
+  if (response?.status() !== 200) {
+    failures.push(
+      `${where}: responded ${String(response?.status())}, expected 200`,
+    );
   }
+
+  await inStep(where, "initial state", () => check(page, where));
+  for (const state of states[path] ?? []) {
+    await inStep(where, state.name, async () => {
+      await state.open(page);
+      // Hover effects (like dimmed rows) are not part of the state.
+      await page.mouse.move(0, 0);
+      await check(page, `${where}, ${state.name}`);
+    });
+  }
+
+  await inStep(where, "closing the page", () => context.close());
+}
+
+try {
+  const variants = (await listPages()).flatMap((path) =>
+    widths.flatMap((width) =>
+      colorSchemes.map(
+        (colorScheme) => () => checkVariant(path, width, colorScheme),
+      ),
+    ),
+  );
+  // Each variant has its own browser context, so several run at once: each
+  // worker takes the next one until none is left.
+  let next = 0;
+  const work = async () => {
+    while (next < variants.length) {
+      const variant = variants[next];
+      next += 1;
+      await variant?.();
+    }
+  };
+  await Promise.all(Array.from({ length: availableParallelism() }, work));
 } finally {
   // Settled, not awaited one by one: an error in cleanup must not replace the
   // error that stopped the run.
@@ -258,7 +279,8 @@ try {
   }
   // Printed here so the issues found before a step stopped the run aren't lost.
   if (failures.length > 0) {
-    console.error(failures.join("\n"));
+    // Sorted: variants finish in no fixed order.
+    console.error(failures.sort().join("\n"));
     process.exitCode = 1;
   }
 }
