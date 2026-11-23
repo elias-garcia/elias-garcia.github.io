@@ -66,11 +66,31 @@ const matches = listings.filter(({ match }) => match).length;
 </figure>
 
 <script>
-  // The drawing runs one cycle when the page opens, then rests. Hovering it
-  // replays one, but never cuts a cycle short.
+  // The drawing sits below the fold, so it runs its one cycle the first time
+  // half of it is in view, or it fills half the screen (a short screen may
+  // never show half of it), then rests. Hovering it replays one, but never
+  // cuts a cycle short, and does nothing before the first.
   for (const drawing of document.querySelectorAll<HTMLElement>(
     "[data-hero-drawing]",
   )) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const inView = entries.some(
+          ({ intersectionRatio, intersectionRect, rootBounds }) =>
+            intersectionRatio >= 0.5 ||
+            intersectionRect.height >= (rootBounds?.height ?? Infinity) / 2,
+        );
+        if (inView) {
+          observer.disconnect();
+          drawing.dataset.seen = "";
+        }
+      },
+      // Steps below half, so the screen-filling check runs again as a tall
+      // drawing comes in.
+      { threshold: [0.1, 0.2, 0.3, 0.4, 0.5] },
+    );
+    observer.observe(drawing);
+
     drawing.addEventListener("pointerenter", (event) => {
       if (event.pointerType !== "mouse") {
         return;
@@ -247,6 +267,14 @@ const matches = listings.filter(({ match }) => match).length;
 
     .skip {
       animation-name: dim;
+    }
+  }
+
+  /* Its first frame until the script sees it in view; without scripts it
+     runs as the page opens. */
+  @media (scripting: enabled) {
+    .drawing:not([data-seen]) :is(.scan, .listing) {
+      animation-play-state: paused;
     }
   }
 
