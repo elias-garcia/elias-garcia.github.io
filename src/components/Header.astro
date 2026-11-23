@@ -55,6 +55,11 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
   .header {
     --header-backdrop: saturate(1.4) blur(12px);
     --progress-h: 2px;
+    --nav-gap: var(--space-6);
+
+    @media (width < 40rem) {
+      --nav-gap: var(--space-4);
+    }
 
     position: sticky;
     inset-block-start: 0;
@@ -121,20 +126,34 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
   }
 
   .home {
+    position: relative;
     display: flex;
     align-items: center;
     min-block-size: var(--hit-area);
+  }
+
+  /* The logo and the links take a click anywhere in the bar's height, and
+     the links up to halfway into the gaps beside them, so a fast click just
+     off one still lands on the nearest; how they look doesn't change. */
+  .home::before,
+  .link::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 50%;
+    block-size: var(--bar-h);
+    translate: 0 -50%;
+  }
+
+  .link::before {
+    inset-inline: calc(var(--nav-gap) / -2);
   }
 
   nav,
   .links {
     display: flex;
     align-items: center;
-    gap: var(--space-6);
-
-    @media (width < 40rem) {
-      gap: var(--space-4);
-    }
+    gap: var(--nav-gap);
   }
 
   .link {
