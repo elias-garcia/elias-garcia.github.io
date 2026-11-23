@@ -15,8 +15,9 @@ type Props = {
   action?: string;
   keywords?: readonly string[];
   more?: boolean;
-  // The line wraps instead of being cut off, so a match in it always shows.
-  fullLine?: boolean;
+  // The line is an address: it may break, but never with a hyphen that
+  // would read as part of it.
+  address?: boolean;
 };
 
 const {
@@ -28,7 +29,7 @@ const {
   action,
   keywords,
   more = false,
-  fullLine = false,
+  address = false,
 } = Astro.props;
 const Row = href === undefined ? "div" : "a";
 ---
@@ -52,14 +53,14 @@ const Row = href === undefined ? "div" : "a";
     <span class="title" data-title>
       {title}
     </span>
-    <span class:list={["line", { full: fullLine }]} data-line>
+    <span class:list={["line", { address }]} data-line>
       {line}
     </span>
   </span>
   <span class="meta" data-meta>
     {meta}
   </span>
-  <span class="hint" aria-hidden="true">
+  <span class:list={["hint", { more }]} aria-hidden="true">
     {more ? "›" : "↵"}
   </span>
 </Row>
@@ -67,6 +68,12 @@ const Row = href === undefined ? "div" : "a";
 <style>
   .option {
     --search-row-h: 48px;
+    /* The title and summary lines: the icon, the meta and the hint are
+       centred on them, so a row that wraps further keeps all of them on the
+       title's level. In rem, so it grows with the text. */
+    --search-two-lines: calc(
+      (var(--text-body) + var(--text-small)) * var(--leading-tight)
+    );
 
     display: flex;
     align-items: center;
@@ -112,6 +119,14 @@ const Row = href === undefined ? "div" : "a";
     background: var(--control);
     color: var(--text-2);
 
+    align-self: start;
+    margin-block-start: calc((var(--search-two-lines) - var(--control-h)) / 2);
+
+    .option:has(.line:empty) & {
+      align-self: center;
+      margin-block-start: 0;
+    }
+
     [aria-selected="true"] & {
       background: var(--bg);
       color: var(--accent);
@@ -124,18 +139,17 @@ const Row = href === undefined ? "div" : "a";
     flex-direction: column;
     min-inline-size: 0;
     line-height: var(--leading-tight);
+    /* A long unbroken word (a URL, a package name) breaks instead of
+       running into the meta; with the text enlarged, with a hyphen. */
+    overflow-wrap: anywhere;
+
+    @media (width < 20em) {
+      hyphens: auto;
+    }
   }
 
-  .title,
-  .line {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .line.full {
-    overflow: visible;
-    white-space: normal;
+  .address {
+    hyphens: manual;
   }
 
   .line,
@@ -153,6 +167,56 @@ const Row = href === undefined ? "div" : "a";
     white-space: nowrap;
   }
 
+  /* One line as tall as the title and summary, so each sits centred on
+     them, like the icon. */
+  .meta,
+  .hint {
+    align-self: start;
+    line-height: var(--search-two-lines);
+
+    .option:has(.line:empty) & {
+      align-self: center;
+      line-height: inherit;
+    }
+  }
+
+  /* With the text this large, a date beside the title would leave it a
+     word per line: the date moves under the summary, and the title gets
+     the row's width beside the icon. The › stays on the right. */
+  @media (width < 20em) {
+    .option {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      row-gap: 0;
+    }
+
+    .meta {
+      grid-row: 2;
+      grid-column: 2;
+      color: var(--text-3);
+      line-height: var(--leading-tight);
+      white-space: normal;
+    }
+
+    .hint {
+      grid-row: 1;
+      grid-column: 3;
+    }
+
+    /* A row with no summary (a topic and its post count): the count goes
+       under the title the same way, and the icon is centred on both. */
+    .option:has(.line:empty) {
+      .tile {
+        grid-row: 1 / span 2;
+      }
+
+      .meta {
+        align-self: start;
+        line-height: var(--leading-tight);
+      }
+    }
+  }
+
   .hint {
     inline-size: var(--icon-md);
     color: var(--text-3);
@@ -161,6 +225,14 @@ const Row = href === undefined ? "div" : "a";
 
     [aria-selected="true"] & {
       opacity: 1;
+    }
+
+    /* ↵ points at a key a touch screen doesn't have, and with large text
+       the row needs the room; › still says a row opens more. */
+    &:not(.more) {
+      @media (width < 30em), (hover: none), (pointer: coarse) {
+        display: none;
+      }
     }
   }
 

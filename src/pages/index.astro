@@ -356,6 +356,8 @@ const newestJob = work[0]?.id;
     dd {
       flex: 1 1 var(--row-basis);
       margin: 0;
+      /* A long address breaks instead of running off a narrow screen. */
+      overflow-wrap: anywhere;
     }
   }
 

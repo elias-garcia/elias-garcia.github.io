@@ -55,8 +55,13 @@ html {
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  /* Anchor targets stop below the sticky header, not under it. */
+  /* Anchor targets stop below the sticky header, not under it. With very
+     large text the header scrolls away (Header), so only the gap is left. */
   scroll-padding-block-start: calc(var(--bar-h) + var(--space-4));
+
+  @media (width < 20em) {
+    scroll-padding-block-start: var(--space-4);
+  }
   /* Short and long pages keep the same width, so navigating doesn't shift. */
   scrollbar-gutter: stable;
 

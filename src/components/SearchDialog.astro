@@ -130,7 +130,12 @@ const noResults = {
       <div class="group-label" aria-hidden="true">
         {copy.actions}
       </div>
-      <SearchOption title={copy.email} line={email.text} href={email.href}>
+      <SearchOption
+        title={copy.email}
+        line={email.text}
+        href={email.href}
+        address
+      >
         <Icon name="mail" />
       </SearchOption>
       <SearchOption
@@ -169,7 +174,6 @@ const noResults = {
           href={href}
           keywords={keywords}
           download
-          fullLine
         >
           <Icon name={icon} />
         </SearchOption>
@@ -244,7 +248,12 @@ const noResults = {
         <div class="group-label" aria-hidden="true">
           {copy.actions}
         </div>
-        <SearchOption title={copy.email} line={email.text} href={email.href}>
+        <SearchOption
+          title={copy.email}
+          line={email.text}
+          href={email.href}
+          address
+        >
           <Icon name="mail" />
         </SearchOption>
       </div>
@@ -252,14 +261,16 @@ const noResults = {
   </div>
 
   <div class="footer">
-    <KeyHintGroup keys={["↑", "↓"]} label={copy.hints.move} />
-    <KeyHintGroup keys={["↵"]} label={copy.hints.open} />
-    <KeyHintGroup
-      keys={[copy.hints.escape]}
-      label={copy.hints.back}
-      hidden
-      data-search-back-hint
-    />
+    <span class="key-hints">
+      <KeyHintGroup keys={["↑", "↓"]} label={copy.hints.move} />
+      <KeyHintGroup keys={["↵"]} label={copy.hints.open} />
+      <KeyHintGroup
+        keys={[copy.hints.escape]}
+        label={copy.hints.back}
+        hidden
+        data-search-back-hint
+      />
+    </span>
     <span class="count" data-search-count></span>
     <VisuallyHidden>
       <span role="status" data-search-announcement></span>
@@ -268,14 +279,14 @@ const noResults = {
 
   {hasWriting && (
     <template data-search-template="posts">
-      <SearchOption href="" fullLine>
+      <SearchOption href="">
         <Icon name="file-text" />
       </SearchOption>
     </template>
   )}
   {hasProjects && (
     <template data-search-template="projects">
-      <SearchOption href="" fullLine>
+      <SearchOption href="">
         <Icon name="layout-grid" />
       </SearchOption>
     </template>
@@ -927,6 +938,16 @@ const noResults = {
     background: var(--surface);
     color: var(--text-3);
     font-size: var(--text-micro);
+  }
+
+  .key-hints {
+    display: flex;
+    gap: var(--space-4);
+
+    /* Keys a touch screen doesn't have; with large text, the room. */
+    @media (width < 30em), (hover: none), (pointer: coarse) {
+      display: none;
+    }
   }
 
   .count {

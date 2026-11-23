@@ -27,7 +27,7 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
       <Logo size="md" />
     </a>
     {/* Home alone, the page it would point to, is no navigation. */}
-    {sections.length > 1 ? (
+    {sections.length > 1 && (
       <nav aria-label={copy.navName}>
         <ul class="links" role="list">
           {sections.map(({ label, href }) => (
@@ -42,11 +42,11 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
             </li>
           ))}
         </ul>
-        <SearchButton />
       </nav>
-    ) : (
-      <SearchButton />
     )}
+    <div class="search">
+      <SearchButton />
+    </div>
   </div>
   {readingProgress && <div class="progress" aria-hidden="true" />}
 </header>
@@ -64,6 +64,13 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
     position: sticky;
     inset-block-start: 0;
     z-index: var(--z-header);
+
+    /* With the text this large, the bar wraps, and two lines kept on
+       screen would take too much of it. */
+    @media (width < 20em) {
+      position: relative;
+    }
+
     border-block-end: var(--hairline) solid var(--line);
     background: var(--header-bg);
     backdrop-filter: var(--header-backdrop);
@@ -81,7 +88,8 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
     display: none;
   }
 
-  @media (prefers-reduced-motion: no-preference) {
+  /* Not below 20em, where the header scrolls away with the page. */
+  @media (prefers-reduced-motion: no-preference) and (width >= 20em) {
     @supports (animation-timeline: scroll()) {
       .progress {
         display: block;
@@ -117,12 +125,17 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
   .bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-4);
+    column-gap: var(--nav-gap);
     max-inline-size: var(--column);
     min-block-size: var(--bar-h);
     margin-inline: auto;
     padding-inline: var(--page-start) var(--page-end);
+
+    /* Each item moves to the next line when the line is full, in its own
+       order, so what you see, the reading order and the tab order match. */
+    @media (width < 20em) {
+      flex-wrap: wrap;
+    }
   }
 
   .home {
@@ -130,6 +143,11 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
     display: flex;
     align-items: center;
     min-block-size: var(--hit-area);
+    margin-inline-end: auto;
+
+    @media (width < 20em) {
+      margin-inline-end: 0;
+    }
   }
 
   /* The logo and the links take a click anywhere in the bar's height, and
@@ -143,17 +161,48 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
     inset-block-start: 50%;
     block-size: var(--bar-h);
     translate: 0 -50%;
+
+    /* Wrapped lines sit directly under each other: each takes a touch
+       area's height, not the bar's. */
+    @media (width < 20em) {
+      block-size: var(--hit-area);
+    }
   }
 
   .link::before {
     inset-inline: calc(var(--nav-gap) / -2);
   }
 
-  nav,
+  nav {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Wrapped onto a line of its own, search keeps a touch area's height. */
+  .search {
+    display: flex;
+    align-items: center;
+
+    @media (width < 20em) {
+      min-block-size: var(--hit-area);
+    }
+  }
+
   .links {
     display: flex;
     align-items: center;
     gap: var(--nav-gap);
+
+    @media (width < 20em) {
+      flex-wrap: wrap;
+      row-gap: 0;
+
+      li {
+        display: flex;
+        align-items: center;
+        min-block-size: var(--hit-area);
+      }
+    }
   }
 
   .link {
