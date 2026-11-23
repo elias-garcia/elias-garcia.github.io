@@ -76,6 +76,8 @@ const Row = href === undefined ? "div" : "a";
     border-radius: var(--r-md);
     color: var(--text);
     cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
