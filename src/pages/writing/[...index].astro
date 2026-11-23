@@ -1,0 +1,22 @@
+---
+import WritingInPlace from "../../components/WritingInPlace.astro";
+import WritingIndex from "../../components/WritingIndex.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import type { GetStaticPaths } from "astro";
+import { getPage, getPosts } from "../../lib/content.ts";
+import { hasWriting } from "../../lib/sections.ts";
+
+// A rest route, so the page can be left out: it's built only while there
+// are published posts (DESIGN.md §8).
+export const getStaticPaths = (() =>
+  hasWriting
+    ? [{ params: { index: undefined } }]
+    : []) satisfies GetStaticPaths;
+
+const [page, posts] = await Promise.all([getPage("writing"), getPosts()]);
+---
+
+<BaseLayout title={page.title} description={page.intro}>
+  <WritingInPlace slot="head" />
+  <WritingIndex page={page} posts={posts} />
+</BaseLayout>

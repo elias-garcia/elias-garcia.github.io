@@ -1,9 +1,18 @@
 ---
-import PageIntro from "../components/PageIntro.astro";
-import PreviewMorph from "../components/PreviewMorph.astro";
-import ProjectCard from "../components/ProjectCard.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import { getPage, getProjects } from "../lib/content.ts";
+import PageIntro from "../../components/PageIntro.astro";
+import PreviewMorph from "../../components/PreviewMorph.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import type { GetStaticPaths } from "astro";
+import { getPage, getProjects } from "../../lib/content.ts";
+import { hasProjects } from "../../lib/sections.ts";
+
+// A rest route, so the page can be left out: it's built only while there
+// are projects (DESIGN.md §8).
+export const getStaticPaths = (() =>
+  hasProjects
+    ? [{ params: { index: undefined } }]
+    : []) satisfies GetStaticPaths;
 
 const [page, projects] = await Promise.all([
   getPage("projects"),

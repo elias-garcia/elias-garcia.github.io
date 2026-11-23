@@ -309,9 +309,14 @@ const search = defineCollection({
       back: z.string(),
     }),
     rss: z.object({ title: z.string(), line: z.string() }),
+    // Naming only the sections the site has (DESIGN.md §8).
     noResults: z.object({
       title: template("{query}"),
+      titlePosts: template("{query}"),
+      titleProjects: template("{query}"),
+      titleNothing: template("{query}"),
       hint: z.string(),
+      hintWithoutPosts: z.string(),
     }),
     topics: z.string(),
     suggest: z.string(),

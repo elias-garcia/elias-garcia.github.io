@@ -20,6 +20,7 @@ import {
   formatYearRange,
 } from "./format.ts";
 import { routes } from "./routes.ts";
+import { hasProjects } from "./sections.ts";
 
 export async function renderCvMarkdown(): Promise<string> {
   const [
@@ -92,8 +93,9 @@ export async function renderCvMarkdown(): Promise<string> {
     courseLines.join("\n"),
     `## ${copy.education}`,
     degrees.join("\n"),
-    `## ${projectsPage.title}`,
-    projectLines.join("\n"),
+    ...(hasProjects
+      ? [`## ${projectsPage.title}`, projectLines.join("\n")]
+      : []),
   ]
     .join("\n\n")
     .concat("\n");

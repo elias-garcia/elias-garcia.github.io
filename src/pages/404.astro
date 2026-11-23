@@ -5,8 +5,9 @@ import PageIntro from "../components/PageIntro.astro";
 import Section from "../components/Section.astro";
 import TextLink from "../components/TextLink.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { getNotFoundPage, getProfile, getSections } from "../lib/content.ts";
+import { getNotFoundPage, getProfile } from "../lib/content.ts";
 import { describeSections } from "../lib/navigation.ts";
+import { getSections } from "../lib/sections.ts";
 
 const [page, profile, sections] = await Promise.all([
   getNotFoundPage(),

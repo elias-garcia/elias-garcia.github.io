@@ -33,6 +33,7 @@ import { formatCountry, formatMonthYear, isoMonth } from "../lib/format.ts";
 import { linkTarget } from "../lib/links.ts";
 import { requireSite } from "../lib/navigation.ts";
 import { routes } from "../lib/routes.ts";
+import { hasProjects, hasWriting } from "../lib/sections.ts";
 import { person, website } from "../lib/structured-data.ts";
 import { fill } from "../lib/template.ts";
 
@@ -108,14 +109,20 @@ const newestJob = work[0]?.id;
       </Section>
     </header>
 
-    <Section title={projectsPage.title}>
-      <SeeMore slot="action" href={routes.projects} label={copy.allProjects} />
-      <ul class="tiles" role="list">
-        {projects.slice(0, 3).map((project) => (
-          <ProjectCard project={project} tile />
-        ))}
-      </ul>
-    </Section>
+    {hasProjects && (
+      <Section title={projectsPage.title}>
+        <SeeMore
+          slot="action"
+          href={routes.projects}
+          label={copy.allProjects}
+        />
+        <ul class="tiles" role="list">
+          {projects.slice(0, 3).map((project) => (
+            <ProjectCard project={project} tile />
+          ))}
+        </ul>
+      </Section>
+    )}
 
     <Section title={copy.work}>
       <List>
@@ -125,19 +132,21 @@ const newestJob = work[0]?.id;
       </List>
     </Section>
 
-    <Section title={writingPage.title}>
-      <SeeMore slot="action" href={routes.writing} label={copy.allPosts} />
-      <List>
-        {posts.slice(0, 3).map((post) => (
-          <ListRow title={post.data.title} href={routes.post(post.id)}>
-            <time slot="date" datetime={isoMonth(post.data.date)}>
-              {formatMonthYear(post.data.date)}
-            </time>
-            {post.data.description}
-          </ListRow>
-        ))}
-      </List>
-    </Section>
+    {hasWriting && (
+      <Section title={writingPage.title}>
+        <SeeMore slot="action" href={routes.writing} label={copy.allPosts} />
+        <List>
+          {posts.slice(0, 3).map((post) => (
+            <ListRow title={post.data.title} href={routes.post(post.id)}>
+              <time slot="date" datetime={isoMonth(post.data.date)}>
+                {formatMonthYear(post.data.date)}
+              </time>
+              {post.data.description}
+            </ListRow>
+          ))}
+        </List>
+      </Section>
+    )}
 
     <Section title={copy.speaking}>
       <List>

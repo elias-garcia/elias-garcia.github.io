@@ -8,7 +8,7 @@ search:
   clear: Clear
   results: Results
   goTo: Go to
-  # One line for each section of the header navigation, by its path.
+  # One line for each section the site can have, by its path.
   sections:
     /: About me, work experience, talks and contact
     /projects: Side projects
@@ -24,10 +24,16 @@ search:
   rss:
     title: Subscribe with RSS
     line: Get new posts in your reader
-  # {query} is what the visitor typed.
+  # {query} is what the visitor typed. Each title names only the sections the
+  # site has: posts and projects, posts only, projects only, or neither.
   noResults:
     title: No posts or projects match “{query}”
+    titlePosts: No posts match “{query}”
+    titleProjects: No projects match “{query}”
+    titleNothing: Nothing matches “{query}”
     hint: Try a topic I write about, or suggest this one.
+    # Without posts there are no topics to offer and nothing to suggest.
+    hintWithoutPosts: Try another word, or send me an email.
   topics: Topics
   suggest: Suggest
   suggestion:

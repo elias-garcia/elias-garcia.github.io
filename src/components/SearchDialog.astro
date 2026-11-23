@@ -5,11 +5,11 @@ import {
   getPage,
   getProfile,
   getSearchCopy,
-  getSections,
 } from "../lib/content.ts";
 import { describeSections } from "../lib/navigation.ts";
 import { routes } from "../lib/routes.ts";
 import { getSearchIndex } from "../lib/search.ts";
+import { getSections, hasProjects, hasWriting } from "../lib/sections.ts";
 import Icon from "./Icon.astro";
 import KeyHint from "./KeyHint.astro";
 import KeyHintGroup from "./KeyHintGroup.astro";
@@ -32,6 +32,17 @@ const email = profile.contact.find(({ href }) => href.startsWith("mailto:"));
 if (email === undefined) {
   throw new Error("The profile has no `mailto:` contact for the search.");
 }
+const noResults = {
+  title:
+    hasWriting && hasProjects
+      ? copy.noResults.title
+      : hasWriting
+        ? copy.noResults.titlePosts
+        : hasProjects
+          ? copy.noResults.titleProjects
+          : copy.noResults.titleNothing,
+  hint: hasWriting ? copy.noResults.hint : copy.noResults.hintWithoutPosts,
+};
 ---
 
 <dialog
@@ -41,7 +52,7 @@ if (email === undefined) {
   data-search
   data-email={email.href}
   data-copy={JSON.stringify({
-    noResults: copy.noResults,
+    noResults,
     noFormat: copy.cv.noMatch,
     suggestion: copy.suggestion,
     resultCount: copy.resultCount,
@@ -113,13 +124,15 @@ if (email === undefined) {
       >
         <Icon name="download" />
       </SearchOption>
-      <SearchOption
-        title={copy.rss.title}
-        line={copy.rss.line}
-        href={routes.feed}
-      >
-        <Icon name="rss" />
-      </SearchOption>
+      {hasWriting && (
+        <SearchOption
+          title={copy.rss.title}
+          line={copy.rss.line}
+          href={routes.feed}
+        >
+          <Icon name="rss" />
+        </SearchOption>
+      )}
     </div>
     <div
       class="group"
@@ -145,56 +158,80 @@ if (email === undefined) {
         </SearchOption>
       ))}
     </div>
-    <div
-      class="group"
-      role="group"
-      aria-label={writing.title}
-      hidden
-      data-view="results"
-      data-results="posts"
-    >
-      <div class="group-label" aria-hidden="true">
-        {writing.title}
+    {hasWriting && (
+      <div
+        class="group"
+        role="group"
+        aria-label={writing.title}
+        hidden
+        data-view="results"
+        data-results="posts"
+      >
+        <div class="group-label" aria-hidden="true">
+          {writing.title}
+        </div>
       </div>
-    </div>
-    <div
-      class="group"
-      role="group"
-      aria-label={projects.title}
-      hidden
-      data-view="results"
-      data-results="projects"
-    >
-      <div class="group-label" aria-hidden="true">
-        {projects.title}
+    )}
+    {hasProjects && (
+      <div
+        class="group"
+        role="group"
+        aria-label={projects.title}
+        hidden
+        data-view="results"
+        data-results="projects"
+      >
+        <div class="group-label" aria-hidden="true">
+          {projects.title}
+        </div>
       </div>
-    </div>
-    <div
-      class="group"
-      role="group"
-      aria-label={copy.topics}
-      hidden
-      data-view="none"
-      data-results="topics"
-    >
-      <div class="group-label" aria-hidden="true">
-        {copy.topics}
+    )}
+    {hasWriting && (
+      <div
+        class="group"
+        role="group"
+        aria-label={copy.topics}
+        hidden
+        data-view="none"
+        data-results="topics"
+      >
+        <div class="group-label" aria-hidden="true">
+          {copy.topics}
+        </div>
       </div>
-    </div>
-    <div
-      class="group"
-      role="group"
-      aria-label={copy.suggest}
-      hidden
-      data-view="none"
-    >
-      <div class="group-label" aria-hidden="true">
-        {copy.suggest}
+    )}
+    {hasWriting ? (
+      <div
+        class="group"
+        role="group"
+        aria-label={copy.suggest}
+        hidden
+        data-view="none"
+        data-search-suggest
+      >
+        <div class="group-label" aria-hidden="true">
+          {copy.suggest}
+        </div>
+        <SearchOption line={copy.suggestion.line} href={email.href}>
+          <Icon name="mail" />
+        </SearchOption>
       </div>
-      <SearchOption line={copy.suggestion.line} href={email.href}>
-        <Icon name="mail" />
-      </SearchOption>
-    </div>
+    ) : (
+      <div
+        class="group"
+        role="group"
+        aria-label={copy.actions}
+        hidden
+        data-view="none"
+      >
+        <div class="group-label" aria-hidden="true">
+          {copy.actions}
+        </div>
+        <SearchOption title={copy.email} line={email.text} href={email.href}>
+          <Icon name="mail" />
+        </SearchOption>
+      </div>
+    )}
   </div>
 
   <div class="footer">
@@ -212,21 +249,27 @@ if (email === undefined) {
     </VisuallyHidden>
   </div>
 
-  <template data-search-template="posts">
-    <SearchOption href="" fullLine>
-      <Icon name="file-text" />
-    </SearchOption>
-  </template>
-  <template data-search-template="projects">
-    <SearchOption href="" fullLine>
-      <Icon name="layout-grid" />
-    </SearchOption>
-  </template>
-  <template data-search-template="topics">
-    <SearchOption href="">
-      <Icon name="hash" />
-    </SearchOption>
-  </template>
+  {hasWriting && (
+    <template data-search-template="posts">
+      <SearchOption href="" fullLine>
+        <Icon name="file-text" />
+      </SearchOption>
+    </template>
+  )}
+  {hasProjects && (
+    <template data-search-template="projects">
+      <SearchOption href="" fullLine>
+        <Icon name="layout-grid" />
+      </SearchOption>
+    </template>
+  )}
+  {hasWriting && (
+    <template data-search-template="topics">
+      <SearchOption href="">
+        <Icon name="hash" />
+      </SearchOption>
+    </template>
+  )}
 </dialog>
 
 <script>
@@ -560,7 +603,7 @@ if (email === undefined) {
           .filter((option) => option !== undefined),
       );
       const suggestion = list.querySelector<HTMLAnchorElement>(
-        '[data-view="none"]:not([data-results]) [role="option"]',
+        '[data-search-suggest] [role="option"]',
       );
       if (suggestion !== null) {
         const [before = "", after = ""] =

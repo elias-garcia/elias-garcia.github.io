@@ -9,12 +9,20 @@ export function describeSections(
   descriptions: Readonly<Record<string, string>>,
   file: string,
 ) {
-  const unused = Object.keys(descriptions).filter(
-    (path) => !sections.some(({ href }) => href === path),
+  // Against every section the site can have, not just the ones it has now:
+  // a section with no content is left out of the navigation, but keeps its
+  // line for when it's back.
+  const sectionPaths: readonly string[] = [
+    routes.home,
+    routes.projects,
+    routes.writing,
+  ];
+  const unknown = Object.keys(descriptions).filter(
+    (path) => !sectionPaths.includes(path),
   );
-  if (unused.length > 0) {
+  if (unknown.length > 0) {
     throw new Error(
-      `\`${file}\` describes paths outside the navigation: ${unused.join(", ")}.`,
+      `\`${file}\` describes paths that aren't sections: ${unknown.join(", ")}.`,
     );
   }
   return sections.map(({ label, href }) => {

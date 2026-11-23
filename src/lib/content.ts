@@ -7,8 +7,6 @@ import {
 } from "astro:content";
 import { z } from "astro/zod";
 import { compareText } from "./format.ts";
-import type { Section } from "./navigation.ts";
-import { routes } from "./routes.ts";
 import { fill } from "./template.ts";
 
 async function requireEntry<Collection extends CollectionKey>(
@@ -165,20 +163,6 @@ export async function getWritingIndexCopy() {
 export async function getCvFormatCopy(format: "pdf" | "markdown") {
   const { data } = await requireEntry("cvFormats", format);
   return data;
-}
-
-// The header's navigation: Home, then each listing page under its title.
-export async function getSections(): Promise<readonly Section[]> {
-  const [layout, projects, writing] = await Promise.all([
-    getLayoutCopy(),
-    getPage("projects"),
-    getPage("writing"),
-  ]);
-  return [
-    { label: layout.homeLabel, href: routes.home },
-    { label: projects.title, href: routes.projects },
-    { label: writing.title, href: routes.writing },
-  ];
 }
 
 export async function getFeedTitle(): Promise<string> {

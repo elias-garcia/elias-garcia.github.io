@@ -1,7 +1,8 @@
 ---
-import { getLayoutCopy, getSections } from "../lib/content.ts";
+import { getLayoutCopy } from "../lib/content.ts";
 import { currentState } from "../lib/navigation.ts";
 import { routes } from "../lib/routes.ts";
+import { getSections } from "../lib/sections.ts";
 import { fill } from "../lib/template.ts";
 import Logo from "./Logo.astro";
 import SearchButton from "./SearchButton.astro";
@@ -25,22 +26,27 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
     >
       <Logo size="md" />
     </a>
-    <nav aria-label={copy.navName}>
-      <ul class="links" role="list">
-        {sections.map(({ label, href }) => (
-          <li>
-            <a
-              class="link"
-              href={href}
-              aria-current={currentState(href, pathname)}
-            >
-              {label}
-            </a>
-          </li>
-        ))}
-      </ul>
+    {/* Home alone, the page it would point to, is no navigation. */}
+    {sections.length > 1 ? (
+      <nav aria-label={copy.navName}>
+        <ul class="links" role="list">
+          {sections.map(({ label, href }) => (
+            <li>
+              <a
+                class="link"
+                href={href}
+                aria-current={currentState(href, pathname)}
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <SearchButton />
+      </nav>
+    ) : (
       <SearchButton />
-    </nav>
+    )}
   </div>
   {readingProgress && <div class="progress" aria-hidden="true" />}
 </header>
