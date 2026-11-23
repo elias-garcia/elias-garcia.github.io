@@ -32,15 +32,32 @@ const email = profile.contact.find(({ href }) => href.startsWith("mailto:"));
 if (email === undefined) {
   throw new Error("The profile has no `mailto:` contact for the search.");
 }
+const bySections = (
+  both: string,
+  postsOnly: string,
+  projectsOnly: string,
+  neither: string,
+) =>
+  hasWriting && hasProjects
+    ? both
+    : hasWriting
+      ? postsOnly
+      : hasProjects
+        ? projectsOnly
+        : neither;
+const inputLabel = bySections(
+  copy.input.label,
+  copy.input.labelPosts,
+  copy.input.labelProjects,
+  copy.input.labelNothing,
+);
 const noResults = {
-  title:
-    hasWriting && hasProjects
-      ? copy.noResults.title
-      : hasWriting
-        ? copy.noResults.titlePosts
-        : hasProjects
-          ? copy.noResults.titleProjects
-          : copy.noResults.titleNothing,
+  title: bySections(
+    copy.noResults.title,
+    copy.noResults.titlePosts,
+    copy.noResults.titleProjects,
+    copy.noResults.titleNothing,
+  ),
   hint: hasWriting ? copy.noResults.hint : copy.noResults.hintWithoutPosts,
 };
 ---
@@ -69,7 +86,7 @@ const noResults = {
       class="input"
       type="text"
       role="combobox"
-      aria-label={copy.input}
+      aria-label={inputLabel}
       aria-expanded="true"
       aria-controls="search-list"
       aria-autocomplete="list"
@@ -78,8 +95,8 @@ const noResults = {
       autocapitalize="none"
       autocorrect="off"
       enterkeyhint="go"
-      placeholder={copy.input}
-      data-placeholder={copy.input}
+      placeholder={inputLabel}
+      data-placeholder={inputLabel}
       data-cv-placeholder={copy.cv.placeholder}
       autofocus
       data-search-input

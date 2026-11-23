@@ -295,7 +295,13 @@ const search = defineCollection({
     shortcut: z.string(),
     shortcutOther: z.string(),
     dialog: z.string(),
-    input: z.string(),
+    // Naming only the sections the site has (DESIGN.md §8), like noResults.
+    input: z.object({
+      label: z.string(),
+      labelPosts: z.string(),
+      labelProjects: z.string(),
+      labelNothing: z.string(),
+    }),
     clear: z.string(),
     results: z.string(),
     goTo: z.string(),

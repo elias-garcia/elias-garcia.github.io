@@ -4,7 +4,13 @@ search:
   # On systems other than Apple's.
   shortcutOther: Ctrl K
   dialog: Search
-  input: Search posts and projects
+  # The input's placeholder and label, naming only the sections the site has:
+  # posts and projects, posts only, projects only, or neither.
+  input:
+    label: Search posts and projects
+    labelPosts: Search posts
+    labelProjects: Search projects
+    labelNothing: Search the site
   clear: Clear
   results: Results
   goTo: Go to
@@ -25,7 +31,7 @@ search:
     title: Subscribe with RSS
     line: Get new posts in your reader
   # {query} is what the visitor typed. Each title names only the sections the
-  # site has: posts and projects, posts only, projects only, or neither.
+  # site has, like the input.
   noResults:
     title: No posts or projects match “{query}”
     titlePosts: No posts match “{query}”
