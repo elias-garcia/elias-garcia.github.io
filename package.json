@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && npm run cv && astro build",
     "cv": "node scripts/cv-pdf.ts",
     "preview": "astro preview",
     "format": "prettier --write .",
@@ -45,6 +45,7 @@
     "eslint-plugin-astro": "^3.2.1",
     "html-validate": "^11.21.1",
     "jiti": "^2.7.0",
+    "pdfjs-dist": "^6.5.438",
     "playwright": "^1.65.0",
     "prettier": "^3.10.0",
     "prettier-plugin-astro": "^1.1.2",

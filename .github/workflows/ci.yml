@@ -20,7 +20,8 @@ jobs:
           node-version-file: package.json
           cache: npm
       - run: npm ci
-      # The accessibility check and Lighthouse run in Google Chrome.
+      # The build prints the CV with Google Chrome, and the accessibility
+      # check and Lighthouse run in it.
       - run: npx playwright install chrome
       - run: npm run format:check
       - run: npm run lint

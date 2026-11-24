@@ -4,6 +4,8 @@ node_modules/
 # build output
 dist/
 .astro/
+# printed by `npm run cv` on every build
+public/cv.pdf
 
 # Vercel
 .vercel/

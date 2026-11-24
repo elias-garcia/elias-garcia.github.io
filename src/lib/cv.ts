@@ -231,14 +231,27 @@ export async function getCvFormats() {
   ] as const;
 }
 
-async function getCvSizes() {
-  const [pdf, markdown] = await Promise.all([
+// The size of the printed PDF. While it's being printed (the `cv` mode) it
+// doesn't exist yet, and the pages of that build aren't kept.
+async function getPdfSize(): Promise<number> {
+  if (import.meta.env.MODE === "cv") {
+    return 0;
+  }
+  try {
     // Relative to the project root, where Astro runs; bundling moves this module.
-    stat("public/cv.pdf"),
-    renderCvMarkdown(),
-  ]);
+    return (await stat("public/cv.pdf")).size;
+  } catch (error) {
+    throw new Error(
+      "public/cv.pdf is missing: print it with `npm run cv` (`npm run build` does too).",
+      { cause: error },
+    );
+  }
+}
+
+async function getCvSizes() {
+  const [pdf, markdown] = await Promise.all([getPdfSize(), renderCvMarkdown()]);
   return {
-    pdf: pdf.size,
+    pdf,
     markdown: Buffer.byteLength(markdown, "utf8"),
   };
 }

@@ -462,7 +462,7 @@ Back link + Copy page, title (display), metadata line, then the article (max 640
 ---
 
 ### CV PDF (`/cv.pdf`)
-The PDF in the Download CV menu. Printed by Chrome from a page built from the collections (`/cv/print`, only built for printing and in `npm run dev`), never edited by hand: `npm run cv` (`scripts/cv-pdf.ts`). Reference: `reference/cv-print.html` (the print page, with its CSS), `reference/cv.pdf` (what it produces: 2 A4 pages, about 100 KB) and `reference/cv-pdf-text.txt` (the text a parser extracts from it, in reading order).
+The PDF in the Download CV menu. Printed by Chrome from a page built from the collections (`/cv/print`, only built for printing and in `npm run dev`), never edited by hand: `npm run cv` (`scripts/cv-pdf.ts`), which `npm run build` runs first. Reference: `reference/cv-print.html` (the print page, with its CSS), `reference/cv.pdf` (what it produces: 2 A4 pages, about 100 KB) and `reference/cv-pdf-text.txt` (the text a parser extracts from it, in reading order).
 
 - **Content: only what's in the collections.** Nothing is written for the PDF, and nothing is rephrased. The layout is the PDF's own, not Home's.
 - **Header:**

@@ -29,7 +29,7 @@ Markup follows the HTML specification, even where the reference HTML does someth
 
 `npm run format && npm run lint && npm test && npm run build && npm run html`
 
-`test` runs the unit tests (`src/lib/*.test.ts`, Node's own test runner); `build` type-checks with `astro check`; `html` validates the built pages against the HTML specification (html-validate's `standard` preset).
+`test` runs the unit tests (`src/lib/*.test.ts`, Node's own test runner); `build` type-checks with `astro check`, prints the CV PDF (`npm run cv`, which needs Google Chrome) and builds the site; `html` validates the built pages against the HTML specification (html-validate's `standard` preset).
 
 When a change touches what a visitor sees (markup, styles, content, an interactive state), also run `npm run a11y`: axe on every page and state, in both themes and at three widths.
 
@@ -58,7 +58,7 @@ src/
   lib/          # TypeScript utilities
   styles/       # tokens.css, global.css
   content.config.ts
-public/         # files served as-is (icons, manifest, cv.pdf)
+public/         # files served as-is (icons, manifest; cv.pdf is printed there)
 design/         # design handoff (reference only)
 ```
 
@@ -92,7 +92,7 @@ design/         # design handoff (reference only)
 - Empty sections aren't built: with no projects or no published posts, that section, its nav item, its pages, its search group and every link to it are left out (`hasProjects` / `hasWriting` in `src/lib/sections.ts`; the RSS feed stays). DESIGN.md §8.
 - Posts with `draft: true` show in `npm run dev` and are left out of the production build. A project with `draft: true` keeps its card, but its case study is left out the same way. A project file whose name starts with `_` is a sample for `npm run dev` only, like the prose reference post.
 - A project's cover (DESIGN.md, Project cover) is rendered by `ProjectCover` and named for the morph by `coverName()`: never type a `project-…` transition name by hand.
-- `public/cv.pdf` is printed by `npm run cv` from `/cv/print`, a page built only for printing and in `npm run dev` (DESIGN.md, CV PDF). When the CV's content changes (the profile, work, projects, talks, courses or education), run it again.
+- `public/cv.pdf` is printed on every build (`npm run cv`) from `/cv/print`, a page built only for printing and in `npm run dev` (DESIGN.md, CV PDF), and isn't in git. `npm run dev` needs it once: run `npm run cv` after cloning. The print fails if the CV passes two pages, or if a parser can't read the name, the email and every company, in order.
 - Don't invent facts, numbers or links. Leave a clear TODO where something is missing.
 
 ## URLs

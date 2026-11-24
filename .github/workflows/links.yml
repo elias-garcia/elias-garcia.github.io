@@ -20,6 +20,8 @@ jobs:
           node-version-file: package.json
           cache: npm
       - run: npm ci
+      # The build prints the CV with Google Chrome.
+      - run: npx playwright install chrome
       - run: npm run build
       # The site's own addresses are read from the build: a page may not be
       # live yet.
