@@ -755,14 +755,14 @@ const copy = await getViewerCopy();
      slightly as it does, and the backdrop fades in. With reduced motion,
      and on phones, they only fade. */
   .viewer[open] {
-    transition: opacity var(--dur) var(--ease-settle);
+    transition: opacity var(--dur-slow) var(--ease-settle);
 
     @starting-style {
       opacity: 0;
     }
 
     &::backdrop {
-      transition: opacity var(--dur) var(--ease-settle);
+      transition: opacity var(--dur-slow) var(--ease-settle);
 
       @starting-style {
         opacity: 0;
@@ -773,8 +773,8 @@ const copy = await getViewerCopy();
   @media (prefers-reduced-motion: no-preference) {
     .viewer[open] {
       transition:
-        opacity var(--dur) var(--ease-settle),
-        scale var(--dur) var(--ease-settle);
+        opacity var(--dur-slow) var(--ease-settle),
+        scale var(--dur-slow) var(--ease-settle);
 
       @starting-style {
         scale: var(--viewer-scale);
@@ -789,7 +789,7 @@ const copy = await getViewerCopy();
     .viewer,
     .viewer::backdrop {
       transition-property: opacity, overlay, display;
-      transition-duration: var(--dur-fast);
+      transition-duration: var(--dur-medium);
       transition-timing-function: var(--ease-settle);
       transition-behavior: allow-discrete;
     }
@@ -810,7 +810,7 @@ const copy = await getViewerCopy();
 
   .viewer[open][data-closing]:not([data-leaving]),
   .viewer[open][data-closing]:not([data-leaving])::backdrop {
-    transition: opacity var(--dur-fast) var(--ease-settle);
+    transition: opacity var(--dur-medium) var(--ease-settle);
   }
 
   .figure {
@@ -1024,12 +1024,12 @@ const copy = await getViewerCopy();
     @media (prefers-reduced-motion: no-preference) {
       .viewer[open] {
         transition:
-          opacity var(--dur) var(--ease-settle),
+          opacity var(--dur-slow) var(--ease-settle),
           translate var(--dur-slow) var(--ease-settle);
 
         &::backdrop {
           transition:
-            opacity var(--dur) var(--ease-settle),
+            opacity var(--dur-slow) var(--ease-settle),
             background-color var(--dur-slow) var(--ease-settle);
         }
       }
@@ -1045,6 +1045,13 @@ const copy = await getViewerCopy();
           transition-behavior: allow-discrete;
         }
       }
+    }
+
+    /* Dragged away, the viewer and its backdrop leave together, faster
+       than they came in, with reduced motion too. */
+    .viewer[data-leaving],
+    .viewer[data-leaving]::backdrop {
+      transition-duration: var(--dur);
     }
 
     /* Following the finger exactly. */

@@ -199,7 +199,7 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      transition: rotate var(--dur) var(--ease-settle);
+      transition: rotate var(--dur-medium) var(--ease-settle);
     }
 
     :global(.button:has(+ .formats[data-keyboard])) & {
@@ -250,7 +250,7 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
     &:popover-open {
       display: flex;
       flex-direction: column;
-      transition: opacity var(--dur) var(--ease-settle);
+      transition: opacity var(--dur-medium) var(--ease-settle);
 
       @starting-style {
         opacity: 0;
@@ -260,9 +260,9 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
     @media (prefers-reduced-motion: no-preference) {
       &:popover-open {
         transition:
-          opacity var(--dur) var(--ease-settle),
-          scale var(--dur) var(--ease-settle),
-          translate var(--dur) var(--ease-settle);
+          opacity var(--dur-medium) var(--ease-settle),
+          scale var(--dur-medium) var(--ease-settle),
+          translate var(--dur-medium) var(--ease-settle);
 
         @starting-style {
           scale: var(--menu-scale);

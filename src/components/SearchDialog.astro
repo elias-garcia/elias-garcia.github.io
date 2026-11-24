@@ -920,6 +920,8 @@ const noResults = {
     max-block-size: var(--search-list-h);
     overflow-y: auto;
     overscroll-behavior: contain;
+    /* Rows don't narrow when typing makes the list long enough to scroll. */
+    scrollbar-gutter: stable;
     padding: var(--space-1) var(--space-2) var(--space-2);
   }
 

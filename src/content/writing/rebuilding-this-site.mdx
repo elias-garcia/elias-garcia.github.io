@@ -15,7 +15,7 @@ One column, about 640 pixels wide. Dates live in a left gutter, so a whole caree
 
 ## Spending the motion budget
 
-I wanted the site to feel crafted without feeling busy, so motion follows a few rules.[^1] Pages arrive in one quick motion. Everything else responds to something you did, and interface feedback never takes longer than 250 milliseconds.
+I wanted the site to feel crafted without feeling busy, so motion follows a few rules.[^1] Pages arrive in one quick motion. Everything else responds to something you did, and interface feedback never takes longer than 300 milliseconds.
 
 Easing does most of the work. Things entering the screen use ease-out: they arrive fast and settle, which reads as responsive. Linear is for things that never stop, like a spinner. Press replay and compare.
 
@@ -32,7 +32,7 @@ I tried staggering every element in, and it felt slow and uneven, so the page no
   from { opacity: 0; }
 }
 main {
-  animation: page-in 250ms cubic-bezier(.22, 1, .36, 1) backwards;
+  animation: page-in 300ms cubic-bezier(.22, 1, .36, 1) backwards;
 }
 @view-transition { navigation: auto; }
 /* reduced motion: still a fade, just no movement */
