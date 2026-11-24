@@ -51,7 +51,8 @@ img:not([src$=".svg"]) {
 /* ---- Base ---- */
 
 html {
-  /* Every tappable thing has its own press state instead (DESIGN.md §2.9). */
+  /* Tappable things have their own press states instead, where the browser
+     applies :active to touches (on iOS, only text links, DESIGN.md §2.9). */
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;

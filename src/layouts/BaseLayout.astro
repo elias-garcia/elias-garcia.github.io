@@ -147,11 +147,6 @@ const shareImage = pageShareImage ?? {
       timezone={profile.timezone}
     />
     <SearchDialog />
-    <script>
-      // iOS Safari only applies :active (the press states) under an element
-      // with a touchstart listener. Passive, so it never holds up scrolling.
-      document.addEventListener("touchstart", () => {}, { passive: true });
-    </script>
   </body>
 </html>
 
