@@ -118,7 +118,7 @@ export async function getCvFormats() {
       ...markdown,
       href: routes.cvMarkdown,
       size: formatFileSize(sizes.markdown),
-      icon: "file-code",
+      icon: "markdown",
     },
   ] as const;
 }

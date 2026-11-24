@@ -1,25 +1,25 @@
 ---
 import type { HTMLAttributes } from "astro/types";
-import ArrowRight from "@lucide/astro/icons/arrow-right";
-import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
-import ChevronDown from "@lucide/astro/icons/chevron-down";
-import ChevronLeft from "@lucide/astro/icons/chevron-left";
-import ChevronRight from "@lucide/astro/icons/chevron-right";
-import CornerDownLeft from "@lucide/astro/icons/corner-down-left";
-import Download from "@lucide/astro/icons/download";
-import FileCode from "@lucide/astro/icons/file-code";
-import FileText from "@lucide/astro/icons/file-text";
-import Hash from "@lucide/astro/icons/hash";
-import LayoutGrid from "@lucide/astro/icons/layout-grid";
-import Mail from "@lucide/astro/icons/mail";
-import Play from "@lucide/astro/icons/play";
-import Plus from "@lucide/astro/icons/plus";
-import Rss from "@lucide/astro/icons/rss";
-import Search from "@lucide/astro/icons/search";
-import Star from "@lucide/astro/icons/star";
-import X from "@lucide/astro/icons/x";
+import ArrowRight from "@tabler/icons-astro/icons/arrow-right";
+import ArrowUpRight from "@tabler/icons-astro/icons/arrow-up-right";
+import ChevronDown from "@tabler/icons-astro/icons/chevron-down";
+import ChevronLeft from "@tabler/icons-astro/icons/chevron-left";
+import ChevronRight from "@tabler/icons-astro/icons/chevron-right";
+import CornerDownLeft from "@tabler/icons-astro/icons/corner-down-left";
+import Download from "@tabler/icons-astro/icons/download";
+import FileText from "@tabler/icons-astro/icons/file-text";
+import Hash from "@tabler/icons-astro/icons/hash";
+import LayoutGrid from "@tabler/icons-astro/icons/layout-grid";
+import Mail from "@tabler/icons-astro/icons/mail";
+import Markdown from "@tabler/icons-astro/icons/markdown";
+import PlayerPlay from "@tabler/icons-astro/icons/player-play";
+import Plus from "@tabler/icons-astro/icons/plus";
+import Rss from "@tabler/icons-astro/icons/rss";
+import Search from "@tabler/icons-astro/icons/search";
+import Star from "@tabler/icons-astro/icons/star";
+import X from "@tabler/icons-astro/icons/x";
 
-// Every icon, under its Lucide name (DESIGN.md §2.7). Decorative: the
+// Every icon, under its Tabler name (DESIGN.md §2.7). Decorative: the
 // control or link it sits in carries the name.
 const icons = {
   "arrow-right": ArrowRight,
@@ -29,12 +29,12 @@ const icons = {
   "chevron-right": ChevronRight,
   "corner-down-left": CornerDownLeft,
   download: Download,
-  "file-code": FileCode,
   "file-text": FileText,
   hash: Hash,
   "layout-grid": LayoutGrid,
   mail: Mail,
-  play: Play,
+  markdown: Markdown,
+  "player-play": PlayerPlay,
   plus: Plus,
   rss: Rss,
   search: Search,
@@ -43,14 +43,14 @@ const icons = {
 };
 
 // The width and height attributes, for a page whose styles haven't loaded
-// (Lucide writes 24 otherwise): the same sizes as --icon-md and --icon-sm.
+// (Tabler writes 24 otherwise): the same sizes as --icon-md and --icon-sm.
 const pixels = { md: 16, sm: 12 };
 
 // What a component may pass on to the <svg>. Without the icon's own props,
-// and without `color` and `title`, which Lucide types more narrowly.
+// and without `color`, `stroke` and `title`, which Tabler reads as props.
 type Props = Omit<
   HTMLAttributes<"svg">,
-  "name" | "size" | "color" | "title" | "stroke-width"
+  "name" | "size" | "color" | "stroke" | "stroke-width" | "title"
 > & {
   name: keyof typeof icons;
   size?: "md" | "sm";
@@ -64,28 +64,30 @@ const {
   class: className,
   ...attributes
 } = Astro.props;
-const Lucide = icons[name];
+const Tabler = icons[name];
 ---
 
-<Lucide
-  class:list={[
-    "icon",
-    { sm: size === "sm", filled, dotted: name === "rss" },
-    className,
-  ]}
+<Tabler
+  class:list={[{ sm: size === "sm", filled }, className]}
   size={pixels[size]}
-  stroke-width={1.5}
-  nonScalingStroke
+  stroke={1.5}
   aria-hidden="true"
   {...attributes}
 />
 
 <style>
-  /* :where() keeps these below whatever the component using the icon sets. */
-  :where(.icon) {
+  /* Tabler puts tabler-icon and tabler-icon-<name> on every icon. :where()
+     keeps these below whatever the component using the icon sets. */
+  :where(.tabler-icon) {
     flex: none;
     inline-size: var(--icon-md);
     block-size: var(--icon-md);
+  }
+
+  /* The stroke stays 1.5px at 16 and 12px instead of scaling with the 24px
+     drawing. Tabler has no prop for it. */
+  :where(.tabler-icon) :global(*) {
+    vector-effect: non-scaling-stroke;
   }
 
   :where(.sm) {
@@ -97,9 +99,9 @@ const Lucide = icons[name];
     fill: currentColor;
   }
 
-  /* The RSS icon's dot is a dot, not a ring. It keeps its stroke: without
-     it the dot is too small for the arcs (DESIGN.md §2.7). */
-  :where(.dotted) :global(circle) {
+  /* The RSS icon's dot, its first path, is a dot, not a ring. It keeps its
+     stroke: without it the dot is too small for the arcs (DESIGN.md §2.7). */
+  :where(.tabler-icon-rss) :global(path:first-child) {
     fill: currentColor;
   }
 </style>
