@@ -236,13 +236,6 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
       display: flex;
       flex-direction: column;
     }
-  }
-
-  /* Without Popover the button opens nothing: it reads as the list's label. */
-  @supports not selector(:popover-open) {
-    .chevron {
-      display: none;
-    }
 
     /* It grows from its button as it opens, and closes at once (DESIGN.md
        §2.5). A transition rather than keyframes, so a quick reopen carries
@@ -273,6 +266,13 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
 
     &[data-keyboard]:popover-open {
       transition: none;
+    }
+  }
+
+  /* Without Popover the button opens nothing: it reads as the list's label. */
+  @supports not selector(:popover-open) {
+    .chevron {
+      display: none;
     }
   }
 
