@@ -44,126 +44,126 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
         </ul>
       </header>
 
-      <section class="section">
-        <h2>{cv.about.title}</h2>
-        <div class="paragraphs">
+      <div class="sections">
+        <section class="section">
+          <h2>{cv.about.title}</h2>
           {cv.about.paragraphs.map((paragraph) => (
-            <p>{paragraph}</p>
+            <p class="detail">{paragraph}</p>
           ))}
-        </div>
-      </section>
-
-      {cv.experience.jobs.length > 0 && (
-        <section class="section">
-          <h2>{cv.experience.title}</h2>
-          <ul class="rows">
-            {cv.experience.jobs.map((job) => (
-              <li class="row job">
-                <p class="date">{job.dates}</p>
-                <div class="entry">
-                  <div>
-                    <h3>
-                      <span class="company">{job.company}</span>{" "}
-                      <span class="separator">·</span>{" "}
-                      <span class="note">{job.mode}</span>
-                    </h3>
-                    <p class="position">{job.role}</p>
-                  </div>
-                  <ul class="points">
-                    {job.points.map((point) => (
-                      <li>{point}</li>
-                    ))}
-                  </ul>
-                </div>
-              </li>
-            ))}
-          </ul>
         </section>
-      )}
 
-      {cv.projects.entries.length > 0 && (
-        <section class="section">
-          <h2>{cv.projects.title}</h2>
-          <ul class="rows">
-            {cv.projects.entries.map((project) => (
-              <li class="row">
-                <p class="date">{project.year}</p>
-                <div>
-                  <h3>
-                    {project.title}
-                    {project.addresses.map(({ href, text }) => (
-                      <>
-                        {" "}
+        {cv.experience.jobs.length > 0 && (
+          <section class="section">
+            <h2>{cv.experience.title}</h2>
+            <ul class="rows jobs">
+              {cv.experience.jobs.map((job) => (
+                <li class="row job">
+                  <p class="date">{job.dates}</p>
+                  <div class="job-body">
+                    <div class="entry">
+                      <h3>
+                        <span class="company">{job.company}</span>{" "}
                         <span class="separator">·</span>{" "}
-                        <a class="note" href={href}>
-                          {text}
-                        </a>
-                      </>
-                    ))}
-                  </h3>
-                  <p class="detail">{project.summary}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+                        <span class="note">{job.mode}</span>
+                      </h3>
+                      <p class="position">{job.role}</p>
+                    </div>
+                    <ul class="points">
+                      {job.points.map((point) => (
+                        <li>{point}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-      {cv.speaking.talks.length > 0 && (
-        <section class="section">
-          <h2>{cv.speaking.title}</h2>
-          <ul class="rows">
-            {cv.speaking.talks.map((talk) => (
-              <li class="row">
-                <p class="date">{talk.date}</p>
-                <div>
-                  <h3>{talk.title}</h3>
-                  <p class="detail">{talk.where}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+        {cv.projects.entries.length > 0 && (
+          <section class="section">
+            <h2>{cv.projects.title}</h2>
+            <ul class="rows">
+              {cv.projects.entries.map((project) => (
+                <li class="row">
+                  <p class="date">{project.year}</p>
+                  <div class="entry">
+                    <h3>
+                      {project.title}
+                      {project.addresses.map(({ href, text }) => (
+                        <>
+                          {" "}
+                          <span class="separator">·</span>{" "}
+                          <a class="note" href={href}>
+                            {text}
+                          </a>
+                        </>
+                      ))}
+                    </h3>
+                    <p class="detail">{project.summary}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-      {cv.teaching.courses.length > 0 && (
-        <section class="section">
-          <h2>{cv.teaching.title}</h2>
-          <ul class="rows">
-            {cv.teaching.courses.map((course) => (
-              <li class="row">
-                <p class="date">{course.date}</p>
-                <div>
-                  <h3>
-                    {course.title} <span class="separator">·</span>{" "}
-                    <a class="note" href={course.address.href}>
-                      {course.address.text}
-                    </a>
-                  </h3>
-                  <p class="detail">{course.where}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+        {cv.speaking.talks.length > 0 && (
+          <section class="section">
+            <h2>{cv.speaking.title}</h2>
+            <ul class="rows">
+              {cv.speaking.talks.map((talk) => (
+                <li class="row">
+                  <p class="date">{talk.date}</p>
+                  <div class="entry">
+                    <h3>{talk.title}</h3>
+                    <p class="detail">{talk.where}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-      {cv.education.degrees.length > 0 && (
-        <section class="section">
-          <h2>{cv.education.title}</h2>
-          <ul class="rows">
-            {cv.education.degrees.map((degree) => (
-              <li class="row">
-                <p class="date">{degree.dates}</p>
-                <div>
-                  <h3>{degree.title}</h3>
-                  <p class="detail">{degree.detail}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+        {cv.teaching.courses.length > 0 && (
+          <section class="section">
+            <h2>{cv.teaching.title}</h2>
+            <ul class="rows">
+              {cv.teaching.courses.map((course) => (
+                <li class="row">
+                  <p class="date">{course.date}</p>
+                  <div class="entry">
+                    <h3>
+                      {course.title} <span class="separator">·</span>{" "}
+                      <a class="note" href={course.address.href}>
+                        {course.address.text}
+                      </a>
+                    </h3>
+                    <p class="detail">{course.where}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {cv.education.degrees.length > 0 && (
+          <section class="section">
+            <h2>{cv.education.title}</h2>
+            <ul class="rows">
+              {cv.education.degrees.map((degree) => (
+                <li class="row">
+                  <p class="date">{degree.dates}</p>
+                  <div class="entry">
+                    <h3>{degree.title}</h3>
+                    <p class="detail">{degree.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
     </main>
   </body>
 </html>
@@ -205,47 +205,40 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
     background: var(--bg);
   }
 
-  /* The CV is only ever a sheet of A4, so its sizes are in pt and mm. */
+  /* The CV is only ever a sheet of A4, so its sizes are in pt and mm. 10pt
+     here stands for the site's 16px, so its spacing steps are the site's
+     times 0.625 (DESIGN.md, CV PDF, Spacing and line heights). */
   .cv {
     --cv-margin-block: 16mm;
     --cv-margin-inline: 18mm;
     --cv-text: 10pt; /* resume guides ask for 10–12pt */
-    --cv-name: 19pt;
-    --cv-role: 11pt;
-    --cv-leading: 1.45;
+    --cv-name: 20pt; /* the site's display size */
     --cv-hairline: 0.5pt;
-    --cv-photo: 16mm; /* the height of the name and role line together */
+    --cv-photo: 40pt; /* the site's 64 step: the height of the name and role line */
     --cv-date-column: 22mm; /* the widest date, "2024 – Now", is about 17mm */
-    --cv-column-gap: 6mm;
-    --cv-section-gap: 6.5mm;
-    --cv-heading-gap: 2.5mm;
-    --cv-header-gap: 5mm;
-    --cv-identity-gap: 4mm;
-    --cv-who-gap: 1.5mm;
-    --cv-contact-padding: 3mm;
-    --cv-contact-gap: 1.5mm 8mm;
-    --cv-contact-icon-gap: 2mm;
-    --cv-paragraph-gap: 2mm;
-    --cv-row-padding: 1.6mm;
-    --cv-job-padding: 2.2mm;
-    --cv-points-gap: 1.5mm;
-    --cv-points-indent: 3.5mm;
-    --cv-point-gap: 0.8mm;
-    --cv-point-padding: 0.5mm;
     --cv-separator-padding: 1pt;
+    --cv-space-4: 2.5pt;
+    --cv-space-8: 5pt;
+    --cv-space-12: 7.5pt;
+    --cv-space-16: 10pt;
+    --cv-space-24: 15pt;
+    --cv-space-32: 20pt;
+    --cv-space-48: 30pt;
 
     display: flex;
     flex-direction: column;
-    gap: var(--cv-section-gap);
+    gap: var(--cv-space-32);
+    box-sizing: border-box;
     color: var(--text);
     font-family: "Instrument Sans Static", ui-sans-serif, system-ui, sans-serif;
     font-size: var(--cv-text);
-    line-height: var(--cv-leading);
+    /* 1.5, not the site's 1.6 for reading: a CV is scanned, and resume
+       guides call more than 1.5 too open. */
+    line-height: var(--leading-normal);
     font-variant-numeric: tabular-nums;
     /* Kerning at print sizes, as the reference sets it. */
     text-rendering: optimizeLegibility;
     print-color-adjust: exact;
-    box-sizing: border-box;
 
     & :is(h1, h2, h3, p, ul) {
       margin: 0;
@@ -273,6 +266,8 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
     }
   }
 
+  /* Each break is bigger than the one inside it. The hairlines are the
+     darker --line-strong, which survives an office printer. */
   .header {
     display: flex;
     flex-direction: column;
@@ -281,9 +276,9 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
   .identity {
     display: flex;
     align-items: center;
-    gap: var(--cv-identity-gap);
-    padding-block-end: var(--cv-header-gap);
-    border-block-end: var(--cv-hairline) solid var(--line);
+    gap: var(--cv-space-16);
+    padding-block-end: var(--cv-space-24);
+    border-block-end: var(--cv-hairline) solid var(--line-strong);
   }
 
   .photo {
@@ -297,7 +292,7 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
   .who {
     display: flex;
     flex-direction: column;
-    gap: var(--cv-who-gap);
+    gap: var(--cv-space-4);
   }
 
   .name {
@@ -309,7 +304,6 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
 
   .role {
     color: var(--text-2);
-    font-size: var(--cv-role);
   }
 
   /* Three columns sized to the addresses, spread to the full width. Each
@@ -319,15 +313,15 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
     display: grid;
     grid-template-columns: repeat(3, max-content);
     justify-content: space-between;
-    gap: var(--cv-contact-gap);
-    padding: var(--cv-contact-padding) 0;
-    border-block-end: var(--cv-hairline) solid var(--line);
+    gap: var(--cv-space-4) var(--cv-space-24);
+    padding: var(--cv-space-12) 0;
+    border-block-end: var(--cv-hairline) solid var(--line-strong);
     color: var(--text-2);
 
     & li {
       display: flex;
       align-items: center;
-      gap: var(--cv-contact-icon-gap);
+      gap: var(--cv-space-8);
       white-space: nowrap;
     }
   }
@@ -336,10 +330,16 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
     color: var(--text-3);
   }
 
+  .sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-48);
+  }
+
   .section {
     display: flex;
     flex-direction: column;
-    gap: var(--cv-heading-gap);
+    gap: var(--cv-space-16);
 
     & > h2 {
       font-size: var(--cv-text);
@@ -348,25 +348,26 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
     }
   }
 
-  .paragraphs {
+  .rows {
     display: flex;
     flex-direction: column;
-    gap: var(--cv-paragraph-gap);
-    color: var(--text-2);
+    gap: var(--cv-space-16);
+    padding: 0;
+  }
+
+  .jobs {
+    gap: var(--cv-space-24);
   }
 
   /* The site's date column, scaled for paper. A row never splits across
-     pages: one that doesn't fit moves whole to the next. */
+     pages: one that doesn't fit moves whole to the next. The date and the
+     title share a baseline, as their line heights differ. */
   .row {
     display: grid;
     grid-template-columns: var(--cv-date-column) 1fr;
-    column-gap: var(--cv-column-gap);
-    padding-block: var(--cv-row-padding);
+    column-gap: var(--cv-space-24);
+    align-items: baseline;
     break-inside: avoid;
-  }
-
-  .job {
-    padding-block: var(--cv-job-padding);
   }
 
   .date {
@@ -374,9 +375,17 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
     white-space: nowrap;
   }
 
+  /* A title and its second line. */
+  .entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-4);
+  }
+
   h3 {
     font-size: var(--cv-text);
     font-weight: var(--weight-medium);
+    line-height: var(--leading-tight);
   }
 
   .company {
@@ -389,10 +398,6 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
     font-weight: normal;
   }
 
-  .rows {
-    padding: 0;
-  }
-
   /* After a title: how and where, or an address. */
   .note {
     color: var(--text-2);
@@ -403,29 +408,26 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
      company at 600. */
   .position {
     font-weight: var(--weight-medium);
+    line-height: var(--leading-tight);
   }
 
   .detail {
     color: var(--text-2);
   }
 
-  .entry {
+  .job-body {
     display: flex;
     flex-direction: column;
-    gap: var(--cv-points-gap);
+    gap: var(--cv-space-12);
   }
 
   .points {
     display: flex;
     flex-direction: column;
-    gap: var(--cv-point-gap);
-    padding-inline-start: var(--cv-points-indent);
+    gap: var(--cv-space-4);
+    padding-inline-start: var(--cv-space-16);
     color: var(--text-2);
     list-style-type: disc;
-
-    & li {
-      padding-inline-start: var(--cv-point-padding);
-    }
 
     & li::marker {
       color: var(--text-3);
