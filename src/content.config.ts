@@ -79,7 +79,6 @@ const courses = defineCollection({
     z.object({
       date: z.coerce.date(),
       title: z.string(),
-      originalTitle: z.string().optional(),
       where: z.string(),
       href: z.url(),
       rating: z.object({

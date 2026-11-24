@@ -15,10 +15,8 @@ import {
   workMode,
 } from "./content.ts";
 import {
-  formatCount,
   formatCountry,
   formatFileSize,
-  formatMinutes,
   formatMonthYear,
   formatYearRange,
 } from "./format.ts";
@@ -148,80 +146,64 @@ export async function getCv() {
   };
 }
 
+// The CV as Markdown, for AI tools and agents: the PDF's sections, in the
+// same order, so the two downloads never disagree.
 export async function renderCvMarkdown(): Promise<string> {
-  const [
-    copy,
-    projectsPage,
-    profile,
-    work,
-    talks,
-    courses,
-    education,
-    projects,
-  ] = await Promise.all([
-    getHomeCopy(),
-    getPage("projects"),
-    getProfile(),
-    getWork(),
-    getTalks(),
-    getCourses(),
-    getEducation(),
-    getProjects(),
-  ]);
-
-  const contact = profile.contact
-    .map(({ label, text }) => `${label}: ${text}`)
-    .join(" · ");
-
-  const jobs = work.map(({ data }) =>
-    [
-      `### ${data.company}: ${data.role}`,
-      `${formatYearRange(data, copy.present)} · ${workMode(data)} · ${data.about}`,
-      "",
-      ...data.points.map((point) => `- ${point}`),
-    ].join("\n"),
-  );
-
-  const talkLines = talks.map(
-    ({ data }) =>
-      `- ${formatMonthYear(data.date)}: ${data.title}, ${data.where}`,
-  );
-
-  const courseLines = courses.map(({ data }) => {
-    const title =
-      data.originalTitle === undefined
-        ? data.title
-        : `${data.title} (${data.originalTitle})`;
-    return `- ${formatMonthYear(data.date)}: ${title}, ${data.where} · ${formatCount(data.lessons, copy.lessonCount)} · ${formatMinutes(data.minutes)}`;
-  });
-
-  const degrees = education.map(
-    ({ data }) =>
-      `- ${formatYearRange(data, copy.present)}: ${data.title}, ${data.school}. ${data.detail}`,
-  );
-
-  const projectLines = projects.map(
-    ({ data }) =>
-      `- ${data.title} (${data.status}, ${String(data.year)}): ${data.summary}`,
-  );
+  const cv = await getCv();
+  // A section without entries is left out, as on the PDF.
+  const section = (
+    title: string,
+    entries: readonly string[],
+    separator = "\n",
+  ) =>
+    entries.length > 0 ? [`## ${title}\n\n${entries.join(separator)}`] : [];
+  // A title followed by its addresses, as on the PDF.
+  const titled = (title: string, addresses: readonly { text: string }[]) =>
+    [title, ...addresses.map(({ text }) => text)].join(" · ");
 
   return [
-    `# ${profile.name}`,
-    `${profile.role} · ${profile.city}, ${formatCountry(profile.country)} · ${profile.availability}`,
-    contact,
-    `## ${copy.about}`,
-    profile.about.join("\n\n"),
-    `## ${copy.experience}`,
-    jobs.join("\n\n"),
-    `## ${copy.speaking}`,
-    talkLines.join("\n"),
-    `## ${copy.teaching}`,
-    courseLines.join("\n"),
-    `## ${copy.education}`,
-    degrees.join("\n"),
-    ...(hasProjects
-      ? [`## ${projectsPage.title}`, projectLines.join("\n")]
-      : []),
+    `# ${cv.name}`,
+    cv.role,
+    cv.contact.map(({ text }) => text).join(" · "),
+    ...section(cv.about.title, cv.about.paragraphs, "\n\n"),
+    ...section(
+      cv.experience.title,
+      cv.experience.jobs.map((job) =>
+        [
+          `### ${job.company} · ${job.mode}`,
+          `${job.role} · ${job.dates}`,
+          "",
+          ...job.points.map((point) => `- ${point}`),
+        ].join("\n"),
+      ),
+      "\n\n",
+    ),
+    ...section(
+      cv.projects.title,
+      cv.projects.entries.map(
+        (project) =>
+          `- ${project.year}: ${titled(project.title, project.addresses)}. ${project.summary}`,
+      ),
+    ),
+    ...section(
+      cv.speaking.title,
+      cv.speaking.talks.map(
+        (talk) => `- ${talk.date}: ${talk.title}. ${talk.where}`,
+      ),
+    ),
+    ...section(
+      cv.teaching.title,
+      cv.teaching.courses.map(
+        (course) =>
+          `- ${course.date}: ${titled(course.title, [course.address])}. ${course.where}`,
+      ),
+    ),
+    ...section(
+      cv.education.title,
+      cv.education.degrees.map(
+        (degree) => `- ${degree.dates}: ${degree.title}. ${degree.detail}`,
+      ),
+    ),
   ]
     .join("\n\n")
     .concat("\n");
