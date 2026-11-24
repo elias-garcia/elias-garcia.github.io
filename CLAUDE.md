@@ -23,7 +23,7 @@ Markup follows the HTML specification, even where the reference HTML does someth
 - ESLint, Prettier, html-validate, Playwright + axe, Lighthouse CI.
 - GitHub Actions: `ci.yml` runs every check on pull requests and on `main`, with Lighthouse and the internal links and anchors (lychee), then deploys; `links.yml` checks the links to other sites on the first of each month.
 - Node 26, pinned with `engines.node`.
-- Vercel hosts what GitHub Actions builds (`vercel deploy --prebuilt`): its own builds can't run Chrome, which prints the CV, so `vercel.json` turns off its Git deploys. Once the checks pass, a pull request gets a preview (its link is a comment on the PR) and `main` deploys to production (`eliasgarcia.dev`). The build is plain static files in `dist/`, with no adapter.
+- Vercel hosts what GitHub Actions builds (`vercel deploy --prebuilt`): its own builds can't run Chrome, which prints the CV, so `vercel.json` turns off its Git deploys. Once the checks pass, a pull request gets a preview (GitHub shows it on the PR as a deployment to the `preview` environment) and `main` deploys to production (`eliasgarcia.dev`). The build is plain static files in `dist/`, with no adapter.
 
 ## Verify before finishing
 

@@ -57,16 +57,22 @@ jobs:
     # Pull requests from forks can't read the secrets.
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
+    # GitHub records each run as a deployment to this environment, with the
+    # address it deployed to: a pull request shows it with a "View
+    # deployment" button, kept up to date on every push. A preview is the pull
+    # request merged into main, as the checks built it. Pull requests share
+    # `preview`, so a newer one's deploy marks an older one's inactive (the
+    # older preview still works). The name repeats ENVIRONMENT's expression:
+    # this key can't read `env`.
+    environment:
+      name: ${{ github.event_name == 'push' && 'production' || 'preview' }}
+      url: ${{ steps.deploy.outputs.url }}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       ENVIRONMENT: ${{ github.event_name == 'push' && 'production' || 'preview' }}
     steps:
-      # The token for comments is GH_TOKEN, on its step only: nothing that
-      # installs or builds gets one through git.
+      # Nothing that installs or builds gets a GitHub token through git.
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
@@ -93,15 +99,3 @@ jobs:
         run: |
           url=$(vercel deploy --prebuilt ${{ env.ENVIRONMENT == 'production' && '--prod' || '' }})
           echo "url=$url" >> "$GITHUB_OUTPUT"
-      # One comment per pull request, updated on every push. The preview is
-      # the pull request merged into main, as the checks built it.
-      - if: github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          URL: ${{ steps.deploy.outputs.url }}
-          SHA: ${{ github.event.pull_request.head.sha }}
-        run: >-
-          gh pr comment ${{ github.event.pull_request.number }}
-          --edit-last --create-if-none
-          --body "Preview: $URL (this pull request at $SHA, merged into main)"
