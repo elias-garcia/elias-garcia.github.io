@@ -1,0 +1,434 @@
+---
+import avatar from "../../../assets/avatar.jpg";
+import Icon from "../../../components/Icon.astro";
+import type { GetStaticPaths } from "astro";
+import { getImage } from "astro:assets";
+import { getCv } from "../../../lib/cv.ts";
+import "../../../styles/tokens.css";
+
+// The page the CV PDF is printed from (DESIGN.md, CV PDF). A rest route, so
+// the site's build leaves it out: it's only built in `npm run dev` and while
+// the CV is printed (`--mode cv`, scripts/cv-pdf.ts).
+export const getStaticPaths = (() =>
+  import.meta.env.DEV || import.meta.env.MODE === "cv"
+    ? [{ params: { index: undefined } }]
+    : []) satisfies GetStaticPaths;
+
+const cv = await getCv();
+const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
+---
+
+<html lang="en" data-palette="light">
+  <head>
+    <meta charset="utf-8" />
+    <title>{cv.title}</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <main class="cv">
+      <header class="header">
+        <div class="identity">
+          <img class="photo" src={photo.src} alt={cv.name} />
+          <div class="who">
+            <h1 class="name">{cv.name}</h1>
+            <p class="role">{cv.role}</p>
+          </div>
+        </div>
+        <ul class="contact">
+          {cv.contact.map(({ href, text, icon }) => (
+            <li>
+              <Icon name={icon} size="sm" class="contact-icon" />
+              <a href={href}>{text}</a>
+            </li>
+          ))}
+        </ul>
+      </header>
+
+      <section class="section">
+        <h2>{cv.about.title}</h2>
+        <div class="paragraphs">
+          {cv.about.paragraphs.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+        </div>
+      </section>
+
+      {cv.experience.jobs.length > 0 && (
+        <section class="section">
+          <h2>{cv.experience.title}</h2>
+          <ul class="rows">
+            {cv.experience.jobs.map((job) => (
+              <li class="row job">
+                <p class="date">{job.dates}</p>
+                <div class="entry">
+                  <div>
+                    <h3>
+                      <span class="company">{job.company}</span>{" "}
+                      <span class="separator">·</span>{" "}
+                      <span class="note">{job.mode}</span>
+                    </h3>
+                    <p class="position">{job.role}</p>
+                  </div>
+                  <ul class="points">
+                    {job.points.map((point) => (
+                      <li>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {cv.projects.entries.length > 0 && (
+        <section class="section">
+          <h2>{cv.projects.title}</h2>
+          <ul class="rows">
+            {cv.projects.entries.map((project) => (
+              <li class="row">
+                <p class="date">{project.year}</p>
+                <div>
+                  <h3>
+                    {project.title}
+                    {project.addresses.map(({ href, text }) => (
+                      <>
+                        {" "}
+                        <span class="separator">·</span>{" "}
+                        <a class="note" href={href}>
+                          {text}
+                        </a>
+                      </>
+                    ))}
+                  </h3>
+                  <p class="detail">{project.summary}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {cv.speaking.talks.length > 0 && (
+        <section class="section">
+          <h2>{cv.speaking.title}</h2>
+          <ul class="rows">
+            {cv.speaking.talks.map((talk) => (
+              <li class="row">
+                <p class="date">{talk.date}</p>
+                <div>
+                  <h3>{talk.title}</h3>
+                  <p class="detail">{talk.where}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {cv.teaching.courses.length > 0 && (
+        <section class="section">
+          <h2>{cv.teaching.title}</h2>
+          <ul class="rows">
+            {cv.teaching.courses.map((course) => (
+              <li class="row">
+                <p class="date">{course.date}</p>
+                <div>
+                  <h3>
+                    {course.title} <span class="separator">·</span>{" "}
+                    <a class="note" href={course.address.href}>
+                      {course.address.text}
+                    </a>
+                  </h3>
+                  <p class="detail">{course.where}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {cv.education.degrees.length > 0 && (
+        <section class="section">
+          <h2>{cv.education.title}</h2>
+          <ul class="rows">
+            {cv.education.degrees.map((degree) => (
+              <li class="row">
+                <p class="date">{degree.dates}</p>
+                <div>
+                  <h3>{degree.title}</h3>
+                  <p class="detail">{degree.detail}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </main>
+  </body>
+</html>
+
+<style>
+  /* Static instances of the site's font: Chrome embeds a variable font in a
+     PDF as Type 3, which some parsers read badly. These embed as TrueType,
+     and they include the "→" the web subset may not. */
+  @font-face {
+    font-family: "Instrument Sans Static";
+    src: url("../../../assets/fonts/InstrumentSans-Regular.ttf")
+      format("truetype");
+    font-weight: 400;
+  }
+
+  @font-face {
+    font-family: "Instrument Sans Static";
+    src: url("../../../assets/fonts/InstrumentSans-Medium.ttf")
+      format("truetype");
+    font-weight: 500;
+  }
+
+  @font-face {
+    font-family: "Instrument Sans Static";
+    src: url("../../../assets/fonts/InstrumentSans-SemiBold.ttf")
+      format("truetype");
+    font-weight: 600;
+  }
+
+  /* A4, with the margins of .cv's --cv-margin-block and --cv-margin-inline:
+     page descriptors can't read custom properties. */
+  @page {
+    size: A4;
+    margin: 16mm 18mm;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+  }
+
+  /* The CV is only ever a sheet of A4, so its sizes are in pt and mm. */
+  .cv {
+    --cv-margin-block: 16mm;
+    --cv-margin-inline: 18mm;
+    --cv-text: 10pt; /* resume guides ask for 10–12pt */
+    --cv-name: 19pt;
+    --cv-role: 11pt;
+    --cv-leading: 1.45;
+    --cv-hairline: 0.5pt;
+    --cv-photo: 16mm; /* the height of the name and role line together */
+    --cv-date-column: 22mm; /* the widest date, "2024 – Now", is about 17mm */
+    --cv-column-gap: 6mm;
+    --cv-section-gap: 6.5mm;
+    --cv-heading-gap: 2.5mm;
+    --cv-header-gap: 5mm;
+    --cv-identity-gap: 4mm;
+    --cv-who-gap: 1.5mm;
+    --cv-contact-padding: 3mm;
+    --cv-contact-gap: 1.5mm 8mm;
+    --cv-contact-icon-gap: 2mm;
+    --cv-paragraph-gap: 2mm;
+    --cv-row-padding: 1.6mm;
+    --cv-job-padding: 2.2mm;
+    --cv-points-gap: 1.5mm;
+    --cv-points-indent: 3.5mm;
+    --cv-point-gap: 0.8mm;
+    --cv-point-padding: 0.5mm;
+    --cv-separator-padding: 1pt;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-section-gap);
+    color: var(--text);
+    font-family: "Instrument Sans Static", ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--cv-text);
+    line-height: var(--cv-leading);
+    font-variant-numeric: tabular-nums;
+    /* Kerning at print sizes, as the reference sets it. */
+    text-rendering: optimizeLegibility;
+    print-color-adjust: exact;
+    box-sizing: border-box;
+
+    & :is(h1, h2, h3, p, ul) {
+      margin: 0;
+    }
+
+    /* :where() keeps the reset below the rules for each kind of link. */
+    & :where(a) {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* On screen, the page as it prints: a sheet on a grey desk. */
+    @media screen {
+      inline-size: 210mm;
+      min-block-size: 297mm;
+      margin: var(--space-6) auto;
+      padding: var(--cv-margin-block) var(--cv-margin-inline);
+      background: var(--bg);
+    }
+  }
+
+  @media screen {
+    body {
+      background: var(--line);
+    }
+  }
+
+  .header {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: var(--cv-identity-gap);
+    padding-block-end: var(--cv-header-gap);
+    border-block-end: var(--cv-hairline) solid var(--line);
+  }
+
+  .photo {
+    flex: none;
+    inline-size: var(--cv-photo);
+    block-size: var(--cv-photo);
+    border-radius: var(--r-full);
+    object-fit: cover;
+  }
+
+  .who {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-who-gap);
+  }
+
+  .name {
+    font-size: var(--cv-name);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .role {
+    color: var(--text-2);
+    font-size: var(--cv-role);
+  }
+
+  /* Three columns sized to the addresses, spread to the full width. Each
+     address is written out (what parsers read); the icon only says what it
+     is. */
+  .contact {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    justify-content: space-between;
+    gap: var(--cv-contact-gap);
+    padding: var(--cv-contact-padding) 0;
+    border-block-end: var(--cv-hairline) solid var(--line);
+    color: var(--text-2);
+
+    & li {
+      display: flex;
+      align-items: center;
+      gap: var(--cv-contact-icon-gap);
+      white-space: nowrap;
+    }
+  }
+
+  .contact-icon {
+    color: var(--text-3);
+  }
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-heading-gap);
+
+    & > h2 {
+      font-size: var(--cv-text);
+      font-weight: var(--weight-semibold);
+      break-after: avoid;
+    }
+  }
+
+  .paragraphs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-paragraph-gap);
+    color: var(--text-2);
+  }
+
+  /* The site's date column, scaled for paper. A row never splits across
+     pages: one that doesn't fit moves whole to the next. */
+  .row {
+    display: grid;
+    grid-template-columns: var(--cv-date-column) 1fr;
+    column-gap: var(--cv-column-gap);
+    padding-block: var(--cv-row-padding);
+    break-inside: avoid;
+  }
+
+  .job {
+    padding-block: var(--cv-job-padding);
+  }
+
+  .date {
+    color: var(--text-3);
+    white-space: nowrap;
+  }
+
+  h3 {
+    font-size: var(--cv-text);
+    font-weight: var(--weight-medium);
+  }
+
+  .company {
+    font-weight: var(--weight-semibold);
+  }
+
+  .separator {
+    padding-inline: var(--cv-separator-padding);
+    color: var(--text-3);
+    font-weight: normal;
+  }
+
+  .rows {
+    padding: 0;
+  }
+
+  /* After a title: how and where, or an address. */
+  .note {
+    color: var(--text-2);
+    font-weight: normal;
+  }
+
+  /* The job title is what recruiters scan for: text colour at 500, under the
+     company at 600. */
+  .position {
+    font-weight: var(--weight-medium);
+  }
+
+  .detail {
+    color: var(--text-2);
+  }
+
+  .entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-points-gap);
+  }
+
+  .points {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-point-gap);
+    padding-inline-start: var(--cv-points-indent);
+    color: var(--text-2);
+    list-style-type: disc;
+
+    & li {
+      padding-inline-start: var(--cv-point-padding);
+    }
+
+    & li::marker {
+      color: var(--text-3);
+    }
+  }
+</style>

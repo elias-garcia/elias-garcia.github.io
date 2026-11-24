@@ -212,6 +212,7 @@ One `Icon` component (`src/components/Icon.astro`) draws them all: `<Icon name="
 | See-more and "View project" chevron | `chevron-right` | 12 |
 | Footnote back-link | `corner-down-left` | 12 |
 | Course rating | `star` (filled the same way, not `star-filled`) | 12 |
+| The CV PDF's contact band | `mail`, `world`, `brand-github`, `brand-linkedin`, `brand-x` | 12 (9pt) |
 
 Icons always sit next to a text label, or carry an accessible name when alone. Decorative icons get `aria-hidden="true"`. In the reference pages each icon carries `data-icon="<tabler name>"`.
 
@@ -459,6 +460,38 @@ Back link + Copy page, title (display), metadata line, then the article (max 640
 `assets/share-site.png` and `assets/share-post.png`, templates in `reference/share-*.html`. Always light theme. Top: logo (+ "Elías García · Writing" on posts); middle: photo + name + title, or the post title at 72px; bottom: details on the left, eliasgarcia.dev on the right, dots spaced 16px. No time-sensitive status on them. Generate one per post at build time in a static endpoint, with Satori and sharp.
 
 ---
+
+### CV PDF (`/cv.pdf`)
+The PDF in the Download CV menu. Printed by Chrome from a page built from the collections (`/cv/print`, only built for printing and in `npm run dev`), never edited by hand: `npm run cv` (`scripts/cv-pdf.ts`). Reference: `reference/cv-print.html` (the print page, with its CSS), `reference/cv.pdf` (what it produces: 2 A4 pages, about 100 KB) and `reference/cv-pdf-text.txt` (the text a parser extracts from it, in reading order).
+
+- **Content: only what's in the collections.** Nothing is written for the PDF, and nothing is rephrased. The layout is the PDF's own, not Home's.
+- **Header:**
+  - The profile photo (16mm, round, the height of the name and role line together) beside the name (19pt/600, −0.02em) and the role line (Home's role line, 11pt, `--text-2`). No availability line.
+  - The photo is the site's `avatar.jpg`, resized to 400px with `getImage` (JPEG). It sits in the page body, never in a page header, so the text still extracts cleanly.
+- **Contact band,** between two hairlines under the header: the email, the site's domain, then Home's contact list (GitHub, LinkedIn, X). Each is written out as its address (`github.com/elias-garcia`, taken from the link without `https://www.`) and is a link, with a small grey icon in front: Tabler `mail`, `world`, `brand-github`, `brand-linkedin`, `brand-x`, 9pt, `--text-3`. Parsers read the text; the icon only says what it is. Three columns sized to their content and spread to the full width (`grid-template-columns: repeat(3, max-content); justify-content: space-between`), so the five items make two rows.
+- **Sections, in this order,** each heading at the text size (600), set apart by space (6.5mm above, 2.5mm below):
+  1. **About:** both paragraphs.
+  2. **Experience:** every job with every bullet. The first line is the company (600) · how and where (`mode`, and `place` when there is one, `--text-2`); the second is the job title (`role`, `--text`, 500); then the bullets (`--text-2`, `--text-3` markers). The company description (`about`) isn't shown.
+  3. **Projects:** the year, then the title followed on the same line by its address in grey (` · eliasgarcia.dev/projects/roleburn` for a project with a case study, then the project's own `links`, written out), then the summary. No status: the year is already in the date column, and a label like "Experiment" undersells the work on a CV. A project with no case study and no links shows its title alone.
+  4. **Speaking:** the date, the title, then where.
+  5. **Teaching:** the date, the title followed by the course's address (` · balio.app/curso/defi`), then where. No rating, reviews, lessons or original title.
+  6. **Education:** "BSc Computer Science at University of A Coruña", then the detail.
+- **Left out:** illustrations and covers, the course trailer, the clock, navigation, availability, statuses.
+- **Rows:** a 22mm date column (`--text-3`, tabular figures; the widest date, "2024 – Now", is about 17mm) beside the text, 6mm apart. Titles 500.
+- **Type:** Instrument Sans, 10pt text with 1.45 line height (resume guides ask for 10–12pt).
+- **Colour:** greys only, no indigo. Links keep the colour of their text: on paper they're read, not clicked, but they're still real links in the PDF.
+- **Page:**
+  - A4, margins 16mm top and bottom, 18mm sides: `@page { size: A4; margin: 16mm 18mm; }`. No page header or footer.
+  - **A job never splits across pages:** every row has `break-inside: avoid`, so a job that doesn't fit moves whole to the next page, even if that leaves space at the bottom. Headings have `break-after: avoid`.
+  - It must fit two pages. The build fails if it reaches three.
+- **For applicant-tracking systems:**
+  - One column, real text in reading order.
+  - Contact details in the body, never in a page header or footer.
+  - Standard section names and one date format; no text in images; every address written out as text.
+- **Fonts:** static Instrument Sans files (`assets/fonts/InstrumentSans-{Regular,Medium,SemiBold}.ttf`, instanced from the variable font at 400/500/600) for the print page only.
+  - **Why not the variable file:** Chrome embeds a variable font as Type 3, which some parsers read badly. The static files embed as TrueType.
+  - **The arrow:** they also include "→" ("Staff Frontend Engineer → Tech Lead"), which the web subset may not.
+- **Always the light palette,** whatever the visitor's or the build machine's settings.
 
 ## 5. Content and copy rules
 

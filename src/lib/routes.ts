@@ -6,6 +6,7 @@ export const routes = {
   feed: "/rss.xml",
   cvPdf: "/cv.pdf",
   cvMarkdown: "/cv.md",
+  cvPrint: "/cv/print",
   shareImage: "/share/site.png",
   sitemap: "/sitemap-index.xml",
   project: (id: string) => `/projects/${id}`,

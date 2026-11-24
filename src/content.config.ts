@@ -37,6 +37,7 @@ const site = defineCollection({
     // Every page's browser title but Home's, which is the name alone.
     pageTitle: template("{page}", "{name}"),
     feedTitle: template("{name}", "{page}"),
+    cvTitle: template("{name}"),
     shareAlt: template("{name}", "{role}"),
   }),
 });

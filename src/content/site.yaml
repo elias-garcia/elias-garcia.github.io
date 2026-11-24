@@ -8,6 +8,8 @@ profile:
   pageTitle: "{page} · {name}"
   # The RSS feed's title; {page} is the Writing page's title.
   feedTitle: "{name}: {page}"
+  # The CV PDF's document title.
+  cvTitle: "{name} — CV"
   # The site's share image, described.
   shareAlt: "{name}, {role}"
   about:

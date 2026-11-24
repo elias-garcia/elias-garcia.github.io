@@ -24,3 +24,15 @@ export function linkTarget(href: string | undefined) {
       }
     : {};
 }
+
+// An address as a CV writes it out, for reading on paper:
+// "github.com/elias-garcia" for https://www.github.com/elias-garcia/, and the
+// address alone for an email.
+export function writtenAddress(href: string): string {
+  const url = new URL(href);
+  if (url.protocol === "mailto:") {
+    return url.pathname;
+  }
+  const path = url.pathname.replace(/\/$/, "");
+  return `${url.hostname.replace(/^www\./, "")}${path}${url.search}${url.hash}`;
+}

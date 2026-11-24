@@ -92,7 +92,7 @@ design/         # design handoff (reference only)
 - Empty sections aren't built: with no projects or no published posts, that section, its nav item, its pages, its search group and every link to it are left out (`hasProjects` / `hasWriting` in `src/lib/sections.ts`; the RSS feed stays). DESIGN.md §8.
 - Posts with `draft: true` show in `npm run dev` and are left out of the production build. A project with `draft: true` keeps its card, but its case study is left out the same way. A project file whose name starts with `_` is a sample for `npm run dev` only, like the prose reference post.
 - A project's cover (DESIGN.md, Project cover) is rendered by `ProjectCover` and named for the morph by `coverName()`: never type a `project-…` transition name by hand.
-- `public/cv.pdf` is made by hand. When the work, talks or education content changes, say that the PDF needs updating too.
+- `public/cv.pdf` is printed by `npm run cv` from `/cv/print`, a page built only for printing and in `npm run dev` (DESIGN.md, CV PDF). When the CV's content changes (the profile, work, projects, talks, courses or education), run it again.
 - Don't invent facts, numbers or links. Leave a clear TODO where something is missing.
 
 ## URLs

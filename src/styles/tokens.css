@@ -159,8 +159,14 @@
   }
 }
 
+:root[data-palette="light"] {
+  color-scheme: light;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  /* The CV's print page is always light (DESIGN.md, CV PDF). :where() keeps
+     the weight of :root, so the forced colours below still win. */
+  :root:where(:not([data-palette="light"])) {
     --bg: #09090b; /* zinc-950 */
     --surface: #18181b; /* zinc-900 */
     --control: #27272a; /* zinc-800 */

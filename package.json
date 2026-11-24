@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && astro build",
+    "cv": "node scripts/cv-pdf.ts",
     "preview": "astro preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

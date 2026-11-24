@@ -1,4 +1,6 @@
+import type { ComponentProps } from "astro/types";
 import { stat } from "node:fs/promises";
+import type Icon from "../components/Icon.astro";
 import {
   getCourses,
   getCvFormatCopy,
@@ -9,6 +11,7 @@ import {
   getProjects,
   getTalks,
   getWork,
+  hasCaseStudy,
   workMode,
 } from "./content.ts";
 import {
@@ -19,8 +22,131 @@ import {
   formatMonthYear,
   formatYearRange,
 } from "./format.ts";
+import { writtenAddress } from "./links.ts";
 import { routes } from "./routes.ts";
 import { hasProjects } from "./sections.ts";
+import { fill } from "./template.ts";
+
+type IconName = ComponentProps<typeof Icon>["name"];
+
+// The icon in front of each profile in the CV's contact band, by its domain.
+const profileIcons: Record<string, IconName> = {
+  "github.com": "brand-github",
+  "linkedin.com": "brand-linkedin",
+  "x.com": "brand-x",
+};
+
+function profileIcon(href: string): IconName {
+  const icon = profileIcons[new URL(href).hostname.replace(/^www\./, "")];
+  if (icon === undefined) {
+    throw new Error(`The CV has no icon for ${href}: add one to profileIcons.`);
+  }
+  return icon;
+}
+
+// An address written out on the CV, as a link.
+function address(href: string) {
+  return { href, text: writtenAddress(href) };
+}
+
+// What the CV PDF shows, from the collections (DESIGN.md, CV PDF): nothing is
+// written for it. Sections without entries are left out.
+export async function getCv() {
+  const [
+    copy,
+    projectsPage,
+    profile,
+    work,
+    talks,
+    courses,
+    education,
+    projects,
+  ] = await Promise.all([
+    getHomeCopy(),
+    getPage("projects"),
+    getProfile(),
+    getWork(),
+    getTalks(),
+    getCourses(),
+    getEducation(),
+    getProjects(),
+  ]);
+  const site = import.meta.env.SITE;
+  const isEmail = (href: string) => href.startsWith("mailto:");
+
+  return {
+    title: fill(profile.cvTitle, { name: profile.name }),
+    name: profile.name,
+    role: fill(copy.role, {
+      role: profile.role,
+      city: profile.city,
+      country: formatCountry(profile.country),
+    }),
+    // The email, the site, then the profiles.
+    contact: [
+      ...profile.contact
+        .filter(({ href }) => isEmail(href))
+        .map(({ href }) => ({ ...address(href), icon: "mail" as const })),
+      { ...address(site), icon: "world" as const },
+      ...profile.contact
+        .filter(({ href }) => !isEmail(href))
+        .map(({ href }) => ({ ...address(href), icon: profileIcon(href) })),
+    ],
+    about: { title: copy.about, paragraphs: profile.about },
+    experience: {
+      title: copy.experience,
+      jobs: work.map(({ data }) => ({
+        dates: formatYearRange(data, copy.present),
+        company: data.company,
+        mode: workMode(data),
+        role: data.role,
+        points: data.points,
+      })),
+    },
+    projects: {
+      title: projectsPage.title,
+      entries: hasProjects
+        ? projects.map((project) => ({
+            year: String(project.data.year),
+            title: project.data.title,
+            // The case study first, then the project's own links.
+            addresses: [
+              ...(hasCaseStudy(project)
+                ? [new URL(routes.project(project.id), site).href]
+                : []),
+              ...project.data.links.map(({ href }) => href),
+            ].map(address),
+            summary: project.data.summary,
+          }))
+        : [],
+    },
+    speaking: {
+      title: copy.speaking,
+      talks: talks.map(({ data }) => ({
+        date: formatMonthYear(data.date),
+        title: data.title,
+        where: data.where,
+      })),
+    },
+    teaching: {
+      title: copy.teaching,
+      courses: courses.map(({ data }) => ({
+        date: formatMonthYear(data.date),
+        title: data.title,
+        address: address(data.href),
+        where: data.where,
+      })),
+    },
+    education: {
+      title: copy.education,
+      degrees: education.map(({ data }) => ({
+        dates: formatYearRange(data, copy.present),
+        title: fill(copy.degree, { title: data.title, school: data.school }),
+        detail: data.detail,
+      })),
+    },
+  };
+}
 
 export async function renderCvMarkdown(): Promise<string> {
   const [
