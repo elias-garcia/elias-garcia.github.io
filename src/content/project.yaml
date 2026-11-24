@@ -1,5 +1,5 @@
 project:
-  # On a project's card, when it has a case study.
+  # On a project's card.
   view: View project
   # A case study's facts.
   year: Year

@@ -55,8 +55,10 @@ const facts = Astro.slots.has("facts");
     gap: var(--space-12);
   }
 
-  /* Nothing closes the page: no gap either. */
-  .end:not(:has(*)) {
+  /* Nothing closes the page, or a project has no article yet: no gap
+     either. */
+  .end:not(:has(*)),
+  .reading > :global(.prose:not(:has(*))) {
     display: none;
   }
 

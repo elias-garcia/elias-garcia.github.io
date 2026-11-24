@@ -71,13 +71,13 @@ export async function getEducation() {
   );
 }
 
-// Drafts and samples show in `npm run dev`, never in production.
-const showsHidden = import.meta.env.DEV;
+// Drafts show in `npm run dev`, never in production.
+const showsDrafts = import.meta.env.DEV;
 
 export async function getProjects() {
   const projects = await getCollection(
     "projects",
-    ({ id }) => showsHidden || !id.startsWith("_"),
+    ({ data }) => showsDrafts || !data.draft,
   );
   const inProgress = (project: CollectionEntry<"projects">) =>
     project.data.status === "In progress" ? 0 : 1;
@@ -97,12 +97,6 @@ export function coverName(project: CollectionEntry<"projects">): string {
   return `project-${project.id}`;
 }
 
-export function hasCaseStudy(project: CollectionEntry<"projects">): boolean {
-  return (
-    (showsHidden || !project.data.draft) && (project.body ?? "").trim() !== ""
-  );
-}
-
 function byNewest(
   a: CollectionEntry<"writing">,
   b: CollectionEntry<"writing">,
@@ -113,7 +107,7 @@ function byNewest(
 export async function getPosts() {
   const posts = await getCollection(
     "writing",
-    ({ data }) => showsHidden || !data.draft,
+    ({ data }) => showsDrafts || !data.draft,
   );
   return posts.sort(byNewest);
 }

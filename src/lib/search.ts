@@ -1,10 +1,4 @@
-import {
-  getPosts,
-  getProjects,
-  getSearchCopy,
-  getTopics,
-  hasCaseStudy,
-} from "./content.ts";
+import { getPosts, getProjects, getSearchCopy, getTopics } from "./content.ts";
 import { formatCount, formatMonthYear } from "./format.ts";
 import { routes } from "./routes.ts";
 
@@ -46,9 +40,7 @@ export async function getSearchIndex(): Promise<SearchIndex> {
       title: project.data.title,
       line: project.data.summary,
       meta: project.data.status,
-      href: hasCaseStudy(project)
-        ? routes.project(project.id)
-        : routes.projects,
+      href: routes.project(project.id),
     })),
     topics: [...topics.values()].map(({ slug, label, count }) => ({
       label,

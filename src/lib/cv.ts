@@ -11,7 +11,6 @@ import {
   getProjects,
   getTalks,
   getWork,
-  hasCaseStudy,
   workMode,
 } from "./content.ts";
 import {
@@ -107,11 +106,9 @@ export async function getCv() {
         ? projects.map((project) => ({
             year: String(project.data.year),
             title: project.data.title,
-            // The case study first, then the project's own links.
+            // Its page on the site first, then the project's own links.
             addresses: [
-              ...(hasCaseStudy(project)
-                ? [new URL(routes.project(project.id), site).href]
-                : []),
+              new URL(routes.project(project.id), site).href,
               ...project.data.links.map(({ href }) => href),
             ].map(address),
             summary: project.data.summary,

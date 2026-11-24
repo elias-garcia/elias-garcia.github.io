@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { getProjectCopy, hasCaseStudy } from "../lib/content.ts";
+import { getProjectCopy } from "../lib/content.ts";
 import { routes } from "../lib/routes.ts";
 import Icon from "./Icon.astro";
 import ProjectCover from "./ProjectCover.astro";
@@ -16,12 +16,11 @@ type Props = {
 
 const { project, tile = false, wide = false } = Astro.props;
 const { title, summary, description, status, year } = project.data;
-const href = hasCaseStudy(project) ? routes.project(project.id) : undefined;
 const copy = await getProjectCopy();
 const Title = tile ? "h3" : "h2";
 ---
 
-<li class:list={["card", { wide, linked: href !== undefined }]}>
+<li class:list={["card", { wide }]}>
   <ProjectCover
     project={project}
     variant={tile ? "tile" : "card"}
@@ -30,15 +29,11 @@ const Title = tile ? "h3" : "h2";
   <div class="head">
     <div class="title-row">
       <Title class="title">
-        {href === undefined ? (
-          title
-        ) : (
-          <a class="title-link" href={href}>
-            {title}
-          </a>
-        )}
+        <a class="title-link" href={routes.project(project.id)}>
+          {title}
+        </a>
       </Title>
-      {!tile && href !== undefined && (
+      {!tile && (
         <span class="go" aria-hidden="true">
           {copy.view}
           <Icon name="chevron-right" size="sm" class="chevron" />
@@ -63,6 +58,40 @@ const Title = tile ? "h3" : "h2";
 
     :global(.cover) {
       margin-block-end: var(--space-2);
+    }
+  }
+
+  /* The cover reacts to the card's link: hover never moves the card, its
+     border darkens and its illustration plays, as it does while focused. */
+  .card {
+    :global(.cover) {
+      transition: border-color var(--dur) var(--ease);
+    }
+
+    &:has(.title-link:focus-visible) :global([data-loop]) {
+      animation-play-state: running;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover :global(.cover) {
+        border-color: var(--line-strong);
+      }
+
+      &:hover :global([data-loop]) {
+        animation-play-state: running;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      :global(.cover) {
+        transition:
+          border-color var(--dur) var(--ease),
+          scale var(--dur) var(--ease-settle);
+      }
+
+      &:active :global(.cover) {
+        scale: var(--press-scale-tile);
+      }
     }
   }
 
@@ -136,53 +165,19 @@ const Title = tile ? "h3" : "h2";
     }
   }
 
-  .linked:has(.title-link:focus-visible) .go {
+  .card:has(.title-link:focus-visible) .go {
     color: var(--accent);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .linked:hover .go {
+    .card:hover .go {
       color: var(--accent);
     }
   }
 
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .linked:hover .chevron {
+    .card:hover .chevron {
       translate: var(--nudge) 0;
-    }
-  }
-
-  /* The cover reacts to the card's link: hover never moves the card, its
-     border darkens and its illustration plays, as it does while focused. */
-  .linked {
-    :global(.cover) {
-      transition: border-color var(--dur) var(--ease);
-    }
-
-    &:has(.title-link:focus-visible) :global([data-loop]) {
-      animation-play-state: running;
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      &:hover :global(.cover) {
-        border-color: var(--line-strong);
-      }
-
-      &:hover :global([data-loop]) {
-        animation-play-state: running;
-      }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-      :global(.cover) {
-        transition:
-          border-color var(--dur) var(--ease),
-          scale var(--dur) var(--ease-settle);
-      }
-
-      &:active :global(.cover) {
-        scale: var(--press-scale-tile);
-      }
     }
   }
 

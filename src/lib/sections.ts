@@ -3,8 +3,7 @@ import type { Section } from "./navigation.ts";
 import { routes } from "./routes.ts";
 
 // A section with nothing in it isn't built: no page, no link to it anywhere
-// (DESIGN.md §8). Projects need one entry, a card without a case study
-// included; Writing one published post.
+// (DESIGN.md §8). Each needs one published entry: drafts don't count.
 export const hasProjects = (await getProjects()).length > 0;
 export const hasWriting = (await getPosts()).length > 0;
 

@@ -122,8 +122,6 @@ const writing = defineCollection({
   }),
 });
 
-// A file whose name starts with "_" is a sample: it shows in `npm run dev`
-// only.
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/projects" }),
   schema: ({ image }) =>
@@ -146,8 +144,7 @@ const projects = defineCollection({
       status: z.enum(["In progress", "Experiment", "Research"]),
       year: z.number().int(),
       links: z.array(link),
-      // A draft case study shows in `npm run dev` only; the project still
-      // lists.
+      // A draft shows in `npm run dev` only, like a post.
       draft: z.boolean().default(false),
     }),
 });

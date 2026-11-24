@@ -9,23 +9,18 @@ import PreviousNext from "../../components/PreviousNext.astro";
 import ProjectCover from "../../components/ProjectCover.astro";
 import ProjectFacts from "../../components/ProjectFacts.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import {
-  getPage,
-  getProjectCopy,
-  getProjects,
-  hasCaseStudy,
-} from "../../lib/content.ts";
+import { getPage, getProjectCopy, getProjects } from "../../lib/content.ts";
 import { routes } from "../../lib/routes.ts";
 
 export const getStaticPaths = (async () => {
-  const caseStudies = (await getProjects()).filter(hasCaseStudy);
-  return caseStudies.map((project, index) => ({
+  const allProjects = await getProjects();
+  return allProjects.map((project, index) => ({
     params: { slug: project.id },
     props: {
       project,
       // In the order of the Projects page.
-      previous: caseStudies[index - 1],
-      next: caseStudies[index + 1],
+      previous: allProjects[index - 1],
+      next: allProjects[index + 1],
     },
   }));
 }) satisfies GetStaticPaths;
