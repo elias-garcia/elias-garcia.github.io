@@ -19,32 +19,32 @@ button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user
 .site main p:not([class]):not([style*="font-size"]){line-height:1.6}
 @media (max-width: 639.98px){:root{--space-page:32px;--space-section:64px;--space-footer:64px}}
 
-:root{--fs-display:32px}
-@media (max-width: 639.98px){:root{--fs-display:28px}}
+:root{--text-display:2rem;--text-title:1.5rem;--text-subtitle:1.25rem;--text-body:1rem;--text-label:1rem;--text-small:.875rem;--text-micro:.75rem;--text-code:.875rem;--column:688px;--gutter:112px;--control-h:32px;--icon-md:16px;--icon-sm:12px;--bar-h:64px}
+@media (max-width: 639.98px){:root{--text-display:1.75rem}}
 /* type scale: 12 · 14 · 16 · 18 · 20 · 24 · 32 (28 on phones, display only). Line heights 1 · 1.2 · 1.35 · 1.5 · 1.7 */
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
    text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
-:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-medium:200ms;--dur-slow:300ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent-c:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-medium:200ms;--dur-slow:300ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
-@media (hover:hover) and (pointer:fine){a:hover{color:var(--accent-c)}}
-.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+@media (hover:hover) and (pointer:fine){a:hover{color:var(--accent)}}
+.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
 .site p{text-wrap:pretty}
 .nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
 @media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
-.nav a[aria-current]{color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent-c)}}
+.nav a[aria-current]{color:var(--accent)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent)}}
 .nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
 .nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
-.prose p{margin:0;font-size:16px;line-height:1.6;color:var(--text-2)}
-.prose h2{margin:0;font-size:24px;font-weight:600;letter-spacing:-0.01em;line-height:1.35}
+.prose p{margin:0;font-size:var(--text-body);line-height:1.6;color:var(--text-2)}
+.prose h2{margin:0;font-size:var(--text-title);font-weight:600;letter-spacing:-0.01em;line-height:1.35}
 
 /* back link nudges toward where it goes */
-.back svg,.pn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
+.back svg,.pn svg{width:var(--icon-md);height:var(--icon-md);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.back:hover svg,.pn.prev:hover svg{transform:translateX(-2px)}}
 @media (hover:hover) and (pointer:fine){.pn.next:hover svg{transform:translateX(2px)}}
 .pn{transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
@@ -66,10 +66,10 @@ a{color:var(--text);text-decoration:none}
 .hero:not(.seen) .scanline,.hero:not(.seen) .role{animation-play-state:paused}
 .role.m{animation-name:lit}
 .role.s{animation-name:dim}
-.chip{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:var(--r-full);border:1px solid var(--line);background:var(--bg);font-size:12px;color:var(--text-2)}
+.chip{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:var(--r-full);border:1px solid var(--line);background:var(--bg);font-size:var(--text-micro);color:var(--text-2)}
 @media (prefers-reduced-motion:reduce){.scanline,.role{animation:none !important}}
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
@@ -77,21 +77,21 @@ a{color:var(--text);text-decoration:none}
 
 .pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default}
 /* search opens and closes instantly: it is a keyboard shortcut */
-.pin{padding:0;flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:16px;color:var(--text);background:transparent;height:100%}
+.pin{padding:0;flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:var(--text-label);color:var(--text);background:transparent;height:100%}
 .pin::placeholder{color:var(--text-3)}
 .ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
-.pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
+.pgrp{padding:12px 12px 4px;font-size:var(--text-micro);color:var(--text-3)}
 .popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){.popt:hover{color:var(--text)}}
 .popt.act{background:var(--tint)}
 .pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2)}
-.popt.act .pic{background:var(--bg);color:var(--accent-c)}
-.pic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0}
+.popt.act .pic{background:var(--bg);color:var(--accent)}
+.pic svg{width:var(--icon-md);height:var(--icon-md);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.pret{width:16px;font-size:var(--text-small);color:var(--text-3);opacity:0}
 .popt.act .pret{opacity:1}
-mark.phl{background:none;color:var(--accent-c);font-weight:600;padding:0}
-.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
-.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+mark.phl{background:none;color:var(--accent);font-weight:600;padding:0}
+.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:var(--text-micro);color:var(--text-2);font-family:inherit}
+.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-micro);cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
 .pclear:active{transform:scale(.97)}
 @media (hover:hover) and (pointer:fine){.pclear:hover{background:var(--control-hover);color:var(--text)}}
 
@@ -106,7 +106,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 ::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:.3s;animation-timing-function:cubic-bezier(.22,1,.36,1)}::view-transition-old(project-roleburn),::view-transition-new(project-roleburn){height:100%;object-fit:cover}
+::view-transition-group(project-roleburn){animation-duration:var(--dur-slow);animation-timing-function:var(--ease-settle)}::view-transition-old(project-roleburn),::view-transition-new(project-roleburn){height:100%;object-fit:cover}
 @media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
@@ -115,15 +115,14 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 .site > main{flex:1 0 auto;width:100%}
 .site > footer{width:100%;flex-shrink:0}
 @media (prefers-color-scheme: dark){
-:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent-c:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
-.site{--accent:var(--accent-c) !important}
+:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
 img:not([src$=".svg"]){filter:brightness(.92)}
 }
 
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:translate var(--dur) var(--ease-settle)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
@@ -136,7 +135,7 @@ html{scroll-padding-top:80px}
 }
 
 /* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
-.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
 .pcrumb:active{transform:scale(.97)}
 @media (hover:hover) and (pointer:fine){.pcrumb:hover{background:var(--control-hover);color:var(--text)}}
 .pret{text-align:center}
@@ -144,13 +143,13 @@ html{scroll-padding-top:80px}
 /* project facts: Year · Status · Links in three columns; below Tailwind sm (640px) Links takes the full width */
 .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 24px}
 .fact{display:flex;flex-direction:column;gap:4px;min-width:0}
-.fact dt{font-size:14px;color:var(--text-3)}
-.fact dd{margin:0;font-size:14px}
+.fact dt{font-size:var(--text-small);color:var(--text-3)}
+.fact dd{margin:0;font-size:var(--text-small)}
 .fact.links dd{display:flex;flex-wrap:wrap;gap:4px 16px}
 .factlink{color:var(--text);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px;transition:text-decoration-color var(--dur) var(--ease)}
 .factlink:focus-visible{text-decoration-color:currentColor}@media (hover:hover) and (pointer:fine){.factlink:hover{text-decoration-color:currentColor}}
 /* facts below Tailwind sm: one fact per row, the label in a 112px column (like the date column of the lists), the value beside it on the same baseline */
-@media (max-width: 639.98px){.facts{grid-template-columns:minmax(0,1fr);gap:12px}.fact{flex-direction:row;align-items:baseline;gap:24px}.fact dt{flex:0 0 112px}.fact dd{min-width:0}}
+@media (max-width: 639.98px){.facts{grid-template-columns:minmax(0,1fr);gap:12px}.fact{flex-direction:row;align-items:baseline;gap:24px}.fact dt{flex:0 0 var(--gutter)}.fact dd{min-width:0}}
 
 /* touch screens: 44px hit areas without changing how anything looks */
 @media (pointer: coarse){
@@ -193,22 +192,22 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
 /* cover: the same picture as the project's card, shared view-transition name */
 .cover{position:relative;aspect-ratio:16 / 7;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);overflow:hidden;view-transition-name:project-roleburn}
 .cover .ill{width:100%;height:100%;display:block;transform:scale(.8267);transform-origin:50% 50%}
-.ring{fill:none;stroke:var(--line);stroke-width:1}.wedge{fill:var(--accent-c);opacity:.14}
+.ring{fill:none;stroke:var(--line);stroke-width:1}.wedge{fill:var(--accent);opacity:.14}
 .sweep{transform-origin:100px 62px;transform-box:view-box;animation:spin 3s linear 1 both}@keyframes spin{to{transform:rotate(360deg)}}
-.hit{fill:var(--accent-c)}.miss{fill:var(--line-strong)}
+.hit{fill:var(--accent)}.miss{fill:var(--line-strong)}
 @media (prefers-reduced-motion:reduce){.sweep{animation:none}}
 </style>
 </head><body>
-<div data-dc-tpl="3" class="site" style="--accent: #4F39F6; min-height: 100svh; background: var(--bg);">
+<div data-dc-tpl="3" class="site" style="min-height: 100svh; background: var(--bg);">
   <a data-dc-tpl="4" class="skip" href="#content">Skip to content</a>
 
 
   <header data-dc-tpl="5" style="position: sticky; top: 0px; z-index: var(--z-header); background: color-mix(in oklch, var(--bg) 82%, transparent); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line);">
-    <div data-dc-tpl="6" style="max-width: 688px; margin: 0px auto; padding: 0 max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px)); height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+    <div data-dc-tpl="6" style="max-width: var(--column); margin: 0px auto; padding: 0 max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px)); height: var(--bar-h); display: flex; align-items: center; justify-content: space-between; gap: 16px;">
       <a data-dc-tpl="7" href="Main.dc.html" aria-label="Elías García, home" style="display: flex; align-items: center; height: 44px;">
-        <svg data-dc-tpl="8" viewBox="0 0 35.44 60" width="16.54" height="28" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="9" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="10" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="11" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="12" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="13" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
+        <svg data-dc-tpl="8" viewBox="0 0 35.44 60" width="16.54" height="28" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="9" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent);"></path><path data-dc-tpl="10" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="11" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="12" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="13" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
       </a>
-      <nav data-dc-tpl="14" class="nav" aria-label="Main" style="display: flex; align-items: center; gap: 24px; font-size: 16px;">
+      <nav data-dc-tpl="14" class="nav" aria-label="Main" style="display: flex; align-items: center; gap: 24px; font-size: var(--text-label);">
         <a data-dc-tpl="15" href="Main.dc.html">Home</a>
         <a data-dc-tpl="16" href="ProjectsIndex.dc.html" aria-current="true">Projects</a>
         <a data-dc-tpl="17" href="Writing.dc.html">Writing</a>
@@ -223,12 +222,12 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
   <main data-dc-tpl="23" id="content" style="padding: var(--space-page) max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; align-items: center; gap: 48px;">
 
     <div data-dc-tpl="24" style="width: 100%; max-width: 640px; display: flex; flex-direction: column; gap: 24px;">
-      <a data-dc-tpl="25" class="back" href="ProjectsIndex.dc.html" style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-2); height: 32px; align-self: flex-start;">
+      <a data-dc-tpl="25" class="back" href="ProjectsIndex.dc.html" style="display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-small); color: var(--text-2); height: 32px; align-self: flex-start;">
         <svg data-dc-tpl="26" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-left"><path data-dc-tpl="27" d="M15 6l-6 6l6 6" vector-effect="non-scaling-stroke"></path></svg>Projects
       </a>
       <div data-dc-tpl="28" style="display: flex; flex-direction: column; gap: 12px;">
-        <h1 data-dc-tpl="29" style="margin: 0px; font-size: var(--fs-display); line-height: 1.2; font-weight: 600; letter-spacing: -0.02em;">Roleburn</h1>
-        <p data-dc-tpl="30" style="margin: 0px; font-size: 20px; line-height: 1.5; color: var(--text-2);">A daily radar for remote roles that match my CV, built from a folder of markdown files and a few scheduled agents.</p>
+        <h1 data-dc-tpl="29" style="margin: 0px; font-size: var(--text-display); line-height: 1.2; font-weight: 600; letter-spacing: -0.02em;">Roleburn</h1>
+        <p data-dc-tpl="30" style="margin: 0px; font-size: var(--text-subtitle); line-height: 1.5; color: var(--text-2);">A daily radar for remote roles that match my CV, built from a folder of markdown files and a few scheduled agents.</p>
       </div>
             <dl data-dc-tpl="31" class="facts" style="margin: 0px; padding: 16px 0px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
         <div data-dc-tpl="32" class="fact">
@@ -242,8 +241,8 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
         <div data-dc-tpl="39" class="fact links">
           <dt data-dc-tpl="40">Links</dt>
           <dd data-dc-tpl="41">
+            <span data-dc-tpl="43" style="color: var(--text-3);">Not public yet</span>
             
-            <a data-dc-tpl="45" class="factlink" href="#" aria-label="Roleburn website"><span class="sc-interp">Website</span><svg data-dc-tpl="46" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="47" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="48" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></a><a data-dc-tpl="45" class="factlink" href="#" aria-label="Roleburn source code on GitHub"><span class="sc-interp">GitHub</span><svg data-dc-tpl="46" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="47" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="48" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></a>
           </dd>
         </div>
       </dl>
@@ -269,7 +268,7 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
       <section data-dc-tpl="67" style="display: flex; flex-direction: column; gap: 16px;">
         <h2 data-dc-tpl="68">How it works</h2>
         <p data-dc-tpl="69">The first version is deliberately low-tech. There’s no repository and no backend, just a folder of markdown files and scheduled tasks in Claude Cowork. One file holds my CV, another my criteria, another the companies worth watching, and a few prompts tell the agent how to search, score and summarise. On a schedule, a task reads the folder and writes the digest.</p>
-        <pre data-dc-tpl="70" tabindex="0" role="region" aria-label="Roleburn folder structure" style="margin: 8px 0px 0px; padding: 16px 20px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); overflow-x: auto; font-family: ui-monospace, &quot;SF Mono&quot;, Menlo, Consolas, monospace; font-size: 14px; line-height: 1.7; color: var(--text-2);"><code data-dc-tpl="71">roleburn/
+        <pre data-dc-tpl="70" tabindex="0" role="region" aria-label="Roleburn folder structure" style="margin: 8px 0px 0px; padding: 16px 20px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); overflow-x: auto; font-family: ui-monospace, &quot;SF Mono&quot;, Menlo, Consolas, monospace; font-size: var(--text-code); line-height: 1.7; color: var(--text-2);"><code data-dc-tpl="71">roleburn/
 ├── cv.md          <span data-dc-tpl="72" style="color: var(--text-3);"># the source of truth</span>
 ├── criteria.md    <span data-dc-tpl="73" style="color: var(--text-3);"># remote from Europe, senior, Web3, payments, AI</span>
 ├── companies.md   <span data-dc-tpl="74" style="color: var(--text-3);"># teams worth watching</span>
@@ -282,42 +281,42 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
         <div data-dc-tpl="77" style="flex: 1.5 1 320px; min-width: 0px; position: relative; display: flex; flex-direction: column; gap: 8px;">
           <div data-dc-tpl="78" class="scanline" aria-hidden="true" style="position: absolute; left: -12px; right: -12px; top: 0px; height: 2px; border-radius: var(--r-sm); background: var(--accent); box-shadow: 0 0 0 4px var(--tint), 0 8px 24px -4px var(--accent); z-index: 2;"></div>
           
-            <div data-dc-tpl="80" class="role m" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: 14px;">
+            <div data-dc-tpl="80" class="role m" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: var(--text-small);">
               <span data-dc-tpl="81" style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Staff Frontend Engineer</span></span>
               <span data-dc-tpl="82" style="color: var(--text-2); white-space: nowrap;"><span class="sc-interp">Remote, Europe</span></span>
             </div>
           
-            <div data-dc-tpl="80" class="role s" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: 14px;">
+            <div data-dc-tpl="80" class="role s" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: var(--text-small);">
               <span data-dc-tpl="81" style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Senior iOS Engineer</span></span>
               <span data-dc-tpl="82" style="color: var(--text-2); white-space: nowrap;"><span class="sc-interp">On-site, Berlin</span></span>
             </div>
           
-            <div data-dc-tpl="80" class="role m" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: 14px;">
+            <div data-dc-tpl="80" class="role m" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: var(--text-small);">
               <span data-dc-tpl="81" style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Product Engineer, AI</span></span>
               <span data-dc-tpl="82" style="color: var(--text-2); white-space: nowrap;"><span class="sc-interp">Remote, Europe</span></span>
             </div>
           
-            <div data-dc-tpl="80" class="role s" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: 14px;">
+            <div data-dc-tpl="80" class="role s" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: var(--text-small);">
               <span data-dc-tpl="81" style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Frontend Developer</span></span>
               <span data-dc-tpl="82" style="color: var(--text-2); white-space: nowrap;"><span class="sc-interp">Hybrid, Madrid</span></span>
             </div>
           
-            <div data-dc-tpl="80" class="role s" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: 14px;">
+            <div data-dc-tpl="80" class="role s" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: var(--text-small);">
               <span data-dc-tpl="81" style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Senior Full-Stack Engineer</span></span>
               <span data-dc-tpl="82" style="color: var(--text-2); white-space: nowrap;"><span class="sc-interp">Remote, US only</span></span>
             </div>
           
-            <div data-dc-tpl="80" class="role m" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: 14px;">
+            <div data-dc-tpl="80" class="role m" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: var(--text-small);">
               <span data-dc-tpl="81" style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Staff Engineer, Payments</span></span>
               <span data-dc-tpl="82" style="color: var(--text-2); white-space: nowrap;"><span class="sc-interp">Remote, Europe</span></span>
             </div>
           
-            <div data-dc-tpl="80" class="role s" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: 14px;">
+            <div data-dc-tpl="80" class="role s" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: var(--text-small);">
               <span data-dc-tpl="81" style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Data Engineer</span></span>
               <span data-dc-tpl="82" style="color: var(--text-2); white-space: nowrap;"><span class="sc-interp">On-site, London</span></span>
             </div>
           
-            <div data-dc-tpl="80" class="role s" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: 14px;">
+            <div data-dc-tpl="80" class="role s" style="height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); font-size: var(--text-small);">
               <span data-dc-tpl="81" style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><span class="sc-interp">Junior React Developer</span></span>
               <span data-dc-tpl="82" style="color: var(--text-2); white-space: nowrap;"><span class="sc-interp">Remote</span></span>
             </div>
@@ -326,7 +325,7 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
 
         <div data-dc-tpl="83" style="flex: 1 1 220px; min-width: 0px; display: flex; flex-direction: column; gap: 20px;">
           <div data-dc-tpl="84" style="display: flex; flex-direction: column; gap: 12px;">
-            <span data-dc-tpl="85" style="font-size: 14px; color: var(--text-3);">Criteria</span>
+            <span data-dc-tpl="85" style="font-size: var(--text-small); color: var(--text-3);">Criteria</span>
             <div data-dc-tpl="86" style="display: flex; flex-wrap: wrap; gap: 8px;">
               <span data-dc-tpl="87" class="chip">Remote from Europe</span>
               <span data-dc-tpl="88" class="chip">Senior and above</span>
@@ -337,20 +336,20 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
             </div>
           </div>
           <div data-dc-tpl="93" style="display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: var(--r-lg); background: var(--bg); border: 1px solid var(--line);">
-            <span data-dc-tpl="94" style="font-size: 14px; color: var(--text-3);">Today’s digest</span>
+            <span data-dc-tpl="94" style="font-size: var(--text-small); color: var(--text-3);">Today’s digest</span>
             <span data-dc-tpl="95" style="font-size: 22px; font-weight: 600; letter-spacing: -0.01em; font-variant-numeric: tabular-nums;">3 matches</span>
-            <span data-dc-tpl="96" style="font-size: 14px; color: var(--text-2); line-height: 1.5;">out of 8 new listings, each scored against the CV with a one-line reason.</span>
+            <span data-dc-tpl="96" style="font-size: var(--text-small); color: var(--text-2); line-height: 1.5;">out of 8 new listings, each scored against the CV with a one-line reason.</span>
           </div>
         </div>
 
       </div>
-      <figcaption data-dc-tpl="97" style="font-size: 14px; color: var(--text-3);">Illustration: new listings are checked against my criteria and CV. Matches stay, the rest fade out.</figcaption>
+      <figcaption data-dc-tpl="97" style="font-size: var(--text-small); color: var(--text-3);">Illustration: new listings are checked against my criteria and CV. Matches stay, the rest fade out.</figcaption>
     </figure>
       </section>
 
       <figure data-dc-tpl="98" style="margin: 0px; display: flex; flex-direction: column; gap: 8px;">
-        <div data-dc-tpl="99" style="aspect-ratio: 16 / 10; border-radius: var(--r-lg); border: 1px dashed var(--line-strong); background: var(--surface); display: flex; align-items: center; justify-content: center; color: var(--text-3); font-size: 14px; text-align: center; padding: 24px;">[Screenshot: a real digest from Roleburn]</div>
-        <figcaption data-dc-tpl="100" style="font-size: 14px; color: var(--text-3);">A digest as it lands. Each match links to the listing and says why it fits.</figcaption>
+        <div data-dc-tpl="99" style="aspect-ratio: 16 / 10; border-radius: var(--r-lg); border: 1px dashed var(--line-strong); background: var(--surface); display: flex; align-items: center; justify-content: center; color: var(--text-3); font-size: var(--text-small); text-align: center; padding: 24px;">[Screenshot: a real digest from Roleburn]</div>
+        <figcaption data-dc-tpl="100" style="font-size: var(--text-small); color: var(--text-3);">A digest as it lands. Each match links to the listing and says why it fits.</figcaption>
       </figure>
 
       <section data-dc-tpl="101" style="display: flex; flex-direction: column; gap: 16px;">
@@ -362,11 +361,11 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
 
     <nav data-dc-tpl="104" aria-label="More projects" style="width: 100%; max-width: 640px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 12px; margin-top: 16px;">
       <a data-dc-tpl="105" class="pn prev" href="#" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-lg);">
-        <span data-dc-tpl="106" style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-3);"><svg data-dc-tpl="107" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-left"><path data-dc-tpl="108" d="M15 6l-6 6l6 6" vector-effect="non-scaling-stroke"></path></svg>Previous</span>
+        <span data-dc-tpl="106" style="display: flex; align-items: center; gap: 8px; font-size: var(--text-small); color: var(--text-3);"><svg data-dc-tpl="107" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-left"><path data-dc-tpl="108" d="M15 6l-6 6l6 6" vector-effect="non-scaling-stroke"></path></svg>Previous</span>
         <span data-dc-tpl="109" style="font-weight: 500;">POL funding spreads</span>
       </a>
       <a data-dc-tpl="110" class="pn next" href="#" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-lg); text-align: right;">
-        <span data-dc-tpl="111" style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; font-size: 14px; color: var(--text-3);">Next<svg data-dc-tpl="112" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="113" d="M9 6l6 6l-6 6" vector-effect="non-scaling-stroke"></path></svg></span>
+        <span data-dc-tpl="111" style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; font-size: var(--text-small); color: var(--text-3);">Next<svg data-dc-tpl="112" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="113" d="M9 6l6 6l-6 6" vector-effect="non-scaling-stroke"></path></svg></span>
         <span data-dc-tpl="114" style="font-weight: 500;">work-issue</span>
       </a>
     </nav>
@@ -374,12 +373,12 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
   </main>
 
   <footer data-dc-tpl="115" style="margin-top: var(--space-footer); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);">
-    <div data-dc-tpl="116" style="max-width: 688px; margin: 0px auto; padding: 12px max(24px, env(safe-area-inset-right, 0px)) 12px max(24px, env(safe-area-inset-left, 0px)); min-height: 64px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: 14px; color: var(--text-3);">
+    <div data-dc-tpl="116" style="max-width: var(--column); margin: 0px auto; padding: 12px max(24px, env(safe-area-inset-right, 0px)) 12px max(24px, env(safe-area-inset-left, 0px)); min-height: var(--bar-h); box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: var(--text-small); color: var(--text-3);">
       <span data-dc-tpl="117" style="display: flex; align-items: center; gap: 12px;">
-        <svg data-dc-tpl="118" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="119" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="120" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="121" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="122" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="123" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
+        <svg data-dc-tpl="118" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="119" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent);"></path><path data-dc-tpl="120" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="121" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="122" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="123" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
         Elías García, 2026
       </span>
-      <span data-dc-tpl="124" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="125"><time data-dc-tpl="126" datetime="10:54"><span class="sc-interp">10:54</span></time> in Portugal</span><span data-dc-tpl="127" aria-hidden="true">·</span><span data-dc-tpl="128"><span class="sc-interp">1h behind you</span></span></span>
+      <span data-dc-tpl="124" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="125"><time data-dc-tpl="126" datetime="12:31"><span class="sc-interp">12:31</span></time> in Portugal</span><span data-dc-tpl="127" aria-hidden="true">·</span><span data-dc-tpl="128"><span class="sc-interp">1h behind you</span></span></span>
     </div>
   </footer>
 

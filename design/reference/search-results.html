@@ -15,6 +15,7 @@ button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user
 /* touch: text links and rows dim while pressed (instantly), then fade back */
 @media (hover:none),(pointer:coarse){a:active:not(.button,.tile,.card,.cl,.pn,.lpc,.topic,.item a){opacity:.6}.list .item:has(a:active){opacity:.6;transition:none}}
 
+:root{--text-display:2rem;--text-title:1.5rem;--text-subtitle:1.25rem;--text-body:1rem;--text-label:1rem;--text-small:.875rem;--text-micro:.75rem;--text-code:.875rem;--column:688px;--gutter:112px;--control-h:32px;--icon-md:16px;--icon-sm:12px;--bar-h:64px}
 :root{--space-page:64px;--space-section:80px;--space-footer:96px}
 .site main p:not([class]):not([style*="font-size"]){line-height:1.6}
 @media (max-width: 639.98px){:root{--space-page:32px;--space-section:64px;--space-footer:64px}}
@@ -22,12 +23,12 @@ button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
    text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
-:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-medium:200ms;--dur-slow:300ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent-c:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-medium:200ms;--dur-slow:300ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
-@media (hover:hover) and (pointer:fine){a:hover{color:var(--accent-c)}}
-.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+@media (hover:hover) and (pointer:fine){a:hover{color:var(--accent)}}
+.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
@@ -38,11 +39,11 @@ a{color:var(--text);text-decoration:none}
 /* nav underline fades in */
 .nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
 @media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
-.nav a[aria-current]{color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent-c)}}
+.nav a[aria-current]{color:var(--accent)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent)}}
 .nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
 .nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
@@ -50,12 +51,12 @@ a{color:var(--text);text-decoration:none}
 .av{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 /* availability dot */
-.dot{position:relative;width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
-.dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:ping 2.4s cubic-bezier(0,0,.2,1) 1 both}
+.dot{--dot-ping-ease:cubic-bezier(0,0,.2,1);/* one-off: the ping decelerates more gently than --ease-settle */position:relative;width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+.dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:ping 2.4s var(--dot-ping-ease) 1 both}
 @keyframes ping{0%{transform:scale(1);opacity:.45}80%,100%{transform:scale(2.6);opacity:0}}
 
 /* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
-.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h);padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
 .button:active{transform:scale(.97)}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
@@ -75,20 +76,19 @@ a{color:var(--text);text-decoration:none}
 
 /* project tiles: previews run only while hovered */
 /* "see more" links: same hover as the header nav, plus a small arrow that nudges */
-.more{display:inline-flex;align-items:center;gap:4px;font-size:14px;color:var(--text-2);transition:color var(--dur) var(--ease)}
+.more{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-small);color:var(--text-2);transition:color var(--dur) var(--ease)}
 @media (hover:hover) and (pointer:fine){.more:hover{color:var(--text)}}
 .more span{position:relative}
 .more span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.more:hover span::after{opacity:1}}
-.more svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
+.more svg{width:var(--icon-sm);height:var(--icon-sm);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.more:hover svg{transform:translateX(2px)}}
 /* tiles share rows (preview, title, description): a long title never pushes its neighbours out of line */
 .tiles .tile{display:grid;grid-template-rows:subgrid;grid-row:span 3;align-content:start}
-@media (max-width: 639.98px){.tiles .tile{padding-bottom:28px}.tiles > li:last-child .tile{padding-bottom:0}}
+@media (max-width: 639.98px){.tiles .tile{--tile-gap:32px;padding-bottom:calc(var(--tile-gap) - 4px)} /* 32 between stacked tiles: the grid's 4px row gap is the title-to-status gap */.tiles > li:last-child .tile{padding-bottom:0}}
 .tile .pv{margin-bottom:12px}
 .tile .tt{font-weight:500;line-height:1.35;text-wrap:balance}
-.tile .td{font-size:16px;color:var(--text-2);line-height:1.5}
-.st{position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:var(--r-full);background:color-mix(in oklch, var(--bg) 92%, transparent);border:1px solid var(--line);font-size:12px;color:var(--text-2);backdrop-filter:blur(4px)}
+.tile .td{font-size:var(--text-label);color:var(--text-2);line-height:1.5}
 .tile .pv{transition:transform var(--dur) var(--ease-settle),border-color var(--dur) var(--ease)}
 @media (hover:hover) and (pointer:fine){.tile:hover .pv{border-color:var(--line-strong)}}
 .tile:active .pv{transform:scale(.99)}
@@ -125,21 +125,21 @@ a{color:var(--text);text-decoration:none}
 @keyframes palFade{from{opacity:0}}
 .pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default}
 /* search opens and closes instantly: it is a keyboard shortcut */
-.pin{padding:0;flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:16px;color:var(--text);background:transparent;height:100%}
+.pin{padding:0;flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:var(--text-label);color:var(--text);background:transparent;height:100%}
 .pin::placeholder{color:var(--text-3)}
 .ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
-.pgrp{padding:12px 12px 4px;font-size:12px;color:var(--text-3)}
+.pgrp{padding:12px 12px 4px;font-size:var(--text-micro);color:var(--text-3)}
 .popt{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){.popt:hover{color:var(--text)}}
 .popt.act{background:var(--tint)}
 .pic{width:32px;height:32px;border-radius:var(--r-md);background:var(--control);display:flex;align-items:center;justify-content:center;flex:none;color:var(--text-2)}
-.popt.act .pic{background:var(--bg);color:var(--accent-c)}
-.pic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.pret{width:16px;font-size:14px;color:var(--text-3);opacity:0}
+.popt.act .pic{background:var(--bg);color:var(--accent)}
+.pic svg{width:var(--icon-md);height:var(--icon-md);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.pret{width:16px;font-size:var(--text-small);color:var(--text-3);opacity:0}
 .popt.act .pret{opacity:1}
-mark.phl{background:none;color:var(--accent-c);font-weight:600;padding:0}
-.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:12px;color:var(--text-2);font-family:inherit}
-.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:12px;cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+mark.phl{background:none;color:var(--accent);font-weight:600;padding:0}
+.pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:var(--text-micro);color:var(--text-2);font-family:inherit}
+.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-micro);cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
 .pclear:active{transform:scale(.97)}
 @media (hover:hover) and (pointer:fine){.pclear:hover{background:var(--control-hover);color:var(--text)}}
 
@@ -154,7 +154,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 ::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:.3s;animation-timing-function:cubic-bezier(.22,1,.36,1)}::view-transition-old(project-roleburn),::view-transition-new(project-roleburn){height:100%;object-fit:cover}
+::view-transition-group(project-roleburn){animation-duration:var(--dur-slow);animation-timing-function:var(--ease-settle)}::view-transition-old(project-roleburn),::view-transition-new(project-roleburn){height:100%;object-fit:cover}
 @media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
@@ -163,15 +163,14 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 .site > main{flex:1 0 auto;width:100%}
 .site > footer{width:100%;flex-shrink:0}
 @media (prefers-color-scheme: dark){
-:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent-c:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
-.site{--accent:var(--accent-c) !important}
+:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
 img:not([src$=".svg"]){filter:brightness(.92)}
 }
 
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:14px;transition:translate var(--dur) var(--ease-settle)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
@@ -184,7 +183,7 @@ html{scroll-padding-top:80px}
 }
 
 /* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
-.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:14px;cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
 .pcrumb:active{transform:scale(.97)}
 @media (hover:hover) and (pointer:fine){.pcrumb:hover{background:var(--control-hover);color:var(--text)}}
 .pret{text-align:center}
@@ -200,11 +199,11 @@ html{scroll-padding-top:80px}
 .cvmenu.kb,.cvchev.kb{transition:none}
 .cvitem{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:var(--r-md);color:var(--text);text-decoration:none;outline:none}
 .cvitem:focus-visible{background:var(--tint)}@media (hover:hover) and (pointer:fine){.cvitem:hover{background:var(--tint)}}
-.cvitem:focus-visible .pic{background:var(--bg);color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.cvitem:hover .pic{background:var(--bg);color:var(--accent-c)}}
+.cvitem:focus-visible .pic{background:var(--bg);color:var(--accent)}@media (hover:hover) and (pointer:fine){.cvitem:hover .pic{background:var(--bg);color:var(--accent)}}
 .cvtext{display:flex;flex-direction:column;gap:0;line-height:1.35;min-width:0}
-.cvtitle{font-size:14px}
-.cvsize{margin-left:4px;font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums}
-.cvdesc{font-size:12px;color:var(--text-2)}
+.cvtitle{font-size:var(--text-small)}
+.cvsize{margin-left:4px;font-size:var(--text-micro);line-height:1.5;color:var(--text-3);font-variant-numeric:tabular-nums}
+.cvdesc{font-size:var(--text-micro);line-height:1.5;color:var(--text-2)}
 @media (prefers-reduced-motion:reduce){.cvmenu{transition:none}.cvchev{transition:none}}
 
 
@@ -223,7 +222,7 @@ address{font-style:normal}
 }
 
 /* work rows: date, text and + on one line; below Tailwind sm (640px) the + stays beside the date and the text drops below */
-.jobhead{display:grid;grid-template-columns:112px minmax(0,1fr) auto;grid-template-areas:"date text icon";column-gap:24px;row-gap:4px;align-items:start}
+.jobhead{display:grid;grid-template-columns:var(--gutter) minmax(0,1fr) auto;grid-template-areas:"date text icon";column-gap:24px;row-gap:4px;align-items:start}
 .jobhead > :nth-child(1){grid-area:date}
 .jobhead > :nth-child(2){grid-area:text}
 .jobhead > .chev{grid-area:icon}
@@ -266,21 +265,21 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
 /* project status: a 13px line under the title ("In progress · 2026"), never a pill on the preview.
    Text carries the meaning; a small static indigo dot marks projects that are in progress (no pulse: pulsing is kept for "Open to remote roles") */
 .thead{display:flex;flex-direction:column;gap:4px;min-width:0}
-.sm{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:14px;line-height:1.5;color:var(--text-3)}
-.sdot{width:8px;height:8px;border-radius:50%;background:var(--accent-c);flex:none}
+.sm{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
 
 /* tiles: 8px between the status line and the description, as on Projects (the tile grid rows are only 4px apart) */
 .tile .thead{padding-bottom:4px}
 
 /* Teaching: course rows. Rating: one neutral star, score and review count; the spoken version is in .vh */
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.cmeta{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:14px;line-height:1.5;color:var(--text-3)}
+.cmeta{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
 .crate,.crate-v{display:inline-flex;align-items:center;gap:4px}
-.crate svg{width:12px;height:12px;fill:var(--text);flex:none}
+.crate svg{width:var(--icon-sm);height:var(--icon-sm);fill:var(--text);flex:none}
 .crate b{font-weight:500;color:var(--text)}
 @media (max-width: 639.98px){}
 .play{position:absolute;inset:0;margin:auto;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:color-mix(in oklch, var(--bg) 92%, transparent);border:1px solid var(--line);color:var(--text);backdrop-filter:blur(4px);transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
-.play svg{width:16px;height:16px;fill:currentColor;margin-left:2px}
+.play svg{width:var(--icon-md);height:var(--icon-md);fill:currentColor;margin-left:2px}
 
 @media (max-width: 639.98px){}
 
@@ -288,7 +287,7 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
    The attachment is a video preview: thumbnail with a play button, then what it is and where it goes; it spans the text column like a row of photos */
 .courses{list-style:none;margin:0;padding:0}
 .attach{display:flex;flex-wrap:wrap;column-gap:24px;margin-bottom:12px}
-.attach-gut{flex:0 0 112px}
+.attach-gut{flex:0 0 var(--gutter)}
 .attach-c{flex:1 1 300px;min-width:0}
 .lpc{display:flex;align-items:center;width:100%;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);overflow:hidden;color:inherit;text-decoration:none;transition:border-color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
 .lpc:active{transform:scale(.99)}
@@ -296,12 +295,12 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
 .lpc-img{position:relative;flex:none;width:calc((100% - 14px) / 3);aspect-ratio:3 / 2;background:var(--surface);border-right:1px solid var(--line)}
 .lpc-img img{display:block;width:100%;height:100%;object-fit:cover}
 .lpc .play{width:32px;height:32px}
-.lpc .play svg{width:12px;height:12px}
+.lpc .play svg{width:var(--icon-sm);height:var(--icon-sm)}
 .lpc:focus-visible .play{background:var(--text);color:var(--bg);border-color:var(--text)}@media (hover:hover) and (pointer:fine){.lpc:hover .play{background:var(--text);color:var(--bg);border-color:var(--text)}}
 .lpc-t{display:flex;flex-direction:column;gap:0;padding:0 16px;min-width:0}
-.lpc-title{font-size:14px;font-weight:500;line-height:1.35;color:var(--text)}
-.lpc-src{font-size:14px;line-height:1.5;color:var(--text-3)}
-.lpc:focus-visible .lpc-title{color:var(--accent-c)}@media (hover:hover) and (pointer:fine){.lpc:hover .lpc-title{color:var(--accent-c)}}
+.lpc-title{font-size:var(--text-small);font-weight:500;line-height:1.35;color:var(--text)}
+.lpc-src{font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
+.lpc:focus-visible .lpc-title{color:var(--accent)}@media (hover:hover) and (pointer:fine){.lpc:hover .lpc-title{color:var(--accent)}}
 
 /* attachments on list rows: every attachment image has one size and shape: a third of the text column (a slot in the row of three), 3:2.
    Photos sit in a row of three (fewer stay left-aligned); the video preview's thumbnail fills the first slot, so it lines up with the photos */
@@ -313,7 +312,7 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
 /* work mode: plain grey text after the company name ("Polygon Labs · Remote", "Netex Learning · On-site, A Coruña"); no chips, icons or colour. The "·" has 8px each side; screen readers hear a comma */
 .wsep{margin:0 8px;color:var(--text-3)}
 
-.cmode{font-size:14px;font-weight:400;color:var(--text-3)}
+.cmode{font-size:var(--text-small);font-weight:400;color:var(--text-3)}
 
 
 /* image viewer. Thumbnails are real buttons; the viewer is a modal dialog: focus moves to Close on open and returns
@@ -343,8 +342,8 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 .vwrap.kb .vdlg,.vwrap.kb .vscrim{animation:none !important}
 .vwrap.kb .vslide,.vwrap.kb .vtrack{transition:none !important;animation:none !important}
 .vcap{display:flex;flex-direction:column;gap:2px;min-width:0}
-.vtitle{font-size:16px;font-weight:500;line-height:1.35;color:var(--text)}
-.vmeta{display:flex;flex-wrap:wrap;column-gap:8px;font-size:14px;line-height:1.5;color:var(--text-3)}
+.vtitle{font-size:var(--text-label);font-weight:500;line-height:1.35;color:var(--text)}
+.vmeta{display:flex;flex-wrap:wrap;column-gap:8px;font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
 .vcount{font-variant-numeric:tabular-nums}
 .vbtn{position:absolute;z-index:1;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:color-mix(in oklch, var(--bg) 92%, transparent);color:var(--text);backdrop-filter:blur(4px);cursor:pointer;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
 .vbtn:active{transform:scale(.97)}
@@ -359,7 +358,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 .vw-card .vclose{top:12px;right:12px}
 .vw-card .vprev{left:12px;top:calc(var(--vw-w) / 3);margin-top:-20px}
 .vw-card .vnext{right:12px;top:calc(var(--vw-w) / 3);margin-top:-20px}
-.vfoot{display:flex;justify-content:space-between;gap:16px;height:44px;align-items:center;padding:0 20px;border-top:1px solid var(--line);font-size:12px;color:var(--text-3)}
+.vfoot{display:flex;justify-content:space-between;gap:16px;height:44px;align-items:center;padding:0 20px;border-top:1px solid var(--line);font-size:var(--text-micro);color:var(--text-3)}
 .vfoot > span{display:inline-flex;align-items:center;gap:8px}
 .vkeys{display:inline-flex;gap:4px}
 /* phones (< 640px): the platform photo viewer. Always dark (photos read best on black), photo edge to edge, caption and controls at the bottom within thumb reach.
@@ -406,19 +405,19 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 @media (prefers-reduced-motion:reduce){.vdlg{animation:palFade var(--dur) var(--ease-settle) both;transition:none}.vscrim{animation:none}.vtrack{display:block !important;translate:none !important;transition:none !important}.vslide{position:absolute !important;inset:0 !important;flex:none !important;translate:none !important;opacity:0 !important;transition:opacity var(--dur) var(--ease-settle) !important}.vslide.on{opacity:1 !important}}
 
 /* title-only link: the title's link is stretched over the card or tile with ::after, so the whole card is still one target; the focus ring is drawn on that ::after, round the card */
-.card,.tile{position:relative}.cl{color:inherit}.cl::after{content:"";position:absolute;inset:0}.site .cl:focus-visible{outline:none}.site .cl:focus-visible::after{outline:2px solid var(--accent-c);outline-offset:3px}
+.card,.tile{position:relative}.cl{color:inherit}.cl::after{content:"";position:absolute;inset:0}.site .cl:focus-visible{outline:none}.site .cl:focus-visible::after{outline:2px solid var(--accent);outline-offset:3px}
 </style>
 </head><body>
-<div data-dc-tpl="3" class="site" style="--accent: #4F39F6; min-height: 100svh; background: var(--bg);">
+<div data-dc-tpl="3" class="site" style="min-height: 100svh; background: var(--bg);">
   <a data-dc-tpl="4" class="skip" href="#top">Skip to content</a>
 
 
   <header data-dc-tpl="5" style="position: sticky; top: 0px; z-index: var(--z-header); background: color-mix(in oklch, var(--bg) 82%, transparent); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line);">
-    <div data-dc-tpl="6" style="max-width: 688px; margin: 0px auto; padding: 0 max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px)); height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+    <div data-dc-tpl="6" style="max-width: var(--column); margin: 0px auto; padding: 0 max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px)); height: var(--bar-h); display: flex; align-items: center; justify-content: space-between; gap: 16px;">
       <a data-dc-tpl="7" href="#top" aria-label="Elías García, home" style="display: flex; align-items: center; height: 44px;">
-        <svg data-dc-tpl="8" viewBox="0 0 35.44 60" width="16.54" height="28" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="9" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="10" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="11" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="12" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="13" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
+        <svg data-dc-tpl="8" viewBox="0 0 35.44 60" width="16.54" height="28" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="9" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent);"></path><path data-dc-tpl="10" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="11" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="12" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="13" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
       </a>
-      <nav data-dc-tpl="14" class="nav" aria-label="Main" style="display: flex; align-items: center; gap: 24px; font-size: 16px;">
+      <nav data-dc-tpl="14" class="nav" aria-label="Main" style="display: flex; align-items: center; gap: 24px; font-size: var(--text-label);">
         <a data-dc-tpl="15" href="#top" aria-current="page">Home</a>
         <a data-dc-tpl="16" href="ProjectsIndex.dc.html">Projects</a>
         <a data-dc-tpl="17" href="Writing.dc.html">Writing</a>
@@ -430,7 +429,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
     </div>
   </header>
 
-  <main data-dc-tpl="23" id="top" style="max-width: 688px; margin: 0px auto; padding: var(--space-page) max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 72px;">
+  <main data-dc-tpl="23" id="top" style="max-width: var(--column); margin: 0px auto; padding: var(--space-page) max(24px, env(safe-area-inset-right, 0px)) 0 max(24px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: var(--space-section);">
 
     <header data-dc-tpl="24" style="display: flex; flex-direction: column; gap: 32px;">
       <div data-dc-tpl="25" style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
@@ -438,20 +437,20 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
           <img data-dc-tpl="27" class="av" src="../assets/avatar.jpg" alt="Elías García">
         </div>
         <div data-dc-tpl="28" style="display: flex; flex-direction: column; gap: 4px; min-width: 0px;">
-          <h1 data-dc-tpl="29" style="margin: 0px; font-size: 20px; line-height: 1.35; font-weight: 600; letter-spacing: -0.01em;">Elías García</h1>
+          <h1 data-dc-tpl="29" style="margin: 0px; font-size: var(--text-subtitle); line-height: 1.35; font-weight: 600; letter-spacing: -0.01em;">Elías García</h1>
           <p data-dc-tpl="30" style="margin: 0px; color: var(--text-2);">Software engineer in Porto, Portugal</p>
           <div data-dc-tpl="31" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
             <span data-dc-tpl="32" class="cvwrap">
               <button data-dc-tpl="33" class="button" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="cv-menu">Download CV<svg data-dc-tpl="34" class="cvchev " viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-down"><path data-dc-tpl="35" d="M6 9l6 6l6 -6" vector-effect="non-scaling-stroke"></path></svg></button>
               
             </span>
-            <span data-dc-tpl="61" style="display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0px 4px; font-size: 14px; color: var(--text-2);"><span data-dc-tpl="62" class="dot" aria-hidden="true"></span>Open to remote roles</span>
+            <span data-dc-tpl="61" style="display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0px 4px; font-size: var(--text-small); color: var(--text-2);"><span data-dc-tpl="62" class="dot" aria-hidden="true"></span>Open to remote roles</span>
           </div>
         </div>
       </div>
 
-      <div data-dc-tpl="63" style="display: flex; flex-direction: column; gap: 8px;">
-        <h2 data-dc-tpl="64" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">About</h2>
+      <div data-dc-tpl="63" style="display: flex; flex-direction: column; gap: 16px;">
+        <h2 data-dc-tpl="64" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">About</h2>
         <p data-dc-tpl="65" style="margin: 0px; color: var(--text-2);">I’ve spent nine years building products end to end, from real-time data pipelines and APIs to the interfaces on top. Most recently I led engineering at Vesu, a lending protocol on Starknet. Before that, four years at Polygon Labs, leading the frontend of Polygon zkEVM and the team behind Polygon ID.</p>
         <p data-dc-tpl="66" style="margin: 0px; color: var(--text-2);">These days I’m also exploring how AI agents change the way small teams ship. This site is where I keep the projects and notes.</p>
       </div>
@@ -459,7 +458,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 
     <section data-dc-tpl="67" id="projects" style="display: flex; flex-direction: column; gap: 16px;">
       <div data-dc-tpl="68" style="display: flex; justify-content: space-between; align-items: baseline;">
-        <h2 data-dc-tpl="69" id="projects-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Projects</h2>
+        <h2 data-dc-tpl="69" id="projects-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Projects</h2>
         <a data-dc-tpl="70" class="more" href="ProjectsIndex.dc.html"><span data-dc-tpl="71">All projects</span><svg data-dc-tpl="72" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="73" d="M9 6l6 6l-6 6" vector-effect="non-scaling-stroke"></path></svg></a>
       </div>
       <ul data-dc-tpl="74" class="tiles" role="list" style="display: grid; gap: 4px 24px;">
@@ -525,13 +524,13 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
       </ul>
     </section>
 
-    <section data-dc-tpl="138" id="work" style="display: flex; flex-direction: column; gap: 8px;">
-      <h2 data-dc-tpl="139" id="work-h" style="margin: 0px 0px 8px; font-size: 18px; font-weight: 600; line-height: 1.35;">Work experience</h2>
+    <section data-dc-tpl="138" id="work" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="139" id="work-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Work experience</h2>
       <ul data-dc-tpl="140" class="list" role="list" style="display: flex; flex-direction: column;">
         
           <li data-dc-tpl="142" class="item job open">
             <button data-dc-tpl="143" class="jobhead" aria-expanded="true">
-              <span data-dc-tpl="144" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2024"><span class="sc-interp">2024</span></time> – Now</span>
+              <span data-dc-tpl="144" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2024"><span class="sc-interp">2024</span></time> – Now</span>
               <span data-dc-tpl="149" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
                 <span data-dc-tpl="150"><span data-dc-tpl="151" style="font-weight: 500;"><span class="sc-interp">Vesu</span></span><span data-dc-tpl="152" class="cmode"><span data-dc-tpl="153" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="154" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
                 <span data-dc-tpl="155" style="color: var(--text-2);"><span class="sc-interp">Engineering Lead</span></span>
@@ -541,17 +540,17 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             <div data-dc-tpl="159" class="jobbody">
               <div data-dc-tpl="160" style="min-height: 0px; overflow: hidden;">
                 <div data-dc-tpl="161" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
-                  <span data-dc-tpl="162" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <span data-dc-tpl="162" class="jobgut" style="flex: 0 0 var(--gutter);"></span>
                   <div data-dc-tpl="163" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="164" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="166" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led engineering from launch to $84.6M in customer assets.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led engineering from launch to $84.6M in customer assets.</span></li>
                       
-                        <li data-dc-tpl="166" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the lender and borrower app, a risk-parameter admin panel and a blockchain-only fallback UI so users can exit positions during an outage, on a shared Ark UI design system.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the lender and borrower app, a risk-parameter admin panel and a blockchain-only fallback UI so users can exit positions during an outage, on a shared Ark UI design system.</span></li>
                       
-                        <li data-dc-tpl="166" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the real-time event-ingestion pipeline, a public API, an RFQ system for liquidations over WebSockets and an MCP server for product data.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the real-time event-ingestion pipeline, a public API, an RFQ system for liquidations over WebSockets and an MCP server for product data.</span></li>
                       
-                        <li data-dc-tpl="166" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Set up issue tracking, CI/CD and releases from zero, mentored the frontend team and introduced the company’s AI development practice.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Set up issue tracking, CI/CD and releases from zero, mentored the frontend team and introduced the company’s AI development practice.</span></li>
                       
                     </ul>
                     
@@ -563,7 +562,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
         
           <li data-dc-tpl="142" class="item job ">
             <button data-dc-tpl="143" class="jobhead" aria-expanded="false">
-              <span data-dc-tpl="144" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2020"><span class="sc-interp">2020</span></time> – <time data-dc-tpl="148" datetime="2024"><span class="sc-interp">2024</span></time></span>
+              <span data-dc-tpl="144" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2020"><span class="sc-interp">2020</span></time> – <time data-dc-tpl="148" datetime="2024"><span class="sc-interp">2024</span></time></span>
               <span data-dc-tpl="149" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
                 <span data-dc-tpl="150"><span data-dc-tpl="151" style="font-weight: 500;"><span class="sc-interp">Polygon Labs</span></span><span data-dc-tpl="152" class="cmode"><span data-dc-tpl="153" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="154" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
                 <span data-dc-tpl="155" style="color: var(--text-2);"><span class="sc-interp">Staff Frontend Engineer → Tech Lead</span></span>
@@ -573,15 +572,15 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             <div data-dc-tpl="159" class="jobbody">
               <div data-dc-tpl="160" style="min-height: 0px; overflow: hidden;">
                 <div data-dc-tpl="161" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
-                  <span data-dc-tpl="162" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <span data-dc-tpl="162" class="jobgut" style="flex: 0 0 var(--gutter);"></span>
                   <div data-dc-tpl="163" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="164" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="166" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Hermez: built the consumer wallet and block explorer, and contributed to the protocol SDK. Polygon acquired Hermez in 2021.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Hermez: built the consumer wallet and block explorer, and contributed to the protocol SDK. Polygon acquired Hermez in 2021.</span></li>
                       
-                        <li data-dc-tpl="166" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon zkEVM: led the 3-person frontend team across every user-facing product, including the bridge, as it grew to $180M in bridged assets.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon zkEVM: led the 3-person frontend team across every user-facing product, including the bridge, as it grew to $180M in bridged assets.</span></li>
                       
-                        <li data-dc-tpl="166" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon ID: tech lead of a 10-engineer team building the credential issuer, wallet, marketplace and schema tooling.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon ID: tech lead of a 10-engineer team building the credential issuer, wallet, marketplace and schema tooling.</span></li>
                       
                     </ul>
                     
@@ -593,7 +592,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
         
           <li data-dc-tpl="142" class="item job ">
             <button data-dc-tpl="143" class="jobhead" aria-expanded="false">
-              <span data-dc-tpl="144" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2019"><span class="sc-interp">2019</span></time> – <time data-dc-tpl="148" datetime="2020"><span class="sc-interp">2020</span></time></span>
+              <span data-dc-tpl="144" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2019"><span class="sc-interp">2019</span></time> – <time data-dc-tpl="148" datetime="2020"><span class="sc-interp">2020</span></time></span>
               <span data-dc-tpl="149" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
                 <span data-dc-tpl="150"><span data-dc-tpl="151" style="font-weight: 500;"><span class="sc-interp">Nexiona</span></span><span data-dc-tpl="152" class="cmode"><span data-dc-tpl="153" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="154" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
                 <span data-dc-tpl="155" style="color: var(--text-2);"><span class="sc-interp">Senior Frontend Engineer</span></span>
@@ -603,11 +602,11 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             <div data-dc-tpl="159" class="jobbody">
               <div data-dc-tpl="160" style="min-height: 0px; overflow: hidden;">
                 <div data-dc-tpl="161" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
-                  <span data-dc-tpl="162" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <span data-dc-tpl="162" class="jobgut" style="flex: 0 0 var(--gutter);"></span>
                   <div data-dc-tpl="163" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="164" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="166" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the frontend of MIIMETIQ in React and Redux, used across Europe by companies including Celsa Group and Grifols.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the frontend of MIIMETIQ in React and Redux, used across Europe by companies including Celsa Group and Grifols.</span></li>
                       
                     </ul>
                     
@@ -619,7 +618,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
         
           <li data-dc-tpl="142" class="item job ">
             <button data-dc-tpl="143" class="jobhead" aria-expanded="false">
-              <span data-dc-tpl="144" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2018"><span class="sc-interp">2018</span></time> – <time data-dc-tpl="148" datetime="2019"><span class="sc-interp">2019</span></time></span>
+              <span data-dc-tpl="144" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2018"><span class="sc-interp">2018</span></time> – <time data-dc-tpl="148" datetime="2019"><span class="sc-interp">2019</span></time></span>
               <span data-dc-tpl="149" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
                 <span data-dc-tpl="150"><span data-dc-tpl="151" style="font-weight: 500;"><span class="sc-interp">Netex Learning</span></span><span data-dc-tpl="152" class="cmode"><span data-dc-tpl="153" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="154" class="vh">, </span><span class="sc-interp">On-site, A Coruña</span></span></span>
                 <span data-dc-tpl="155" style="color: var(--text-2);"><span class="sc-interp">Lead Frontend Engineer</span></span>
@@ -629,13 +628,13 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             <div data-dc-tpl="159" class="jobbody">
               <div data-dc-tpl="160" style="min-height: 0px; overflow: hidden;">
                 <div data-dc-tpl="161" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
-                  <span data-dc-tpl="162" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <span data-dc-tpl="162" class="jobgut" style="flex: 0 0 var(--gutter);"></span>
                   <div data-dc-tpl="163" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="164" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="166" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led the 4-person Angular team behind Netex Cloud, used by thousands of learners at companies including Amazon and Inditex. Delivered internationalisation and accessibility.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led the 4-person Angular team behind Netex Cloud, used by thousands of learners at companies including Amazon and Inditex. Delivered internationalisation and accessibility.</span></li>
                       
-                        <li data-dc-tpl="166" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led a cross-department initiative to build a shared component library adopted across the company’s products.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led a cross-department initiative to build a shared component library adopted across the company’s products.</span></li>
                       
                     </ul>
                     
@@ -647,7 +646,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
         
           <li data-dc-tpl="142" class="item job ">
             <button data-dc-tpl="143" class="jobhead" aria-expanded="false">
-              <span data-dc-tpl="144" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2017"><span class="sc-interp">2017</span></time> – <time data-dc-tpl="148" datetime="2018"><span class="sc-interp">2018</span></time></span>
+              <span data-dc-tpl="144" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2017"><span class="sc-interp">2017</span></time> – <time data-dc-tpl="148" datetime="2018"><span class="sc-interp">2018</span></time></span>
               <span data-dc-tpl="149" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
                 <span data-dc-tpl="150"><span data-dc-tpl="151" style="font-weight: 500;"><span class="sc-interp">Ágora Binaria</span></span><span data-dc-tpl="152" class="cmode"><span data-dc-tpl="153" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="154" class="vh">, </span><span class="sc-interp">Hybrid, A Coruña</span></span></span>
                 <span data-dc-tpl="155" style="color: var(--text-2);"><span class="sc-interp">Full-Stack Engineer</span></span>
@@ -657,11 +656,11 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             <div data-dc-tpl="159" class="jobbody">
               <div data-dc-tpl="160" style="min-height: 0px; overflow: hidden;">
                 <div data-dc-tpl="161" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
-                  <span data-dc-tpl="162" class="jobgut" style="flex: 0 0 112px;"></span>
+                  <span data-dc-tpl="162" class="jobgut" style="flex: 0 0 var(--gutter);"></span>
                   <div data-dc-tpl="163" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="164" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="166" style="font-size: 16px; color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built full-stack client applications and did performance work on existing Angular codebases.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built full-stack client applications and did performance work on existing Angular codebases.</span></li>
                       
                     </ul>
                     
@@ -674,28 +673,28 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
       </ul>
     </section>
 
-    <section data-dc-tpl="172" id="writing" style="display: flex; flex-direction: column; gap: 8px;">
-      <div data-dc-tpl="173" style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-        <h2 data-dc-tpl="174" id="writing-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Writing</h2>
+    <section data-dc-tpl="172" id="writing" style="display: flex; flex-direction: column; gap: 16px;">
+      <div data-dc-tpl="173" style="display: flex; justify-content: space-between; align-items: baseline;">
+        <h2 data-dc-tpl="174" id="writing-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Writing</h2>
         <a data-dc-tpl="175" class="more" href="Writing.dc.html"><span data-dc-tpl="176">All posts</span><svg data-dc-tpl="177" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="178" d="M9 6l6 6l-6 6" vector-effect="non-scaling-stroke"></path></svg></a>
       </div>
       <ul data-dc-tpl="179" class="list" role="list" style="display: flex; flex-direction: column;">
         <li data-dc-tpl="180"><a data-dc-tpl="181" class="item" href="Post.dc.html" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-          <time data-dc-tpl="182" datetime="2026-11" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;">Nov 2026</time>
+          <time data-dc-tpl="182" datetime="2026-11" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;">Nov 2026</time>
           <span data-dc-tpl="183" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
             <span data-dc-tpl="184" style="font-weight: 500;">Rebuilding this site</span>
             <span data-dc-tpl="185" style="color: var(--text-2);">Why it stayed one column, and how I spent the motion budget.</span>
           </span>
         </a></li>
         <li data-dc-tpl="186"><a data-dc-tpl="187" class="item" href="#" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-          <time data-dc-tpl="188" datetime="2026-10" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;">Oct 2026</time>
+          <time data-dc-tpl="188" datetime="2026-10" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;">Oct 2026</time>
           <span data-dc-tpl="189" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
             <span data-dc-tpl="190" style="font-weight: 500;">A job radar made of markdown files</span>
             <span data-dc-tpl="191" style="color: var(--text-2);">How Roleburn runs on a folder of notes and a few scheduled agents.</span>
           </span>
         </a></li>
         <li data-dc-tpl="192"><a data-dc-tpl="193" class="item" href="#" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-          <time data-dc-tpl="194" datetime="2026-09" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;">Sep 2026</time>
+          <time data-dc-tpl="194" datetime="2026-09" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;">Sep 2026</time>
           <span data-dc-tpl="195" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
             <span data-dc-tpl="196" style="font-weight: 500;">From GitHub issue to reviewed pull request</span>
             <span data-dc-tpl="197" style="color: var(--text-2);">Running my side projects through an agent pipeline with work-issue.</span>
@@ -705,10 +704,10 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
     </section>
 
     <section data-dc-tpl="198" id="speaking" style="display: flex; flex-direction: column; gap: 16px;">
-      <h2 data-dc-tpl="199" id="speaking-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Speaking</h2>
+      <h2 data-dc-tpl="199" id="speaking-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Speaking</h2>
       <ul data-dc-tpl="200" class="list" role="list" style="display: flex; flex-direction: column;">
         <li data-dc-tpl="201" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-          <time data-dc-tpl="202" datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3);">Jan 2024</time>
+          <time data-dc-tpl="202" datetime="2024-01" style="flex: 0 0 var(--gutter); color: var(--text-3);">Jan 2024</time>
           <span data-dc-tpl="203" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
             <span data-dc-tpl="204" style="font-weight: 500;">Preserving privacy with Polygon ID profiles</span>
             <span data-dc-tpl="205" style="color: var(--text-2);">House of ZK, EthDenver</span>
@@ -716,7 +715,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
           <div data-dc-tpl="206" class="attach"><span data-dc-tpl="207" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="208" class="attach-c"><ul data-dc-tpl="209" class="photos" role="list"><li data-dc-tpl="210"><button data-dc-tpl="211" class="phbtn" type="button" aria-label="Open photo 1 of 1: Preserving privacy with Polygon ID profiles"><img data-dc-tpl="212" src="../assets/talk-hozk.jpg" alt="Elías pointing at the Polygon ID identity state diagram while presenting at House of ZK, EthDenver 2024" loading="lazy"></button></li></ul></div></div>
         </li>
         <li data-dc-tpl="213" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-          <time data-dc-tpl="214" datetime="2024-01" style="flex: 0 0 112px; color: var(--text-3);">Jan 2024</time>
+          <time data-dc-tpl="214" datetime="2024-01" style="flex: 0 0 var(--gutter); color: var(--text-3);">Jan 2024</time>
           <span data-dc-tpl="215" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
             <span data-dc-tpl="216" style="font-weight: 500;">Zero-knowledge identity with Polygon ID</span>
             <span data-dc-tpl="217" style="color: var(--text-2);">Polygon AggCave, EthDenver</span>
@@ -724,7 +723,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
           <div data-dc-tpl="218" class="attach"><span data-dc-tpl="219" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="220" class="attach-c"><ul data-dc-tpl="221" class="photos" role="list"><li data-dc-tpl="222"><button data-dc-tpl="223" class="phbtn" type="button" aria-label="Open photo 1 of 1: Zero-knowledge identity with Polygon ID"><img data-dc-tpl="224" src="../assets/talk-aggcave.jpg" alt="Elías, holding a microphone, beside a fellow speaker presenting the main features of Polygon ID at the Polygon Aggregation Cave, EthDenver 2024" loading="lazy"></button></li></ul></div></div>
         </li>
         <li data-dc-tpl="225" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-          <time data-dc-tpl="226" datetime="2023-07" style="flex: 0 0 112px; color: var(--text-3);">Jul 2023</time>
+          <time data-dc-tpl="226" datetime="2023-07" style="flex: 0 0 var(--gutter); color: var(--text-3);">Jul 2023</time>
           <span data-dc-tpl="227" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
             <span data-dc-tpl="228" style="font-weight: 500;">Issuing verifiable credentials with Polygon ID</span>
             <span data-dc-tpl="229" style="color: var(--text-2);">Polygon DevX Global Tour, Lisbon</span>
@@ -735,12 +734,12 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
     </section>
 
     <section data-dc-tpl="243" id="teaching" style="display: flex; flex-direction: column; gap: 16px;">
-      <h2 data-dc-tpl="244" id="teaching-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Teaching</h2>
+      <h2 data-dc-tpl="244" id="teaching-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Teaching</h2>
       
       <ul data-dc-tpl="245" class="list courses" role="list">
         <li data-dc-tpl="246" class="crow">
           <a data-dc-tpl="247" class="item" href="https://balio.app/curso/defi/" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-            <time data-dc-tpl="248" datetime="2022-03" style="flex: 0 0 112px; color: var(--text-3);">Mar 2022</time>
+            <time data-dc-tpl="248" datetime="2022-03" style="flex: 0 0 var(--gutter); color: var(--text-3);">Mar 2022</time>
             <span data-dc-tpl="249" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 4px;">
               <span data-dc-tpl="250" style="display: flex; flex-direction: column;">
                 <span data-dc-tpl="251" style="font-weight: 500;">The DeFi revolution<svg data-dc-tpl="252" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="253" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="254" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span>
@@ -760,9 +759,9 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
     </section>
 
     <section data-dc-tpl="283" style="display: flex; flex-direction: column; gap: 16px;">
-      <h2 data-dc-tpl="284" id="edu-h" style="margin: 0px; font-size: 16px; font-weight: 500; line-height: 1.5;">Education</h2>
-      <div data-dc-tpl="285" style="display: flex; flex-wrap: wrap; gap: 4px 24px;">
-        <span data-dc-tpl="286" style="flex: 0 0 112px; color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="287" datetime="2013">2013</time> – <time data-dc-tpl="288" datetime="2017">2017</time></span>
+      <h2 data-dc-tpl="284" id="edu-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Education</h2>
+      <div data-dc-tpl="285" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+        <span data-dc-tpl="286" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="287" datetime="2013">2013</time> – <time data-dc-tpl="288" datetime="2017">2017</time></span>
         <span data-dc-tpl="289" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
           <span data-dc-tpl="290" style="font-weight: 500;">BSc Computer Science at University of A Coruña</span>
           <span data-dc-tpl="291" style="color: var(--text-2);">Specialization in software engineering</span>
@@ -770,26 +769,26 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
       </div>
     </section>
 
-    <section data-dc-tpl="292" id="contact" class="contact" style="display: flex; flex-direction: column; gap: 12px;">
-      <h2 data-dc-tpl="293" id="contact-h" style="margin: 0px 0px 4px; font-size: 18px; font-weight: 600; line-height: 1.35;">Contact</h2>
+    <section data-dc-tpl="292" id="contact" class="contact" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="293" id="contact-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Contact</h2>
       <address data-dc-tpl="294">
-      <dl data-dc-tpl="295" style="display: flex; flex-direction: column; gap: 12px;">
-      <div data-dc-tpl="296" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
-        <dt data-dc-tpl="297" style="flex: 0 0 112px; color: var(--text-3);">Email</dt>
+      <dl data-dc-tpl="295" style="display: flex; flex-direction: column;">
+      <div data-dc-tpl="296" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
+        <dt data-dc-tpl="297" style="flex: 0 0 var(--gutter); color: var(--text-3);">Email</dt>
         <dd data-dc-tpl="298" style="flex: 1 1 300px; min-width: 0px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
           <a data-dc-tpl="299" href="mailto:eliasgarciadev@gmail.com">eliasgarciadev@gmail.com<svg data-dc-tpl="300" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="301" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="302" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></a>
         </dd>
       </div>
-      <div data-dc-tpl="303" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
-        <dt data-dc-tpl="304" style="flex: 0 0 112px; color: var(--text-3);">GitHub</dt>
+      <div data-dc-tpl="303" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
+        <dt data-dc-tpl="304" style="flex: 0 0 var(--gutter); color: var(--text-3);">GitHub</dt>
         <dd data-dc-tpl="305" style="flex: 1 1 300px;"><a data-dc-tpl="306" href="https://github.com/elias-garcia">elias-garcia<svg data-dc-tpl="307" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="308" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="309" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></a></dd>
       </div>
-      <div data-dc-tpl="310" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
-        <dt data-dc-tpl="311" style="flex: 0 0 112px; color: var(--text-3);">LinkedIn</dt>
+      <div data-dc-tpl="310" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
+        <dt data-dc-tpl="311" style="flex: 0 0 var(--gutter); color: var(--text-3);">LinkedIn</dt>
         <dd data-dc-tpl="312" style="flex: 1 1 300px;"><a data-dc-tpl="313" href="https://www.linkedin.com/in/elias-garcia-marino">elias-garcia-marino<svg data-dc-tpl="314" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="315" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="316" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></a></dd>
       </div>
-      <div data-dc-tpl="317" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; min-height: 36px;">
-        <dt data-dc-tpl="318" style="flex: 0 0 112px; color: var(--text-3);">X</dt>
+      <div data-dc-tpl="317" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
+        <dt data-dc-tpl="318" style="flex: 0 0 var(--gutter); color: var(--text-3);">X</dt>
         <dd data-dc-tpl="319" style="flex: 1 1 300px;"><a data-dc-tpl="320" href="https://x.com/eliasgarciadev">@eliasgarciadev<svg data-dc-tpl="321" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="322" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="323" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></a></dd>
       </div>
       </dl>
@@ -799,12 +798,12 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
   </main>
 
   <footer data-dc-tpl="324" style="margin-top: var(--space-footer); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);">
-    <div data-dc-tpl="325" style="max-width: 688px; margin: 0px auto; padding: 12px max(24px, env(safe-area-inset-right, 0px)) 12px max(24px, env(safe-area-inset-left, 0px)); min-height: 64px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: 14px; color: var(--text-3);">
+    <div data-dc-tpl="325" style="max-width: var(--column); margin: 0px auto; padding: 12px max(24px, env(safe-area-inset-right, 0px)) 12px max(24px, env(safe-area-inset-left, 0px)); min-height: var(--bar-h); box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: var(--text-small); color: var(--text-3);">
       <span data-dc-tpl="326" style="display: flex; align-items: center; gap: 12px;">
-        <svg data-dc-tpl="327" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="328" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent-c);"></path><path data-dc-tpl="329" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="330" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="331" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="332" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
+        <svg data-dc-tpl="327" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="328" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent);"></path><path data-dc-tpl="329" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="330" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="331" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="332" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
         Elías García, 2026
       </span>
-      <span data-dc-tpl="333" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="334"><time data-dc-tpl="335" datetime="10:53"><span class="sc-interp">10:53</span></time> in Portugal</span><span data-dc-tpl="336" aria-hidden="true">·</span><span data-dc-tpl="337"><span class="sc-interp">1h behind you</span></span></span>
+      <span data-dc-tpl="333" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="334"><time data-dc-tpl="335" datetime="12:29"><span class="sc-interp">12:29</span></time> in Portugal</span><span data-dc-tpl="336" aria-hidden="true">·</span><span data-dc-tpl="337"><span class="sc-interp">1h behind you</span></span></span>
     </div>
   </footer>
 
@@ -834,20 +833,20 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
                 <a data-dc-tpl="412" class="popt act" id="pal-0" role="option" aria-selected="true" href="#">
                   <span data-dc-tpl="413" class="pic" aria-hidden="true"><svg data-dc-tpl="415" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="file-text"><path data-dc-tpl="416" d="M14 3v4a1 1 0 0 0 1 1h4" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="417" d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="418" d="M9 9l1 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="419" d="M9 13l6 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="420" d="M9 17l6 0" vector-effect="non-scaling-stroke"></path></svg></span>
                   <span data-dc-tpl="480" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="481" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="486"><span class="sc-interp">A job radar made of markdown files</span></span></span>
-                    <span data-dc-tpl="488" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="493"><span class="sc-interp">How Roleburn runs on a folder of notes and a few scheduled </span></span><mark data-dc-tpl="491" class="phl"><span class="sc-interp">agent</span></mark><span data-dc-tpl="493"><span class="sc-interp">s.</span></span></span>
+                    <span data-dc-tpl="481" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--text-label);"><span data-dc-tpl="486"><span class="sc-interp">A job radar made of markdown files</span></span></span>
+                    <span data-dc-tpl="488" style="font-size: var(--text-small); color: var(--text-2);"><span data-dc-tpl="493"><span class="sc-interp">How Roleburn runs on a folder of notes and a few scheduled </span></span><mark data-dc-tpl="491" class="phl"><span class="sc-interp">agent</span></mark><span data-dc-tpl="493"><span class="sc-interp">s.</span></span></span>
                   </span>
-                  <span data-dc-tpl="494" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">Oct 2026</span></span>
+                  <span data-dc-tpl="494" style="font-size: var(--text-small); color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">Oct 2026</span></span>
                   <span data-dc-tpl="495" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
                 <a data-dc-tpl="412" class="popt " id="pal-1" role="option" aria-selected="false" href="#">
                   <span data-dc-tpl="413" class="pic" aria-hidden="true"><svg data-dc-tpl="415" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="file-text"><path data-dc-tpl="416" d="M14 3v4a1 1 0 0 0 1 1h4" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="417" d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="418" d="M9 9l1 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="419" d="M9 13l6 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="420" d="M9 17l6 0" vector-effect="non-scaling-stroke"></path></svg></span>
                   <span data-dc-tpl="480" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="481" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="486"><span class="sc-interp">From GitHub issue to reviewed pull request</span></span></span>
-                    <span data-dc-tpl="488" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="493"><span class="sc-interp">Running my side projects through an </span></span><mark data-dc-tpl="491" class="phl"><span class="sc-interp">agent</span></mark><span data-dc-tpl="493"><span class="sc-interp"> pipeline with work-issue.</span></span></span>
+                    <span data-dc-tpl="481" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--text-label);"><span data-dc-tpl="486"><span class="sc-interp">From GitHub issue to reviewed pull request</span></span></span>
+                    <span data-dc-tpl="488" style="font-size: var(--text-small); color: var(--text-2);"><span data-dc-tpl="493"><span class="sc-interp">Running my side projects through an </span></span><mark data-dc-tpl="491" class="phl"><span class="sc-interp">agent</span></mark><span data-dc-tpl="493"><span class="sc-interp"> pipeline with work-issue.</span></span></span>
                   </span>
-                  <span data-dc-tpl="494" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">Sep 2026</span></span>
+                  <span data-dc-tpl="494" style="font-size: var(--text-small); color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">Sep 2026</span></span>
                   <span data-dc-tpl="495" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
@@ -859,17 +858,17 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
                 <a data-dc-tpl="412" class="popt " id="pal-2" role="option" aria-selected="false" href="#">
                   <span data-dc-tpl="413" class="pic" aria-hidden="true"><svg data-dc-tpl="422" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="layout-grid"><path data-dc-tpl="423" d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="424" d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="425" d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="426" d="M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" vector-effect="non-scaling-stroke"></path></svg></span>
                   <span data-dc-tpl="480" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="481" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 16px;"><span data-dc-tpl="486"><span class="sc-interp">work-issue</span></span></span>
-                    <span data-dc-tpl="488" style="font-size: 14px; color: var(--text-2);"><span data-dc-tpl="493"><span class="sc-interp">From GitHub issue to reviewed pull request, by </span></span><mark data-dc-tpl="491" class="phl"><span class="sc-interp">agent</span></mark><span data-dc-tpl="493"><span class="sc-interp">s</span></span></span>
+                    <span data-dc-tpl="481" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--text-label);"><span data-dc-tpl="486"><span class="sc-interp">work-issue</span></span></span>
+                    <span data-dc-tpl="488" style="font-size: var(--text-small); color: var(--text-2);"><span data-dc-tpl="493"><span class="sc-interp">From GitHub issue to reviewed pull request, by </span></span><mark data-dc-tpl="491" class="phl"><span class="sc-interp">agent</span></mark><span data-dc-tpl="493"><span class="sc-interp">s</span></span></span>
                   </span>
-                  <span data-dc-tpl="494" style="font-size: 14px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">Experiment</span></span>
+                  <span data-dc-tpl="494" style="font-size: var(--text-small); color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">Experiment</span></span>
                   <span data-dc-tpl="495" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
             </div>
           
         </div>
-        <div data-dc-tpl="496" style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--surface); font-size: 12px; color: var(--text-3);">
+        <div data-dc-tpl="496" style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--surface); font-size: var(--text-micro); color: var(--text-3);">
           <span data-dc-tpl="497" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="498" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="499" class="pk">↑</span><span data-dc-tpl="500" class="pk">↓</span></span>to move</span>
           <span data-dc-tpl="501" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="502" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="503" class="pk">↵</span></span>to open</span>
           
