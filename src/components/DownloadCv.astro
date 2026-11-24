@@ -345,6 +345,7 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
     margin-inline-start: var(--space-1);
     color: var(--text-3);
     font-size: var(--text-micro);
+    line-height: var(--leading-normal);
     font-variant-numeric: tabular-nums;
 
     /* --text-3 is too faint on the tint background (DESIGN.md §2.1). */
@@ -359,8 +360,11 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
     }
   }
 
+  /* The size and the description: 12px text at 1.5 (DESIGN.md §2.2,
+     Micro); the format name keeps the row's 1.35. */
   .description {
     color: var(--text-2);
     font-size: var(--text-micro);
+    line-height: var(--leading-normal);
   }
 </style>

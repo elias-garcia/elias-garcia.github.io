@@ -46,7 +46,8 @@ One page per step. Each step builds the components that page needs (DESIGN.md §
 21. **Design review.** From the design-review handoff (nine points and one decision).
     - ~~Every project has a page.~~ Done, decided with you: projects work like posts. Every project file has its page with the same structure (header, facts, cover, then the article when the file has a body), so every card and tile is a link and the CV lists every project's address; `draft: true` shows a project only in `npm run dev` (card and page), and the `_` sample convention is gone (`cover-image.mdx` is a draft).
     - Already matched: Roleburn's "Not public yet" (2), one accent name (5), layers (6: our menus and dialogs are in the top layer), the dot's one-off curve (9), the reference-only points (4, 10).
-    - To check against the new reference pages: Home's section spacing (1), the Download CV menu's line height (3), 12px text at 1.5 (7), the card and tile gaps (8).
+    - ~~The rest, measured against the new reference pages.~~ Done. Home's section spacing (1): only Contact differed; its rows now have the list rows' 12px padding and no gap, so its first row sits 28 under the heading like every section's (the Writing and Education headings already did). The Download CV menu (3): the size and description at 1.5. 12px text (7): everything already at 1.5 but the key hints, which now inherit it too (their 20px box doesn't change); the footnote marker keeps 1. Card gaps (8): already 48 on Projects and 32 between Home's stacked tiles, from the spacing scale.
+    - Found while measuring, older than this handoff: Teaching's course row places the trailer card 8px higher than the reference (32 under the rating line instead of 40) and ends 12px lower (the row keeps its bottom padding under the card), so the section is 4px taller. To decide.
 
 ## Notes for the next steps
 

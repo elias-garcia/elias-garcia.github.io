@@ -195,7 +195,7 @@ const newestJob = work[0]?.id;
 
     <Section title={copy.contact}>
       <address>
-        <dl class="contact">
+        <dl>
           {profile.contact.map((link) => (
             <div class="contact-row">
               <dt>{link.label}</dt>
@@ -221,7 +221,6 @@ const newestJob = work[0]?.id;
     --ease-ping: cubic-bezier(0, 0, 0.2, 1);
     --avatar: 104px;
     --avatar-sm: 80px;
-    --contact-row: 36px;
 
     display: flex;
     flex-direction: column;
@@ -335,18 +334,14 @@ const newestJob = work[0]?.id;
     }
   }
 
-  .contact {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
+  /* The list rows' padding, so the first row starts as far under the
+     heading as every other section's. */
   .contact-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-1) var(--space-6);
-    min-block-size: var(--contact-row);
+    padding-block: var(--space-3);
 
     dt {
       flex: 0 0 var(--gutter);
