@@ -10,7 +10,9 @@ const { skip } = await getLayoutCopy();
 
 <style>
   .skip {
-    position: absolute;
+    /* Fixed, not absolute: hidden above the screen, it isn't drawn in the
+       area a pull to refresh reveals above the page. */
+    position: fixed;
     inset-block-start: var(--space-3);
     inset-inline-start: var(--space-3);
     z-index: var(--z-skip);
