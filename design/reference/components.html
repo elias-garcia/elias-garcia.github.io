@@ -6,6 +6,8 @@
 /* phones: the platform layer. No grey tap flash (every control has its own :active), no double-tap delay,
    controls aren't text you can long-press-select, and no font inflation in landscape */
 html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+/* always keep room for the page's scrollbar (classic scrollbars on Windows and Linux), so nothing shifts when a page starts or stops scrolling, or when a dialog locks it */
+html{scrollbar-gutter:stable}
 a,button,summary,label,[role="button"]{touch-action:manipulation}
 button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user-select:none}
 .phbtn img{-webkit-touch-callout:none}
@@ -23,7 +25,7 @@ button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
    text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
-:root{color-scheme:light dark;--code-plain:#52525C;--code-keyword:#4F39F6;--code-literal:#372AAC;--code-name:#18181B;--code-comment:#71717B;--code-punct:#71717B;--code-highlight:#EEF2FF;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-slow:250ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent-c:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+:root{color-scheme:light dark;--code-plain:#52525C;--code-keyword:#4F39F6;--code-literal:#372AAC;--code-name:#18181B;--code-comment:#71717B;--code-punct:#71717B;--code-highlight:#EEF2FF;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-medium:200ms;--dur-slow:300ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent-c:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
@@ -61,12 +63,12 @@ a{color:var(--text);text-decoration:none}
 .button:active{transform:scale(.97)}
 /* copy buttons: both labels share one grid cell, so the button keeps the width of the longer one; they swap with a short blur crossfade */
 .sw{display:inline-grid;justify-items:center}
-.sw > span{grid-area:1 / 1;transition:opacity var(--dur) var(--ease-settle),filter var(--dur) var(--ease-settle),transform var(--dur) var(--ease-settle)}
+.sw > span{grid-area:1 / 1;transition:opacity var(--dur-medium) var(--ease-settle),filter var(--dur-medium) var(--ease-settle),transform var(--dur-medium) var(--ease-settle)}
 .sw-b,.done .sw-a{opacity:0;filter:blur(2px);transform:scale(.96)}
 .done .sw-b{opacity:1;filter:none;transform:none}
 @media (prefers-reduced-motion:reduce){.sw > span{filter:none !important;transform:none !important}}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.button svg circle{fill:currentColor}
+
 
 /* lists: hovering one row quiets the others */
 .list .item{transition:opacity var(--dur) var(--ease)}
@@ -161,7 +163,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 ::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}::view-transition-old(project-roleburn),::view-transition-new(project-roleburn){height:100%;object-fit:cover}
+::view-transition-group(project-roleburn){animation-duration:.3s;animation-timing-function:cubic-bezier(.22,1,.36,1)}::view-transition-old(project-roleburn),::view-transition-new(project-roleburn){height:100%;object-fit:cover}
 @media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
@@ -201,7 +203,7 @@ html{scroll-padding-top:80px}
 .cvchev{margin-right:-4px;transition:transform var(--dur) var(--ease)}
 .cvchev.up{transform:rotate(180deg)}
 .cvscrim{position:fixed;inset:0;z-index:var(--z-menu);border:0;padding:0;background:transparent;cursor:default}
-.cvmenu{position:absolute;top:calc(100% + 8px);left:0;z-index:calc(var(--z-menu) + 1);width:320px;max-width:calc(100vw - 48px);display:flex;flex-direction:column;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);transform-origin:top left;transition:opacity var(--dur) var(--ease-settle),transform var(--dur) var(--ease-settle)}
+.cvmenu{position:absolute;top:calc(100% + 8px);left:0;z-index:calc(var(--z-menu) + 1);width:320px;max-width:calc(100vw - 48px);display:flex;flex-direction:column;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);transform-origin:top left;transition:opacity var(--dur-medium) var(--ease-settle),transform var(--dur-medium) var(--ease-settle)}
 @starting-style{.cvmenu{opacity:0;transform:scale(.97) translateY(-4px)}}
 /* opened from the keyboard: the menu appears at once and the chevron flips at once */
 .cvmenu.kb,.cvchev.kb{transition:none}
@@ -312,7 +314,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 ::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+::view-transition-group(project-roleburn){animation-duration:.3s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
 @media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
@@ -323,7 +325,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 @media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
 .button:active{transform:scale(.97)}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.button svg circle{fill:currentColor}
+
 
 /* footer sits after the content, and at the bottom of the window when a page is short (never fixed) */
 .site{display:flex;flex-direction:column}
@@ -436,7 +438,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 ::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+::view-transition-group(project-roleburn){animation-duration:.3s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
 @media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
@@ -589,7 +591,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 ::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+::view-transition-group(project-roleburn){animation-duration:.3s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
 @media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
@@ -675,7 +677,7 @@ a{color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
 .button:active{transform:scale(.97)}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.button svg circle{fill:currentColor}
+
 .pn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.pn.prev:hover svg{transform:translateX(-2px)}}
 .pn{transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
@@ -726,7 +728,7 @@ main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backward
 ::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:.4s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+::view-transition-group(project-roleburn){animation-duration:.3s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
 @media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
@@ -913,7 +915,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .phbtn img{transition:opacity var(--dur) var(--ease)}
 @media (hover: hover) and (pointer: fine){.phbtn:hover img{opacity:.88}}
 .vwrap{position:fixed;inset:0;z-index:var(--z-dialog);display:flex;align-items:center;justify-content:center;padding:24px}
-.vscrim{position:fixed;inset:0;border:0;padding:0;margin:0;cursor:zoom-out;animation:palFade var(--dur) var(--ease-settle) both}
+.vscrim{position:fixed;inset:0;border:0;padding:0;margin:0;cursor:zoom-out;animation:palFade var(--dur-slow) var(--ease-settle) both}
 .vdlg{position:relative;outline:none;animation:vwIn var(--dur-slow) var(--ease-settle) both}
 @keyframes vwIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
 .vfig{margin:0;display:flex;flex-direction:column}
@@ -993,7 +995,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
         <a data-dc-tpl="28" href="ProjectsIndex.dc.html">Projects</a>
         <a data-dc-tpl="29" href="Writing.dc.html" aria-current="page">Writing</a>
         <button data-dc-tpl="30" class="kbd" aria-label="Search the site" aria-keyshortcuts="Meta+K Control+K">
-          <svg data-dc-tpl="31" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="search" style="fill: none; stroke: currentcolor; stroke-width: 1.5;"><path data-dc-tpl="32" vector-effect="non-scaling-stroke" d="m21 21-4.34-4.34"></path><circle data-dc-tpl="33" vector-effect="non-scaling-stroke" cx="11" cy="11" r="8"></circle></svg>
+          <svg data-dc-tpl="31" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="search" style="fill: none; stroke: currentcolor; stroke-width: 1.5;"><path data-dc-tpl="32" d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="33" d="M21 21l-6 -6" vector-effect="non-scaling-stroke"></path></svg>
           <span data-dc-tpl="34">⌘K</span>
         </button>
       </nav>
@@ -1041,7 +1043,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
       <p data-dc-tpl="69" class="spec-w">Used on: Home, Writing, posts</p>
       
     </div>
-    <div data-dc-tpl="70" class="demo"><div data-dc-tpl="71" class="row"><button data-dc-tpl="72" class="button" type="button">Replay</button><a data-dc-tpl="73" class="button" href="#"><svg data-dc-tpl="74" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="rss"><path data-dc-tpl="75" vector-effect="non-scaling-stroke" d="M4 11a9 9 0 0 1 9 9"></path><path data-dc-tpl="76" vector-effect="non-scaling-stroke" d="M4 4a16 16 0 0 1 16 16"></path><circle data-dc-tpl="77" vector-effect="non-scaling-stroke" cx="5" cy="19" r="1"></circle></svg>Subscribe</a><span data-dc-tpl="78" class="onsurface"><button data-dc-tpl="79" class="button" type="button" style="background: var(--bg);"><span data-dc-tpl="80" class="sw"><span data-dc-tpl="81" class="sw-a">Copy</span><span data-dc-tpl="82" class="sw-b" aria-hidden="true">Copied</span></span></button></span></div>
+    <div data-dc-tpl="70" class="demo"><div data-dc-tpl="71" class="row"><button data-dc-tpl="72" class="button" type="button">Replay</button><a data-dc-tpl="73" class="button" href="#"><svg data-dc-tpl="74" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="rss"><path data-dc-tpl="75" d="M4 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" vector-effect="non-scaling-stroke" style="fill: currentcolor;"></path><path data-dc-tpl="76" d="M4 4a16 16 0 0 1 16 16" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="77" d="M4 11a9 9 0 0 1 9 9" vector-effect="non-scaling-stroke"></path></svg>Subscribe</a><span data-dc-tpl="78" class="onsurface"><button data-dc-tpl="79" class="button" type="button" style="background: var(--bg);"><span data-dc-tpl="80" class="sw"><span data-dc-tpl="81" class="sw-a">Copy</span><span data-dc-tpl="82" class="sw-b" aria-hidden="true">Copied</span></span></button></span></div>
     </div>
   </section>
   <section data-dc-tpl="83" class="spec" aria-labelledby="c-menu">
@@ -1051,92 +1053,92 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
       <p data-dc-tpl="87" class="spec-w">Used on: Home</p>
       
     </div>
-    <div data-dc-tpl="88" class="demo"><span data-dc-tpl="89" class="cvwrap" style="flex-direction: column; align-items: flex-start;"><button data-dc-tpl="90" class="button" type="button" aria-expanded="false">Download CV<svg data-dc-tpl="91" class="cvchev" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-down"><path data-dc-tpl="92" vector-effect="non-scaling-stroke" d="m6 9 6 6 6-6"></path></svg></button></span>
-       <span data-dc-tpl="93" class="cvwrap" style="flex-direction: column; align-items: flex-start;"><button data-dc-tpl="94" class="button" type="button" aria-expanded="true">Download CV<svg data-dc-tpl="95" class="cvchev up" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-down"><path data-dc-tpl="96" vector-effect="non-scaling-stroke" d="m6 9 6 6 6-6"></path></svg></button>
+    <div data-dc-tpl="88" class="demo"><span data-dc-tpl="89" class="cvwrap" style="flex-direction: column; align-items: flex-start;"><button data-dc-tpl="90" class="button" type="button" aria-expanded="false">Download CV<svg data-dc-tpl="91" class="cvchev" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-down"><path data-dc-tpl="92" d="M6 9l6 6l6 -6" vector-effect="non-scaling-stroke"></path></svg></button></span>
+       <span data-dc-tpl="93" class="cvwrap" style="flex-direction: column; align-items: flex-start;"><button data-dc-tpl="94" class="button" type="button" aria-expanded="true">Download CV<svg data-dc-tpl="95" class="cvchev up" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-down"><path data-dc-tpl="96" d="M6 9l6 6l6 -6" vector-effect="non-scaling-stroke"></path></svg></button>
        <span data-dc-tpl="97" class="cvmenu" id="cv-menu" role="menu" aria-label="Download CV" style="position: static; animation: auto ease 0s 1 normal none running none; margin-top: 8px;">
                   <a data-dc-tpl="98" class="cvitem" role="menuitem" href="#">
-                    <span data-dc-tpl="99" class="pic" aria-hidden="true"><svg data-dc-tpl="100" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="file-text"><path data-dc-tpl="101" vector-effect="non-scaling-stroke" d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path data-dc-tpl="102" vector-effect="non-scaling-stroke" d="M14 2v5a1 1 0 0 0 1 1h5"></path><path data-dc-tpl="103" vector-effect="non-scaling-stroke" d="M10 9H8"></path><path data-dc-tpl="104" vector-effect="non-scaling-stroke" d="M16 13H8"></path><path data-dc-tpl="105" vector-effect="non-scaling-stroke" d="M16 17H8"></path></svg></span>
+                    <span data-dc-tpl="99" class="pic" aria-hidden="true"><svg data-dc-tpl="100" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="file-text"><path data-dc-tpl="101" d="M14 3v4a1 1 0 0 0 1 1h4" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="102" d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="103" d="M9 9l1 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="104" d="M9 13l6 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="105" d="M9 17l6 0" vector-effect="non-scaling-stroke"></path></svg></span>
                     <span data-dc-tpl="106" class="cvtext"><span data-dc-tpl="107" class="cvtitle">PDF <span data-dc-tpl="108" class="cvsize">120 KB</span></span><span data-dc-tpl="109" class="cvdesc">Formatted for reading, printing and sharing</span></span>
                   </a>
                   <a data-dc-tpl="110" class="cvitem" role="menuitem" href="#">
-                    <span data-dc-tpl="111" class="pic" aria-hidden="true"><svg data-dc-tpl="112" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="file-code"><path data-dc-tpl="113" vector-effect="non-scaling-stroke" d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path data-dc-tpl="114" vector-effect="non-scaling-stroke" d="M14 2v5a1 1 0 0 0 1 1h5"></path><path data-dc-tpl="115" vector-effect="non-scaling-stroke" d="M10 12.5 8 15l2 2.5"></path><path data-dc-tpl="116" vector-effect="non-scaling-stroke" d="m14 12.5 2 2.5-2 2.5"></path></svg></span>
-                    <span data-dc-tpl="117" class="cvtext"><span data-dc-tpl="118" class="cvtitle">Markdown <span data-dc-tpl="119" class="cvsize">4 KB</span></span><span data-dc-tpl="120" class="cvdesc">Plain text for AI tools and agents</span></span>
+                    <span data-dc-tpl="111" class="pic" aria-hidden="true"><svg data-dc-tpl="112" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="markdown"><path data-dc-tpl="113" d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="114" d="M7 15v-6l2 2l2 -2v6" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="115" d="M14 13l2 2l2 -2m-2 2v-6" vector-effect="non-scaling-stroke"></path></svg></span>
+                    <span data-dc-tpl="116" class="cvtext"><span data-dc-tpl="117" class="cvtitle">Markdown <span data-dc-tpl="118" class="cvsize">4 KB</span></span><span data-dc-tpl="119" class="cvdesc">Plain text for AI tools and agents</span></span>
                   </a>
                 </span></span>
     </div>
   </section>
-  <section data-dc-tpl="121" class="spec" aria-labelledby="c-chip">
-    <div data-dc-tpl="122" class="spec-h">
-      <h3 data-dc-tpl="123" id="c-chip">Chip</h3>
-      <p data-dc-tpl="124" class="spec-u">Links between sibling pages: the Writing topics (All → /writing, AI → /writing/topics/ai). Grey at rest; the current page’s chip (aria-current="page") is indigo tint with an indigo count. Never alone, never for actions.</p>
-      <p data-dc-tpl="125" class="spec-w">Used on: Writing</p>
+  <section data-dc-tpl="120" class="spec" aria-labelledby="c-chip">
+    <div data-dc-tpl="121" class="spec-h">
+      <h3 data-dc-tpl="122" id="c-chip">Chip</h3>
+      <p data-dc-tpl="123" class="spec-u">Links between sibling pages: the Writing topics (All → /writing, AI → /writing/topics/ai). Grey at rest; the current page’s chip (aria-current="page") is indigo tint with an indigo count. Never alone, never for actions.</p>
+      <p data-dc-tpl="124" class="spec-w">Used on: Writing</p>
       
     </div>
-    <div data-dc-tpl="126" class="demo"><nav data-dc-tpl="127" class="topics" aria-label="Example topics"><a data-dc-tpl="128" class="topic" href="/writing" aria-current="page">All<span data-dc-tpl="129" class="c">5</span></a><a data-dc-tpl="130" class="topic" href="/writing/topics/ai">AI<span data-dc-tpl="131" class="c">3</span></a><a data-dc-tpl="132" class="topic" href="/writing/topics/defi">DeFi<span data-dc-tpl="133" class="c">1</span></a></nav>
+    <div data-dc-tpl="125" class="demo"><nav data-dc-tpl="126" class="topics" aria-label="Example topics"><a data-dc-tpl="127" class="topic" href="/writing" aria-current="page">All<span data-dc-tpl="128" class="c">5</span></a><a data-dc-tpl="129" class="topic" href="/writing/topics/ai">AI<span data-dc-tpl="130" class="c">3</span></a><a data-dc-tpl="131" class="topic" href="/writing/topics/defi">DeFi<span data-dc-tpl="132" class="c">1</span></a></nav>
     </div>
   </section>
-  <section data-dc-tpl="134" class="spec" aria-labelledby="c-more">
-    <div data-dc-tpl="135" class="spec-h">
-      <h3 data-dc-tpl="136" id="c-more">See-more link</h3>
-      <p data-dc-tpl="137" class="spec-u">Muted text, the underline fades in and the chevron nudges. Only for pages inside the site; links that leave use ↗.</p>
-      <p data-dc-tpl="138" class="spec-w">Used on: Home, Projects</p>
+  <section data-dc-tpl="133" class="spec" aria-labelledby="c-more">
+    <div data-dc-tpl="134" class="spec-h">
+      <h3 data-dc-tpl="135" id="c-more">See-more link</h3>
+      <p data-dc-tpl="136" class="spec-u">Muted text, the underline fades in and the chevron nudges. Only for pages inside the site; links that leave use ↗.</p>
+      <p data-dc-tpl="137" class="spec-w">Used on: Home, Projects</p>
       
     </div>
-    <div data-dc-tpl="139" class="demo"><div data-dc-tpl="140" class="row"><a data-dc-tpl="141" class="more" href="#"><span data-dc-tpl="142">All posts</span><svg data-dc-tpl="143" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="144" vector-effect="non-scaling-stroke" d="m9 18 6-6-6-6"></path></svg></a><a data-dc-tpl="145" class="more" href="#"><span data-dc-tpl="146">All projects</span><svg data-dc-tpl="147" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="148" vector-effect="non-scaling-stroke" d="m9 18 6-6-6-6"></path></svg></a></div>
+    <div data-dc-tpl="138" class="demo"><div data-dc-tpl="139" class="row"><a data-dc-tpl="140" class="more" href="#"><span data-dc-tpl="141">All posts</span><svg data-dc-tpl="142" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="143" d="M9 6l6 6l-6 6" vector-effect="non-scaling-stroke"></path></svg></a><a data-dc-tpl="144" class="more" href="#"><span data-dc-tpl="145">All projects</span><svg data-dc-tpl="146" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="147" d="M9 6l6 6l-6 6" vector-effect="non-scaling-stroke"></path></svg></a></div>
     </div>
   </section>
-  <section data-dc-tpl="149" class="spec" aria-labelledby="c-copy">
-    <div data-dc-tpl="150" class="spec-h">
-      <h3 data-dc-tpl="151" id="c-copy">Back link + Copy page</h3>
-      <p data-dc-tpl="152" class="spec-u">Back to the parent list on the left; copy the page as Markdown on the right.</p>
-      <p data-dc-tpl="153" class="spec-w">Used on: posts</p>
+  <section data-dc-tpl="148" class="spec" aria-labelledby="c-copy">
+    <div data-dc-tpl="149" class="spec-h">
+      <h3 data-dc-tpl="150" id="c-copy">Back link + Copy page</h3>
+      <p data-dc-tpl="151" class="spec-u">Back to the parent list on the left; copy the page as Markdown on the right.</p>
+      <p data-dc-tpl="152" class="spec-w">Used on: posts</p>
       
     </div>
-    <div data-dc-tpl="154" class="demo"><div data-dc-tpl="155" style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-        <a data-dc-tpl="156" href="Writing.dc.html" style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-2); height: 32px;">
-          <svg data-dc-tpl="157" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-left" style="fill: none; stroke: currentcolor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;"><path data-dc-tpl="158" vector-effect="non-scaling-stroke" d="m15 18-6-6 6-6"></path></svg>Writing
+    <div data-dc-tpl="153" class="demo"><div data-dc-tpl="154" style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+        <a data-dc-tpl="155" href="Writing.dc.html" style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-2); height: 32px;">
+          <svg data-dc-tpl="156" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-left" style="fill: none; stroke: currentcolor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;"><path data-dc-tpl="157" d="M15 6l-6 6l6 6" vector-effect="non-scaling-stroke"></path></svg>Writing
         </a>
-        <button data-dc-tpl="159" class="button" aria-label="Copy page as Markdown" aria-live="polite"><svg data-dc-tpl="160" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="file-code"><path data-dc-tpl="161" vector-effect="non-scaling-stroke" d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path data-dc-tpl="162" vector-effect="non-scaling-stroke" d="M14 2v5a1 1 0 0 0 1 1h5"></path><path data-dc-tpl="163" vector-effect="non-scaling-stroke" d="M10 12.5 8 15l2 2.5"></path><path data-dc-tpl="164" vector-effect="non-scaling-stroke" d="m14 12.5 2 2.5-2 2.5"></path></svg><span data-dc-tpl="165" class="sw"><span data-dc-tpl="166" class="sw-a">Copy page</span><span data-dc-tpl="167" class="sw-b" aria-hidden="true">Copied</span></span></button>
+        <button data-dc-tpl="158" class="button" aria-label="Copy page as Markdown" aria-live="polite"><svg data-dc-tpl="159" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="markdown"><path data-dc-tpl="160" d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="161" d="M7 15v-6l2 2l2 -2v6" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="162" d="M14 13l2 2l2 -2m-2 2v-6" vector-effect="non-scaling-stroke"></path></svg><span data-dc-tpl="163" class="sw"><span data-dc-tpl="164" class="sw-a">Copy page</span><span data-dc-tpl="165" class="sw-b" aria-hidden="true">Copied</span></span></button>
       </div>
     </div>
   </section>
     </div>
   </section>
 
-  <section data-dc-tpl="168" class="group" aria-labelledby="g5">
-    <h2 data-dc-tpl="169" id="g5" class="group-h">Search</h2>
-    <div data-dc-tpl="170" class="specs">
-  <section data-dc-tpl="171" class="spec wide" aria-labelledby="c-search">
-    <div data-dc-tpl="172" class="spec-h">
-      <h3 data-dc-tpl="173" id="c-search">Search result rows</h3>
-      <p data-dc-tpl="174" class="spec-u">Icon tile, title, its summary (shown in full: it wraps, so a match is never cut off), meta on the right; posts and projects both show their summary. The selected row is tinted indigo; ↵ shows what Enter does. Only the title and the summary are searched, each query word where a word starts, and every match is indigo at weight 600 with no background, so it stays readable on the tinted row. Topics aren’t searched (each has its own page); with no match, links to the topic pages are offered instead. Example: “agent”.</p>
-      <p data-dc-tpl="175" class="spec-w">Used on: search menu (⌘K)</p>
+  <section data-dc-tpl="166" class="group" aria-labelledby="g5">
+    <h2 data-dc-tpl="167" id="g5" class="group-h">Search</h2>
+    <div data-dc-tpl="168" class="specs">
+  <section data-dc-tpl="169" class="spec wide" aria-labelledby="c-search">
+    <div data-dc-tpl="170" class="spec-h">
+      <h3 data-dc-tpl="171" id="c-search">Search result rows</h3>
+      <p data-dc-tpl="172" class="spec-u">Icon tile, title, its summary (shown in full: it wraps, so a match is never cut off), meta on the right; posts and projects both show their summary. The selected row is tinted indigo; ↵ shows what Enter does. Only the title and the summary are searched, each query word where a word starts, and every match is indigo at weight 600 with no background, so it stays readable on the tinted row. Topics aren’t searched (each has its own page); with no match, links to the topic pages are offered instead. Example: “agent”.</p>
+      <p data-dc-tpl="173" class="spec-w">Used on: search menu (⌘K)</p>
       
     </div>
-    <div data-dc-tpl="176" class="demo"><div data-dc-tpl="177" role="listbox" aria-label="Example results" style="max-width: 560px; padding: 4px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--bg);">
-         <div data-dc-tpl="178" class="pgrp">Writing</div>
-         <a data-dc-tpl="179" class="popt act" role="option" aria-selected="true" href="#"><span data-dc-tpl="180" class="pic" aria-hidden="true"><svg data-dc-tpl="181" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="file-text"><path data-dc-tpl="182" vector-effect="non-scaling-stroke" d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path data-dc-tpl="183" vector-effect="non-scaling-stroke" d="M14 2v5a1 1 0 0 0 1 1h5"></path><path data-dc-tpl="184" vector-effect="non-scaling-stroke" d="M10 9H8"></path><path data-dc-tpl="185" vector-effect="non-scaling-stroke" d="M16 13H8"></path><path data-dc-tpl="186" vector-effect="non-scaling-stroke" d="M16 17H8"></path></svg></span><span data-dc-tpl="187" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;"><span data-dc-tpl="188" style="font-size: 14px;">A job radar made of markdown files</span><span data-dc-tpl="189" style="font-size: 12px; color: var(--text-2);">How Roleburn runs on a folder of notes and a few scheduled <mark data-dc-tpl="190" class="phl">agent</mark>s.</span></span><span data-dc-tpl="191" style="font-size: 12px; color: var(--text-2);">Oct 2026</span><span data-dc-tpl="192" class="pret" aria-hidden="true">↵</span></a>
-         <a data-dc-tpl="193" class="popt" role="option" aria-selected="false" href="#"><span data-dc-tpl="194" class="pic" aria-hidden="true"><svg data-dc-tpl="195" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="file-text"><path data-dc-tpl="196" vector-effect="non-scaling-stroke" d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path data-dc-tpl="197" vector-effect="non-scaling-stroke" d="M14 2v5a1 1 0 0 0 1 1h5"></path><path data-dc-tpl="198" vector-effect="non-scaling-stroke" d="M10 9H8"></path><path data-dc-tpl="199" vector-effect="non-scaling-stroke" d="M16 13H8"></path><path data-dc-tpl="200" vector-effect="non-scaling-stroke" d="M16 17H8"></path></svg></span><span data-dc-tpl="201" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;"><span data-dc-tpl="202" style="font-size: 14px;">From GitHub issue to reviewed pull request</span><span data-dc-tpl="203" style="font-size: 12px; color: var(--text-2);">Running my side projects through an <mark data-dc-tpl="204" class="phl">agent</mark> pipeline with work-issue.</span></span><span data-dc-tpl="205" style="font-size: 12px; color: var(--text-2);">Sep 2026</span><span data-dc-tpl="206" class="pret" aria-hidden="true">↵</span></a>
-         <div data-dc-tpl="207" style="display: flex; align-items: center; gap: 16px; padding: 12px; font-size: 12px; color: var(--text-3);"><span data-dc-tpl="208" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="209" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="210" class="pk">↑</span><span data-dc-tpl="211" class="pk">↓</span></span>to move</span><span data-dc-tpl="212" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="213" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="214" class="pk">↵</span></span>to open</span></div>
+    <div data-dc-tpl="174" class="demo"><div data-dc-tpl="175" role="listbox" aria-label="Example results" style="max-width: 560px; padding: 4px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--bg);">
+         <div data-dc-tpl="176" class="pgrp">Writing</div>
+         <a data-dc-tpl="177" class="popt act" role="option" aria-selected="true" href="#"><span data-dc-tpl="178" class="pic" aria-hidden="true"><svg data-dc-tpl="179" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="file-text"><path data-dc-tpl="180" d="M14 3v4a1 1 0 0 0 1 1h4" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="181" d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="182" d="M9 9l1 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="183" d="M9 13l6 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="184" d="M9 17l6 0" vector-effect="non-scaling-stroke"></path></svg></span><span data-dc-tpl="185" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;"><span data-dc-tpl="186" style="font-size: 14px;">A job radar made of markdown files</span><span data-dc-tpl="187" style="font-size: 12px; color: var(--text-2);">How Roleburn runs on a folder of notes and a few scheduled <mark data-dc-tpl="188" class="phl">agent</mark>s.</span></span><span data-dc-tpl="189" style="font-size: 12px; color: var(--text-2);">Oct 2026</span><span data-dc-tpl="190" class="pret" aria-hidden="true">↵</span></a>
+         <a data-dc-tpl="191" class="popt" role="option" aria-selected="false" href="#"><span data-dc-tpl="192" class="pic" aria-hidden="true"><svg data-dc-tpl="193" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="file-text"><path data-dc-tpl="194" d="M14 3v4a1 1 0 0 0 1 1h4" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="195" d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="196" d="M9 9l1 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="197" d="M9 13l6 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="198" d="M9 17l6 0" vector-effect="non-scaling-stroke"></path></svg></span><span data-dc-tpl="199" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;"><span data-dc-tpl="200" style="font-size: 14px;">From GitHub issue to reviewed pull request</span><span data-dc-tpl="201" style="font-size: 12px; color: var(--text-2);">Running my side projects through an <mark data-dc-tpl="202" class="phl">agent</mark> pipeline with work-issue.</span></span><span data-dc-tpl="203" style="font-size: 12px; color: var(--text-2);">Sep 2026</span><span data-dc-tpl="204" class="pret" aria-hidden="true">↵</span></a>
+         <div data-dc-tpl="205" style="display: flex; align-items: center; gap: 16px; padding: 12px; font-size: 12px; color: var(--text-3);"><span data-dc-tpl="206" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="207" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="208" class="pk">↑</span><span data-dc-tpl="209" class="pk">↓</span></span>to move</span><span data-dc-tpl="210" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="211" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="212" class="pk">↵</span></span>to open</span></div>
        </div>
     </div>
   </section>
-  <section data-dc-tpl="215" class="spec" aria-labelledby="c-keys">
-    <div data-dc-tpl="216" class="spec-h">
-      <h3 data-dc-tpl="217" id="c-keys">Key hint</h3>
-      <p data-dc-tpl="218" class="spec-u">Shows which key does what. 20px square, 12px text, never focusable. Keys that work together sit 4px apart as a group, and the group sits 8px before its label (“↑ ↓ to move”).</p>
-      <p data-dc-tpl="219" class="spec-w">Used on: search menu, header search button</p>
+  <section data-dc-tpl="213" class="spec" aria-labelledby="c-keys">
+    <div data-dc-tpl="214" class="spec-h">
+      <h3 data-dc-tpl="215" id="c-keys">Key hint</h3>
+      <p data-dc-tpl="216" class="spec-u">Shows which key does what. 20px square, 12px text, never focusable. Keys that work together sit 4px apart as a group, and the group sits 8px before its label (“↑ ↓ to move”).</p>
+      <p data-dc-tpl="217" class="spec-w">Used on: search menu, header search button</p>
     </div>
-    <div data-dc-tpl="220" class="demo"><div data-dc-tpl="221" class="row" style="font-size: 12px; color: var(--text-3);"><span data-dc-tpl="222" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="223" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="224" class="pk">↑</span><span data-dc-tpl="225" class="pk">↓</span></span>to move</span><span data-dc-tpl="226" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="227" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="228" class="pk">↵</span></span>to open</span><span data-dc-tpl="229" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="230" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="231" class="pk">esc</span></span>to go back</span></div>
+    <div data-dc-tpl="218" class="demo"><div data-dc-tpl="219" class="row" style="font-size: 12px; color: var(--text-3);"><span data-dc-tpl="220" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="221" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="222" class="pk">↑</span><span data-dc-tpl="223" class="pk">↓</span></span>to move</span><span data-dc-tpl="224" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="225" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="226" class="pk">↵</span></span>to open</span><span data-dc-tpl="227" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="228" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="229" class="pk">esc</span></span>to go back</span></div>
     </div>
   </section>
-  <section data-dc-tpl="232" class="spec" aria-labelledby="c-crumb">
-    <div data-dc-tpl="233" class="spec-h">
-      <h3 data-dc-tpl="234" id="c-crumb">Search crumb</h3>
-      <p data-dc-tpl="235" class="spec-u">Shows which nested choice you are in; click it, or press Esc or Backspace on an empty input, to go back. Inside the step both formats stay listed and typing only moves the selection (p → PDF, m → Markdown). If nothing matches, a quiet line says “No format matches “…”. Backspace to go back.” and Enter does nothing.</p>
-      <p data-dc-tpl="236" class="spec-w">Used on: search menu (Download CV)</p>
+  <section data-dc-tpl="230" class="spec" aria-labelledby="c-crumb">
+    <div data-dc-tpl="231" class="spec-h">
+      <h3 data-dc-tpl="232" id="c-crumb">Search crumb</h3>
+      <p data-dc-tpl="233" class="spec-u">Shows which nested choice you are in; click it, or press Esc or Backspace on an empty input, to go back. Inside the step both formats stay listed and typing only moves the selection (p → PDF, m → Markdown). If nothing matches, a quiet line says “No format matches “…”. Backspace to go back.” and Enter does nothing.</p>
+      <p data-dc-tpl="234" class="spec-w">Used on: search menu (Download CV)</p>
     </div>
-    <div data-dc-tpl="237" class="demo"><div data-dc-tpl="238" style="display: flex; align-items: center; gap: 12px; height: 56px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--bg); width: 100%; max-width: 420px;"><svg data-dc-tpl="239" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="search" style="fill: none; stroke: var(--text-3); stroke-width: 1.5; flex: 0 0 auto;"><path data-dc-tpl="240" vector-effect="non-scaling-stroke" d="m21 21-4.34-4.34"></path><circle data-dc-tpl="241" vector-effect="non-scaling-stroke" cx="11" cy="11" r="8"></circle></svg><button data-dc-tpl="242" class="pcrumb" type="button">Download CV</button><span data-dc-tpl="243" style="color: var(--text-3);">Choose a format</span><span data-dc-tpl="244" class="pk" style="margin-left: auto;">esc</span></div>
+    <div data-dc-tpl="235" class="demo"><div data-dc-tpl="236" style="display: flex; align-items: center; gap: 12px; height: 56px; padding: 0px 16px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--bg); width: 100%; max-width: 420px;"><svg data-dc-tpl="237" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="search" style="fill: none; stroke: var(--text-3); stroke-width: 1.5; flex: 0 0 auto;"><path data-dc-tpl="238" d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="239" d="M21 21l-6 -6" vector-effect="non-scaling-stroke"></path></svg><button data-dc-tpl="240" class="pcrumb" type="button">Download CV</button><span data-dc-tpl="241" style="color: var(--text-3);">Choose a format</span><span data-dc-tpl="242" class="pk" style="margin-left: auto;">esc</span></div>
     </div>
   </section>
     </div>
