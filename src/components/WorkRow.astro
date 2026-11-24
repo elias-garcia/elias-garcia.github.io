@@ -14,7 +14,7 @@ const { job, open } = Astro.props;
 ---
 
 <li>
-  <details class="job row-interactive" name="work" open={open}>
+  <details class="job row-interactive" open={open}>
     <summary class="head">
       <span class="date">
         <Years start={job.start} end={job.end} />
