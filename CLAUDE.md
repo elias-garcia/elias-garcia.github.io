@@ -21,9 +21,9 @@ Markup follows the HTML specification, even where the reference HTML does someth
 - Astro 7 with static output, TypeScript (`astro/tsconfigs/strictest`), MDX, plain CSS with no framework.
 - Icons: Tabler through `@tabler/icons-astro`, brand marks included.
 - ESLint, Prettier, html-validate, Playwright + axe, Lighthouse CI.
-- GitHub Actions: `ci.yml` runs every check on pull requests, with Lighthouse and the internal links and anchors (lychee); `links.yml` checks the links to other sites on the first of each month.
+- GitHub Actions: `ci.yml` runs every check on pull requests and on `main`, with Lighthouse and the internal links and anchors (lychee), then deploys; `links.yml` checks the links to other sites on the first of each month.
 - Node 26, pinned with `engines.node`.
-- Vercel through Git: `main` deploys to production (`eliasgarcia.dev`), other branches get previews. The build is plain static files in `dist/`, with no adapter.
+- Vercel hosts what GitHub Actions builds (`vercel deploy --prebuilt`): its own builds can't run Chrome, which prints the CV, so `vercel.json` turns off its Git deploys. Once the checks pass, a pull request gets a preview (its link is a comment on the PR) and `main` deploys to production (`eliasgarcia.dev`). The build is plain static files in `dist/`, with no adapter.
 
 ## Verify before finishing
 
@@ -104,7 +104,7 @@ design/         # design handoff (reference only)
 
 - Committing, pushing and deploying always need an explicit ask. Pushing to `main` deploys to production.
 - Before committing, run the `reviewer` agent (`.claude/agents/reviewer.md`) on the changes, unless the commit only changes documents (this file, `PLAN.md`) or `design/`. Fix every "must fix" finding, or explain why not.
-- Changes reach `main` through a pull request, so CI has run on them before they deploy.
+- Changes reach `main` through a pull request, so CI has run on them, and CI runs again on `main` before it deploys.
 - Conventional commits, one logical change per commit.
 - New dependencies only when the task needs them. Always install the latest version.
 - No secrets in the repo, and no third-party scripts without a clear reason.
