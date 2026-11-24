@@ -14,49 +14,53 @@
 @page { size: A4; margin: 16mm 18mm 16mm; }
 :root {
   color-scheme: light;
-  --text: #18181B; --text-2: #52525C; --text-3: #71717B; --line: #E4E4E7;
-  --date: 22mm;  /* the widest date ("2024 – Now") is ~17mm */ --gap: 6mm;
+  --text: #18181B; --text-2: #52525C; --text-3: #71717B; --line: #D4D4D8; /* the site's --line-strong: a paler hairline can drop out on an office printer */
+  /* the site's spacing scale, scaled like the text (16px on screen is 10pt here, so 1px is 0.625pt) */
+  --s-4: 2.5pt; --s-8: 5pt; --s-12: 7.5pt; --s-16: 10pt; --s-24: 15pt; --s-32: 20pt; --s-48: 30pt;
+  /* the site's line heights */
+  --lh-display: 1.2; --lh-title: 1.35; --lh-line: 1.5;  /* no 1.6: that's the site's reading line height, too open for a page that's scanned */
+  --date: 22mm;  /* the widest date ("2024 – Now") is ~17mm */
 }
 * { box-sizing: border-box; }
 html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 body { margin: 0; background: #fff; color: var(--text); font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
-  font-size: 10pt; line-height: 1.45; font-variant-numeric: tabular-nums; text-rendering: optimizeLegibility; }
+  font-size: 10pt; line-height: var(--lh-line); font-variant-numeric: tabular-nums; text-rendering: optimizeLegibility; }
 a { color: inherit; text-decoration: none; }
 h1, h2, h3, p, ul { margin: 0; }
 
-/* header: name, one line of who and where, contact written out */
-.head { display: flex; align-items: center; gap: 4mm; padding-bottom: 5mm; border-bottom: 0.5pt solid var(--line); }
-.photo { width: 16mm; height: 16mm; border-radius: 50%; object-fit: cover; flex: none; display: block; }
-.who { display: flex; flex-direction: column; gap: 1.5mm; min-width: 0; }
-h1 { font-size: 19pt; line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; }
-.role { font-size: 11pt; color: var(--text-2); }
+/* header: photo, name, one line of who and where */
+.head { display: flex; align-items: center; gap: var(--s-16); padding-bottom: var(--s-24); border-bottom: 0.5pt solid var(--line); }
+.photo { width: 40pt; height: 40pt; /* the site's 64 step: the height of the name and role line beside it */ border-radius: 50%; object-fit: cover; flex: none; display: block; }
+.who { display: flex; flex-direction: column; gap: var(--s-4); min-width: 0; }
+h1 { font-size: 20pt; line-height: var(--lh-display); font-weight: 600; letter-spacing: -0.02em; }  /* the site's display size (32px) */
+.role { color: var(--text-2); }
 /* contact: its own band between two hairlines; three columns sized to the addresses, spread to the full width.
    Every address is written out as text (what parsers read); the icon only says what it is */
-.contact { list-style: none; margin: 0; padding: 3mm 0; border-bottom: 0.5pt solid var(--line); display: grid; grid-template-columns: repeat(3, max-content); justify-content: space-between; gap: 1.5mm 8mm; color: var(--text-2); }
-.contact li { display: flex; align-items: center; gap: 2mm; white-space: nowrap; }
+.contact { list-style: none; margin: 0; padding: var(--s-12) 0; border-bottom: 0.5pt solid var(--line); display: grid; grid-template-columns: repeat(3, max-content); justify-content: space-between; gap: var(--s-4) var(--s-24); color: var(--text-2); }
+.contact li { display: flex; align-items: center; gap: var(--s-8); white-space: nowrap; }
 .contact a { color: inherit; }
 .ic { width: 9pt; height: 9pt; flex: none; color: var(--text-3); }
 .sep { color: var(--text-3); padding: 0 1pt; }
 
-/* sections: headings at the text size, set apart by space and weight (as on the site) */
-section { margin-top: 6.5mm; }
-h2 { font-size: 10pt; font-weight: 600; margin-bottom: 2.5mm; break-after: avoid; }
-section > p + p { margin-top: 2mm; }
+/* sections: headings at the text size, set apart by space and weight (as on the site).
+   Gaps live on the parent. Each break is bigger than the one inside it: 4 bullets and title to second line, 12 job title to bullets, 16 rows and heading to content, 24 jobs, 48 sections */
+section { display: flex; flex-direction: column; gap: var(--s-16); margin-top: var(--s-48); }
+.contact + section { margin-top: var(--s-32); }
+h2 { font-size: 10pt; font-weight: 600; break-after: avoid; }
 section > p { color: var(--text-2); }
 
-/* rows: the site's date column, scaled for paper */
-.row { display: grid; grid-template-columns: var(--date) 1fr; column-gap: var(--gap); padding: 1.6mm 0; break-inside: avoid; }
+/* rows: the site's date column, scaled for paper. No padding: rows sit 16 apart (the section's gap), jobs 24 */
+.row { display: grid; grid-template-columns: var(--date) 1fr; column-gap: var(--s-24); align-items: baseline; break-inside: avoid; }
 .date { color: var(--text-3); white-space: nowrap; }
-h3 { font-size: 10pt; font-weight: 500; }
+h3 { font-size: 10pt; font-weight: 500; line-height: var(--lh-title); }
 .co { font-weight: 600; }
 .meta { color: var(--text-2); }
-.pos { color: var(--text); font-weight: 500; }  /* the job title: text colour at 500, below the company at 600; it's what recruiters scan for */
+h3 + .pos, h3 + .meta { margin-top: var(--s-4); }  /* 4 from a title to its second line, as on the site */
+.pos { color: var(--text); font-weight: 500; line-height: var(--lh-title); }  /* the job title: text colour at 500, below the company at 600; it's what recruiters scan for */
 h3 .lk { color: var(--text-2); font-weight: 400; }  /* an address on the title line, after the title */
 .st { color: var(--text-2); font-weight: 400; }
-.job { padding: 2.2mm 0; }
-ul { margin-top: 1.5mm; padding-left: 3.5mm; color: var(--text-2); }
-li { padding-left: 0.5mm; }
-li + li { margin-top: 0.8mm; }
+.job + .job { margin-top: var(--s-8); }  /* 24 between jobs, about one blank line: the section's 16 plus 8 */
+ul { margin-top: var(--s-12); padding-left: var(--s-16); color: var(--text-2); display: flex; flex-direction: column; gap: var(--s-4); }  /* bullets at 1.5: resume guides put leading at 120-145% and call more than 1.5 too wide */
 li::marker { color: var(--text-3); }
 
 @media screen {
@@ -78,7 +82,7 @@ li::marker { color: var(--text-3); }
 <ul class="contact"><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" /><path d="M3 7l9 6l9 -6" /></svg><a href="mailto:eliasgarciadev@gmail.com">eliasgarciadev@gmail.com</a></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M3.6 9h16.8" /><path d="M3.6 15h16.8" /><path d="M11.5 3a17 17 0 0 0 0 18" /><path d="M12.5 3a17 17 0 0 1 0 18" /></svg><a href="https://eliasgarcia.dev">eliasgarcia.dev</a></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg><a href="https://github.com/elias-garcia">github.com/elias-garcia</a></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11v5" /><path d="M8 8v.01" /><path d="M12 16v-5" /><path d="M16 16v-3a2 2 0 1 0 -4 0" /><path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4l0 -10" /></svg><a href="https://www.linkedin.com/in/elias-garcia-marino">linkedin.com/in/elias-garcia-marino</a></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16l-4.267 0" /><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" /></svg><a href="https://x.com/eliasgarciadev">x.com/eliasgarciadev</a></li></ul>
 <section><h2>About</h2><p>I’ve spent nine years building products end to end, from real-time data pipelines and APIs to the interfaces on top. Most recently I led engineering at Vesu, a lending protocol on Starknet. Before that, four years at Polygon Labs, leading the frontend of Polygon zkEVM and the team behind Polygon ID.</p><p>These days I’m also exploring how AI agents change the way small teams ship. This site is where I keep the projects and notes.</p></section>
 <section><h2>Experience</h2><div class="row job"><div class="date">2024 – Now</div><div class="body"><h3><span class="co">Vesu</span> <span class="sep">·</span> <span class="st">Remote</span></h3><p class="pos">Engineering Lead</p><ul><li>Led engineering from launch to $84.6M in customer assets.</li><li>Built the lender and borrower app, a risk-parameter admin panel and a blockchain-only fallback UI so users can exit positions during an outage, on a shared Ark UI design system.</li><li>Built the real-time event-ingestion pipeline, a public API, an RFQ system for liquidations over WebSockets and an MCP server for product data.</li><li>Set up issue tracking, CI/CD and releases from zero, mentored the frontend team and introduced the company’s AI development practice.</li></ul></div></div><div class="row job"><div class="date">2020 – 2024</div><div class="body"><h3><span class="co">Polygon Labs</span> <span class="sep">·</span> <span class="st">Remote</span></h3><p class="pos">Staff Frontend Engineer → Tech Lead</p><ul><li>Hermez: built the consumer wallet and block explorer, and contributed to the protocol SDK. Polygon acquired Hermez in 2021.</li><li>Polygon zkEVM: led the 3-person frontend team across every user-facing product, including the bridge, as it grew to $180M in bridged assets.</li><li>Polygon ID: tech lead of a 10-engineer team building the credential issuer, wallet, marketplace and schema tooling.</li></ul></div></div><div class="row job"><div class="date">2019 – 2020</div><div class="body"><h3><span class="co">Nexiona</span> <span class="sep">·</span> <span class="st">Remote</span></h3><p class="pos">Senior Frontend Engineer</p><ul><li>Built the frontend of MIIMETIQ in React and Redux, used across Europe by companies including Celsa Group and Grifols.</li></ul></div></div><div class="row job"><div class="date">2018 – 2019</div><div class="body"><h3><span class="co">Netex Learning</span> <span class="sep">·</span> <span class="st">On-site, A Coruña</span></h3><p class="pos">Lead Frontend Engineer</p><ul><li>Led the 4-person Angular team behind Netex Cloud, used by thousands of learners at companies including Amazon and Inditex. Delivered internationalisation and accessibility.</li><li>Led a cross-department initiative to build a shared component library adopted across the company’s products.</li></ul></div></div><div class="row job"><div class="date">2017 – 2018</div><div class="body"><h3><span class="co">Ágora Binaria</span> <span class="sep">·</span> <span class="st">Hybrid, A Coruña</span></h3><p class="pos">Full-Stack Engineer</p><ul><li>Built full-stack client applications and did performance work on existing Angular codebases.</li></ul></div></div></section>
-<section><h2>Projects</h2><div class="row "><div class="date">2026</div><div class="body"><h3>Roleburn <span class="sep">·</span> <a class="lk" href="https://eliasgarcia.dev/projects/roleburn">eliasgarcia.dev/projects/roleburn</a></h3><p class="meta">A daily radar for remote roles that match my CV.</p></div></div><div class="row "><div class="date">2026</div><div class="body"><h3>work-issue</h3><p class="meta">Agents that take a GitHub issue to a reviewed PR.</p></div></div><div class="row "><div class="date">2026</div><div class="body"><h3>POL funding spreads</h3><p class="meta">Funding-rate arbitrage on POL perps across DEXes.</p></div></div></section>
+<section><h2>Projects</h2><div class="row "><div class="date">2026</div><div class="body"><h3>Roleburn <span class="sep">·</span> <a class="lk" href="https://eliasgarcia.dev/projects/roleburn">eliasgarcia.dev/projects/roleburn</a></h3><p class="meta">A daily radar for remote roles that match my CV.</p></div></div><div class="row "><div class="date">2026</div><div class="body"><h3>work-issue <span class="sep">·</span> <a class="lk" href="https://eliasgarcia.dev/projects/work-issue">eliasgarcia.dev/projects/work-issue</a></h3><p class="meta">Agents that take a GitHub issue to a reviewed PR.</p></div></div><div class="row "><div class="date">2026</div><div class="body"><h3>POL funding spreads <span class="sep">·</span> <a class="lk" href="https://eliasgarcia.dev/projects/pol-funding-spreads">eliasgarcia.dev/projects/pol-funding-spreads</a></h3><p class="meta">Funding-rate arbitrage on POL perps across DEXes.</p></div></div></section>
 <section><h2>Speaking</h2><div class="row "><div class="date">Jan 2024</div><div class="body"><h3>Preserving privacy with Polygon ID profiles</h3><p class="meta">House of ZK, EthDenver</p></div></div><div class="row "><div class="date">Jan 2024</div><div class="body"><h3>Zero-knowledge identity with Polygon ID</h3><p class="meta">Polygon AggCave, EthDenver</p></div></div><div class="row "><div class="date">Jul 2023</div><div class="body"><h3>Issuing verifiable credentials with Polygon ID</h3><p class="meta">Polygon DevX Global Tour, Lisbon</p></div></div></section>
 <section><h2>Teaching</h2><div class="row "><div class="date">Mar 2022</div><div class="body"><h3>The DeFi revolution <span class="sep">·</span> <a class="lk" href="https://balio.app/curso/defi/">balio.app/curso/defi</a></h3><p class="meta">Online course in Spanish, Balio</p></div></div></section>
 <section><h2>Education</h2><div class="row "><div class="date">2013 – 2017</div><div class="body"><h3>BSc Computer Science at University of A Coruña</h3><p class="meta">Specialization in software engineering</p></div></div></section>
