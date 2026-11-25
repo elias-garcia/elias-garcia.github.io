@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><head>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta charset="utf-8">
 <title>Writing — Elías García</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..600;1,400..600&amp;display=swap">
 <style>
 /* phones: the platform layer. No grey tap flash (every control has its own :active), no double-tap delay,
    controls aren't text you can long-press-select, and no font inflation in landscape */
@@ -23,30 +23,30 @@ button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
    text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
-:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-medium:200ms;--dur-slow:300ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-quick:150ms;--dur-move:250ms;--dur-arrive:400ms;--arrive-gap:100ms;--arrive-rise:12px;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){a:hover{color:var(--accent)}}
-.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased}
+.site{font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
-.site p{text-wrap:pretty}
-.nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
+.site{text-wrap:pretty}
+.nav a{position:relative;color:var(--text-2);transition:color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
 .nav a[aria-current]{color:var(--accent)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent)}}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur-quick) var(--ease-settle)}
 .nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 
 
 /* topic chips: links to the topic pages (/writing/topics/ai). The Home pill: grey at rest, indigo for the current page */
 .topics{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.topic{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);text-decoration:none;padding:0 8px 0 12px;border:0;border-radius:var(--r-full);background:var(--control);font:inherit;font-size:var(--text-small);color:var(--text-2);cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.topic{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);text-decoration:none;padding:0 8px 0 12px;border:0;border-radius:var(--r-full);background:var(--control);font:inherit;font-size:var(--text-small);color:var(--text-2);cursor:pointer;transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.topic:hover{background:var(--control-hover);color:var(--text)}}
 .topic:active{transform:scale(.97)}
 .topic[aria-current="page"]{background:var(--tint);color:var(--accent);font-weight:500}@media (hover:hover) and (pointer:fine){.topic[aria-current="page"]:hover{background:var(--tint);color:var(--accent);font-weight:500}}
-.topic .c{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 8px;border-radius:var(--r-full);background:var(--bg);font-size:var(--text-micro);font-weight:500;color:var(--text-2);font-variant-numeric:tabular-nums;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.topic .c{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 8px;border-radius:var(--r-full);background:var(--bg);font-size:var(--text-micro);font-weight:500;color:var(--text-2);font-variant-numeric:tabular-nums;transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease)}
 .topic[aria-current="page"] .c{background:var(--accent);color:var(--bg)}
 
 /* list re-enters when the topic changes (production: a page navigation; the intro and chips keep their place via view-transition-name, the list arrives with the page entrance) */
@@ -56,7 +56,7 @@ a{color:var(--text);text-decoration:none}
 
 
 /* rows: the title link covers the whole row; one row, one action */
-.list .item{transition:opacity var(--dur) var(--ease)}
+.list .item{transition:opacity var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.list:has(.item:hover) .item:not(:hover){opacity:.45}}
 /* the year groups are one list: hovering any post fades every other post, across years */
 @media (hover:hover) and (pointer:fine){main:has(.list .item:hover) .list .item:not(:hover){opacity:.45}}
@@ -65,7 +65,7 @@ a{color:var(--text);text-decoration:none}
 .txt{flex:1 1 300px;min-width:0;display:flex;flex-direction:column}
 .ttl{font-weight:500;color:var(--text)}
 .ttl::after{content:"";position:absolute;inset:0}
-.ttl span{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:transparent;transition:text-decoration-color var(--dur) var(--ease)}
+.ttl span{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:transparent;transition:text-decoration-color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.row:hover .ttl span{text-decoration-color:currentColor}}
 
 
@@ -74,14 +74,17 @@ a{color:var(--text);text-decoration:none}
 .ttl span{transition:none}
 }
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
 /* search menu */
 
 .pscrim{position:fixed;inset:0;border:0;padding:0;margin:0;background:var(--scrim);backdrop-filter:blur(2px);cursor:default}
-/* search opens and closes instantly: it is a keyboard shortcut */
+/* search: instant from the keyboard (the shortcut, Esc, Enter). Opened or closed with a pointer or a finger it fades from its own centre, like every centred dialog: 250ms in, 150ms out */
+.pwrap.ptr .ppanel,.pwrap.ptr .pscrim{animation:palFade var(--dur-move) var(--ease-settle) both}
+.pwrap.closing .ppanel,.pwrap.closing .pscrim{animation:palOut var(--dur-quick) var(--ease-settle) both;pointer-events:none}
+@keyframes palOut{to{opacity:0}}
 .pin{padding:0;flex:1;min-width:0;border:0;outline:none;font:inherit;font-size:var(--text-label);color:var(--text);background:transparent;height:100%}
 .pin::placeholder{color:var(--text-3)}
 .ppanel .pin:focus,.ppanel .pin:focus-visible{outline:none;box-shadow:none}
@@ -96,29 +99,34 @@ a{color:var(--text);text-decoration:none}
 .popt.act .pret{opacity:1}
 mark.phl{background:none;color:var(--accent);font-weight:600;padding:0}
 .pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:var(--text-micro);color:var(--text-2);font-family:inherit}
-.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-micro);cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-micro);cursor:pointer;transition:transform var(--dur-quick) var(--ease-settle)}
 .pclear:active{transform:scale(.97)}
 @media (hover:hover) and (pointer:fine){.pclear:hover{background:var(--control-hover);color:var(--text)}}
 
 
-/* page entrance: the content arrives as one piece, fast; the header never moves */
+/* page entrance when moving between pages: the content arrives as one piece; the header never moves */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
 @keyframes pageFade{from{opacity:0}}
-main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backwards}
+main,.site > footer{animation:pageIn var(--dur-move) var(--ease-settle) backwards}
+/* arriving at the site (a direct visit or a refresh; the head script sets html.arrive): the blocks on screen settle from the top, 100ms apart: title and intro, topic chips, the first year, then the rest as one. No scroll reveals */
+@keyframes arriveIn{from{opacity:0;transform:translateY(var(--arrive-rise))}}
+html.arrive main,html.arrive .site > footer{animation:none}
+html.arrive :is(main > header > *,main > div > *),html.arrive .site > footer{animation:arriveIn var(--dur-arrive) var(--ease-settle) backwards;animation-delay:calc(var(--i) * var(--arrive-gap))}
+main > header > :first-child{--i:0}main > header > :nth-child(2){--i:1}main > div > *{--i:3}main > div > :first-child{--i:2}.site > footer{--i:3}
 /* between pages: the header stays put, the content cross-fades */
 @view-transition{navigation:auto}
 .site > header{view-transition-name:site-header}
-::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
+::view-transition-old(root){animation:vtOut var(--dur-quick) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:var(--dur-slow);animation-timing-function:var(--ease-settle)}::view-transition-old(project-roleburn),::view-transition-new(project-roleburn){height:100%;object-fit:cover}
-@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
+::view-transition-group(project-roleburn){animation-duration:var(--dur-move);animation-timing-function:var(--ease-settle)}::view-transition-old(project-roleburn),::view-transition-new(project-roleburn){height:100%;object-fit:cover}
+@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur-quick) var(--ease) backwards !important}html.arrive :is(main > header > *,main > div > *){animation:none !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
 
 
 /* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
-.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h);padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h);padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
 .button:active{transform:scale(.97)}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
@@ -136,7 +144,7 @@ img:not([src$=".svg"]){filter:brightness(.92)}
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur) var(--ease-settle)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur-quick) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
@@ -149,7 +157,7 @@ html{scroll-padding-top:80px}
 }
 
 /* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
-.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:transform var(--dur-quick) var(--ease-settle)}
 .pcrumb:active{transform:scale(.97)}
 @media (hover:hover) and (pointer:fine){.pcrumb:hover{background:var(--control-hover);color:var(--text)}}
 .pret{text-align:center}
@@ -175,6 +183,8 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
 /* jumping to a #link scrolls smoothly (heading anchors, footnotes, back links, skip link); instant with reduced motion */
 @media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
 </style>
+<script>/* arrival: a direct visit or a refresh plays the cascade; coming from another page of the site doesn't (DESIGN.md §2.5) */
+(function(){var n=performance.getEntriesByType('navigation')[0];var inside=false;try{inside=!!document.referrer&&new URL(document.referrer).origin===location.origin}catch(e){}if(!inside||(n&&n.type==='reload'))document.documentElement.classList.add('arrive')})()</script>
 </head><body>
 <div data-dc-tpl="3" class="site" style="min-height: 100svh; background: var(--bg);">
   <a data-dc-tpl="4" class="skip" href="#content">Skip to content</a>
@@ -203,7 +213,7 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
       <div data-dc-tpl="25" style="display: flex; flex-direction: column; gap: 8px;">
         <div data-dc-tpl="26" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
           <h1 data-dc-tpl="27" id="h" style="margin: 0px; font-size: var(--text-subtitle); line-height: 1.35; font-weight: 600; letter-spacing: -0.01em;">Writing</h1>
-          <a data-dc-tpl="28" class="button" href="#"><svg data-dc-tpl="29" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="rss"><path data-dc-tpl="30" d="M4 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" vector-effect="non-scaling-stroke" style="fill: currentcolor;"></path><path data-dc-tpl="31" d="M4 4a16 16 0 0 1 16 16" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="32" d="M4 11a9 9 0 0 1 9 9" vector-effect="non-scaling-stroke"></path></svg>Subscribe</a>
+          <a data-dc-tpl="28" class="button" href="#" style="margin: -4px 0px;"><svg data-dc-tpl="29" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="rss"><path data-dc-tpl="30" d="M4 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" vector-effect="non-scaling-stroke" style="fill: currentcolor;"></path><path data-dc-tpl="31" d="M4 4a16 16 0 0 1 16 16" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="32" d="M4 11a9 9 0 0 1 9 9" vector-effect="non-scaling-stroke"></path></svg>Subscribe</a>
         </div>
         <p data-dc-tpl="33" style="margin: 0px; color: var(--text-2);">Notes on building products, interfaces for DeFi, and working alongside AI agents.</p>
       </div>
@@ -323,7 +333,7 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
         <svg data-dc-tpl="60" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="61" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent);"></path><path data-dc-tpl="62" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="63" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="64" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="65" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
         Elías García, 2026
       </span>
-      <span data-dc-tpl="66" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="67"><time data-dc-tpl="68" datetime="12:32"><span class="sc-interp">12:32</span></time> in Portugal</span><span data-dc-tpl="69" aria-hidden="true">·</span><span data-dc-tpl="70"><span class="sc-interp">1h behind you</span></span></span>
+      <span data-dc-tpl="66" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="67"><time data-dc-tpl="68" datetime="14:45"><span class="sc-interp">14:45</span></time> in Portugal</span><span data-dc-tpl="69" aria-hidden="true">·</span><span data-dc-tpl="70"><span class="sc-interp">1h behind you</span></span></span>
     </div>
   </footer>
 

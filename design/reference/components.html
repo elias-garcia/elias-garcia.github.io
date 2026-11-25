@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><head>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta charset="utf-8">
 <title>Components — Elías García</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..600;1,400..600&amp;display=swap">
 <style>
 /* phones: the platform layer. No grey tap flash (every control has its own :active), no double-tap delay,
    controls aren't text you can long-press-select, and no font inflation in landscape */
@@ -25,27 +25,27 @@ button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
    text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
-:root{color-scheme:light dark;--code-plain:#52525C;--code-keyword:#4F39F6;--code-literal:#372AAC;--code-name:#18181B;--code-comment:#71717B;--code-punct:#71717B;--code-highlight:#EEF2FF;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-fast:100ms;--dur:150ms;--dur-medium:200ms;--dur-slow:300ms;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+:root{color-scheme:light dark;--code-plain:#52525C;--code-keyword:#4F39F6;--code-literal:#372AAC;--code-name:#18181B;--code-comment:#71717B;--code-punct:#71717B;--code-highlight:#EEF2FF;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-quick:150ms;--dur-move:250ms;--dur-arrive:400ms;--arrive-gap:100ms;--arrive-rise:12px;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){a:hover{color:var(--accent)}}
-.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.site{font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
-.site p{text-wrap:pretty}
+.site{text-wrap:pretty}
 
 /* one orchestrated load moment */
 
 /* nav underline fades in */
-.nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
+.nav a{position:relative;color:var(--text-2);transition:color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
 .nav a[aria-current]{color:var(--accent)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent)}}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur-quick) var(--ease-settle)}
 .nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
@@ -58,12 +58,12 @@ a{color:var(--text);text-decoration:none}
 @keyframes ping{0%{transform:scale(1);opacity:.45}80%,100%{transform:scale(2.6);opacity:0}}
 
 /* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
-.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h);padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h);padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
 .button:active{transform:scale(.97)}
 /* copy buttons: both labels share one grid cell, so the button keeps the width of the longer one; they swap with a short blur crossfade */
 .sw{display:inline-grid;justify-items:center}
-.sw > span{grid-area:1 / 1;transition:opacity var(--dur-medium) var(--ease-settle),filter var(--dur-medium) var(--ease-settle),transform var(--dur-medium) var(--ease-settle)}
+.sw > span{grid-area:1 / 1;transition:opacity var(--dur-move) var(--ease-settle),filter var(--dur-move) var(--ease-settle),transform var(--dur-move) var(--ease-settle)}
 .sw-b,.done .sw-a{opacity:0;filter:blur(2px);transform:scale(.96)}
 .done .sw-b{opacity:1;filter:none;transform:none}
 @media (prefers-reduced-motion:reduce){.sw > span{filter:none !important;transform:none !important}}
@@ -71,25 +71,26 @@ a{color:var(--text);text-decoration:none}
 
 
 /* lists: hovering one row quiets the others */
-.list .item{transition:opacity var(--dur) var(--ease)}
+.list .item{transition:opacity var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.list:has(.item:hover) .item:not(:hover){opacity:.45}}
 
 /* jobs expand in place */
 .jobhead{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px 24px;width:100%;padding:12px 0;margin:0;background:none;border:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
-.jobbody{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--dur-slow) var(--ease-settle),opacity var(--dur) var(--ease-settle)}
-.job.open .jobbody{grid-template-rows:1fr;opacity:1}
-.chev{width:16px;height:16px;margin-top:4px;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;transition:transform var(--dur-slow) var(--ease-settle),stroke var(--dur) var(--ease)}
+/* a row collapses quicker than it expands: the transition of the state it is going to applies */
+.jobbody{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--dur-quick) var(--ease-settle),opacity var(--dur-quick) var(--ease-settle)}
+.job.open .jobbody{grid-template-rows:1fr;opacity:1;transition:grid-template-rows var(--dur-move) var(--ease-settle),opacity var(--dur-quick) var(--ease-settle)}
+.chev{width:16px;height:16px;margin-top:4px;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;transition:transform var(--dur-quick) var(--ease-settle),stroke var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.jobhead:hover .chev{stroke:var(--text)}}
-.job.open .chev{transform:rotate(45deg)}
+.job.open .chev{transform:rotate(45deg);transition:transform var(--dur-move) var(--ease-settle),stroke var(--dur-quick) var(--ease)}
 
 /* project tiles: previews run only while hovered */
 /* "see more" links: same hover as the header nav, plus a small arrow that nudges */
-.more{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-small);color:var(--text-2);transition:color var(--dur) var(--ease)}
+.more{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-small);color:var(--text-2);transition:color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.more:hover{color:var(--text)}}
 .more span{position:relative}
-.more span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.more span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.more:hover span::after{opacity:1}}
-.more svg{width:var(--icon-sm);height:var(--icon-sm);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
+.more svg{width:var(--icon-sm);height:var(--icon-sm);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.more:hover svg{transform:translateX(2px)}}
 /* tiles share rows (preview, title, description): a long title never pushes its neighbours out of line */
 .tiles .tile{display:grid;grid-template-rows:subgrid;grid-row:span 3;align-content:start}
@@ -97,7 +98,7 @@ a{color:var(--text);text-decoration:none}
 .tile .pv{margin-bottom:12px}
 .tile .tt{font-weight:500;line-height:1.35;text-wrap:balance}
 .tile .td{font-size:var(--text-label);color:var(--text-2);line-height:1.5}
-.tile .pv{transition:transform var(--dur) var(--ease-settle),border-color var(--dur) var(--ease)}
+.tile .pv{transition:transform var(--dur-quick) var(--ease-settle),border-color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.tile:hover .pv{border-color:var(--line-strong)}}
 .tile:active .pv{transform:scale(.99)}
 .anim{animation-play-state:paused !important}
@@ -126,7 +127,7 @@ a{color:var(--text);text-decoration:none}
 
 @media (prefers-reduced-motion:reduce){
 .dot::after,.anim{animation:none !important}
-.jobbody,.chev,.tile .pv{transition:opacity var(--dur) var(--ease)}
+.jobbody,.chev,.tile .pv{transition:opacity var(--dur-quick) var(--ease)}
 }
 
 /* search menu */
@@ -147,7 +148,7 @@ a{color:var(--text);text-decoration:none}
 .popt.act .pret{opacity:1}
 mark.phl{background:none;color:var(--accent);font-weight:600;padding:0}
 .pk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font-size:var(--text-micro);color:var(--text-2);font-family:inherit}
-.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-micro);cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+.pclear{height:28px;padding:0 8px;border:0;border-radius:var(--r-md);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-micro);cursor:pointer;transition:transform var(--dur-quick) var(--ease-settle)}
 .pclear:active{transform:scale(.97)}
 @media (hover:hover) and (pointer:fine){.pclear:hover{background:var(--control-hover);color:var(--text)}}
 
@@ -155,15 +156,15 @@ mark.phl{background:none;color:var(--accent);font-weight:600;padding:0}
 /* page entrance: the content arrives as one piece, fast; the header never moves */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
 @keyframes pageFade{from{opacity:0}}
-main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backwards}
+main,.site > footer{animation:pageIn var(--dur-move) var(--ease-settle) backwards}
 /* between pages: the header stays put, the content cross-fades */
 @view-transition{navigation:auto}
 .site > header{view-transition-name:site-header}
-::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
+::view-transition-old(root){animation:vtOut var(--dur-quick) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:var(--dur-slow);animation-timing-function:var(--ease-settle)}::view-transition-old(project-roleburn),::view-transition-new(project-roleburn){height:100%;object-fit:cover}
-@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
+::view-transition-group(project-roleburn){animation-duration:var(--dur-move);animation-timing-function:var(--ease-settle)}::view-transition-old(project-roleburn),::view-transition-new(project-roleburn){height:100%;object-fit:cover}
+@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur-quick) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
 /* footer sits after the content, and at the bottom of the window when a page is short (never fixed) */
@@ -178,7 +179,7 @@ img:not([src$=".svg"]){filter:brightness(.92)}
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur) var(--ease-settle)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur-quick) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
@@ -191,17 +192,17 @@ html{scroll-padding-top:80px}
 }
 
 /* search: nested choice (Download CV → format). The crumb shows where you are and goes back */
-.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:transform var(--dur) var(--ease-settle)}
+.pcrumb{flex:none;display:inline-flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:transform var(--dur-quick) var(--ease-settle)}
 .pcrumb:active{transform:scale(.97)}
 @media (hover:hover) and (pointer:fine){.pcrumb:hover{background:var(--control-hover);color:var(--text)}}
 .pret{text-align:center}
 
 /* Download CV: menu button. Same button, a chevron, and a small menu that explains each format */
 .cvwrap{position:relative;display:inline-flex}
-.cvchev{margin-right:-4px;transition:transform var(--dur) var(--ease)}
+.cvchev{margin-right:-4px;transition:transform var(--dur-quick) var(--ease)}
 .cvchev.up{transform:rotate(180deg)}
 .cvscrim{position:fixed;inset:0;z-index:var(--z-menu);border:0;padding:0;background:transparent;cursor:default}
-.cvmenu{position:absolute;top:calc(100% + 8px);left:0;z-index:calc(var(--z-menu) + 1);width:320px;max-width:calc(100vw - 48px);display:flex;flex-direction:column;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);transform-origin:top left;transition:opacity var(--dur-medium) var(--ease-settle),transform var(--dur-medium) var(--ease-settle)}
+.cvmenu{position:absolute;top:calc(100% + 8px);left:0;z-index:calc(var(--z-menu) + 1);width:320px;max-width:calc(100vw - 48px);display:flex;flex-direction:column;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);transform-origin:top left;transition:opacity var(--dur-move) var(--ease-settle),transform var(--dur-move) var(--ease-settle)}
 @starting-style{.cvmenu{opacity:0;transform:scale(.97) translateY(-4px)}}
 /* opened from the keyboard: the menu appears at once and the chevron flips at once */
 .cvmenu.kb,.cvchev.kb{transition:none}
@@ -231,25 +232,25 @@ address{font-style:normal}
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){a:hover{color:var(--accent)}}
-.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased}
+.site{font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
-.site p{text-wrap:pretty}
-.nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
+.site{text-wrap:pretty}
+.nav a{position:relative;color:var(--text-2);transition:color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
 .nav a[aria-current]{color:var(--accent)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent)}}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur-quick) var(--ease-settle)}
 .nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 
 
 /* topic chips: links to the topic pages (/writing/topics/ai). The Home pill: grey at rest, indigo for the current page */
 .topics{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.topic{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);text-decoration:none;padding:0 8px 0 12px;border:0;border-radius:var(--r-full);background:var(--control);font:inherit;font-size:var(--text-small);color:var(--text-2);cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.topic{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);text-decoration:none;padding:0 8px 0 12px;border:0;border-radius:var(--r-full);background:var(--control);font:inherit;font-size:var(--text-small);color:var(--text-2);cursor:pointer;transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.topic:hover{background:var(--control-hover);color:var(--text)}}
 .topic:active{transform:scale(.97)}
 .topic[aria-current="page"]{background:var(--tint);color:var(--accent);font-weight:500}@media (hover:hover) and (pointer:fine){.topic[aria-current="page"]:hover{background:var(--tint);color:var(--accent);font-weight:500}}
-.topic .c{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 8px;border-radius:var(--r-full);background:var(--bg);font-size:var(--text-micro);font-weight:500;color:var(--text-2);font-variant-numeric:tabular-nums;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.topic .c{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 8px;border-radius:var(--r-full);background:var(--bg);font-size:var(--text-micro);font-weight:500;color:var(--text-2);font-variant-numeric:tabular-nums;transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease)}
 .topic[aria-current="page"] .c{background:var(--accent);color:var(--bg)}
 
 
@@ -259,14 +260,14 @@ a{color:var(--text);text-decoration:none}
 
 
 /* rows: the title link covers the whole row; one row, one action */
-.list .item{transition:opacity var(--dur) var(--ease)}
+.list .item{transition:opacity var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.list:has(.item:hover) .item:not(:hover){opacity:.45}}
 .row{position:relative;display:flex;flex-wrap:wrap;gap:4px 24px;padding:12px 0}
 .gut{flex:0 0 var(--gutter);color:var(--text-3);font-variant-numeric:tabular-nums}
 .txt{flex:1 1 300px;min-width:0;display:flex;flex-direction:column}
 .ttl{font-weight:500;color:var(--text)}
 .ttl::after{content:"";position:absolute;inset:0}
-.ttl span{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:transparent;transition:text-decoration-color var(--dur) var(--ease)}
+.ttl span{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:transparent;transition:text-decoration-color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.row:hover .ttl span{text-decoration-color:currentColor}}
 
 
@@ -275,7 +276,7 @@ a{color:var(--text);text-decoration:none}
 .ttl span{transition:none}
 }
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
@@ -304,21 +305,21 @@ mark.phl{background:none;color:var(--accent);font-weight:600;padding:0}
 /* page entrance: the content arrives as one piece, fast; the header never moves */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
 @keyframes pageFade{from{opacity:0}}
-main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backwards}
+main,.site > footer{animation:pageIn var(--dur-move) var(--ease-settle) backwards}
 /* between pages: the header stays put, the content cross-fades */
 @view-transition{navigation:auto}
 .site > header{view-transition-name:site-header}
-::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
+::view-transition-old(root){animation:vtOut var(--dur-quick) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:var(--dur-slow);animation-timing-function:var(--ease-settle)}
-@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
+::view-transition-group(project-roleburn){animation-duration:var(--dur-move);animation-timing-function:var(--ease-settle)}
+@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur-quick) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
 
 
 /* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
-.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h);padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h);padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
 .button:active{transform:scale(.97)}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
@@ -336,7 +337,7 @@ img:not([src$=".svg"]){filter:brightness(.92)}
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur) var(--ease-settle)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur-quick) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
@@ -366,24 +367,24 @@ ul.list{list-style:none;margin:0;padding:0}
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){a:hover{color:var(--accent)}}
-.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased}
+.site{font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
-.site p{text-wrap:pretty}
-.nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
+.site{text-wrap:pretty}
+.nav a{position:relative;color:var(--text-2);transition:color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
 .nav a[aria-current]{color:var(--accent)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent)}}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur-quick) var(--ease-settle)}
 .nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 .prose p{margin:0;font-size:var(--text-body);line-height:1.6;color:var(--text-2)}
 .prose h2{margin:0;font-size:var(--text-title);font-weight:600;letter-spacing:-0.01em;line-height:1.35}
 
 /* back link nudges toward where it goes */
-.back svg,.pn svg{width:var(--icon-md);height:var(--icon-md);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
+.back svg,.pn svg{width:var(--icon-md);height:var(--icon-md);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.back:hover svg,.pn.prev:hover svg{transform:translateX(-2px)}}
 @media (hover:hover) and (pointer:fine){.pn.next:hover svg{transform:translateX(2px)}}
-.pn{transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.pn{transition:border-color var(--dur-quick) var(--ease),background var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 .pn:active{transform:scale(.99)}
 @media (hover:hover) and (pointer:fine){.pn:hover{border-color:var(--line-strong);background:var(--surface)}}
 
@@ -398,7 +399,7 @@ a{color:var(--text);text-decoration:none}
 .chip{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:var(--r-full);border:1px solid var(--line);background:var(--bg);font-size:var(--text-micro);color:var(--text-2)}
 @media (prefers-reduced-motion:reduce){.scanline,.role{animation:none !important}}
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
@@ -427,15 +428,15 @@ mark.phl{background:none;color:var(--accent);font-weight:600;padding:0}
 /* page entrance: the content arrives as one piece, fast; the header never moves */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
 @keyframes pageFade{from{opacity:0}}
-main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backwards}
+main,.site > footer{animation:pageIn var(--dur-move) var(--ease-settle) backwards}
 /* between pages: the header stays put, the content cross-fades */
 @view-transition{navigation:auto}
 .site > header{view-transition-name:site-header}
-::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
+::view-transition-old(root){animation:vtOut var(--dur-quick) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:var(--dur-slow);animation-timing-function:var(--ease-settle)}
-@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
+::view-transition-group(project-roleburn){animation-duration:var(--dur-move);animation-timing-function:var(--ease-settle)}
+@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur-quick) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
 /* footer sits after the content, and at the bottom of the window when a page is short (never fixed) */
@@ -450,7 +451,7 @@ img:not([src$=".svg"]){filter:brightness(.92)}
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur) var(--ease-settle)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur-quick) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
@@ -473,7 +474,7 @@ html{scroll-padding-top:80px}
 .fact dt{font-size:var(--text-small);color:var(--text-3)}
 .fact dd{margin:0;font-size:var(--text-small)}
 .fact.links dd{display:flex;flex-wrap:wrap;gap:4px 16px}
-.factlink{color:var(--text);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px;transition:text-decoration-color var(--dur) var(--ease)}
+.factlink{color:var(--text);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px;transition:text-decoration-color var(--dur-quick) var(--ease)}
 .factlink:focus-visible{text-decoration-color:currentColor}@media (hover:hover) and (pointer:fine){.factlink:hover{text-decoration-color:currentColor}}
 /* facts below Tailwind sm: one fact per row, the label in a 112px column (like the date column of the lists), the value beside it on the same baseline */
 @media (max-width: 639.98px){.facts{grid-template-columns:minmax(0,1fr);gap:12px}.fact{flex-direction:row;align-items:baseline;gap:24px}.fact dt{flex:0 0 var(--gutter)}.fact dd{min-width:0}}
@@ -487,15 +488,15 @@ html{scroll-padding-top:80px}
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){a:hover{color:var(--accent)}}
-.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased}
+.site{font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
-.site p{text-wrap:pretty}
-.nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
+.site{text-wrap:pretty}
+.nav a{position:relative;color:var(--text-2);transition:color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
 .nav a[aria-current]{color:var(--accent)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent)}}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur-quick) var(--ease-settle)}
 .nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 
 
@@ -509,15 +510,15 @@ a{color:var(--text);text-decoration:none}
 .card .pv{position:relative;margin-bottom:8px}
 .card .ct{line-height:1.35;text-wrap:balance}
 .card .cd{line-height:1.5}
-.card .pv{aspect-ratio:4 / 3;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);overflow:hidden;transition:transform var(--dur) var(--ease-settle),border-color var(--dur) var(--ease)}
+.card .pv{aspect-ratio:4 / 3;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);overflow:hidden;transition:transform var(--dur-quick) var(--ease-settle),border-color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.card:hover .pv{border-color:var(--line-strong)}}
 .card:active .pv{transform:scale(.99)}
-.card .go{font-size:var(--text-small);color:var(--text-2);display:inline-flex;align-items:center;gap:8px;transition:color var(--dur) var(--ease)}
+.card .go{font-size:var(--text-small);color:var(--text-2);display:inline-flex;align-items:center;gap:8px;transition:color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.card:hover .go{color:var(--text)}}
 .card .go > span{position:relative}
-.card .go > span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.card .go > span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.card:hover .go > span::after{opacity:1}}
-.card .go svg{width:var(--icon-md);height:var(--icon-md);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
+.card .go svg{width:var(--icon-md);height:var(--icon-md);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.card:hover .go svg{transform:translateX(2px)}}
 .anim{animation-play-state:paused !important}
 .card:focus-visible .anim{animation-play-state:running !important}@media (hover:hover) and (pointer:fine){.card:hover .anim{animation-play-state:running !important}}
@@ -547,7 +548,7 @@ a{color:var(--text);text-decoration:none}
 .card .pv{transition:none !important}
 }
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
@@ -576,15 +577,15 @@ mark.phl{background:none;color:var(--accent);font-weight:600;padding:0}
 /* page entrance: the content arrives as one piece, fast; the header never moves */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
 @keyframes pageFade{from{opacity:0}}
-main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backwards}
+main,.site > footer{animation:pageIn var(--dur-move) var(--ease-settle) backwards}
 /* between pages: the header stays put, the content cross-fades */
 @view-transition{navigation:auto}
 .site > header{view-transition-name:site-header}
-::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
+::view-transition-old(root){animation:vtOut var(--dur-quick) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:var(--dur-slow);animation-timing-function:var(--ease-settle)}
-@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
+::view-transition-group(project-roleburn){animation-duration:var(--dur-move);animation-timing-function:var(--ease-settle)}
+@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur-quick) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
 /* footer sits after the content, and at the bottom of the window when a page is short (never fixed) */
@@ -599,7 +600,7 @@ img:not([src$=".svg"]){filter:brightness(.92)}
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur) var(--ease-settle)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur-quick) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
@@ -630,14 +631,14 @@ ul.grid > li.wide{grid-column:1 / -1}
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){a:hover{color:var(--accent)}}
-.site{font-family:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased}
+.site{font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
-.nav a{position:relative;color:var(--text-2);transition:color var(--dur) var(--ease)}
+.nav a{position:relative;color:var(--text-2);transition:color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--text)}}
 .nav a[aria-current]{color:var(--accent)}@media (hover:hover) and (pointer:fine){.nav a[aria-current]:hover{color:var(--accent)}}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur-quick) var(--ease-settle)}
 .nav a[aria-current]::after{opacity:1}@media (hover:hover) and (pointer:fine){.nav a:hover::after{opacity:1}}
 
 /* reading progress, driven by scroll with no JavaScript */
@@ -647,13 +648,13 @@ a{color:var(--text);text-decoration:none}
 
 .body p{margin:0;font-size:var(--text-body);line-height:1.6;color:var(--text-2);text-wrap:pretty}
 /* links inside prose: indigo text with a soft underline that is always there, so they read as links without hover or colour */
-.body p a{color:var(--accent);text-decoration:underline;text-decoration-color:var(--accent-line);text-decoration-thickness:1px;text-underline-offset:3px;transition:text-decoration-color var(--dur) var(--ease),text-decoration-thickness var(--dur) var(--ease)}
+.body p a{color:var(--accent);text-decoration:underline;text-decoration-color:var(--accent-line);text-decoration-thickness:1px;text-underline-offset:3px;transition:text-decoration-color var(--dur-quick) var(--ease),text-decoration-thickness var(--dur-quick) var(--ease)}
 .body p a:focus-visible{color:var(--accent);text-decoration-color:var(--accent);text-decoration-thickness:2px}@media (hover:hover) and (pointer:fine){.body p a:hover{color:var(--accent);text-decoration-color:var(--accent);text-decoration-thickness:2px}}
 .h{position:relative;margin:0;font-size:var(--text-title);font-weight:600;letter-spacing:-0.01em;line-height:1.35}
-.h .anchor{position:absolute;left:-24px;top:0;width:20px;color:var(--text-3);font-weight:500;opacity:0;transition:opacity var(--dur) var(--ease)}
+.h .anchor{position:absolute;left:-24px;top:0;width:20px;color:var(--text-3);font-weight:500;opacity:0;transition:opacity var(--dur-quick) var(--ease)}
 .h .anchor:focus-visible{opacity:1}@media (hover:hover) and (pointer:fine){.h:hover .anchor{opacity:1}}
 
-.fn{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;margin-left:4px;padding:0 4px;border:0;border-radius:var(--r-sm);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-micro);font-weight:600;line-height:1;vertical-align:2px;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.fn{display:inline;margin-left:4px;padding:2.5px 6px;border:0;border-radius:var(--r-sm);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-micro);font-weight:600;font-variant-numeric:tabular-nums;line-height:1;vertical-align:2px;cursor:pointer;transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease)}
 .fn:focus-visible{background:var(--accent);color:var(--bg)}@media (hover:hover) and (pointer:fine){.fn:hover{background:var(--accent);color:var(--bg)}}
 /* easing demo */
 .track{position:relative;height:32px;border-radius:var(--r-full);background:var(--control);overflow:hidden}
@@ -664,26 +665,26 @@ a{color:var(--text);text-decoration:none}
 .go .runner{transform:translateX(calc(100% - 32px))}
 .reset .runner{transition:none !important}
 /* button: the one action component (Download CV, Subscribe, Replay, Copy). Neutral; indigo stays for state */
-.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h);padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h);padding:0 12px;border:0;border-radius:var(--r-full);background:var(--control);color:var(--text-2);font:inherit;font-size:var(--text-small);line-height:1;text-decoration:none;cursor:pointer;transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
 .button:active{transform:scale(.97)}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 
-.pn svg{width:var(--icon-md);height:var(--icon-md);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
+.pn svg{width:var(--icon-md);height:var(--icon-md);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.pn.prev:hover svg{transform:translateX(-2px)}}
-.pn{transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.pn{transition:border-color var(--dur-quick) var(--ease),background var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 .pn:active{transform:scale(.99)}
 @media (hover:hover) and (pointer:fine){.pn:hover{border-color:var(--line-strong);background:var(--surface)}}
-.more{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-small);color:var(--text-2);transition:color var(--dur) var(--ease)}
+.more{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-small);color:var(--text-2);transition:color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.more:hover{color:var(--text)}}
 .more span{position:relative}
-.more span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur) var(--ease-settle)}
+.more span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;opacity:0;transition:opacity var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.more:hover span::after{opacity:1}}
-.more svg{width:var(--icon-sm);height:var(--icon-sm);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
+.more svg{width:var(--icon-sm);height:var(--icon-sm);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.more:hover svg{transform:translateX(2px)}}
 @media (prefers-reduced-motion:reduce){.runner{transition:none !important}.progress{animation:none !important}}
 
-.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.kbd:hover{border-color:var(--line-strong);color:var(--text)}}
 .kbd:active{transform:scale(.97)}
 
@@ -712,15 +713,15 @@ mark.phl{background:none;color:var(--accent);font-weight:600;padding:0}
 /* page entrance: the content arrives as one piece, fast; the header never moves */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}}
 @keyframes pageFade{from{opacity:0}}
-main,.site > footer{animation:pageIn var(--dur-slow) var(--ease-settle) backwards}
+main,.site > footer{animation:pageIn var(--dur-move) var(--ease-settle) backwards}
 /* between pages: the header stays put, the content cross-fades */
 @view-transition{navigation:auto}
 .site > header{view-transition-name:site-header}
-::view-transition-old(root){animation:vtOut var(--dur-fast) var(--ease-settle) both}
+::view-transition-old(root){animation:vtOut var(--dur-quick) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:var(--dur-slow);animation-timing-function:var(--ease-settle)}
-@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
+::view-transition-group(project-roleburn){animation-duration:var(--dur-move);animation-timing-function:var(--ease-settle)}
+@media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur-quick) var(--ease) backwards !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
 /* footer sits after the content, and at the bottom of the window when a page is short (never fixed) */
@@ -735,7 +736,7 @@ img:not([src$=".svg"]){filter:brightness(.92)}
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
 ::selection{background:var(--tint-strong);color:var(--text)}
-.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur) var(--ease-settle)}
+.skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur-quick) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
 /* touch screens fire a fake hover on tap: keep hover movement and dimming for real pointers only */
@@ -748,7 +749,7 @@ html{scroll-padding-top:80px}
 }
 
 /* topic in the post header: metadata that links to the Writing list, filtered */
-.topiclink{color:var(--text-3);text-decoration:underline;text-decoration-color:transparent;text-underline-offset:3px;transition:color var(--dur) var(--ease),text-decoration-color var(--dur) var(--ease)}
+.topiclink{color:var(--text-3);text-decoration:underline;text-decoration-color:transparent;text-underline-offset:3px;transition:color var(--dur-quick) var(--ease),text-decoration-color var(--dur-quick) var(--ease)}
 .topiclink:focus-visible{color:var(--text);text-decoration-color:currentColor}@media (hover:hover) and (pointer:fine){.topiclink:hover{color:var(--text);text-decoration-color:currentColor}}
 
 /* post meta: each dot stays with the item after it, so a line never ends on a dot; phones use the short date */
@@ -806,7 +807,7 @@ html{scroll-padding-top:80px}
 @media (max-width: 639.98px){.clock > span:nth-child(n+2){display:none}}
 
 /* external-link arrow: a 12px icon like the see-more chevron, quieter than the text, nudging toward where it goes */
-.ext{display:inline-block;width:12px;height:12px;margin-left:4px;vertical-align:-1px;flex:none;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.ext{display:inline-block;width:12px;height:12px;margin-left:4px;vertical-align:-1px;flex:none;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 a:focus-visible .ext{stroke:currentColor}@media (hover:hover) and (pointer:fine){a:hover .ext{stroke:currentColor}}
 @media (hover: hover) and (pointer: fine){a:hover .ext{transform:translate(1px,-1px)}}
 @media (prefers-reduced-motion:reduce){.ext{transition:none}@media (hover:hover) and (pointer:fine){a:hover .ext{transform:none}}}
@@ -850,8 +851,8 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
    The whole card is one link; on hover or focus the title and the label turn indigo together. Below Tailwind sm (640px) the label and arrow are hidden: the title has the whole row and the card itself is the link */
 .trow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 16px;min-width:0}
 .trow .ct{min-width:0}
-.trow .go{display:inline-flex;align-items:center;gap:4px;flex:none;font-size:var(--text-small);white-space:nowrap;color:var(--text-2);transition:color var(--dur) var(--ease)}
-.garrow{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur) var(--ease-settle)}
+.trow .go{display:inline-flex;align-items:center;gap:4px;flex:none;font-size:var(--text-small);white-space:nowrap;color:var(--text-2);transition:color var(--dur-quick) var(--ease)}
+.garrow{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur-quick) var(--ease-settle)}
 .card:focus-visible .trow .go{color:var(--accent)}
 @media (hover: hover) and (pointer: fine){
 .card:hover .trow .go{color:var(--accent)}
@@ -869,13 +870,13 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .crate,.crate-v{display:inline-flex;align-items:center;gap:4px}
 .crate svg{width:var(--icon-sm);height:var(--icon-sm);fill:var(--text);flex:none}
 .crate b{font-weight:500;color:var(--text)}
-.play{position:absolute;inset:0;margin:auto;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:color-mix(in oklch, var(--bg) 92%, transparent);border:1px solid var(--line);color:var(--text);backdrop-filter:blur(4px);transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.play{position:absolute;inset:0;margin:auto;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:color-mix(in oklch, var(--bg) 92%, transparent);border:1px solid var(--line);color:var(--text);backdrop-filter:blur(4px);transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease)}
 .play svg{width:var(--icon-md);height:var(--icon-md);fill:currentColor;margin-left:2px}
 .courses{list-style:none;margin:0;padding:0}
 .attach{display:flex;flex-wrap:wrap;column-gap:24px;margin-bottom:12px}
 .attach-gut{flex:0 0 var(--gutter)}
 .attach-c{flex:1 1 300px;min-width:0}
-.lpc{display:flex;align-items:center;width:100%;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);overflow:hidden;color:inherit;text-decoration:none;transition:border-color var(--dur) var(--ease),transform var(--dur) var(--ease-settle)}
+.lpc{display:flex;align-items:center;width:100%;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);overflow:hidden;color:inherit;text-decoration:none;transition:border-color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 .lpc:active{transform:scale(.99)}
 .lpc:focus-visible{border-color:var(--line-strong)}@media (hover:hover) and (pointer:fine){.lpc:hover{border-color:var(--line-strong)}}
 .lpc-img{position:relative;flex:none;width:calc((100% - 14px) / 3);aspect-ratio:3 / 2;background:var(--surface);border-right:1px solid var(--line)}
@@ -902,7 +903,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 /* image viewer. Thumbnails are real buttons; the viewer is a modal dialog: focus moves to Close on open and returns
    to the thumbnail on close; Tab stays inside; Esc, the × and the backdrop close it; ← → and swipe move; swipe down closes. No counter or arrows for one photo */
 .phbtn{display:block;width:100%;padding:0;border:0;background:none;border-radius:var(--r-md);cursor:zoom-in}
-.phbtn img{transition:opacity var(--dur) var(--ease)}
+.phbtn img{transition:opacity var(--dur-quick) var(--ease)}
 @media (hover: hover) and (pointer: fine){.phbtn:hover img{opacity:.88}}
 @keyframes vwIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
 
@@ -1014,7 +1015,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
        <span data-dc-tpl="97" class="cvmenu" id="cv-menu" role="menu" aria-label="Download CV" style="position: static; animation: auto ease 0s 1 normal none running none; margin-top: 8px;">
                   <a data-dc-tpl="98" class="cvitem" role="menuitem" href="#">
                     <span data-dc-tpl="99" class="pic" aria-hidden="true"><svg data-dc-tpl="100" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="file-text"><path data-dc-tpl="101" d="M14 3v4a1 1 0 0 0 1 1h4" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="102" d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="103" d="M9 9l1 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="104" d="M9 13l6 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="105" d="M9 17l6 0" vector-effect="non-scaling-stroke"></path></svg></span>
-                    <span data-dc-tpl="106" class="cvtext"><span data-dc-tpl="107" class="cvtitle">PDF <span data-dc-tpl="108" class="cvsize">120 KB</span></span><span data-dc-tpl="109" class="cvdesc">Formatted for reading, printing and sharing</span></span>
+                    <span data-dc-tpl="106" class="cvtext"><span data-dc-tpl="107" class="cvtitle">PDF <span data-dc-tpl="108" class="cvsize">120 KB</span></span><span data-dc-tpl="109" class="cvdesc">For reading, printing and sharing</span></span>
                   </a>
                   <a data-dc-tpl="110" class="cvitem" role="menuitem" href="#">
                     <span data-dc-tpl="111" class="pic" aria-hidden="true"><svg data-dc-tpl="112" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="markdown"><path data-dc-tpl="113" d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="114" d="M7 15v-6l2 2l2 -2v6" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="115" d="M14 13l2 2l2 -2m-2 2v-6" vector-effect="non-scaling-stroke"></path></svg></span>
