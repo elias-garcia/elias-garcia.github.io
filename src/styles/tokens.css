@@ -120,7 +120,11 @@
   --press-dim: 0.6; /* a text link or list row pressed on a touch screen */
   --press-scale: 0.97;
   --press-scale-tile: 0.99;
-  --entrance-offset: 6px;
+  --entrance-offset: 6px; /* how far the page rises, coming from another page */
+  /* Arriving at the site, its blocks settle from the top one after another. */
+  --dur-arrive: 400ms; /* each block */
+  --arrive-gap: 100ms; /* between one block and the next */
+  --arrive-rise: 12px; /* how far each block rises */
   --dur-flash: 2s; /* a footnote marker or a note you arrive at lights up, then fades; a deliberate exception */
 
   /* ---- Elevation and layers ---- */

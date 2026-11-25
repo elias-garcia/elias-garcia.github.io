@@ -1,4 +1,15 @@
-<div class="prose">
+---
+type Props = {
+  arrivalStep?: number;
+};
+
+const { arrivalStep } = Astro.props;
+---
+
+<div
+  class:list={["prose", { enter: arrivalStep !== undefined }]}
+  style={arrivalStep === undefined ? undefined : `--i: ${String(arrivalStep)}`}
+>
   <slot />
 </div>
 

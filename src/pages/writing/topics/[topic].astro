@@ -33,6 +33,7 @@ const values = { topic: topic.label, name: profile.name };
 <BaseLayout
   title={fill(topicPage.title, values)}
   description={fill(topicPage.intro, values)}
+  lastArrivalStep={3}
 >
   <WritingInPlace slot="head" />
   <WritingIndex page={page} posts={posts} topic={topic} />

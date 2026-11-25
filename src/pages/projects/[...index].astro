@@ -22,11 +22,11 @@ const [page, projects] = await Promise.all([
 const wide = projects.length % 2 === 1;
 ---
 
-<BaseLayout title={page.title} description={page.intro}>
+<BaseLayout title={page.title} description={page.intro} lastArrivalStep={1}>
   <PreviewMorph slot="head" />
   <div class="projects">
     <PageIntro title={page.title} intro={page.intro} />
-    <ul class="grid" role="list">
+    <ul class="grid enter" role="list" style="--i: 1">
       {projects.map((project, index) => (
         <ProjectCard project={project} wide={wide && index === 0} />
       ))}

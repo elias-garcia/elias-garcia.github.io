@@ -73,6 +73,7 @@ const structuredData = blogPosting(
   readingProgress
   shareImage={{ path: shareImage, alt: title }}
   article={{ published: isoDate(date) }}
+  lastArrivalStep={1}
 >
   <link slot="head" rel="alternate" type="text/markdown" href={markdown} />
   <StructuredData slot="head" data={structuredData} />

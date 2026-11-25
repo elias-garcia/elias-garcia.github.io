@@ -21,6 +21,9 @@ type Props = {
   shareImage?: { path: string; alt: string };
   // A post: shared as an article, with its date (ISO 8601).
   article?: { published: string };
+  // The page's last step in the arrival cascade (DESIGN.md §2.5): the
+  // footer arrives with it.
+  lastArrivalStep: number;
 };
 
 const {
@@ -29,6 +32,7 @@ const {
   readingProgress = false,
   shareImage: pageShareImage,
   article,
+  lastArrivalStep,
 } = Astro.props;
 const [profile, feedTitle] = await Promise.all([getProfile(), getFeedTitle()]);
 const path = toPath(Astro.url.pathname);
@@ -132,6 +136,36 @@ const shareImage = pageShareImage ?? {
         document.documentElement.dataset.shortcut = "other";
       }
     </script>
+    <script is:inline>
+      // Arriving at the site (from another site, typed, or reloaded), the
+      // page's blocks settle in one after another; coming from one of its
+      // pages, it arrives as one piece (DESIGN.md §2.5). Set before the
+      // first render, so nothing shows before its turn.
+      {
+        const activation = window.navigation?.activation;
+        const [timing] = performance.getEntriesByType("navigation");
+        const type =
+          activation?.navigationType ??
+          (timing instanceof PerformanceNavigationTiming
+            ? timing.type
+            : undefined);
+        // Back and forward keep the referrer of the entry's first load, not
+        // the page just left: the history says where the visitor came
+        // from. Without the Navigation API, they arrive as one piece.
+        const arriving =
+          type === "reload"
+            ? true
+            : type === "traverse"
+              ? activation.from === null
+              : type === "back_forward"
+                ? false
+                : document.referrer === "" ||
+                  new URL(document.referrer).origin !== location.origin;
+        if (arriving) {
+          document.documentElement.dataset.arrive = "";
+        }
+      }
+    </script>
     <slot name="head" />
     {onVercel && <Analytics />}
   </head>
@@ -142,6 +176,7 @@ const shareImage = pageShareImage ?? {
       <slot />
     </main>
     <Footer
+      arrivalStep={lastArrivalStep}
       name={profile.name}
       country={formatCountry(profile.country)}
       timezone={profile.timezone}
@@ -161,6 +196,13 @@ const shareImage = pageShareImage ?? {
 
     :global(:root[data-in-place]) & {
       animation: none;
+    }
+
+    /* Arriving, its blocks move instead (below). */
+    @media (prefers-reduced-motion: no-preference) {
+      :global(:root[data-arrive]) & {
+        animation: none;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {

@@ -50,7 +50,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
       {copy.subscribe}
       <NewTabNote />
     </Button>
-    <nav class="topics" aria-label={copy.filterName}>
+    <nav class="topics enter" aria-label={copy.filterName} style="--i: 1">
       <Chip
         label={copy.all}
         count={posts.length}
@@ -69,8 +69,8 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
   </PageIntro>
 
   <div class="years">
-    {[...years].map(([year, yearRows]) => (
-      <Section title={String(year)}>
+    {[...years].map(([year, yearRows], index) => (
+      <Section title={String(year)} arrivalStep={index === 0 ? 2 : 3}>
         <List>
           {yearRows.map(({ post, readingTime }) => (
             <ListRow

@@ -3,19 +3,20 @@ import { getLayoutCopy } from "../lib/content.ts";
 import Logo from "./Logo.astro";
 
 type Props = {
+  arrivalStep: number;
   name: string;
   country: string;
   timezone: string;
 };
 
-const { name, country, timezone } = Astro.props;
+const { arrivalStep, name, country, timezone } = Astro.props;
 const copy = await getLayoutCopy();
 // The clock's sentence in pieces: the country always shows; the time and the
 // words around it only once the script has filled the time in.
 const clock = copy.clock.split(/(\{time\}|\{country\})/).filter(Boolean);
 ---
 
-<footer class="footer" id="footer">
+<footer class="footer enter" id="footer" style={`--i: ${String(arrivalStep)}`}>
   <div class="bar">
     <p class="owner">
       <Logo size="sm" />

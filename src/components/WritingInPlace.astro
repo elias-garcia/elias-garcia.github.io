@@ -2,7 +2,9 @@
 // Moving between Writing pages (all posts or one topic) only changes the list,
 // so the page shouldn't play its entrance again, and the list doesn't re-enter
 // either (DESIGN.md §2.5). This must run before the first render, so it is an
-// inline script in <head>, not a deferred module.
+// inline script in <head>, not a deferred module. A visit that arrives at the
+// site (marked by the base layout's script, which runs first) plays its
+// arrival instead, even from a Writing page in the same tab.
 // The pattern matches the routes in src/pages/writing/[...index].astro and
 // src/pages/writing/topics/[topic].astro.
 ---
@@ -14,6 +16,7 @@
     if (
       typeof from === "string" &&
       activation.navigationType !== "reload" &&
+      !("arrive" in document.documentElement.dataset) &&
       /^\/writing(\/topics\/[^/]+)?$/.test(new URL(from).pathname)
     ) {
       document.documentElement.dataset.inPlace = "";

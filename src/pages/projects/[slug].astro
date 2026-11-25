@@ -36,7 +36,7 @@ const [{ Content }, projects, copy] = await Promise.all([
 ]);
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} lastArrivalStep={1}>
   <PreviewMorph slot="head" />
   <Article title={title}>
     <BackLink slot="back" href={routes.projects} label={projects.title} />

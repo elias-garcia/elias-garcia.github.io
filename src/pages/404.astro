@@ -29,7 +29,7 @@ const suggestions = describeSections(
 const [beforeLink, afterLink] = page.report.split("{link}");
 ---
 
-<BaseLayout title={page.title} description={page.intro}>
+<BaseLayout title={page.title} description={page.intro} lastArrivalStep={1}>
   <div class="not-found">
     <PageIntro label={page.label} title={page.title}>
       <span slot="intro" data-missing-address={page.introWithAddress}>
@@ -37,7 +37,7 @@ const [beforeLink, afterLink] = page.report.split("{link}");
       </span>
     </PageIntro>
 
-    <Section title={page.suggestionsTitle}>
+    <Section title={page.suggestionsTitle} arrivalStep={1}>
       <List>
         {suggestions.map(({ label, href, description }) => (
           <ListRow title={label} href={href} dateOnPhones={false}>
@@ -50,7 +50,7 @@ const [beforeLink, afterLink] = page.report.split("{link}");
       </List>
     </Section>
 
-    <p class="report">
+    <p class="report enter" style="--i: 1">
       {beforeLink}
       <TextLink
         href={`${email.href}?subject=${encodeURIComponent(page.reportSubject)}`}

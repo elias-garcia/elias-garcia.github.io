@@ -4,7 +4,8 @@ import VisuallyHidden from "./VisuallyHidden.astro";
 
 // `label` sits above the title ("404"); screen readers hear it as part of the
 // title instead. The intro is the `intro` prop, or the `intro` slot for a page
-// that fills it in with a script.
+// that fills it in with a script. The title and intro are the page's first
+// step when it arrives (DESIGN.md §2.5).
 type Props = {
   title: string;
   intro?: string;
@@ -15,7 +16,7 @@ const { title, intro, label } = Astro.props;
 ---
 
 <header class="page-intro">
-  <div class="heading">
+  <div class="heading enter" style="--i: 0">
     <div class="titles">
       {label !== undefined && (
         <p class="label" aria-hidden="true">

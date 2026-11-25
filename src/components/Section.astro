@@ -3,12 +3,16 @@
 // would crowd the page's landmarks. The headings are the way through.
 type Props = {
   title: string;
+  arrivalStep?: number;
 };
 
-const { title } = Astro.props;
+const { title, arrivalStep } = Astro.props;
 ---
 
-<section class="section">
+<section
+  class:list={["section", { enter: arrivalStep !== undefined }]}
+  style={arrivalStep === undefined ? undefined : `--i: ${String(arrivalStep)}`}
+>
   <div class="heading">
     <h2>{title}</h2>
     <slot name="action" />

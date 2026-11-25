@@ -66,15 +66,34 @@ const portrait = await getImage({ src: avatar, width: 400 });
 const websiteData = website(profile, siteUrl);
 const personData = person(profile, siteUrl, new URL(portrait.src, siteUrl));
 const newestJob = work[0]?.id;
+// Arriving (DESIGN.md §2.5): the name block, About, the first section and
+// the second one after another, then everything below as one last step.
+const [firstSection, secondSection] = [
+  hasProjects ? "projects" : undefined,
+  "work",
+  hasWriting ? "writing" : undefined,
+  "speaking",
+].filter((section) => section !== undefined);
+const lastArrivalStep = 4;
+const sectionStep = (section: string) =>
+  section === firstSection
+    ? 2
+    : section === secondSection
+      ? 3
+      : lastArrivalStep;
 ---
 
-<BaseLayout title={profile.name} description={description}>
+<BaseLayout
+  title={profile.name}
+  description={description}
+  lastArrivalStep={lastArrivalStep}
+>
   <PreviewMorph slot="head" />
   <StructuredData slot="head" data={websiteData} />
   <StructuredData slot="head" data={personData} />
   <div class="home">
     <header class="intro">
-      <div class="identity">
+      <div class="identity enter" style="--i: 0">
         <Image
           class="avatar"
           src={avatar}
@@ -102,7 +121,7 @@ const newestJob = work[0]?.id;
           </div>
         </div>
       </div>
-      <Section title={copy.about}>
+      <Section title={copy.about} arrivalStep={1}>
         <div class="about">
           {profile.about.map((paragraph) => (
             <p>{paragraph}</p>
@@ -112,7 +131,7 @@ const newestJob = work[0]?.id;
     </header>
 
     {hasProjects && (
-      <Section title={projectsPage.title}>
+      <Section title={projectsPage.title} arrivalStep={sectionStep("projects")}>
         <SeeMore
           slot="action"
           href={routes.projects}
@@ -126,7 +145,7 @@ const newestJob = work[0]?.id;
       </Section>
     )}
 
-    <Section title={copy.work}>
+    <Section title={copy.work} arrivalStep={sectionStep("work")}>
       <List>
         {work.map((job) => (
           <WorkRow job={job.data} open={job.id === newestJob} />
@@ -135,7 +154,7 @@ const newestJob = work[0]?.id;
     </Section>
 
     {hasWriting && (
-      <Section title={writingPage.title}>
+      <Section title={writingPage.title} arrivalStep={sectionStep("writing")}>
         <SeeMore slot="action" href={routes.writing} label={copy.allPosts} />
         <List>
           {posts.slice(0, 3).map((post) => (
@@ -150,7 +169,7 @@ const newestJob = work[0]?.id;
       </Section>
     )}
 
-    <Section title={copy.speaking}>
+    <Section title={copy.speaking} arrivalStep={sectionStep("speaking")}>
       <List>
         {talks.map(({ data }) => (
           <ListRow title={data.title}>
@@ -164,7 +183,7 @@ const newestJob = work[0]?.id;
       </List>
     </Section>
 
-    <Section title={copy.teaching}>
+    <Section title={copy.teaching} arrivalStep={lastArrivalStep}>
       <List>
         {courses.map(({ data }) => (
           <ListRow title={data.title} href={data.href}>
@@ -179,7 +198,7 @@ const newestJob = work[0]?.id;
       </List>
     </Section>
 
-    <Section title={copy.education}>
+    <Section title={copy.education} arrivalStep={lastArrivalStep}>
       <List>
         {education.map(({ data }) => (
           <ListRow
@@ -195,7 +214,7 @@ const newestJob = work[0]?.id;
       </List>
     </Section>
 
-    <Section title={copy.contact}>
+    <Section title={copy.contact} arrivalStep={lastArrivalStep}>
       <address>
         <dl>
           {profile.contact.map((link) => (

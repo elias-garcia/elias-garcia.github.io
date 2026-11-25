@@ -4,7 +4,8 @@ import Prose from "./mdx/Prose.astro";
 
 // What a post and a case study share: the way back with an action beside
 // it, the title and what sits under it, facts, a cover, the content (the
-// default slot, set as prose), and what closes the page.
+// default slot, set as prose), and what closes the page. Arriving, the head
+// is the first step and the rest the second (DESIGN.md §2.5).
 type Props = {
   title: string;
 };
@@ -15,7 +16,7 @@ const facts = Astro.slots.has("facts");
 
 <article class="article">
   <div class:list={["reading", { facts }]}>
-    <div class="head">
+    <div class="head enter" style="--i: 0">
       <div class="top">
         <slot name="back" />
         <slot name="action" />
@@ -27,11 +28,11 @@ const facts = Astro.slots.has("facts");
       <slot name="facts" />
       <slot name="cover" />
     </div>
-    <Prose>
+    <Prose arrivalStep={1}>
       <slot />
     </Prose>
   </div>
-  <div class="end">
+  <div class="end enter" style="--i: 1">
     <slot name="end" />
   </div>
 </article>

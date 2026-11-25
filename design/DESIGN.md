@@ -140,14 +140,29 @@ Two interface durations, two curves, one rule: **anything that opens or moves ta
 | Token | Value | Use |
 |---|---|---|
 | `--dur-quick` | 150ms | **Feedback and leaving:** press, hover, colour and opacity, hover underlines, the skip link; the old page fading out; the photo viewer closing; a row or `<details>` collapsing, the Download CV chevron turning back; a dragged-away photo leaving |
-| `--dur-move` | 250ms | **Opening and moving:** the Download CV menu opening (and its chevron), the photo viewer opening, a row or `<details>` expanding, photo slides and spring-backs on phones, the Copy → Copied swap, a project's morph into its cover, the page entrance |
+| `--dur-move` | 250ms | **Opening and moving:** the Download CV menu opening (and its chevron), the photo viewer opening, a row or `<details>` expanding, photo slides and spring-backs on phones, the Copy → Copied swap, a project's morph into its cover, the page entrance between pages |
+| `--dur-arrive` | 400ms | **Arriving at the site only:** each block of the arrival cascade, `--arrive-gap` (100ms) apart, rising `--arrive-rise` (12px) |
 | `--ease` | ease-out | Hover and colour changes only |
 | `--ease-settle` | cubic-bezier(.22, 1, .36, 1) | Everything that enters, leaves or moves: the page, menus, expanding rows, press feedback, the photo viewer, gestures settling |
 
 **Opening and closing take different times.** Where one element transitions both ways (an expanding row, `<details>`, the Download CV chevron), the resting state carries `--dur-quick` and the open state `--dur-move`: a transition uses the timing of the state it is going to.
 
 The motion system:
-1. **Page entrance.** The header never moves. `main` and the footer arrive as one piece: opacity 0→1 and translateY 6px→0 over 250ms (`--dur-move`) with `--ease-settle`. No stagger, no scroll reveals.
+1. **Page entrance.** The header never moves. There are two entrances, and which one plays depends on how the visitor got here. No scroll reveals: nothing animates when it scrolls into view.
+   - **Arriving at the site** (from another site, a typed or saved address, a reload): **the blocks on screen settle from the top, one after another.** Each goes from opacity 0 and 12px lower (`--arrive-rise`) to rest over 400ms (`--dur-arrive`, `--ease-settle`), starting 100ms (`--arrive-gap`) after the one above, with `animation-fill-mode: backwards`. Blocks are only transparent until their turn, never hidden, so every link works from the first frame. Something seen once per visit can take its time; on every click between pages it would get tiring.
+     - **At most five steps.** Everything below the last named block arrives with it, the footer included.
+
+       | Page | Steps |
+       |---|---|
+       | Home | name block · About · first section · second section · everything below |
+       | Writing and topic pages | title and intro · topic chips · first year · everything below |
+       | Projects | title and intro · the cards |
+       | Post | title block (Copy page row and header) · the body |
+       | Case study | title block with its cover · the body |
+       | 404 | header · the suggestions |
+     - **Build:** each block carries the class `enter` and its step (`style="--i: 2"`, through an `arrivalStep` prop where the block is a component: `Section`, `Prose`); a page's title and intro (`PageIntro`) and a post's or case study's head are always step 0. Every page passes its last step to the base layout (`lastArrivalStep`), and the footer takes it. One rule animates them, `animation-delay: calc(var(--i) * var(--arrive-gap))`, only while `<html>` has `data-arrive`.
+     - **When it plays:** an inline script in the base layout's `<head>` sets `data-arrive` before the first render, when the page was reloaded, or the referrer isn't this site (our `Referrer-Policy` keeps it for same-origin links). Back and forward are decided from the history instead (the Navigation API's `activation.from`): a page reloaded from history keeps the referrer of its first load, which could play the cascade under a cover's morph. Without the Navigation API, back and forward arrive as one piece. Arriving wins over Within Writing (step 5): a topic page typed into the address bar after Writing still arrives.
+   - **Coming from another page of the site:** `main` and the footer arrive as one piece: opacity 0→1 and translateY 6px→0 over 250ms (`--dur-move`) with `--ease-settle`. No stagger.
 2. **Between pages.** Cross-document View Transitions (`@view-transition { navigation: auto; }`, inline in the base layout's `<head>`, not in `global.css`: Chrome checks the new page for it before linked stylesheets apply). The first render waits until the content is parsed (`<link rel="expect" href="#footer" blocking="render">`: the block lifts at the footer's opening tag, right after `<main>`), so a transition never starts on half a page. The header keeps its place (`view-transition-name: site-header`), the old content fades out in 150ms, then step 1 plays. The transition itself ends with that fade-out: the browser's default 250ms on the page and the header is cut to 150ms too, because while a transition runs a click reaches no link (Chrome sends it to the root), and a fast second click would be lost. Step 1 is an ordinary animation and doesn't block clicks. Only a project morph runs longer (250ms). A project's preview (Home tile and Projects card) morphs into its case study's **cover** (see Project cover): one name per project, `view-transition-name: project-<slug>`, from one helper (`coverName()`), plus `view-transition-class: project-cover` for the shared timing and crop (250ms, `--dur-move`). Only the navigation that morphs names them (see Project cover › The morph), so any other arrival isn't held up. This needs a multi-page site, which Astro builds by default.
 3. **Interaction.** Every motion has to earn its place (Emil Kowalski's rules; the design passed his `review-animations` and `remove-animations` skills):
    - **Press:** every pressable control responds: buttons, chips, the search button, search's Clear button and Download CV crumb, and the photo viewer's ‹ › × scale to .97; bordered cards that link elsewhere (project tiles and cards, previous / next, the video card) scale to .99. 150ms `--ease-settle`. On touch screens, text links and list rows dim instead (§2.9).
@@ -161,7 +176,7 @@ The motion system:
 4. **Touch.** Every hover style (colour, underline, movement, list dimming) runs only on a real pointer: `@media (hover: hover) and (pointer: fine)`. Where a hover style is shared with keyboard focus, focus keeps it everywhere. A tap must never leave anything highlighted. Touch gets press states instead (§2.9).
 5. **Within Writing.** Moving between `/writing` and its topic pages keeps the page in place: no page entrance, and the posts don't re-enter either (re-animating content on every change is decoration). The previous page comes from the Navigation API; without it, the normal entrance plays.
 6. **In-page jumps.** Following a `#` link (heading anchors, footnote markers and back links, the skip link) scrolls smoothly: `@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth } }`. `scroll-padding-top` keeps the target clear of the sticky header, and footnote targets get their arrival tint.
-7. **Reduced motion.** Gentler, not zero: pages fade in over 150ms without moving; things fade instead of moving (the photo viewer, the menu, photos); the loops and the dot's ping stop; the skip link appears without sliding.
+7. **Reduced motion.** Gentler, not zero: pages fade in over 150ms as one piece, without moving and without the cascade (on arrival too); things fade instead of moving (the photo viewer, the menu, photos); the loops and the dot's ping stop; the skip link appears without sliding.
 
 Deliberate exceptions, each explanatory rather than interface feedback: the easing demo in the post (600ms), the animations inside project illustrations (paused until hovered; one cycle on a case study's cover), the Roleburn figure's one cycle, and the 2s tint on a footnote you jump to.
 
