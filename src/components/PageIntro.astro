@@ -76,5 +76,11 @@ const { title, intro, label } = Astro.props;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-3);
+
+    /* The 32px button beside the title doesn't make the row taller than the
+       title's own line, so the intro stays 8 below it. */
+    & > :global(:not(.page-title)) {
+      margin-block: calc(-1 * var(--space-1));
+    }
   }
 </style>

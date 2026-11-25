@@ -90,6 +90,9 @@ body {
   line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
   overflow-wrap: break-word;
+  /* Every wrapped text, not only paragraphs: a row's second line or a
+     caption doesn't end on one short word either. Titles balance instead. */
+  text-wrap: pretty;
 }
 
 a {
@@ -167,10 +170,6 @@ html:has(dialog:modal) {
     ):active {
     opacity: var(--press-dim);
   }
-}
-
-p {
-  text-wrap: pretty;
 }
 
 :focus-visible {

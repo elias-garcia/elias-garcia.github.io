@@ -48,24 +48,26 @@ const { footnoteName } = await getPostCopy();
 <style>
   /* A footnote marker in the text. */
   .fn {
-    --marker: 20px;
+    /* With the 12px text, these draw a box of about 20×20 around one
+       digit. */
+    --marker-padding-block: 2.5px;
+    --marker-padding-inline: 6px;
     /* Markers sit just above the baseline. */
     --marker-lift: 2px;
     /* A marker you return to lands a third of the way down. */
     --marker-scroll: 30vh;
 
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-inline-size: var(--marker);
-    min-block-size: var(--marker);
+    /* A plain inline, never an inline box: a line can break before one of
+       those, leaving the marker at the start of the next line. */
+    display: inline;
     margin-inline-start: var(--space-1);
-    padding-inline: var(--space-1);
+    padding: var(--marker-padding-block) var(--marker-padding-inline);
     border-radius: var(--r-sm);
     background: var(--control);
     color: var(--text-2);
     font-size: var(--text-micro);
     font-weight: var(--weight-semibold);
+    font-variant-numeric: tabular-nums;
     line-height: var(--leading-none);
     vertical-align: var(--marker-lift);
     /* Returning from a note, the marker lands with the sentence before it in
