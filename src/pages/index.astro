@@ -65,7 +65,6 @@ const siteUrl = requireSite(Astro.site, "structured data");
 const portrait = await getImage({ src: avatar, width: 400 });
 const websiteData = website(profile, siteUrl);
 const personData = person(profile, siteUrl, new URL(portrait.src, siteUrl));
-const newestJob = work[0]?.id;
 // Arriving (DESIGN.md §2.5): the name block, About, the first section and
 // the second one after another, then everything below as one last step.
 const [firstSection, secondSection] = [
@@ -148,7 +147,7 @@ const sectionStep = (section: string) =>
     <Section title={copy.work} arrivalStep={sectionStep("work")}>
       <List>
         {work.map((job) => (
-          <WorkRow job={job.data} open={job.id === newestJob} />
+          <WorkRow job={job.data} />
         ))}
       </List>
     </Section>

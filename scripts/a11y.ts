@@ -72,8 +72,8 @@ const states: Record<
       },
     },
     {
-      name: "second work row open",
-      open: (page) => page.locator("details.job > summary").nth(1).click(),
+      name: "a work row open",
+      open: (page) => page.locator("details.job > summary").first().click(),
     },
     {
       name: "image viewer open",

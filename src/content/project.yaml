@@ -5,7 +5,7 @@ project:
   year: Year
   status: Status
   links: Links
-  noLinks: Not public yet
+  noLinks: No links yet
   # The links to the other case studies, at the end of one.
   more: More projects
   previous: Previous

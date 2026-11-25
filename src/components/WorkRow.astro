@@ -7,14 +7,13 @@ import Years from "./Years.astro";
 
 type Props = {
   job: CollectionEntry<"work">["data"];
-  open: boolean;
 };
 
-const { job, open } = Astro.props;
+const { job } = Astro.props;
 ---
 
 <li>
-  <details class="job row-interactive" open={open}>
+  <details class="job row-interactive">
     <summary class="head">
       <span class="date">
         <Years start={job.start} end={job.end} />
