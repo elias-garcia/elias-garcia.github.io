@@ -129,7 +129,7 @@ Ten steps on a 4px grid, each with a job. Space follows **proximity**: a heading
 - **Writing and topic pages:** intro block (title, 8, text; the Subscribe button beside the title carries `margin: -4px 0`, so the 32px button doesn't make the title row taller than the title's own line and the 8 stays 8) then 24 to the topic chips; 32 to the list; year groups 32 apart, each a 16-gap column (year heading, then rows).
 - **Projects, 404:** title, 8, intro; 32 to the content. 404 sections use the same 16 heading gap as Home.
 - **Post header:** back link and Copy page, 24, title, 12, metadata line, 32, first paragraph.
-- **Case study header:** back link, 24, title, 12, intro (20px), 24, the facts (16px padding between their two hairlines); then 48 to the illustration and 48 to the first heading.
+- **Case study header:** back link, 24, title, 12, the summary (16px body text), 24, the facts (16px padding between their two hairlines); then 48 to the illustration and 48 to the first heading.
 - **Prose** (posts, case studies, the prose test post `src/content/writing/prose.mdx`): see §3 Prose.
 - **Project tiles on phones:** 32 between tiles (the last one adds nothing below it).
 

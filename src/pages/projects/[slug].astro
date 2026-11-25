@@ -40,7 +40,7 @@ const [{ Content }, projects, copy] = await Promise.all([
   <PreviewMorph slot="head" />
   <Article title={title}>
     <BackLink slot="back" href={routes.projects} label={projects.title} />
-    <p slot="intro" class="lead">
+    <p slot="intro" class="summary">
       {description}
     </p>
     <ProjectFacts
@@ -74,8 +74,8 @@ const [{ Content }, projects, copy] = await Promise.all([
 </BaseLayout>
 
 <style>
-  /* Body text, like the intros on Projects and Writing: not a larger lead. */
-  .lead {
+  /* Body text, like the page intros. */
+  .summary {
     color: var(--text-2);
     line-height: var(--leading-body);
   }
