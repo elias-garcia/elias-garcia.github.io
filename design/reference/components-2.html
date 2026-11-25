@@ -12,7 +12,7 @@ a,button,summary,label,[role="button"]{touch-action:manipulation}
 button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user-select:none}
 .phbtn img{-webkit-touch-callout:none}
 /* touch: text links and rows dim while pressed (instantly), then fade back */
-@media (hover:none),(pointer:coarse){a:active:not(.button,.tile,.card,.cl,.pn,.lpc,.topic,.item a){opacity:.6}.list .item:has(a:active){opacity:.6;transition:none}}
+@media (hover:none),(pointer:coarse){a:active:not(.button,.tile,.card,.cl,.pn,.lpc,.topic,.item a){opacity:var(--dim-press)}.list .item:has(a:active){opacity:var(--dim-press);transition:none}}
 
 :root{--space-page:64px;--space-section:80px;--space-footer:96px}
 .site main p:not([class]):not([style*="font-size"]){line-height:1.6}
@@ -24,8 +24,8 @@ button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user
 
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
-   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
-:root{color-scheme:light dark;--code-plain:#52525C;--code-keyword:#4F39F6;--code-literal:#372AAC;--code-name:#18181B;--code-comment:#71717B;--code-punct:#71717B;--code-highlight:#EEF2FF;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-quick:150ms;--dur-move:250ms;--dur-arrive:400ms;--arrive-gap:100ms;--arrive-rise:12px;--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950. Link underlines and the text selection are mixed from accent */
+:root{color-scheme:light dark;--code-literal:#372AAC;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-quick:150ms;--dur-move:250ms;--dur-arrive:400ms;--dim-press:.6;--dim-rest:.45;--glass:color-mix(in oklab, var(--bg) 80%, transparent);--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
@@ -72,7 +72,7 @@ a{color:var(--text);text-decoration:none}
 
 /* lists: hovering one row quiets the others */
 .list .item{transition:opacity var(--dur-quick) var(--ease)}
-@media (hover:hover) and (pointer:fine){.list:has(.item:hover) .item:not(:hover){opacity:.45}}
+@media (hover:hover) and (pointer:fine){.list:has(.item:hover) .item:not(:hover){opacity:var(--dim-rest)}}
 
 /* jobs expand in place */
 .jobhead{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px 24px;width:100%;padding:12px 0;margin:0;background:none;border:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
@@ -172,13 +172,13 @@ main,.site > footer{animation:pageIn var(--dur-move) var(--ease-settle) backward
 .site > main{flex:1 0 auto;width:100%}
 .site > footer{width:100%;flex-shrink:0}
 @media (prefers-color-scheme: dark){
-:root{--code-plain:#D4D4D8;--code-keyword:#7C86FF;--code-literal:#C6D2FF;--code-name:#F4F4F5;--code-comment:#9F9FA9;--code-punct:#9F9FA9;--code-highlight:#1E1A4D;--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
+:root{--code-literal:#C6D2FF;--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--scrim:rgba(0,0,0,.55)}
 img:not([src$=".svg"]){filter:brightness(.92)}
 }
 
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
-::selection{background:var(--tint-strong);color:var(--text)}
+::selection{background:color-mix(in oklab, var(--accent) 20%, transparent);color:var(--text)}
 .skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur-quick) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
@@ -226,8 +226,8 @@ address{font-style:normal}
 
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
-   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
-:root{color-scheme:light dark;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950. Link underlines and the text selection are mixed from accent */
+:root{color-scheme:light dark;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
@@ -261,7 +261,7 @@ a{color:var(--text);text-decoration:none}
 
 /* rows: the title link covers the whole row; one row, one action */
 .list .item{transition:opacity var(--dur-quick) var(--ease)}
-@media (hover:hover) and (pointer:fine){.list:has(.item:hover) .item:not(:hover){opacity:.45}}
+@media (hover:hover) and (pointer:fine){.list:has(.item:hover) .item:not(:hover){opacity:var(--dim-rest)}}
 .row{position:relative;display:flex;flex-wrap:wrap;gap:4px 24px;padding:12px 0}
 .gut{flex:0 0 var(--gutter);color:var(--text-3);font-variant-numeric:tabular-nums}
 .txt{flex:1 1 300px;min-width:0;display:flex;flex-direction:column}
@@ -330,13 +330,13 @@ main,.site > footer{animation:pageIn var(--dur-move) var(--ease-settle) backward
 .site > main{flex:1 0 auto;width:100%}
 .site > footer{width:100%;flex-shrink:0}
 @media (prefers-color-scheme: dark){
-:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
+:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--scrim:rgba(0,0,0,.55)}
 img:not([src$=".svg"]){filter:brightness(.92)}
 }
 
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
-::selection{background:var(--tint-strong);color:var(--text)}
+::selection{background:color-mix(in oklab, var(--accent) 20%, transparent);color:var(--text)}
 .skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur-quick) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
@@ -361,8 +361,8 @@ ul.list{list-style:none;margin:0;padding:0}
 
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
-   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
-:root{color-scheme:light dark;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950. Link underlines and the text selection are mixed from accent */
+:root{color-scheme:light dark;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
@@ -444,13 +444,13 @@ main,.site > footer{animation:pageIn var(--dur-move) var(--ease-settle) backward
 .site > main{flex:1 0 auto;width:100%}
 .site > footer{width:100%;flex-shrink:0}
 @media (prefers-color-scheme: dark){
-:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
+:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--scrim:rgba(0,0,0,.55)}
 img:not([src$=".svg"]){filter:brightness(.92)}
 }
 
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
-::selection{background:var(--tint-strong);color:var(--text)}
+::selection{background:color-mix(in oklab, var(--accent) 20%, transparent);color:var(--text)}
 .skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur-quick) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
@@ -468,8 +468,8 @@ html{scroll-padding-top:80px}
 @media (hover:hover) and (pointer:fine){.pcrumb:hover{background:var(--control-hover);color:var(--text)}}
 .pret{text-align:center}
 
-/* project facts: Year · Status · Links in three columns; below Tailwind sm (640px) Links takes the full width */
-.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 24px}
+/* project facts: Year · Type · Status · Links in equal columns (three when the project has no status); below Tailwind sm (640px) one fact per row */
+.facts{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:16px 24px}
 .fact{display:flex;flex-direction:column;gap:4px;min-width:0}
 .fact dt{font-size:var(--text-small);color:var(--text-3)}
 .fact dd{margin:0;font-size:var(--text-small)}
@@ -477,13 +477,13 @@ html{scroll-padding-top:80px}
 .factlink{color:var(--text);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px;transition:text-decoration-color var(--dur-quick) var(--ease)}
 .factlink:focus-visible{text-decoration-color:currentColor}@media (hover:hover) and (pointer:fine){.factlink:hover{text-decoration-color:currentColor}}
 /* facts below Tailwind sm: one fact per row, the label in a 112px column (like the date column of the lists), the value beside it on the same baseline */
-@media (max-width: 639.98px){.facts{grid-template-columns:minmax(0,1fr);gap:12px}.fact{flex-direction:row;align-items:baseline;gap:24px}.fact dt{flex:0 0 var(--gutter)}.fact dd{min-width:0}}
+@media (max-width: 639.98px){.facts{grid-auto-flow:row;grid-template-columns:minmax(0,1fr);gap:12px}.fact{flex-direction:row;align-items:baseline;gap:24px}.fact dt{flex:0 0 var(--gutter)}.fact dd{min-width:0}}
 
 
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
-   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
-:root{color-scheme:light dark;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950. Link underlines and the text selection are mixed from accent */
+:root{color-scheme:light dark;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
@@ -593,13 +593,13 @@ main,.site > footer{animation:pageIn var(--dur-move) var(--ease-settle) backward
 .site > main{flex:1 0 auto;width:100%}
 .site > footer{width:100%;flex-shrink:0}
 @media (prefers-color-scheme: dark){
-:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
+:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--scrim:rgba(0,0,0,.55)}
 img:not([src$=".svg"]){filter:brightness(.92)}
 }
 
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
-::selection{background:var(--tint-strong);color:var(--text)}
+::selection{background:color-mix(in oklab, var(--accent) 20%, transparent);color:var(--text)}
 .skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur-quick) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
@@ -625,8 +625,8 @@ ul.grid > li.wide{grid-column:1 / -1}
 
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
-   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
-:root{color-scheme:light dark;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
+   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950. Link underlines and the text selection are mixed from accent */
+:root{color-scheme:light dark;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
@@ -648,7 +648,7 @@ a{color:var(--text);text-decoration:none}
 
 .body p{margin:0;font-size:var(--text-body);line-height:1.6;color:var(--text-2);text-wrap:pretty}
 /* links inside prose: indigo text with a soft underline that is always there, so they read as links without hover or colour */
-.body p a{color:var(--accent);text-decoration:underline;text-decoration-color:var(--accent-line);text-decoration-thickness:1px;text-underline-offset:3px;transition:text-decoration-color var(--dur-quick) var(--ease),text-decoration-thickness var(--dur-quick) var(--ease)}
+.body p a{color:var(--accent);text-decoration:underline;text-decoration-color:color-mix(in oklab, var(--accent) 45%, transparent);text-decoration-thickness:1px;text-underline-offset:3px;transition:text-decoration-color var(--dur-quick) var(--ease),text-decoration-thickness var(--dur-quick) var(--ease)}
 .body p a:focus-visible{color:var(--accent);text-decoration-color:var(--accent);text-decoration-thickness:2px}@media (hover:hover) and (pointer:fine){.body p a:hover{color:var(--accent);text-decoration-color:var(--accent);text-decoration-thickness:2px}}
 .h{position:relative;margin:0;font-size:var(--text-title);font-weight:600;letter-spacing:-0.01em;line-height:1.35}
 .h .anchor{position:absolute;left:-24px;top:0;width:20px;color:var(--text-3);font-weight:500;opacity:0;transition:opacity var(--dur-quick) var(--ease)}
@@ -729,13 +729,13 @@ main,.site > footer{animation:pageIn var(--dur-move) var(--ease-settle) backward
 .site > main{flex:1 0 auto;width:100%}
 .site > footer{width:100%;flex-shrink:0}
 @media (prefers-color-scheme: dark){
-:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
+:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--scrim:rgba(0,0,0,.55)}
 img:not([src$=".svg"]){filter:brightness(.92)}
 }
 
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
-::selection{background:var(--tint-strong);color:var(--text)}
+::selection{background:color-mix(in oklab, var(--accent) 20%, transparent);color:var(--text)}
 .skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur-quick) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
@@ -816,17 +816,17 @@ a:focus-visible .ext{stroke:currentColor}@media (hover:hover) and (pointer:fine)
 .codeblock{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);overflow:hidden}
 .codeblock .code-h{display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 8px 0 16px;border-bottom:1px solid var(--line)}
 .codeblock .lang{font-size:var(--text-micro);font-weight:500;color:var(--text-3)}
-.codeblock pre{margin:0;padding:16px 0;overflow-x:auto;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:var(--text-code);line-height:1.7;color:var(--code-plain)}
+.codeblock pre{margin:0;padding:16px 0;overflow-x:auto;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:var(--text-code);line-height:1.7;color:var(--text-2)}
 .codeblock code{display:block;min-width:max-content}
 .codeblock .line{display:block;padding:0 20px}
 .codeblock .line:empty::after{content:"\200b"}
-.codeblock .line.hl{background:var(--code-highlight);box-shadow:inset 2px 0 var(--accent)}
-.codeblock .line.hl .tk-c{color:var(--code-plain)}
-.tk-k{color:var(--code-keyword)}
+.codeblock .line.hl{background:var(--tint);box-shadow:inset 2px 0 var(--accent)}
+.codeblock .line.hl .tk-c{color:var(--text-2)}
+.tk-k{color:var(--accent)}
 .tk-s{color:var(--code-literal)}
-.tk-n{color:var(--code-name)}
-.tk-c{color:var(--code-comment);font-style:italic}
-.tk-p{color:var(--code-punct)}
+.tk-n{color:var(--text)}
+.tk-c{color:var(--text-3);font-style:italic}
+.tk-p{color:var(--text-3)}
 .codeblock .line:empty::after{content:"\200b"}
 
 /* project tiles: one per row with wide 16:7 previews below Tailwind sm (640px), three in a row from sm. No two-column stage, so no orphan tile */
@@ -841,11 +841,10 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 /* work rows: below Tailwind sm the open row drops its empty date column, so the bullets start under the company name like the header does */
 @media (max-width: 639.98px){.jobgut{display:none}}
 
-/* project status: a 13px line under the title ("In progress · 2026"), never a pill on the preview.
+/* project type line: a 14px line under the title ("Tool · 2026", "Experiment · 2026"), never a pill on the preview.
    Text carries the meaning; a small static indigo dot marks projects that are in progress (no pulse: pulsing is kept for "Open to remote roles") */
 .thead{display:flex;flex-direction:column;gap:4px;min-width:0}
 .sm{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
-.sdot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
 
 /* project card call to action: a label on the title's line ("View project" on every card) whose chevron nudges forward on hover, like the see-more links.
    The whole card is one link; on hover or focus the title and the label turn indigo together. Below Tailwind sm (640px) the label and arrow are hidden: the title has the whole row and the card itself is the link */
@@ -868,9 +867,9 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .cmeta{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
 .crate,.crate-v{display:inline-flex;align-items:center;gap:4px}
-.crate svg{width:var(--icon-sm);height:var(--icon-sm);fill:var(--text);flex:none}
+.crate svg{width:var(--icon-sm);height:var(--icon-sm);color:var(--text);fill:currentColor;flex:none}
 .crate b{font-weight:500;color:var(--text)}
-.play{position:absolute;inset:0;margin:auto;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:color-mix(in oklch, var(--bg) 92%, transparent);border:1px solid var(--line);color:var(--text);backdrop-filter:blur(4px);transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease)}
+.play{position:absolute;inset:0;margin:auto;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--glass);border:1px solid var(--line);color:var(--text);backdrop-filter:blur(4px);transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease)}
 .play svg{width:var(--icon-md);height:var(--icon-md);fill:currentColor;margin-left:2px}
 .courses{list-style:none;margin:0;padding:0}
 .attach{display:flex;flex-wrap:wrap;column-gap:24px;margin-bottom:12px}
@@ -902,6 +901,8 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .lpc-src{font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
 .lpc:focus-visible .lpc-title{color:var(--accent)}@media (hover:hover) and (pointer:fine){.lpc:hover .lpc-title{color:var(--accent)}}
 .list li > .attach{flex:1 1 100%;margin:8px 0 0}
+/* under a row that is a link, the row's own 12px padding is the gap above, and 12 below keeps the next row at the same distance: 12 from the text, 12 to the next row, as under a plain row */
+.list li > a.item + .attach{margin:0 0 12px}
 .photos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .photos img{display:block;width:100%;aspect-ratio:3 / 2;object-fit:cover;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
 
@@ -928,7 +929,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .vtitle{font-size:var(--text-label);font-weight:500;line-height:1.35;color:var(--text)}
 .vmeta{display:flex;flex-wrap:wrap;column-gap:8px;font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
 .vcount{font-variant-numeric:tabular-nums}
-.vbtn{position:absolute;padding:0;z-index:1;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:color-mix(in oklch, var(--bg) 92%, transparent);color:var(--text);backdrop-filter:blur(4px);cursor:pointer;transition:border-color var(--dur-quick) var(--ease),background var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
+.vbtn{position:absolute;padding:0;z-index:1;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--glass);color:var(--text);backdrop-filter:blur(4px);cursor:pointer;transition:border-color var(--dur-quick) var(--ease),background var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 .vbtn:active{transform:scale(.97)}
 .vbtn svg{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 @media (hover:hover) and (pointer:fine){.vbtn:hover{border-color:var(--line-strong);background:var(--bg)}}
@@ -946,7 +947,7 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 /* phones (< 640px): the platform photo viewer. Always dark (photos read best on black), photo edge to edge, caption and controls at the bottom within thumb reach.
    A visible close button; swipe sideways AND buttons to move (WCAG 2.5.1); drag down to close, the photo follows the finger (the button is the alternative, WCAG 2.5.7). Production: the back gesture closes it, pinch zooms */
 /* the viewer is dark in both themes: its own fixed colours */
-:root{--viewer-bg:#000000;--viewer-text:#F4F4F5;--viewer-text-2:#9F9FA9;--viewer-control:rgb(255 255 255 / .12);--viewer-dot:rgb(255 255 255 / .32)}
+:root{--viewer-bg:#000000;--viewer-text:#F4F4F5;--viewer-text-2:#9F9FA9;}
 .vmnav{display:none}
 @media (max-width: 639.98px){
 .vwrap .vprev,.vwrap .vnext,.vwrap .vfoot{display:none}
@@ -956,16 +957,16 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
 .vwrap.vw-card .vdlg{width:100%;height:100%;display:flex;flex-direction:column;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible;padding:0 0 calc(16px + env(safe-area-inset-bottom, 0px));touch-action:none;transition:translate var(--dur-move) var(--ease-settle)}
 .vwrap.out .vdlg{transition-duration:var(--dur-quick)}
 .vwrap.drag .vdlg{transition:none}
-.vwrap.vw-card .vclose{top:calc(8px + env(safe-area-inset-top, 0px));right:calc(8px + env(safe-area-inset-right, 0px));width:44px;height:44px;border-color:transparent;background:var(--viewer-control);color:var(--viewer-text)}
+.vwrap.vw-card .vclose{top:calc(8px + env(safe-area-inset-top, 0px));right:calc(8px + env(safe-area-inset-right, 0px));width:44px;height:44px;border-color:transparent;background:color-mix(in oklab, var(--viewer-text) 12%, transparent);color:var(--viewer-text)}
 .vwrap.vw-card .vfig{flex:1;min-height:0;padding-top:60px}
 .vwrap.vw-card .vimgbox{flex:0 1 auto;min-height:0;margin:auto 0;border:0;background:transparent;aspect-ratio:3 / 2}
 .vwrap.vw-card .vcap{padding:24px 20px 0}
 .vwrap.vw-card .vtitle{color:var(--viewer-text)}
 .vwrap.vw-card .vmeta{color:var(--viewer-text-2)}
 .vmnav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px calc(8px + env(safe-area-inset-right, 0px)) 0 calc(8px + env(safe-area-inset-left, 0px))}
-.vmnav .vbtn{position:static;flex:none;width:44px;height:44px;border-color:transparent;background:var(--viewer-control);color:var(--viewer-text)}
+.vmnav .vbtn{position:static;flex:none;width:44px;height:44px;border-color:transparent;background:color-mix(in oklab, var(--viewer-text) 12%, transparent);color:var(--viewer-text)}
 .vdots{display:flex;gap:8px}
-.vdot{width:6px;height:6px;border-radius:50%;background:var(--viewer-dot);transition:background var(--dur-quick) var(--ease)}
+.vdot{width:6px;height:6px;border-radius:50%;background:color-mix(in oklab, var(--viewer-text) 32%, transparent);transition:background var(--dur-quick) var(--ease)}
 .vdot.on{background:var(--viewer-text)}
 }
 /* photo attachments, narrow rows: when the row is too narrow for the date column (the same 436px at which the date moves above the title),
@@ -1152,65 +1153,65 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
               <circle data-dc-tpl="347" cx="54" cy="70" r="2.5" class="miss"></circle>
             </svg>
             </div>
-          <div data-dc-tpl="348" class="thead"><h3 data-dc-tpl="349" class="tt"><a data-dc-tpl="350" class="cl" href="Project.dc.html">Roleburn</a></h3><p data-dc-tpl="351" class="sm"><span data-dc-tpl="352" class="sdot" aria-hidden="true"></span><span data-dc-tpl="353">In progress</span><span data-dc-tpl="354" aria-hidden="true">·</span><time data-dc-tpl="355" datetime="2026">2026</time></p></div>
-          <span data-dc-tpl="356" class="td">A daily radar for remote roles that match my CV.</span>
+          <div data-dc-tpl="348" class="thead"><h3 data-dc-tpl="349" class="tt"><a data-dc-tpl="350" class="cl" href="Project.dc.html">Roleburn</a></h3><p data-dc-tpl="351" class="sm"><span data-dc-tpl="352">Tool</span><span data-dc-tpl="353" aria-hidden="true">·</span><time data-dc-tpl="354" datetime="2026">2026</time></p></div>
+          <span data-dc-tpl="355" class="td">A daily radar for remote roles that match my CV.</span>
         </div>
         </li></ul>
     </div>
   </section>
-  <section data-dc-tpl="357" class="spec" aria-labelledby="c-card">
-    <div data-dc-tpl="358" class="spec-h">
-      <h3 data-dc-tpl="359" id="c-card">Project card</h3>
-      <p data-dc-tpl="360" class="spec-u">Preview, title with “View project” on its line (desktop only), the status line, description. The newest spans the full width when the count is odd (desktop only); on phones all cards are equal.</p>
-      <p data-dc-tpl="361" class="spec-w">Used on: Projects</p>
+  <section data-dc-tpl="356" class="spec" aria-labelledby="c-card">
+    <div data-dc-tpl="357" class="spec-h">
+      <h3 data-dc-tpl="358" id="c-card">Project card</h3>
+      <p data-dc-tpl="359" class="spec-u">Preview, title with “View project” on its line (desktop only), the status line, description. The newest spans the full width when the count is odd (desktop only); on phones all cards are equal.</p>
+      <p data-dc-tpl="360" class="spec-w">Used on: Projects</p>
       
     </div>
-    <div data-dc-tpl="362" class="demo"><ul data-dc-tpl="363" class="grid" role="list" style="grid-template-columns: 1fr; max-width: 360px;"><li data-dc-tpl="364">
-      <div data-dc-tpl="365" class="card">
-        <div data-dc-tpl="366" class="pv" style="view-transition-name: project-roleburn;">
-          <svg data-dc-tpl="367" class="ill" viewBox="0 0 200 150" aria-hidden="true">
-            <g data-dc-tpl="368">
-              <circle data-dc-tpl="369" cx="100" cy="62" r="52" class="ring"></circle>
-              <circle data-dc-tpl="370" cx="100" cy="62" r="34" class="ring"></circle>
-              <circle data-dc-tpl="371" cx="100" cy="62" r="16" class="ring"></circle>
-              <g data-dc-tpl="372" class="sweep anim"><path data-dc-tpl="373" class="wedge" d="M100 62 L100 10 A52 52 0 0 1 145 36 Z"></path></g>
-              <circle data-dc-tpl="374" cx="126" cy="34" r="3.5" class="hit"></circle>
-              <circle data-dc-tpl="375" cx="72" cy="86" r="3.5" class="hit"></circle>
-              <circle data-dc-tpl="376" cx="132" cy="84" r="2.5" class="miss"></circle>
-              <circle data-dc-tpl="377" cx="78" cy="38" r="2.5" class="miss"></circle>
-              <circle data-dc-tpl="378" cx="108" cy="104" r="2.5" class="miss"></circle>
-              <circle data-dc-tpl="379" cx="56" cy="58" r="2.5" class="miss"></circle>
+    <div data-dc-tpl="361" class="demo"><ul data-dc-tpl="362" class="grid" role="list" style="grid-template-columns: 1fr; max-width: 360px;"><li data-dc-tpl="363">
+      <div data-dc-tpl="364" class="card">
+        <div data-dc-tpl="365" class="pv" style="view-transition-name: project-roleburn;">
+          <svg data-dc-tpl="366" class="ill" viewBox="0 0 200 150" aria-hidden="true">
+            <g data-dc-tpl="367">
+              <circle data-dc-tpl="368" cx="100" cy="62" r="52" class="ring"></circle>
+              <circle data-dc-tpl="369" cx="100" cy="62" r="34" class="ring"></circle>
+              <circle data-dc-tpl="370" cx="100" cy="62" r="16" class="ring"></circle>
+              <g data-dc-tpl="371" class="sweep anim"><path data-dc-tpl="372" class="wedge" d="M100 62 L100 10 A52 52 0 0 1 145 36 Z"></path></g>
+              <circle data-dc-tpl="373" cx="126" cy="34" r="3.5" class="hit"></circle>
+              <circle data-dc-tpl="374" cx="72" cy="86" r="3.5" class="hit"></circle>
+              <circle data-dc-tpl="375" cx="132" cy="84" r="2.5" class="miss"></circle>
+              <circle data-dc-tpl="376" cx="78" cy="38" r="2.5" class="miss"></circle>
+              <circle data-dc-tpl="377" cx="108" cy="104" r="2.5" class="miss"></circle>
+              <circle data-dc-tpl="378" cx="56" cy="58" r="2.5" class="miss"></circle>
             </g>
           </svg>
           
         </div>
-        <div data-dc-tpl="380" class="thead"><div data-dc-tpl="381" class="trow"><h2 data-dc-tpl="382" class="ct" style="margin: 0px; font-size: var(--text-label); font-weight: 500;"><a data-dc-tpl="383" class="cl" href="Project.dc.html">Roleburn</a></h2><span data-dc-tpl="384" class="go" aria-hidden="true"><span data-dc-tpl="385" class="gl">View project</span><svg data-dc-tpl="386" class="garrow" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="387" d="M9 6l6 6l-6 6" vector-effect="non-scaling-stroke"></path></svg></span></div><p data-dc-tpl="388" class="sm"><span data-dc-tpl="389" class="sdot" aria-hidden="true"></span><span data-dc-tpl="390">In progress</span><span data-dc-tpl="391" aria-hidden="true">·</span><time data-dc-tpl="392" datetime="2026">2026</time></p></div>
-        <p data-dc-tpl="393" class="cd" style="margin: 0px; font-size: var(--text-label); color: var(--text-2);">A daily radar for remote roles in Web3, payments and AI that match my CV. A folder of markdown files plus scheduled agents in Claude Cowork, soon open source.</p>
+        <div data-dc-tpl="379" class="thead"><div data-dc-tpl="380" class="trow"><h2 data-dc-tpl="381" class="ct" style="margin: 0px; font-size: var(--text-label); font-weight: 500;"><a data-dc-tpl="382" class="cl" href="Project.dc.html">Roleburn</a></h2><span data-dc-tpl="383" class="go" aria-hidden="true"><span data-dc-tpl="384" class="gl">View project</span><svg data-dc-tpl="385" class="garrow" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-right"><path data-dc-tpl="386" d="M9 6l6 6l-6 6" vector-effect="non-scaling-stroke"></path></svg></span></div><p data-dc-tpl="387" class="sm"><span data-dc-tpl="388">Tool</span><span data-dc-tpl="389" aria-hidden="true">·</span><time data-dc-tpl="390" datetime="2026">2026</time></p></div>
+        <p data-dc-tpl="391" class="cd" style="margin: 0px; font-size: var(--text-label); color: var(--text-2);">A daily radar for remote roles in Web3, payments and AI that match my CV. A folder of markdown files plus scheduled agents in Claude Cowork, soon open source.</p>
         
       </div>
       </li></ul>
     </div>
   </section>
-  <section data-dc-tpl="394" class="spec" aria-labelledby="c-status">
-    <div data-dc-tpl="395" class="spec-h">
-      <h3 data-dc-tpl="396" id="c-status">Project status</h3>
-      <p data-dc-tpl="397" class="spec-u">A 14px grey line under the project’s title: the stage, a dot, the year. Only “In progress” gets the 8px indigo dot, which never pulses (pulsing is kept for “Open to remote roles”). The text always carries the meaning; the dot is decorative.</p>
-      <p data-dc-tpl="398" class="spec-w">Used on: project tiles (Home) and project cards (Projects)</p>
+  <section data-dc-tpl="392" class="spec" aria-labelledby="c-status">
+    <div data-dc-tpl="393" class="spec-h">
+      <h3 data-dc-tpl="394" id="c-status">Project type line</h3>
+      <p data-dc-tpl="395" class="spec-u">A 14px grey line under the project’s title: its type, a dot, the year (“Tool · 2026”, “Experiment · 2026”). Nothing else: the project’s status (In progress, Live, Paused, Archived) is shown on its page, in the facts, not on cards.</p>
+      <p data-dc-tpl="396" class="spec-w">Used on: project tiles (Home) and project cards (Projects)</p>
     </div>
-    <div data-dc-tpl="399" class="demo"><p data-dc-tpl="400" class="sm"><span data-dc-tpl="401" class="sdot" aria-hidden="true"></span><span data-dc-tpl="402">In progress</span><span data-dc-tpl="403" aria-hidden="true">·</span><time data-dc-tpl="404" datetime="2026">2026</time></p><p data-dc-tpl="405" class="sm"><span data-dc-tpl="406">Experiment</span><span data-dc-tpl="407" aria-hidden="true">·</span><time data-dc-tpl="408" datetime="2026">2026</time></p><p data-dc-tpl="409" class="sm"><span data-dc-tpl="410">Research</span><span data-dc-tpl="411" aria-hidden="true">·</span><time data-dc-tpl="412" datetime="2026">2026</time></p>
+    <div data-dc-tpl="397" class="demo"><p data-dc-tpl="398" class="sm"><span data-dc-tpl="399">Tool</span><span data-dc-tpl="400" aria-hidden="true">·</span><time data-dc-tpl="401" datetime="2026">2026</time></p><p data-dc-tpl="402" class="sm"><span data-dc-tpl="403">Experiment</span><span data-dc-tpl="404" aria-hidden="true">·</span><time data-dc-tpl="405" datetime="2026">2026</time></p><p data-dc-tpl="406" class="sm"><span data-dc-tpl="407">Research</span><span data-dc-tpl="408" aria-hidden="true">·</span><time data-dc-tpl="409" datetime="2026">2026</time></p>
     </div>
   </section>
-  <section data-dc-tpl="413" class="spec" aria-labelledby="c-pn">
-    <div data-dc-tpl="414" class="spec-h">
-      <h3 data-dc-tpl="415" id="c-pn">Previous / next card</h3>
-      <p data-dc-tpl="416" class="spec-u">Bordered; the chevron sits on the side it leads to.</p>
-      <p data-dc-tpl="417" class="spec-w">Used on: case studies, posts</p>
+  <section data-dc-tpl="410" class="spec" aria-labelledby="c-pn">
+    <div data-dc-tpl="411" class="spec-h">
+      <h3 data-dc-tpl="412" id="c-pn">Previous / next card</h3>
+      <p data-dc-tpl="413" class="spec-u">Bordered; the chevron sits on the side it leads to.</p>
+      <p data-dc-tpl="414" class="spec-w">Used on: case studies, posts</p>
       
     </div>
-    <div data-dc-tpl="418" class="demo"><nav data-dc-tpl="419" aria-label="More posts" style="">
-        <a data-dc-tpl="420" class="pn prev" href="#" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-lg);">
-          <span data-dc-tpl="421" style="display: flex; align-items: center; gap: 8px; font-size: var(--text-small); color: var(--text-3);"><svg data-dc-tpl="422" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-left"><path data-dc-tpl="423" d="M15 6l-6 6l6 6" vector-effect="non-scaling-stroke"></path></svg>Previous post</span>
-          <span data-dc-tpl="424" style="font-weight: 500;">A job radar made of markdown files</span>
+    <div data-dc-tpl="415" class="demo"><nav data-dc-tpl="416" aria-label="More posts" style="">
+        <a data-dc-tpl="417" class="pn prev" href="#" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-lg);">
+          <span data-dc-tpl="418" style="display: flex; align-items: center; gap: 8px; font-size: var(--text-small); color: var(--text-3);"><svg data-dc-tpl="419" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-left"><path data-dc-tpl="420" d="M15 6l-6 6l6 6" vector-effect="non-scaling-stroke"></path></svg>Previous post</span>
+          <span data-dc-tpl="421" style="font-weight: 500;">A job radar made of markdown files</span>
         </a>
       </nav>
     </div>
@@ -1218,32 +1219,33 @@ ul.tiles{grid-template-columns:minmax(0,1fr)}
     </div>
   </section>
 
-  <section data-dc-tpl="425" class="group" aria-labelledby="g3">
-    <h2 data-dc-tpl="426" id="g3" class="group-h">Text and metadata</h2>
-    <div data-dc-tpl="427" class="specs">
-  <section data-dc-tpl="428" class="spec" aria-labelledby="c-meta">
-    <div data-dc-tpl="429" class="spec-h">
-      <h3 data-dc-tpl="430" id="c-meta">Metadata line</h3>
-      <p data-dc-tpl="431" class="spec-u">Grey items with a dot between; a dot never ends a line. The topic links to the filtered list.</p>
-      <p data-dc-tpl="432" class="spec-w">Used on: posts, Writing</p>
+  <section data-dc-tpl="422" class="group" aria-labelledby="g3">
+    <h2 data-dc-tpl="423" id="g3" class="group-h">Text and metadata</h2>
+    <div data-dc-tpl="424" class="specs">
+  <section data-dc-tpl="425" class="spec" aria-labelledby="c-meta">
+    <div data-dc-tpl="426" class="spec-h">
+      <h3 data-dc-tpl="427" id="c-meta">Metadata line</h3>
+      <p data-dc-tpl="428" class="spec-u">Grey items with a dot between; a dot never ends a line. The topic links to the filtered list.</p>
+      <p data-dc-tpl="429" class="spec-w">Used on: posts, Writing</p>
       
     </div>
-    <div data-dc-tpl="433" class="demo"><div data-dc-tpl="434" class="meta" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: var(--text-small); color: var(--text-3);">
-            <time data-dc-tpl="435" datetime="2026-11-09"><span data-dc-tpl="436" class="dlong">November 9, 2026</span><span data-dc-tpl="437" class="dshort">Nov 9, 2026</span></time>
-            <span data-dc-tpl="438" class="grp"><span data-dc-tpl="439" aria-hidden="true">·</span><a data-dc-tpl="440" class="topiclink" href="Writing.dc.html" aria-label="More posts about Design engineering">Design engineering</a></span>
-            <span data-dc-tpl="441" class="grp"><span data-dc-tpl="442" aria-hidden="true">·</span><span data-dc-tpl="443">4 min read</span></span>
+    <div data-dc-tpl="430" class="demo"><div data-dc-tpl="431" class="meta" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: var(--text-small); color: var(--text-3);">
+            <time data-dc-tpl="432" datetime="2026-11-09"><span data-dc-tpl="433" class="dlong">November 9, 2026</span><span data-dc-tpl="434" class="dshort">Nov 9, 2026</span></time>
+            <span data-dc-tpl="435" class="grp"><span data-dc-tpl="436" aria-hidden="true">·</span><a data-dc-tpl="437" class="topiclink" href="Writing.dc.html" aria-label="More posts about Design engineering">Design engineering</a></span>
+            <span data-dc-tpl="438" class="grp"><span data-dc-tpl="439" aria-hidden="true">·</span><span data-dc-tpl="440">4 min read</span></span>
           </div>
     </div>
   </section>
-  <section data-dc-tpl="444" class="spec wide" aria-labelledby="c-facts">
-    <div data-dc-tpl="445" class="spec-h">
-      <h3 data-dc-tpl="446" id="c-facts">Project facts</h3>
-      <p data-dc-tpl="447" class="spec-u">Year · Status · Links in three equal columns. Below 640px, one fact per row: the 14px label in a 112px column (like the lists’ date column), the 14px value beside it on the same baseline, 12px between rows. Links are named by destination and marked ↗; when they don’t fit beside each other they wrap under the first.</p>
-      <p data-dc-tpl="448" class="spec-w">Used on: case studies</p>
+  <section data-dc-tpl="441" class="spec wide" aria-labelledby="c-facts">
+    <div data-dc-tpl="442" class="spec-h">
+      <h3 data-dc-tpl="443" id="c-facts">Project facts</h3>
+      <p data-dc-tpl="444" class="spec-u">Year · Type · Status · Links in equal columns (Status is left out when the project has none). Below 640px, one fact per row: the 14px label in a 112px column (like the lists’ date column), the 14px value beside it on the same baseline, 12px between rows. Links are named by destination and marked ↗; when they don’t fit beside each other they wrap under the first.</p>
+      <p data-dc-tpl="445" class="spec-w">Used on: case studies</p>
       
     </div>
-    <div data-dc-tpl="449" class="demo"><dl data-dc-tpl="450" class="facts" style="margin: 0px; padding: 16px 0px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
-         <div data-dc-tpl="451" class="fact"><dt data-dc-tpl="452">Year</dt><dd data-dc-tpl="453"><time data-dc-tpl="454" datetime="2026">2026</time></dd></div>
+    <div data-dc-tpl="446" class="demo"><dl data-dc-tpl="447" class="facts" style="margin: 0px; padding: 16px 0px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+         <div data-dc-tpl="448" class="fact"><dt data-dc-tpl="449">Year</dt><dd data-dc-tpl="450"><time data-dc-tpl="451" datetime="2026">2026</time></dd></div>
+         <div data-dc-tpl="452" class="fact"><dt data-dc-tpl="453">Type</dt><dd data-dc-tpl="454">Tool</dd></div>
          <div data-dc-tpl="455" class="fact"><dt data-dc-tpl="456">Status</dt><dd data-dc-tpl="457">In progress</dd></div>
          <div data-dc-tpl="458" class="fact links"><dt data-dc-tpl="459">Links</dt><dd data-dc-tpl="460"><a data-dc-tpl="461" class="factlink" href="#">Website<svg data-dc-tpl="462" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="463" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="464" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></a><a data-dc-tpl="465" class="factlink" href="#">GitHub<svg data-dc-tpl="466" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="467" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="468" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></a></dd></div>
        </dl>
