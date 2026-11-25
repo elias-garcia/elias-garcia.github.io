@@ -122,7 +122,7 @@ const shareImage = pageShareImage ?? {
       content="#09090b"
     />
 
-    <Font cssVariable="--font-sans" preload />
+    <Font cssVariable="--font-sans" preload={[{ style: "normal" }]} />
     <script is:inline>
       // The search shortcut is ⌘K on Apple's systems and Ctrl K elsewhere;
       // set before the first render so the header button doesn't change.

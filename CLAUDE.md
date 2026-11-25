@@ -19,7 +19,7 @@ Markup follows the HTML specification, even where the reference HTML does someth
 ## Stack
 
 - Astro 7 with static output, TypeScript (`astro/tsconfigs/strictest`), MDX, plain CSS with no framework.
-- Font: Inter through Astro's Fonts API (variable, without its optical-size axis); static Inter files for the CV PDF.
+- Font: Inter through Astro's Fonts API (variable, upright and italic, without its optical-size axis; only the upright font is preloaded); static Inter files for the CV PDF.
 - Icons: Tabler through `@tabler/icons-astro`, brand marks included.
 - ESLint, Prettier, html-validate, Playwright + axe, Lighthouse CI.
 - GitHub Actions: `ci.yml` runs every check on pull requests and on `main`, with Lighthouse and the internal links and anchors (lychee), then deploys; `links.yml` checks the links to other sites on the first of each month.

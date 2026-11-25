@@ -71,7 +71,9 @@ export default defineConfig({
       name: "Inter",
       cssVariable: "--font-sans",
       weights: ["400 600"],
-      styles: ["normal"],
+      // The base layout preloads only the upright font: a browser downloads
+      // the italic only for a page that has italic text.
+      styles: ["normal", "italic"],
       fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
       // Hides the text briefly while the font gets ready, then allows a swap
       // for a few seconds: a cached font (moving between pages) draws without
