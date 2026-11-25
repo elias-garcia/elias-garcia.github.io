@@ -15,29 +15,39 @@ One column, about 640 pixels wide. Dates live in a left gutter, so a whole caree
 
 ## Spending the motion budget
 
-I wanted the site to feel crafted without feeling busy, so motion follows a few rules.[^1] Pages arrive in one quick motion. Everything else responds to something you did, and interface feedback never takes longer than 300 milliseconds.
+I wanted the site to feel crafted without feeling busy, so motion follows a few rules.[^1] When you arrive, the page settles from the top in a few steps. Everything else responds to something you did, and nothing you trigger takes longer than a quarter of a second.
 
 Easing does most of the work. Things entering the screen use ease-out: they arrive fast and settle, which reads as responsive. Linear is for things that never stop, like a spinner. Press replay and compare.
 
 <EasingDemo caption="Same distance, same 600 ms. Only the curve changes." />
 
-I tried staggering every element in, and it felt slow and uneven, so the page now arrives as one piece: the content rises six pixels and fades in over a quarter of a second, while the header stays exactly where it is.[^2] Moving between pages, the old content fades out first, so it reads as one continuous site. This is the whole thing:
+I tried staggering every element in, and it felt slow and uneven. Staggering whole sections works, as long as it happens once: when you arrive, the blocks on screen rise twelve pixels and fade in from the top, a tenth of a second apart, while the header stays exactly where it is.[^2] After that, moving between pages is quicker: the old content fades out and the new page arrives as one piece, so it reads as one continuous site. This is the whole thing:
 
 ```css
-/* the page arrives as one piece */
+/* between pages: the page arrives as one piece */
 @keyframes page-in {
   from { opacity: 0; transform: translateY(6px); }
 }
+main {
+  animation: page-in 250ms cubic-bezier(.22, 1, .36, 1) backwards;
+}
+@view-transition { navigation: auto; }
+/* arriving at the site: the blocks settle from the top */
+@keyframes arrive-in {
+  from { opacity: 0; transform: translateY(12px); }
+}
+[data-arrive] main { animation: none; }
+[data-arrive] .enter {
+  animation: arrive-in 400ms cubic-bezier(.22, 1, .36, 1) backwards;
+  animation-delay: calc(var(--i) * 100ms);
+}
+/* reduced motion: still a fade, just no movement */
 @keyframes page-fade {
   from { opacity: 0; }
 }
-main {
-  animation: page-in 300ms cubic-bezier(.22, 1, .36, 1) backwards;
-}
-@view-transition { navigation: auto; }
-/* reduced motion: still a fade, just no movement */
 @media (prefers-reduced-motion: reduce) {
-  main { animation: page-fade 150ms ease-out backwards; }
+  main, [data-arrive] main { animation: page-fade 150ms cubic-bezier(.22, 1, .36, 1) backwards; }
+  [data-arrive] .enter { animation: none; }
 }
 ```
 
