@@ -10,6 +10,13 @@ This is the source of truth for the site's design. It was produced in Claude Des
 - `design/screenshots/`: every page at 1280px and 390px, in light and dark, plus the interactive states. Use them to check your output visually.
 - `design/assets/`: logo, avatar, talk photos, the course trailer thumbnail, share images (originals; the site uses copies in `src/assets/`). `design/head.html`: the `<head>` tags for every page (viewport, colour scheme, app icons, which live in `public/`).
 
+**Design and content are separate.** This document specifies structure, styling, behaviour and the interface's own labels ("Download CV", "All posts", "No links yet", the 404 text). It does not specify content: names, dates, post and project text, the number of jobs or talks. The content is the author's, in `src/content/`.
+
+- **Every piece of content in this document, in the reference pages and in the screenshots is an example.** Match the structure and the styling, never the words. A reference page showing five jobs or three talks means "a list of rows", not "five" or "three".
+- **A design change never edits the content,** and doesn't keep it true: if one makes some text out of date (the post about this site describes its motion), that is the author's to fix.
+- **Content isn't checked against the design,** and mismatches between them aren't reported.
+- **A change to the shape of the data is different.** When a field is added, renamed or removed, its change note gives the migration; that is schema, not copy.
+
 ---
 
 ## 1. Principles
@@ -449,10 +456,10 @@ Screenshots for each: `screenshots/<page>.{desktop,phone}.{light,dark}.png`.
 1. **Intro.** Avatar (104px; 80px on phones, above the text), name (page title, `h1`), "Software engineer in Porto, Portugal" (one sentence, `--text-2`; no separator here, the "·" is for rows of facts), then **Download CV** menu button and "Open to remote roles" with an indigo dot (centred on the **first line** of the text when it wraps: `align-items: flex-start`, the dot offset by half of the line height minus its own; the line keeps the button's 32px height through its padding) that pings once when the page opens (a ring scaling 1 → 2.6 while fading, 2.4s) and then rests.
 2. **About.** Two paragraphs.
 3. **Projects.** The first three projects in the Projects order as tiles + "All projects ›". With one or two projects the tiles keep their size and sit from the left, leaving the other columns empty (like the talk photos); they never stretch to fill the row.
-4. **Work experience.** Five expandable rows, all closed.
+4. **Work experience.** Expandable rows, one per job, all closed.
 5. **Writing.** The three newest posts as list rows (date "Nov 2026") + "All posts ›".
-6. **Speaking.** Three talks as **plain rows** (no recordings exist), dated by month ("Jan 2024", "Jul 2023"), each with a **photo attachment**: House of ZK one photo, AggCave one, Lisbon three. No section photo above the list.
-7. **Teaching.** The course as one link row to balio.app (with the arrow): date "Mar 2022", title "The DeFi revolution", line "Online course in Spanish, Balio", the **course rating line**, then a **video preview** attachment ("Watch the trailer", YouTube).
+6. **Speaking.** Talks as **plain rows** (a talk becomes a link only if it has a recording or a page), dated by month ("Jan 2024"), each with an optional **photo attachment** of one to three photos. No section photo above the list.
+7. **Teaching.** Courses as rows; a course with a page is a link row with the arrow. Under its provider line it can carry the **course rating line**, and it can have a **video preview** attachment (a trailer, for instance).
 8. **Education.** One plain row, with the list rows' 12px vertical padding.
 9. **Contact.** `<address>` with a `<dl>`: Email, GitHub, LinkedIn, X, each value a link with the arrow. Each row has the list rows' 12px vertical padding and no gap between rows (48px rows on desktop).
 
@@ -462,7 +469,7 @@ Sections are plain `<section>` elements, **not labelled**, with `h2` headings at
 Intro (title, one line), then the card grid: one per row on phones, two per row from 640px with the first spanning both when the count is odd. That covers small counts too: one project is a single full-width card (16:7), two are two half cards side by side. Order: projects in progress first, then the rest; each group by year, newest first, then by title. Every card shows "View project ›" on the title row (from 640px).
 
 ### Case study (`/projects/roleburn`)
-Back link "‹ Projects", title (display) and lead (the project's description, full column width), project facts, then the **cover** (see Project cover): the same picture as the project's card, which morphs into it. Then the article: Why I built it, How it works (with a folder-tree code block, the Roleburn figure and a placeholder figure), What's next. A project with no article yet has none, and no gap where it would be. **The facts come before the cover:** they describe the project like the type line under a card's title, and the links stay on the first screen. The layout is the same for every project; only the cover and the article change. Previous/next at the end ("Previous", "Next") moves between projects, in the Projects order.
+Back link "‹ Projects", title (display) and lead (the project's description, full column width), project facts, then the **cover** (see Project cover): the same picture as the project's card, which morphs into it. Then the article (MDX: any prose element, figures and custom components). A project with no article yet has none, and no gap where it would be. **The facts come before the cover:** they describe the project like the type line under a card's title, and the links stay on the first screen. The layout is the same for every project; only the cover and the article change. Previous/next at the end ("Previous", "Next") moves between projects, in the Projects order.
 
 ### Writing (`/writing`) and topic pages (`/writing/topics/<slug>`)
 Intro with **Subscribe** (RSS icon + label) on the right of the title; topic chips (All, AI, DeFi, Design engineering, with counts); posts grouped by year (`h2`), each an `<article>` in an `<li>` with `<time>`, `h3` title link, description, and "Topic · N min read" (the topic is plain text, not a link, because the row is already a link). Each topic is its own static page, `/writing/topics/<slug>` (e.g. `/writing/topics/ai`), built from the posts: the same page with that chip selected and only its posts, so filtered views are shareable and work without JavaScript. The chips are links in a `nav`; choosing one is a page change where the page stays in place, with no entrance (§2.5). A topic page's `<title>` is "AI · Writing · Elías García" and its description "Posts about AI by Elías García".
@@ -521,7 +528,9 @@ The PDF in the Download CV menu. Printed by Chrome from a page built from the co
   - **The arrow:** they also include "→" ("Staff Frontend Engineer → Tech Lead"), which the web subset may not.
 - **Always the light palette,** whatever the visitor's or the build machine's settings.
 
-## 5. Content and copy rules
+## 5. Formatting and interface copy rules
+
+Rules for how text is formatted and for the interface's own labels. They apply to whatever content the author writes; they don't describe that content.
 
 - Plain English, sentence case, short sentences. All titles in English; a source in another language is translated and its language noted ("Online course in Spanish").
 - Dates: "Nov 9" in lists, "Nov 2026" on Home, "November 9, 2026" in post headers ("Nov 9, 2026" on phones). Always in `<time datetime>`.
@@ -529,7 +538,7 @@ The PDF in the Download CV menu. Printed by Chrome from a page built from the co
 - Dates: ranges use a **spaced en dash**, never a hyphen: "2024 – Now", "2013 – 2017" (in markup: `<time>2020</time> – <time>2024</time>`). Single dates are an abbreviated month and year where the month is known ("Jan 2024", "Mar 2022"), with the full value in `datetime` ("2024-01"); work experience and education stay years-only.
 - Straight quotes and apostrophes (' ") in visible text, as typed. Markdown doesn't curl them.
 - No mention of read.cv anywhere.
-- Placeholder content still to replace is listed in `PLAN.md`. Until a destination exists, render rows and cards as plain (not links).
+- An entry without a destination renders as a plain row or card, not a link.
 
 ---
 
