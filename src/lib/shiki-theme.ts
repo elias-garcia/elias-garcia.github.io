@@ -2,8 +2,9 @@ import type { ThemeRegistration } from "shiki";
 
 // The minimal indigo syntax theme (DESIGN.md §3, Syntax theme). Colours are
 // the site's tokens, so code follows light and dark mode with the rest of the
-// site. Anything not matched below is --text-2. A code block can recolour its
-// comments through --code-comment (CodeBlock, on a highlighted line).
+// site. Anything not matched below is --text-2. The muted colour of comments
+// and punctuation is --code-muted when a code block sets it (CodeBlock, on a
+// highlighted line), --text-3 otherwise.
 export const indigoMinimal: ThemeRegistration = {
   name: "indigo-minimal",
   type: "light",
@@ -48,12 +49,12 @@ export const indigoMinimal: ThemeRegistration = {
         "keyword.operator",
         "storage.type.function.arrow",
       ],
-      settings: { foreground: "var(--text-3)" },
+      settings: { foreground: "var(--code-muted, var(--text-3))" },
     },
     {
       scope: ["comment", "punctuation.definition.comment"],
       settings: {
-        foreground: "var(--code-comment, var(--text-3))",
+        foreground: "var(--code-muted, var(--text-3))",
         fontStyle: "italic",
       },
     },

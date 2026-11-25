@@ -409,7 +409,7 @@ MDX-only components, for the occasional post that needs them:
 | `--text-3` | zinc-500 | zinc-400 | Punctuation and operators |
 | `--tint` | indigo-50 | indigo-950 | Highlighted lines, with a 2px `--accent` rule on the left |
 
-On a highlighted line, comments switch to `--text-2` (zinc-500 on indigo-50 falls below 4.5:1): the theme writes their colour as `var(--code-comment, var(--text-3))`, and the code block sets `--code-comment` on a highlighted line. Implementation: `src/lib/shiki-theme.ts`, a Shiki theme that maps token scopes straight to the colour tokens in the table above; `CodeBlock` styles lines and highlights. Highlight lines in posts with `// [!code highlight]` via `transformerNotationHighlight`. The language label comes from the code fence's language (Astro adds `data-language` to `pre`); map `pre` to a `CodeBlock` component that renders the header bar.
+On a highlighted line, comments and punctuation switch to `--text-2` (6.9:1; zinc-500 on indigo-50 is 4.3:1, below 4.5:1); keywords, literals and names already pass. The theme writes their colour as `var(--code-muted, var(--text-3))`, and the code block sets `--code-muted` on a highlighted line. Implementation: `src/lib/shiki-theme.ts`, a Shiki theme that maps token scopes straight to the colour tokens in the table above; `CodeBlock` styles lines and highlights. Highlight lines in posts with `// [!code highlight]` via `transformerNotationHighlight`. The language label comes from the code fence's language (Astro adds `data-language` to `pre`); map `pre` to a `CodeBlock` component that renders the header bar.
 
 **Footnotes.** No popovers: a footnote is a link to its note, and every note links back.
 

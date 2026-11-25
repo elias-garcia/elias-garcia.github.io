@@ -87,10 +87,10 @@ const name =
       padding-inline: var(--space-5);
     }
 
-    /* Comments drop to --text-2 on a highlighted line: zinc-500 on
-       indigo-50 falls below 4.5:1. */
+    /* Comments and punctuation rise to --text-2 on a highlighted line:
+       zinc-500 on indigo-50 is 4.3:1, below 4.5:1. */
     & :global(.line.highlighted) {
-      --code-comment: var(--text-2);
+      --code-muted: var(--text-2);
 
       background: var(--tint);
       box-shadow: inset var(--rule-strong) 0 var(--accent);
