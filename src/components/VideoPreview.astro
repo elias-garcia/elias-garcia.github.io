@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import { attachmentImage } from "../lib/attachment.ts";
 import { linkTarget } from "../lib/links.ts";
-import ExternalArrow from "./ExternalArrow.astro";
+import ExternalLabel from "./ExternalLabel.astro";
 import Icon from "./Icon.astro";
 
 type Props = {
@@ -30,8 +30,7 @@ const { href, thumbnail, label, source } = Astro.props.video;
   <span class="text">
     <span class="label">{label}</span>
     <span class="source">
-      {source}
-      <ExternalArrow href={href} />
+      <ExternalLabel href={href} label={source} />
     </span>
   </span>
 </a>

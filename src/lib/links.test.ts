@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { writtenAddress } from "./links.ts";
+import { arrowTail, writtenAddress } from "./links.ts";
 
 test("writtenAddress drops the scheme, www and a trailing slash", () => {
   assert.equal(
@@ -32,4 +32,52 @@ test("writtenAddress writes an email link as the address", () => {
     writtenAddress("mailto:someone@example.com"),
     "someone@example.com",
   );
+});
+
+test("arrowTail keeps a one-word label whole with the arrow", () => {
+  assert.deepEqual(arrowTail("Website"), { start: "", end: "Website" });
+});
+
+test("arrowTail keeps the last word of a sentence with the arrow", () => {
+  assert.deepEqual(arrowTail("Watch the trailer"), {
+    start: "Watch the ",
+    end: "trailer",
+  });
+});
+
+test("arrowTail breaks an address after its last dot, slash, hyphen or @", () => {
+  assert.deepEqual(arrowTail("github.com/elias-garcia"), {
+    start: "github.com/elias-",
+    end: "garcia",
+  });
+  assert.deepEqual(arrowTail("someone@example.com"), {
+    start: "someone@example.",
+    end: "com",
+  });
+});
+
+test("arrowTail keeps only three characters of a long last word", () => {
+  assert.deepEqual(arrowTail("a supercalifragilistic"), {
+    start: "a supercalifragilis",
+    end: "tic",
+  });
+});
+
+test("arrowTail keeps three characters when the label ends on a break", () => {
+  assert.deepEqual(arrowTail("example.com/"), {
+    start: "example.c",
+    end: "om/",
+  });
+});
+
+test("arrowTail counts an emoji as one character", () => {
+  assert.deepEqual(arrowTail("Party 🎉"), { start: "Party ", end: "🎉" });
+});
+
+test("arrowTail never cuts an emoji made of several code points", () => {
+  const family = "👨‍👩‍👧‍👦";
+  assert.deepEqual(arrowTail(`a ${family.repeat(13)}`), {
+    start: `a ${family.repeat(10)}`,
+    end: family.repeat(3),
+  });
 });

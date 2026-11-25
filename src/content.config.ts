@@ -85,8 +85,6 @@ const courses = defineCollection({
         score: z.number().min(0).max(5),
         reviews: z.number().int().positive(),
       }),
-      lessons: z.number().int().positive(),
-      minutes: z.number().int().positive(),
       video: link.extend({ thumbnail: image(), source: z.string() }),
     }),
 });
@@ -141,8 +139,9 @@ const projects = defineCollection({
           alt: z.string().min(1),
         }),
       ]),
-      // What it is, in a word or two (Tool, Experiment, Research…).
-      type: z.string().min(1).max(16),
+      // What it is (Tool, Experiment, Research…); any length, the type line
+      // wraps.
+      type: z.string().min(1),
       // Whether it's alive; a fixed list, so a status is never a sentence.
       status: z.enum(["In progress", "Live", "Paused", "Archived"]).optional(),
       year: z.number().int(),
@@ -239,7 +238,6 @@ const home = defineCollection({
     rating: template("{score}", "{reviews}"),
     reviews: template("{reviews}"),
     reviewCount: counts,
-    lessonCount: counts,
     experience: z.string(),
   }),
 });

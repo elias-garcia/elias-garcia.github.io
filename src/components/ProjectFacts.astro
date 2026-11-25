@@ -2,7 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getProjectCopy } from "../lib/content.ts";
 import { linkTarget } from "../lib/links.ts";
-import ExternalArrow from "./ExternalArrow.astro";
+import ExternalLabel from "./ExternalLabel.astro";
 import TextLink from "./TextLink.astro";
 
 type Props = Pick<
@@ -39,8 +39,7 @@ const copy = await getProjectCopy();
       ) : (
         links.map(({ label, href }) => (
           <TextLink quiet href={href} {...linkTarget(href)}>
-            {label}
-            <ExternalArrow href={href} />
+            <ExternalLabel href={href} label={label} />
           </TextLink>
         ))
       )}
@@ -49,10 +48,15 @@ const copy = await getProjectCopy();
 </dl>
 
 <style>
-  /* Phones: one fact per row, the label in the lists' date column. From
+  /* Phones: one fact per row, the label in a column of its own. From
      40rem: one equal column per fact (four, or three without a status),
      each label above its value. */
   .facts {
+    /* Phones: the labels' column, narrower than the lists' date column so
+       values get the room. In rem, so it grows with the reader's text size
+       and a label never breaks. */
+    --label-column: 4rem;
+
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-3);
@@ -81,7 +85,7 @@ const copy = await getProjectCopy();
   }
 
   dt {
-    flex: 0 0 var(--gutter);
+    flex: 0 0 var(--label-column);
     color: var(--text-3);
     font-size: var(--text-small);
 

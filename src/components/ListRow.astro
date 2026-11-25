@@ -1,6 +1,6 @@
 ---
 import { leavesSite, linkTarget } from "../lib/links.ts";
-import ExternalArrow from "./ExternalArrow.astro";
+import ExternalLabel from "./ExternalLabel.astro";
 
 type Props = {
   title: string;
@@ -37,8 +37,13 @@ const Title = article ? "h3" : "span";
             href={href}
             {...linkTarget(href)}
           >
-            <span class="title-text">{title}</span>
-            {leavesSite(href) && <ExternalArrow href={href} />}
+            <span class="title-text">
+              {leavesSite(href) ? (
+                <ExternalLabel href={href} label={title} />
+              ) : (
+                title
+              )}
+            </span>
           </a>
         )}
       </Title>

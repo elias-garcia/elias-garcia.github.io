@@ -3,7 +3,7 @@ import { getImage, Image } from "astro:assets";
 import avatar from "../assets/avatar.jpg";
 import CourseRating from "../components/CourseRating.astro";
 import DownloadCv from "../components/DownloadCv.astro";
-import ExternalArrow from "../components/ExternalArrow.astro";
+import ExternalLabel from "../components/ExternalLabel.astro";
 import ImageViewer from "../components/ImageViewer.astro";
 import List from "../components/List.astro";
 import ListRow from "../components/ListRow.astro";
@@ -221,8 +221,7 @@ const sectionStep = (section: string) =>
               <dt>{link.label}</dt>
               <dd>
                 <a href={link.href} {...linkTarget(link.href)}>
-                  {link.text}
-                  <ExternalArrow href={link.href} />
+                  <ExternalLabel href={link.href} label={link.text} />
                 </a>
               </dd>
             </div>
@@ -299,12 +298,13 @@ const sectionStep = (section: string) =>
     margin-block-start: var(--space-3);
   }
 
+  /* As tall as the Download CV button beside it on one line; when the text
+     wraps, it grows down and the dot stays centred on the first line. */
   .availability {
     display: inline-flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-2);
-    min-block-size: var(--control-h);
-    padding-inline: var(--space-1);
+    padding: calc((var(--control-h) - 1lh) / 2) var(--space-1);
     color: var(--text-2);
     font-size: var(--text-small);
   }
@@ -312,6 +312,7 @@ const sectionStep = (section: string) =>
   .dot {
     position: relative;
     flex: none;
+    margin-block-start: calc((1lh - var(--dot)) / 2);
     inline-size: var(--dot);
     block-size: var(--dot);
     border-radius: 50%;

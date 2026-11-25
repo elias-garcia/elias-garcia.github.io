@@ -85,7 +85,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
               {post.data.description}
               <MetaLine slot="meta">
                 <MetaItem>{topicLabel(topics, post.data.topic)}</MetaItem>
-                <MetaItem>{readingTime}</MetaItem>
+                <MetaItem nowrap>{readingTime}</MetaItem>
               </MetaLine>
             </ListRow>
           ))}
@@ -107,6 +107,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2);
+    min-inline-size: 0;
   }
 
   .years {

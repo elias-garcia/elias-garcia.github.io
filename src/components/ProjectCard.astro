@@ -51,6 +51,8 @@ const Title = tile ? "h3" : "h2";
   .card {
     position: relative;
     display: grid;
+    /* As wide as its place in the grid, whatever the one-line title. */
+    grid-template-columns: minmax(0, 1fr);
     grid-row: span 3;
     grid-template-rows: subgrid;
     align-content: start;
@@ -119,23 +121,34 @@ const Title = tile ? "h3" : "h2";
     gap: var(--space-1);
   }
 
+  /* The title row never wraps: "View project" keeps its place and the
+     title takes what's left, on one line. With every title one line and
+     every description at most two, tiles in a row stay level whatever the
+     content (DESIGN.md, Project tile, Project card). The full text stays
+     in the markup. */
   .title-row {
     display: flex;
-    flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
-    gap: var(--space-1) var(--space-4);
+    gap: var(--space-4);
   }
 
   .title {
+    min-inline-size: 0;
+    overflow: hidden;
     font-size: inherit;
     font-weight: var(--weight-medium);
     line-height: var(--leading-tight);
-    text-wrap: balance;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .description {
+    display: -webkit-box;
+    overflow: hidden;
     color: var(--text-2);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   .go {

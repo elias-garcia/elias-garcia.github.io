@@ -36,3 +36,27 @@ export function writtenAddress(href: string): string {
   const path = url.pathname.replace(/\/$/, "");
   return `${url.hostname.replace(/^www\./, "")}${path}${url.search}${url.hash}`;
 }
+
+const graphemes = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+
+// The external arrow never starts a line (DESIGN.md, External-link arrow):
+// it's kept with the end of its label, the text after the last space, dot,
+// slash, hyphen or @. When that is empty or longer than 12 characters, the
+// last three characters travel with it instead. Characters as a reader sees
+// them, so an emoji made of several code points is never cut.
+export function arrowTail(label: string): { start: string; end: string } {
+  const characters = Array.from(
+    graphemes.segment(label),
+    ({ segment }) => segment,
+  );
+  const lastBreak = characters.findLastIndex((character) =>
+    /[\s./@-]/.test(character),
+  );
+  const after = characters.slice(lastBreak + 1);
+  const end =
+    after.length === 0 || after.length > 12 ? characters.slice(-3) : after;
+  return {
+    start: characters.slice(0, characters.length - end.length).join(""),
+    end: end.join(""),
+  };
+}

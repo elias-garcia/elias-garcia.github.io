@@ -1,19 +1,31 @@
 ---
-import { opensNewTab } from "../lib/links.ts";
+import { arrowTail, opensNewTab } from "../lib/links.ts";
 import Icon from "./Icon.astro";
 import NewTabNote from "./NewTabNote.astro";
 
+// A link's label followed by the external arrow, which never starts a line:
+// it stays with the end of the label (DESIGN.md, External-link arrow).
 type Props = {
   href: string;
+  label: string;
 };
 
-const { href } = Astro.props;
+const { href, label } = Astro.props;
+const { start, end } = arrowTail(label);
 ---
 
-<Icon name="arrow-up-right" size="sm" class="external" />
+{start}
+<span class="end">
+  {end}
+  <Icon name="arrow-up-right" size="sm" class="external" />
+</span>
 {opensNewTab(href) && <NewTabNote />}
 
 <style>
+  .end {
+    white-space: nowrap;
+  }
+
   .external {
     /* The nudge on hover, and the offset from the baseline. */
     --nudge-sm: 1px;

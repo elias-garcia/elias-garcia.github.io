@@ -133,6 +133,8 @@ const { job } = Astro.props;
     padding: 0 0 var(--space-4) calc(var(--gutter) + var(--space-6));
     color: var(--text-2);
     line-height: var(--leading-body);
+    /* An address or identifier in a bullet breaks instead of being cut. */
+    overflow-wrap: anywhere;
 
     @media (width < 40rem) {
       padding-inline-start: 0;
