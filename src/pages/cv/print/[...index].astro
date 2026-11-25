@@ -68,11 +68,13 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
                       </h3>
                       <p class="position">{job.role}</p>
                     </div>
-                    <ul class="points">
-                      {job.points.map((point) => (
-                        <li>{point}</li>
-                      ))}
-                    </ul>
+                    {job.points.length > 0 && (
+                      <ul class="points">
+                        {job.points.map((point) => (
+                          <li>{point}</li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </li>
               ))}

@@ -10,11 +10,16 @@ type Props = {
 };
 
 const { job } = Astro.props;
+// A job with no bullets has nothing to open: a plain row, with no + and
+// nothing to press (DESIGN.md, Expandable row).
+const expandable = job.points.length > 0;
+const Row = expandable ? "details" : "div";
+const Head = expandable ? "summary" : "div";
 ---
 
 <li>
-  <details class="job row-interactive">
-    <summary class="head">
+  <Row class:list={["job", { "row-interactive": expandable }]}>
+    <Head class="head">
       <span class="date">
         <Years start={job.start} end={job.end} />
       </span>
@@ -31,18 +36,22 @@ const { job } = Astro.props;
         </span>
         <span class="role">{job.role}</span>
       </span>
-      <Icon name="plus" class="plus" />
-    </summary>
-    <ul class="points" role="list">
-      {job.points.map((point) => (
-        <li>{point}</li>
-      ))}
-    </ul>
-  </details>
+      {expandable && <Icon name="plus" class="plus" />}
+    </Head>
+    {expandable && (
+      <ul class="points" role="list">
+        {job.points.map((point) => (
+          <li>{point}</li>
+        ))}
+      </ul>
+    )}
+  </Row>
 </li>
 
 <style>
-  .job {
+  /* It fades with the list's dimming, which only rows that open take part
+     in. */
+  .row-interactive {
     transition: opacity var(--dur-quick) var(--ease);
   }
 
@@ -54,7 +63,10 @@ const { job } = Astro.props;
     gap: var(--space-1) var(--space-6);
     padding-block: var(--space-3);
     list-style: none;
-    cursor: pointer;
+
+    &:is(summary) {
+      cursor: pointer;
+    }
 
     &::-webkit-details-marker {
       display: none;

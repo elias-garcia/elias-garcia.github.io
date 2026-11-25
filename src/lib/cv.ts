@@ -169,8 +169,9 @@ export async function renderCvMarkdown(): Promise<string> {
         [
           `### ${job.company} · ${job.mode}`,
           `${job.role} · ${job.dates}`,
-          "",
-          ...job.points.map((point) => `- ${point}`),
+          ...(job.points.length > 0
+            ? ["", ...job.points.map((point) => `- ${point}`)]
+            : []),
         ].join("\n"),
       ),
       "\n\n",
