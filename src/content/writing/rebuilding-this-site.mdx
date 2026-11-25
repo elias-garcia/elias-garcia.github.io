@@ -15,13 +15,13 @@ One column, about 640 pixels wide. Dates live in a left gutter, so a whole caree
 
 ## Spending the motion budget
 
-I wanted the site to feel crafted without feeling busy, so motion follows a few rules.[^1] When you arrive, the page settles from the top in a few steps. Everything else responds to something you did, and nothing you trigger takes longer than a quarter of a second.
+I wanted the site to feel crafted without feeling busy, so motion follows a few rules.[^1] When you arrive, the page settles from the top in a few steps. Everything else responds to something you did, and the interface answers within a quarter of a second.
 
 Easing does most of the work. Things entering the screen use ease-out: they arrive fast and settle, which reads as responsive. Linear is for things that never stop, like a spinner. Press replay and compare.
 
 <EasingDemo caption="Same distance, same 600 ms. Only the curve changes." />
 
-I tried staggering every element in, and it felt slow and uneven. Staggering whole sections works, as long as it happens once: when you arrive, the blocks on screen rise twelve pixels and fade in from the top, a tenth of a second apart, while the header stays exactly where it is.[^2] After that, moving between pages is quicker: the old content fades out and the new page arrives as one piece, so it reads as one continuous site. This is the whole thing:
+I tried staggering every element in, and it felt slow and uneven. Staggering whole sections works, as long as it happens once: when you arrive, the blocks on screen rise twelve pixels and fade in from the top, a tenth of a second apart, while the header stays exactly where it is.[^2] After that, moving between pages is quicker: the old content fades out and the new page arrives as one piece, so it reads as one continuous site. This is the core of it:
 
 ```css
 /* between pages: the page arrives as one piece */
@@ -31,7 +31,9 @@ I tried staggering every element in, and it felt slow and uneven. Staggering who
 main {
   animation: page-in 250ms cubic-bezier(.22, 1, .36, 1) backwards;
 }
-@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
 /* arriving at the site: the blocks settle from the top */
 @keyframes arrive-in {
   from { opacity: 0; transform: translateY(12px); }
