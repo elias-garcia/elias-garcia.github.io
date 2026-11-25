@@ -8,10 +8,12 @@
     flex-direction: column;
   }
 
-  /* Hovering one interactive row quiets the others, on real pointers only. */
+  /* Hovering a row that links or opens quiets every other row of the list,
+     plain ones included, on real pointers only. A plain row has no hover,
+     so it quiets nothing. What hangs under a row (photos, an attachment)
+     isn't part of `.row` and stays. */
   @media (hover: hover) and (pointer: fine) {
-    .list:has(:global(.row-interactive:hover))
-      :global(.row-interactive:not(:hover)) {
+    .list:has(:global(.row-interactive:hover)) :global(.row:not(:hover)) {
       opacity: var(--dim-rest);
     }
   }

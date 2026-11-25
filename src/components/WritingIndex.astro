@@ -119,8 +119,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
   /* The year groups read as one list: hovering a post quiets all the others,
      beyond the per-list fade in List. */
   @media (hover: hover) and (pointer: fine) {
-    .years:has(:global(.row-interactive:hover))
-      :global(.row-interactive:not(:hover)) {
+    .years:has(:global(.row-interactive:hover)) :global(.row:not(:hover)) {
       opacity: var(--dim-rest);
     }
   }

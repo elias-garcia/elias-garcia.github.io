@@ -18,7 +18,7 @@ const Head = expandable ? "summary" : "div";
 ---
 
 <li>
-  <Row class:list={["job", { "row-interactive": expandable }]}>
+  <Row class:list={["job", "row", { "row-interactive": expandable }]}>
     <Head class="head">
       <span class="date">
         <Years start={job.start} end={job.end} />
@@ -49,9 +49,8 @@ const Head = expandable ? "summary" : "div";
 </li>
 
 <style>
-  /* It fades with the list's dimming, which only rows that open take part
-     in. */
-  .row-interactive {
+  /* It fades with the list's dimming. */
+  .job {
     transition: opacity var(--dur-quick) var(--ease);
   }
 
