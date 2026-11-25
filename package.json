@@ -7,8 +7,9 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && npm run cv && astro build",
+    "build": "npm run previews && astro check && npm run cv && astro build",
     "cv": "node scripts/cv-pdf.ts",
+    "previews": "node scripts/previews.ts",
     "preview": "astro preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -44,6 +45,7 @@
     "eslint": "^10.14.0",
     "eslint-plugin-astro": "^3.2.1",
     "html-validate": "^11.21.1",
+    "htmlparser2": "^12.0.0",
     "jiti": "^2.7.0",
     "pdfjs-dist": "^6.5.438",
     "playwright": "^1.65.0",
@@ -51,6 +53,7 @@
     "prettier-plugin-astro": "^1.1.2",
     "schema-dts": "^2.1.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.2"
+    "typescript-eslint": "^8.72.2",
+    "yaml": "^2.9.1"
   }
 }

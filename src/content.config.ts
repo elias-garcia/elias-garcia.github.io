@@ -76,19 +76,40 @@ const talks = defineCollection({
 
 const courses = defineCollection({
   loader: file("src/content/courses.yaml"),
+  schema: z.object({
+    date: z.coerce.date(),
+    title: z.string(),
+    where: z.string(),
+    href: z.url(),
+    rating: z
+      .object({
+        score: z.number().min(0).max(5),
+        reviews: z.number().int().positive(),
+      })
+      .optional(),
+    // A card under the row linking to another page (DESIGN.md, Link
+    // attachment). Its title and site name come from that page, saved by
+    // `npm run previews`; set them here only to replace the page's own.
+    attachment: z
+      .object({
+        href: z.url(),
+        title: z.string().optional(),
+        site: z.string().optional(),
+      })
+      .optional(),
+  }),
+});
+
+// What each attachment's page says about itself when shared, keyed by its
+// address. Written by `npm run previews` (scripts/previews.ts), never by hand.
+const linkPreviews = defineCollection({
+  loader: file("src/content/link-previews.json"),
   schema: ({ image }) =>
     z.object({
-      date: z.coerce.date(),
-      title: z.string(),
-      where: z.string(),
-      href: z.url(),
-      rating: z
-        .object({
-          score: z.number().min(0).max(5),
-          reviews: z.number().int().positive(),
-        })
-        .optional(),
-      video: link.extend({ thumbnail: image(), source: z.string() }).optional(),
+      title: z.string().optional(),
+      image: image().optional(),
+      siteName: z.string().optional(),
+      type: z.string().optional(),
     }),
 });
 
@@ -358,6 +379,7 @@ export const collections = {
   work,
   talks,
   courses,
+  linkPreviews,
   education,
   cvFormats,
   writing,

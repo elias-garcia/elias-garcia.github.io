@@ -7,8 +7,6 @@ the-defi-revolution:
   rating:
     score: 4.7
     reviews: 26
-  video:
+  attachment:
     href: https://www.youtube.com/watch?v=FESgArXJBX0
-    thumbnail: ../assets/course-trailer.jpg
-    label: Watch the trailer
-    source: YouTube
+    title: Watch the trailer

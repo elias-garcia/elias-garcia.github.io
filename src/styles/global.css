@@ -161,7 +161,7 @@ html:has(dialog:modal) {
       .button,
       .chip,
       .card,
-      .video,
+      .link-card,
       .title-link,
       .option,
       .format,

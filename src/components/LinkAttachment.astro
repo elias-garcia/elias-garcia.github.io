@@ -1,0 +1,207 @@
+---
+import { Image } from "astro:assets";
+import { getEntry, type CollectionEntry } from "astro:content";
+import { attachmentImage } from "../lib/attachment.ts";
+import { addressTitle, namedSite, previewDomain } from "../lib/link-preview.ts";
+import { linkTarget, opensNewTab } from "../lib/links.ts";
+import ExternalArrow from "./ExternalArrow.astro";
+import Icon from "./Icon.astro";
+import NewTabNote from "./NewTabNote.astro";
+import VisuallyHidden from "./VisuallyHidden.astro";
+
+// A card linking to another page, drawn from what that page says about
+// itself when shared (DESIGN.md, Link attachment). An address that was never
+// fetched shows no image and the address as its title.
+type Props = {
+  attachment: NonNullable<CollectionEntry<"courses">["data"]["attachment"]>;
+};
+
+const { href, title, site } = Astro.props.attachment;
+const preview = (await getEntry("linkPreviews", href))?.data;
+const name = title ?? preview?.title ?? addressTitle(href);
+const siteName = namedSite(site ?? preview?.siteName, href);
+const video = preview?.type?.startsWith("video") === true;
+---
+
+<a class="link-card" href={href} {...linkTarget(href)}>
+  <span class="thumbnail">
+    {preview?.image === undefined ? (
+      <Icon name="link" class="placeholder" />
+    ) : (
+      <Image
+        class="image"
+        src={preview.image}
+        alt=""
+        widths={[...attachmentImage.widths]}
+        sizes={attachmentImage.sizes}
+        loading="lazy"
+      />
+    )}
+    {video && (
+      <span class="play" aria-hidden="true">
+        <Icon name="player-play" filled />
+      </span>
+    )}
+  </span>
+  <span class="text">
+    <span class="title">{name}</span>
+    <VisuallyHidden>, </VisuallyHidden>
+    <span class="site">
+      <span class="site-text">
+        {siteName !== undefined && (
+          <>
+            {siteName}
+            <span aria-hidden="true"> · </span>
+            <VisuallyHidden>, </VisuallyHidden>
+          </>
+        )}
+        {previewDomain(href)}
+      </span>
+      <ExternalArrow />
+    </span>
+  </span>
+  {opensNewTab(href) && <NewTabNote />}
+</a>
+
+<style>
+  .link-card {
+    --play: 32px;
+
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    transition: border-color var(--dur-quick) var(--ease);
+
+    &:focus-visible {
+      border-color: var(--line-strong);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        border-color: var(--line-strong);
+        color: inherit;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        border-color var(--dur-quick) var(--ease),
+        scale var(--dur-quick) var(--ease-settle);
+
+      &:active {
+        scale: var(--press-scale-tile);
+      }
+    }
+  }
+
+  /* The size of a photo slot: a third of the text column, less the gaps
+     between slots. The card's own border is added back, so the thumbnail
+     lines up with the photos above it. Without an image, the link icon sits
+     in the same frame, so every card has the same shape. */
+  .thumbnail {
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    inline-size: calc((100% + 2 * var(--hairline) - 2 * var(--space-2)) / 3);
+    aspect-ratio: 3 / 2;
+    border-inline-end: var(--hairline) solid var(--line);
+    background: var(--surface);
+  }
+
+  .image {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .placeholder {
+    color: var(--text-3);
+  }
+
+  .play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--play);
+    block-size: var(--play);
+    margin: auto;
+    border: var(--hairline) solid var(--line);
+    border-radius: 50%;
+    background: var(--glass);
+    color: var(--text);
+    backdrop-filter: var(--photo-control-backdrop);
+    transition:
+      background var(--dur-quick) var(--ease),
+      border-color var(--dur-quick) var(--ease),
+      color var(--dur-quick) var(--ease);
+
+    .link-card:focus-visible & {
+      border-color: var(--text);
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .link-card:hover & {
+        border-color: var(--text);
+        background: var(--text);
+        color: var(--bg);
+      }
+    }
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    padding-inline: var(--space-4);
+  }
+
+  /* At most two lines, and an address in it may break anywhere. */
+  .title {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: var(--text-small);
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-tight);
+    overflow-wrap: anywhere;
+    transition: color var(--dur-quick) var(--ease);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    .link-card:focus-visible & {
+      color: var(--accent);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .link-card:hover & {
+        color: var(--accent);
+      }
+    }
+  }
+
+  /* One line: the site's name and domain are cut, never the arrow. */
+  .site {
+    display: flex;
+    align-items: center;
+    color: var(--text-3);
+    font-size: var(--text-small);
+  }
+
+  /* Positioned, so the hidden comma after a long site name is clipped with
+     it instead of widening the page. */
+  .site-text {
+    position: relative;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>

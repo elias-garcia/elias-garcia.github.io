@@ -1,5 +1,5 @@
 // Every list row attachment image fills one slot of a row of three in the
-// text column: video thumbnails, and talk photos wherever the date column fits.
+// text column: link attachment images, and talk photos wherever the date column fits.
 export const attachmentImage = {
   widths: [110, 165, 220, 330],
   sizes: "(width < 40rem) calc((100vw - 4rem) / 3), 165px",

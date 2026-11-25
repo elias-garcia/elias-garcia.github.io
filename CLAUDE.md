@@ -30,7 +30,7 @@ Markup follows the HTML specification, even where the reference HTML does someth
 
 `npm run format && npm run lint && npm test && npm run build && npm run html`
 
-`test` runs the unit tests (`src/lib/*.test.ts`, Node's own test runner); `build` type-checks with `astro check`, prints the CV PDF (`npm run cv`, which needs Google Chrome) and builds the site; `html` validates the built pages against the HTML specification (html-validate's `standard` preset).
+`test` runs the unit tests (`src/lib/*.test.ts`, Node's own test runner); `build` fetches the link previews (`npm run previews`), type-checks with `astro check`, prints the CV PDF (`npm run cv`, which needs Google Chrome) and builds the site; `html` validates the built pages against the HTML specification (html-validate's `standard` preset).
 
 When a change touches what a visitor sees (markup, styles, content, an interactive state), also run `npm run a11y`: axe on every page and state, in both themes and at three widths.
 
@@ -95,6 +95,7 @@ design/         # design handoff (reference only)
 - Posts and projects work the same way: each is one file with its page, and with `draft: true` it shows in `npm run dev` and is left out of the production build (its card, its page and every link to it). There's no other way to hide one: the prose reference post and the image-cover sample project are drafts.
 - A project's cover (DESIGN.md, Project cover) is rendered by `ProjectCover` and named for the morph by `coverName()`: never type a `project-…` transition name by hand.
 - `public/cv.pdf` is printed on every build (`npm run cv`) from `/cv/print`, a page built only for printing and in `npm run dev` (DESIGN.md, CV PDF), and isn't in git. `npm run dev` needs it once: run `npm run cv` after cloning. The print fails if the CV passes two pages, or if a parser can't read back the page's whole text, in order.
+- A link attachment's card comes from its page: `npm run previews` writes `src/content/link-previews.json` and `src/assets/link-previews/`, fetching every address on every build (DESIGN.md §8, Link previews). Never edit them by hand; commit what a build changes in them.
 - Don't invent facts, numbers or links. Leave a clear TODO where something is missing.
 
 ## URLs
