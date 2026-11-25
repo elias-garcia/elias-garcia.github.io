@@ -895,19 +895,15 @@ const noResults = {
         transition-behavior: allow-discrete;
       }
 
-      /* Still drawn while it fades, but already closed: a click goes
-         through to the page. */
       .search:not([open]),
       .search:not([open])::backdrop {
         opacity: 0;
-        pointer-events: none;
       }
     }
 
     .search[open][data-closing],
     .search[open][data-closing]::backdrop {
       opacity: 0;
-      pointer-events: none;
       transition: opacity var(--dur-quick) var(--ease-settle);
     }
   }
