@@ -169,27 +169,25 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
 </html>
 
 <style>
-  /* Static instances of the site's font: Chrome embeds a variable font in a
-     PDF as Type 3, which some parsers read badly. These embed as TrueType,
-     and they include the "→" the web subset may not. */
+  /* Static instances of the site's font at its text optical size: Chrome
+     embeds a variable font in a PDF as Type 3 (Inter's .otf files too),
+     which some parsers read badly. These .ttf files embed as TrueType, and
+     they include the "→" the web subset may not. */
   @font-face {
-    font-family: "Instrument Sans Static";
-    src: url("../../../assets/fonts/InstrumentSans-Regular.ttf")
-      format("truetype");
+    font-family: "Inter Static";
+    src: url("../../../assets/fonts/Inter-Regular.ttf") format("truetype");
     font-weight: 400;
   }
 
   @font-face {
-    font-family: "Instrument Sans Static";
-    src: url("../../../assets/fonts/InstrumentSans-Medium.ttf")
-      format("truetype");
+    font-family: "Inter Static";
+    src: url("../../../assets/fonts/Inter-Medium.ttf") format("truetype");
     font-weight: 500;
   }
 
   @font-face {
-    font-family: "Instrument Sans Static";
-    src: url("../../../assets/fonts/InstrumentSans-SemiBold.ttf")
-      format("truetype");
+    font-family: "Inter Static";
+    src: url("../../../assets/fonts/Inter-SemiBold.ttf") format("truetype");
     font-weight: 600;
   }
 
@@ -215,7 +213,7 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
     --cv-name: 20pt; /* the site's display size */
     --cv-hairline: 0.5pt;
     --cv-photo: 40pt; /* the site's 64 step: the height of the name and role line */
-    --cv-date-column: 22mm; /* the widest date, "2024 – Now", is about 17mm */
+    --cv-date-column: 24mm; /* the widest date, "2020 – 2024", is about 21mm */
     --cv-separator-padding: 1pt;
     --cv-space-4: 2.5pt;
     --cv-space-8: 5pt;
@@ -230,12 +228,16 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
     gap: var(--cv-space-32);
     box-sizing: border-box;
     color: var(--text);
-    font-family: "Instrument Sans Static", ui-sans-serif, system-ui, sans-serif;
+    font-family: "Inter Static", ui-sans-serif, system-ui, sans-serif;
     font-size: var(--cv-text);
     /* 1.5, not the site's 1.6 for reading: a CV is scanned, and resume
        guides call more than 1.5 too open. */
     line-height: var(--leading-normal);
-    font-variant-numeric: tabular-nums;
+    /* Only glyphs with a character code of their own: Chrome writes Inter's
+       alternates (tabular figures and punctuation, the dash raised between
+       figures) into the PDF under private-use codes, which parsers read as
+       nothing. Never add tabular-nums or font-feature-settings here. */
+    font-variant-ligatures: no-contextual;
     /* Kerning at print sizes, as the reference sets it. */
     text-rendering: optimizeLegibility;
     print-color-adjust: exact;

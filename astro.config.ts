@@ -68,7 +68,7 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
-      name: "Instrument Sans",
+      name: "Inter",
       cssVariable: "--font-sans",
       weights: ["400 600"],
       styles: ["normal"],

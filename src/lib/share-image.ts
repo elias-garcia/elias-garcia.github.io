@@ -66,9 +66,9 @@ async function fonts() {
   ] as const;
   return Promise.all(
     files.map(async ({ subset, weight }) => ({
-      name: "Instrument Sans",
+      name: "Inter",
       data: await readFile(
-        `node_modules/@fontsource/instrument-sans/files/instrument-sans-${subset}-${String(weight)}-normal.woff`,
+        `node_modules/@fontsource/inter/files/inter-${subset}-${String(weight)}-normal.woff`,
       ),
       weight,
       style: "normal" as const,
@@ -116,7 +116,7 @@ async function render(
       overflow: "hidden",
       background: colours.bg,
       color: colours.text,
-      fontFamily: "Instrument Sans",
+      fontFamily: "Inter",
     },
     ...content(colours, logo),
   );

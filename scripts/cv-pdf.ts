@@ -3,7 +3,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
-import { chromium, type Page } from "playwright";
+import { chromium } from "playwright";
 import { routes } from "../src/lib/routes.ts";
 
 // Prints the CV page to public/cv.pdf (DESIGN.md, CV PDF), then checks the
@@ -13,27 +13,15 @@ import { routes } from "../src/lib/routes.ts";
 const output = new URL("../public/cv.pdf", import.meta.url);
 const maximumPages = 2;
 
-// What a parser must find in the PDF, in this order: the name, the email
-// and every company, read from the page that was printed.
-async function expectedText(page: Page): Promise<string[]> {
-  const companies = await page.locator(".company").allInnerTexts();
-  // Without any, the check would pass with nothing checked.
-  if (companies.length === 0) {
-    throw new Error("The print page has no `.company`: update this check.");
-  }
-  return [
-    await page.locator("h1").innerText(),
-    await page.locator('a[href^="mailto:"]').innerText(),
-    ...companies,
-  ];
-}
-
 // Whitespace is left out on both sides: a parser may split or join lines.
 function compact(text: string): string {
   return text.replace(/\s+/g, "");
 }
 
-async function checkPdf(pdf: Buffer, expected: readonly string[]) {
+// The PDF must read back as the page's whole text, in order: a parser reads
+// a glyph without a character code of its own (one of Inter's alternates)
+// as nothing, which drops digits, dots and dashes (DESIGN.md, CV PDF, Fonts).
+async function checkPdf(pdf: Buffer, pageText: string) {
   const loading = getDocument({ data: new Uint8Array(pdf) });
   try {
     const parsed = await loading.promise;
@@ -49,14 +37,16 @@ async function checkPdf(pdf: Buffer, expected: readonly string[]) {
         ...content.items.map((item) => ("str" in item ? item.str : "")),
       );
     }
-    const text = compact(runs.join(""));
-    let from = 0;
-    for (const part of expected) {
-      const at = text.indexOf(compact(part), from);
-      if (at === -1) {
-        throw new Error(`The CV's text doesn't have "${part}" where expected.`);
+    const read = compact(runs.join(""));
+    const expected = compact(pageText);
+    if (read !== expected) {
+      let at = 0;
+      while (read[at] === expected[at]) {
+        at += 1;
       }
-      from = at + compact(part).length;
+      throw new Error(
+        `The CV's text reads "${read.slice(at, at + 40)}" where the page has "${expected.slice(at, at + 40)}".`,
+      );
     }
     return parsed.numPages;
   } finally {
@@ -83,7 +73,7 @@ try {
     tagged: true,
     outline: true,
   });
-  const pages = await checkPdf(pdf, await expectedText(page));
+  const pages = await checkPdf(pdf, await page.locator("main").innerText());
   await writeFile(output, pdf);
   console.log(
     `Printed the CV: ${String(pages)} pages, ${String(pdf.length)} bytes.`,
