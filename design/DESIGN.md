@@ -593,3 +593,72 @@ Every page must pass axe (WCAG 2.2 AA + best practice) in light and dark, at 128
 - **Security headers and CSP:** only the site's own scripts and styles run. Astro's `security.csp` writes each page's policy as a `<meta>` with the hashes of its scripts and styles (`default-src 'self'`, no objects, no `<base>`, no form targets; stylesheets and `<style>` elements only from the site, and inline `style` attributes allowed for the code blocks' colours). Astro warns on every start that Shiki's inline styles don't work with a CSP; with style attributes allowed they do, and the warning can't be turned off. `vercel.json` sends what a `<meta>` can't: `frame-ancestors 'none'` with `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy` and `Cross-Origin-Opener-Policy`. Anything loaded from another origin (an embed, a script, an image) is blocked until the policy allows it. The policy isn't applied in `npm run dev`.
 - **Code highlighting:** built-in Shiki with the minimal indigo theme in `src/lib/shiki-theme.ts` (see Code blocks above).
 - **Download CV:** link the menu items to `/cv.pdf` and `/cv.md`; generate `/cv.md` at build time from the content and compute both sizes at build time.
+
+## 9. Awkward content: how each case behaves
+
+One principle: **content is never restricted; the layout copes.** Nothing below limits what the author can write, except the two fields the schema still requires (a post's description and an on-site or hybrid job's place, decided with the author). The designer's fixtures are in their handoff's `content/_worst-case/`; we check them by copying the awkward values into our content in a separate worktree and measuring every page at 320 and 1280px.
+
+**Long titles**
+
+| Where | Behaviour |
+|---|---|
+| Project title on a Home tile or Projects card | One line, then an ellipsis. On a card, "View project ›" stays on that line, top right |
+| Project description on a tile or card | At most two lines, then an ellipsis |
+| Post title in a list (Home, Writing), talk, course, job role, degree | Wraps onto as many lines as it needs; never cut |
+| Post and case-study title (display size) | Wraps, balanced; 28px on phones |
+| Search result title | Wraps in full, like its summary; never an ellipsis, at any text size (see §8, OS text size) |
+| Link attachment | Title two lines then an ellipsis; site line one line then an ellipsis |
+| Previous / next cards | Wrap |
+
+**Words that can't break** (code identifiers, addresses, emails)
+
+| Where | Behaviour |
+|---|---|
+| Anywhere on the site | The word breaks where the line ends, nothing added (`overflow-wrap: break-word` on the root). No hyphenation |
+| Contact values, job bullets | Break anywhere (`overflow-wrap: anywhere`) |
+| External arrow | Never alone on a line: it wraps with the end of its label |
+| Code blocks | Never wrap; the block scrolls sideways inside its box |
+| Tables in posts | The table scrolls sideways inside its box |
+
+No page scrolls sideways at 320px with any of this.
+
+**Long names and labels**
+
+| Where | Behaviour |
+|---|---|
+| Name, role line, About | Wrap |
+| "Open to remote roles" (any length) | Wraps; the dot stays on the first line |
+| Company with a long description or place | Wraps under the company name |
+| Project type, topic in a metadata line | The line is inline text and wraps; a break comes before a separator, never after |
+| Topic chip | One line; a label too long for the row is cut with an ellipsis, the count stays |
+| Project facts | Values wrap inside their column (desktop) or beside the 64px label (phones) |
+| Header | Below 20em the nav wraps in order; never a menu |
+| Footer | The two halves wrap onto two lines |
+
+**Many of something**
+
+| What | Behaviour |
+|---|---|
+| Topics | Chips wrap onto more rows, 8px apart; never a sideways scroller |
+| Projects | Home shows the three newest; Projects lays them two per row, the newest spanning both when the count is odd |
+| One or two projects on Home | Tiles keep their size and sit from the left |
+| Posts | Home shows the three newest; Writing groups all of them by year |
+| Photos on a talk | At most three; on narrow rows they scroll sideways with the next one peeking |
+| Links on a project | Wrap inside the Links fact |
+
+**Missing optional content**
+
+| What is missing | Behaviour |
+|---|---|
+| A post's description | Required: it is also the page's meta description, share card, RSS summary and search line |
+| A job's bullets | A plain row: no + and no button |
+| A job's place | Required for an on-site or hybrid job; a remote job has none and shows "Remote" |
+| A talk's photos, a course's attachment | No attachment; the row closes up |
+| A course's rating | No rating line |
+| A project's status | Three facts instead of four; nothing on cards either way |
+| A project's links | "No links yet" in the Links fact |
+| A project's article | The page is its header, facts and cover |
+| A link attachment's image, or its fetch fails | A link icon on `--surface`; the last saved data, else the address as title |
+| A destination for a row | A plain row, not a link |
+| All projects, or all posts | The section, its nav item, its pages and every link to it are not built (§8) |
+| Both | No nav at all: logo and search |

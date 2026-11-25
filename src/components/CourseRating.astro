@@ -7,11 +7,11 @@ import Icon from "./Icon.astro";
 import VisuallyHidden from "./VisuallyHidden.astro";
 
 type Props = {
-  course: CollectionEntry<"courses">["data"];
+  rating: NonNullable<CollectionEntry<"courses">["data"]["rating"]>;
 };
 
 // The score and the review count (DESIGN.md, Course rating line).
-const { rating } = Astro.props.course;
+const { rating } = Astro.props;
 const score = formatScore(rating.score);
 const copy = await getHomeCopy();
 const reviews = formatCount(rating.reviews, copy.reviewCount);

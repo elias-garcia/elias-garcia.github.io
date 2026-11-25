@@ -7,7 +7,7 @@ import ExternalLabel from "./ExternalLabel.astro";
 import Icon from "./Icon.astro";
 
 type Props = {
-  video: CollectionEntry<"courses">["data"]["video"];
+  video: NonNullable<CollectionEntry<"courses">["data"]["video"]>;
 };
 
 const { href, thumbnail, label, source } = Astro.props.video;

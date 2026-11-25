@@ -176,7 +176,9 @@ const sectionStep = (section: string) =>
               {formatMonthYear(data.date)}
             </time>
             {data.where}
-            <RowPhotos slot="attachment" talk={data} />
+            {data.photos !== undefined && (
+              <RowPhotos slot="attachment" talk={data} photos={data.photos} />
+            )}
           </ListRow>
         ))}
       </List>
@@ -190,8 +192,12 @@ const sectionStep = (section: string) =>
               {formatMonthYear(data.date)}
             </time>
             {data.where}
-            <CourseRating slot="meta" course={data} />
-            <VideoPreview slot="attachment" video={data.video} />
+            {data.rating !== undefined && (
+              <CourseRating slot="meta" rating={data.rating} />
+            )}
+            {data.video !== undefined && (
+              <VideoPreview slot="attachment" video={data.video} />
+            )}
           </ListRow>
         ))}
       </List>
@@ -230,7 +236,7 @@ const sectionStep = (section: string) =>
       </address>
     </Section>
   </div>
-  <ImageViewer />
+  {talks.some(({ data }) => data.photos !== undefined) && <ImageViewer />}
 </BaseLayout>
 
 <style>

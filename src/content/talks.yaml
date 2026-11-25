@@ -1,4 +1,4 @@
-# Each talk has one to three photos, one file each: the page and the image
+# A talk can have up to three photos, one file each: the page and the image
 # viewer show the same centred 3:2 crop of it, at different sizes.
 polygon-id-profiles:
   date: 2024-01

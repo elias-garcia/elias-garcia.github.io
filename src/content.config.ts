@@ -69,7 +69,8 @@ const talks = defineCollection({
       photos: z
         .array(z.object({ src: image(), alt: z.string() }))
         .min(1)
-        .max(3),
+        .max(3)
+        .optional(),
     }),
 });
 
@@ -81,11 +82,13 @@ const courses = defineCollection({
       title: z.string(),
       where: z.string(),
       href: z.url(),
-      rating: z.object({
-        score: z.number().min(0).max(5),
-        reviews: z.number().int().positive(),
-      }),
-      video: link.extend({ thumbnail: image(), source: z.string() }),
+      rating: z
+        .object({
+          score: z.number().min(0).max(5),
+          reviews: z.number().int().positive(),
+        })
+        .optional(),
+      video: link.extend({ thumbnail: image(), source: z.string() }).optional(),
     }),
 });
 

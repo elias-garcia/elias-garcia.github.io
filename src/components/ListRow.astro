@@ -18,6 +18,15 @@ const {
   underline = false,
   dateOnPhones = true,
 } = Astro.props;
+// Rendered first, so a slot passed empty (a talk without photos, a course
+// without a rating or a trailer) leaves no wrapper: Astro reports a slot
+// whose content renders nothing as present.
+const meta = Astro.slots.has("meta")
+  ? (await Astro.slots.render("meta")).trim()
+  : "";
+const attachment = Astro.slots.has("attachment")
+  ? (await Astro.slots.render("attachment")).trim()
+  : "";
 const Row = article ? "article" : "div";
 const Title = article ? "h3" : "span";
 ---
@@ -50,17 +59,17 @@ const Title = article ? "h3" : "span";
       <span class="description">
         <slot />
       </span>
-      {Astro.slots.has("meta") && (
+      {meta !== "" && (
         <span class="meta">
-          <slot name="meta" />
+          <Fragment set:html={meta} />
         </span>
       )}
     </div>
   </Row>
-  {Astro.slots.has("attachment") && (
+  {attachment !== "" && (
     <div class="attachment">
       <div class="attachment-content">
-        <slot name="attachment" />
+        <Fragment set:html={attachment} />
       </div>
     </div>
   )}

@@ -9,15 +9,18 @@ import { fill } from "../lib/template.ts";
 // A talk's photos. Each one is a button that opens the image viewer
 // (ImageViewer.astro), which reads the talk and a larger copy of the same
 // file from here.
+type Talk = CollectionEntry<"talks">["data"];
+
 type Props = {
-  talk: CollectionEntry<"talks">["data"];
+  talk: Pick<Talk, "title" | "where" | "date">;
+  photos: NonNullable<Talk["photos"]>;
 };
 
-const { talk } = Astro.props;
+const { talk, photos: sources } = Astro.props;
 const copy = await getViewerCopy();
-const count = talk.photos.length;
+const count = sources.length;
 const photos = await Promise.all(
-  talk.photos.map(async ({ src, alt }, index) => {
+  sources.map(async ({ src, alt }, index) => {
     const large = await getImage({
       src,
       widths: [...viewerImage.widths],
