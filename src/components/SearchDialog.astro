@@ -312,6 +312,7 @@ const noResults = {
     type Segment,
   } from "../lib/search-match.ts";
   import { fill } from "../lib/template.ts";
+  import { closeTopLayer, isClosing } from "../lib/top-layer.ts";
 
   type Counts = { one: string; other: string };
   type Message = { title: string; hint: string };
@@ -673,17 +674,45 @@ const noResults = {
       input.focus();
     };
 
-    const close = () => {
+    // Nothing done from the keyboard animates: with a pointer, search fades
+    // in and out, from the keyboard it opens and closes at once (DESIGN.md
+    // §2.5). With the transitions off, the change is made and laid out
+    // before they come back, so none of them starts.
+    const instantly = (change: () => void) => {
+      dialog.dataset.instant = "";
+      change();
+      dialog.getBoundingClientRect();
+      delete dialog.dataset.instant;
+    };
+
+    const shut = () => {
       dialog.close();
     };
 
-    const open = () => {
+    const close = ({ key }: { key: boolean }) => {
+      if (!dialog.open || isClosing(dialog)) {
+        return;
+      }
+      if (key) {
+        instantly(shut);
+        return;
+      }
+      void closeTopLayer(dialog, shut);
+    };
+
+    const open = ({ key }: { key: boolean }) => {
       if (dialog.open) {
         return;
       }
       input.value = "";
       showView("home");
       render();
+      if (key) {
+        instantly(() => {
+          dialog.showModal();
+        });
+        return;
+      }
       dialog.showModal();
     };
 
@@ -691,15 +720,20 @@ const noResults = {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         if (dialog.open) {
-          close();
+          close({ key: true });
         } else {
-          open();
+          open({ key: true });
         }
       }
     });
 
-    for (const button of document.querySelectorAll("[data-search-open]")) {
-      button.addEventListener("click", open);
+    // A click from Enter or Space has no pointer behind it (`detail` 0).
+    for (const button of document.querySelectorAll<HTMLElement>(
+      "[data-search-open]",
+    )) {
+      button.addEventListener("click", (event) => {
+        open({ key: event.detail === 0 });
+      });
     }
 
     input.addEventListener("input", render);
@@ -741,11 +775,28 @@ const noResults = {
       }
     });
 
-    // Esc inside the Download CV choice goes back instead of closing.
+    // Esc closes at once, and inside the Download CV choice goes back
+    // instead.
     dialog.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && view === "cv") {
-        event.preventDefault();
+      // While an input method is composing, Esc cancels it.
+      if (event.key !== "Escape" || event.isComposing) {
+        return;
+      }
+      event.preventDefault();
+      if (view === "cv") {
         back();
+      } else {
+        close({ key: true });
+      }
+    });
+
+    // A click outside and Android's Back. Browsers only let a page hold back
+    // a close request after a user action, so without one search closes at
+    // once.
+    dialog.addEventListener("cancel", (event) => {
+      if (event.cancelable) {
+        event.preventDefault();
+        close({ key: false });
       }
     });
 
@@ -760,7 +811,7 @@ const noResults = {
       if (option instanceof HTMLAnchorElement) {
         // The link does its own thing; the dialog steps out of the way, as
         // a download or a new tab leaves the visitor here.
-        close();
+        close({ key: event.detail === 0 });
         return;
       }
       activate(option);
@@ -791,7 +842,7 @@ const noResults = {
     if (!("closedBy" in HTMLDialogElement.prototype)) {
       dialog.addEventListener("click", (event) => {
         if (event.target === dialog) {
-          close();
+          close({ key: false });
         }
       });
     }
@@ -810,6 +861,61 @@ const noResults = {
     inline-size: min(var(--search-w), 100% - 2 * var(--space-4));
     max-block-size: none;
     margin: var(--space-24) auto auto;
+  }
+
+  /* With a pointer, the panel and the backdrop fade in where they are,
+     opacity only (DESIGN.md, Search dialog). */
+  .search[open] {
+    transition: opacity var(--dur-move) var(--ease-settle);
+
+    @starting-style {
+      opacity: 0;
+    }
+
+    &::backdrop {
+      transition: opacity var(--dur-move) var(--ease-settle);
+
+      @starting-style {
+        opacity: 0;
+      }
+    }
+  }
+
+  /* Closing, they fade out faster; with reduced motion, search closes at
+     once. Where a closing dialog can stay in the top layer until it's done
+     (`overlay`), CSS fades it out by itself; elsewhere src/lib/top-layer.ts
+     fades it out while it's still open, then closes it. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (overlay: auto) {
+      .search,
+      .search::backdrop {
+        transition-property: opacity, overlay, display;
+        transition-duration: var(--dur-quick);
+        transition-timing-function: var(--ease-settle);
+        transition-behavior: allow-discrete;
+      }
+
+      /* Still drawn while it fades, but already closed: a click goes
+         through to the page. */
+      .search:not([open]),
+      .search:not([open])::backdrop {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    .search[open][data-closing],
+    .search[open][data-closing]::backdrop {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur-quick) var(--ease-settle);
+    }
+  }
+
+  /* From the keyboard: nothing animates (the script). */
+  .search[data-instant],
+  .search[data-instant]::backdrop {
+    transition: none;
   }
 
   .input-row {

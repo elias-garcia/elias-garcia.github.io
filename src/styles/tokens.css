@@ -111,8 +111,8 @@
 
   /* ---- Motion: anything that opens or moves takes 250ms; anything that
      closes or leaves takes 150ms, the same as feedback ---- */
-  --dur-quick: 150ms; /* feedback and leaving: press, hover, colour/opacity, underlines, skip link; old page fading out; viewer closing; a row collapsing; a dragged-away photo leaving */
-  --dur-move: 250ms; /* opening and moving: Download CV menu, viewer opening, a row expanding, photo slides, Copy → Copied swap, project morph, page entrance between pages */
+  --dur-quick: 150ms; /* feedback and leaving: press, hover, colour/opacity, underlines, skip link; old page fading out; viewer and search closing; a row collapsing; a dragged-away photo leaving */
+  --dur-move: 250ms; /* opening and moving: Download CV menu, viewer and search opening, a row expanding, photo slides, Copy → Copied swap, project morph, page entrance between pages */
   --ease: ease-out; /* hover and colour changes only */
   /* Everything that enters, leaves or moves. */
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
