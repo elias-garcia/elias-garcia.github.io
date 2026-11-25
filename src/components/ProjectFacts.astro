@@ -7,10 +7,10 @@ import TextLink from "./TextLink.astro";
 
 type Props = Pick<
   CollectionEntry<"projects">["data"],
-  "year" | "status" | "links"
+  "year" | "type" | "status" | "links"
 >;
 
-const { year, status, links } = Astro.props;
+const { year, type, status, links } = Astro.props;
 const copy = await getProjectCopy();
 ---
 
@@ -22,9 +22,15 @@ const copy = await getProjectCopy();
     </dd>
   </div>
   <div class="fact">
-    <dt>{copy.status}</dt>
-    <dd>{status}</dd>
+    <dt>{copy.type}</dt>
+    <dd>{type}</dd>
   </div>
+  {status !== undefined && (
+    <div class="fact">
+      <dt>{copy.status}</dt>
+      <dd>{status}</dd>
+    </div>
+  )}
   <div class="fact links">
     <dt>{copy.links}</dt>
     <dd>
@@ -44,7 +50,8 @@ const copy = await getProjectCopy();
 
 <style>
   /* Phones: one fact per row, the label in the lists' date column. From
-     40rem: three columns, each label above its value. */
+     40rem: one equal column per fact (four, or three without a status),
+     each label above its value. */
   .facts {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -53,8 +60,10 @@ const copy = await getProjectCopy();
     border-block: var(--hairline) solid var(--line);
 
     @media (width >= 40rem) {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--space-4) var(--space-6);
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+      grid-template-columns: none;
+      column-gap: var(--space-6);
     }
   }
 

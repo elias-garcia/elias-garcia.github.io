@@ -132,7 +132,6 @@
   --hit-area: 44px; /* touch target on coarse pointers */
   --icon-md: 16px;
   --icon-sm: 12px; /* inline markers only: see-more chevron, external arrow, rating star */
-  --dot: 8px; /* availability and project status dots */
   --row-basis: 300px; /* text column next to the gutter; wraps below it when narrower */
   --nudge: 2px; /* arrows nudging toward where they lead */
   --hairline: 1px;

@@ -141,7 +141,10 @@ const projects = defineCollection({
           alt: z.string().min(1),
         }),
       ]),
-      status: z.enum(["In progress", "Experiment", "Research"]),
+      // What it is, in a word or two (Tool, Experiment, Research…).
+      type: z.string().min(1).max(16),
+      // Whether it's alive; a fixed list, so a status is never a sentence.
+      status: z.enum(["In progress", "Live", "Paused", "Archived"]).optional(),
       year: z.number().int(),
       links: z.array(link),
       // A draft shows in `npm run dev` only, like a post.
@@ -246,6 +249,7 @@ const project = defineCollection({
   schema: z.object({
     view: z.string(),
     year: z.string(),
+    type: z.string(),
     status: z.string(),
     links: z.string(),
     noLinks: z.string(),

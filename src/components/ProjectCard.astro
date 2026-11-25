@@ -4,7 +4,7 @@ import { getProjectCopy } from "../lib/content.ts";
 import { routes } from "../lib/routes.ts";
 import Icon from "./Icon.astro";
 import ProjectCover from "./ProjectCover.astro";
-import ProjectStatus from "./ProjectStatus.astro";
+import ProjectMeta from "./ProjectMeta.astro";
 
 type Props = {
   project: CollectionEntry<"projects">;
@@ -15,7 +15,7 @@ type Props = {
 };
 
 const { project, tile = false, wide = false } = Astro.props;
-const { title, summary, description, status, year } = project.data;
+const { title, summary, description, type, year } = project.data;
 const copy = await getProjectCopy();
 const Title = tile ? "h3" : "h2";
 ---
@@ -40,7 +40,7 @@ const Title = tile ? "h3" : "h2";
         </span>
       )}
     </div>
-    <ProjectStatus status={status} year={year} />
+    <ProjectMeta type={type} year={year} />
   </div>
   <p class="description">{tile ? summary : description}</p>
 </li>

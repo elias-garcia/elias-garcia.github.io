@@ -3,6 +3,7 @@ project:
   view: View project
   # A case study's facts.
   year: Year
+  type: Type
   status: Status
   links: Links
   noLinks: No links yet

@@ -28,7 +28,7 @@ export const getStaticPaths = (async () => {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { project, previous, next } = Astro.props;
-const { title, description, year, status, links } = project.data;
+const { title, description, year, type, status, links } = project.data;
 const [{ Content }, projects, copy] = await Promise.all([
   render(project),
   getPage("projects"),
@@ -43,7 +43,13 @@ const [{ Content }, projects, copy] = await Promise.all([
     <p slot="intro" class="lead">
       {description}
     </p>
-    <ProjectFacts slot="facts" year={year} status={status} links={links} />
+    <ProjectFacts
+      slot="facts"
+      year={year}
+      type={type}
+      status={status}
+      links={links}
+    />
     <ProjectCover slot="cover" project={project} variant="header" />
     <Content components={mdxComponents} />
     <PreviousNext

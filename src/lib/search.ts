@@ -39,7 +39,7 @@ export async function getSearchIndex(): Promise<SearchIndex> {
     projects: projects.map((project) => ({
       title: project.data.title,
       line: project.data.summary,
-      meta: project.data.status,
+      meta: project.data.type,
       href: routes.project(project.id),
     })),
     topics: [...topics.values()].map(({ slug, label, count }) => ({
