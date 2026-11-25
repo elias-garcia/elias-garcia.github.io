@@ -109,11 +109,10 @@
   --r-lg: 12px; /* cards, previews, code blocks, menus, search panel */
   --r-full: 999px; /* buttons, chips */
 
-  /* ---- Motion: four durations, nothing in the interface passes 300ms ---- */
-  --dur-fast: 100ms; /* old page fading out (the only part of a page change that blocks clicks) */
-  --dur: 150ms; /* press, hover, colour/opacity, hover underlines, skip link, a dragged-away photo leaving */
-  --dur-medium: 200ms; /* Download CV menu opening and its chevron, Copy → Copied swap, photo viewer closing */
-  --dur-slow: 300ms; /* arriving or settling: page entrance, expanding rows, photo viewer opening, photo slides, project morph */
+  /* ---- Motion: anything that opens or moves takes 250ms; anything that
+     closes or leaves takes 150ms, the same as feedback ---- */
+  --dur-quick: 150ms; /* feedback and leaving: press, hover, colour/opacity, underlines, skip link; old page fading out; viewer closing; a row collapsing; a dragged-away photo leaving */
+  --dur-move: 250ms; /* opening and moving: Download CV menu, viewer opening, a row expanding, photo slides, Copy → Copied swap, project morph, page entrance between pages */
   --ease: ease-out; /* hover and colour changes only */
   /* Everything that enters, leaves or moves. */
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);

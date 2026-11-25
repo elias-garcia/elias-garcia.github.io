@@ -22,7 +22,7 @@ const { href, label } = Astro.props;
     gap: var(--space-1);
     color: var(--text-2);
     font-size: var(--text-small);
-    transition: color var(--dur) var(--ease);
+    transition: color var(--dur-quick) var(--ease);
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
@@ -47,7 +47,7 @@ const { href, label } = Astro.props;
 
   @media (hover: hover) and (pointer: fine) {
     .label::after {
-      transition: opacity var(--dur) var(--ease-settle);
+      transition: opacity var(--dur-quick) var(--ease-settle);
     }
 
     .more:hover .label::after {
@@ -61,7 +61,7 @@ const { href, label } = Astro.props;
 
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
     .chevron {
-      transition: translate var(--dur) var(--ease-settle);
+      transition: translate var(--dur-quick) var(--ease-settle);
     }
   }
 

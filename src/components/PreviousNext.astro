@@ -59,8 +59,8 @@ const links = [
     border: var(--hairline) solid var(--line);
     border-radius: var(--r-lg);
     transition:
-      border-color var(--dur) var(--ease),
-      background var(--dur) var(--ease);
+      border-color var(--dur-quick) var(--ease),
+      background var(--dur-quick) var(--ease);
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
@@ -71,9 +71,9 @@ const links = [
 
     @media (prefers-reduced-motion: no-preference) {
       transition:
-        border-color var(--dur) var(--ease),
-        background var(--dur) var(--ease),
-        scale var(--dur) var(--ease-settle);
+        border-color var(--dur-quick) var(--ease),
+        background var(--dur-quick) var(--ease),
+        scale var(--dur-quick) var(--ease-settle);
 
       &:active {
         scale: var(--press-scale-tile);
@@ -111,7 +111,7 @@ const links = [
 
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
     .chevron {
-      transition: translate var(--dur) var(--ease-settle);
+      transition: translate var(--dur-quick) var(--ease-settle);
     }
   }
 </style>

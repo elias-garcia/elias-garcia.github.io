@@ -865,7 +865,7 @@ const noResults = {
     font-size: var(--text-small);
 
     @media (prefers-reduced-motion: no-preference) {
-      transition: scale var(--dur) var(--ease-settle);
+      transition: scale var(--dur-quick) var(--ease-settle);
 
       &:active {
         scale: var(--press-scale);
@@ -878,14 +878,14 @@ const noResults = {
     border-radius: var(--r-md);
     font-size: var(--text-micro);
     transition:
-      background var(--dur) var(--ease),
-      color var(--dur) var(--ease);
+      background var(--dur-quick) var(--ease),
+      color var(--dur-quick) var(--ease);
 
     @media (prefers-reduced-motion: no-preference) {
       transition:
-        background var(--dur) var(--ease),
-        color var(--dur) var(--ease),
-        scale var(--dur) var(--ease-settle);
+        background var(--dur-quick) var(--ease),
+        color var(--dur-quick) var(--ease),
+        scale var(--dur-quick) var(--ease-settle);
 
       &:active {
         scale: var(--press-scale);

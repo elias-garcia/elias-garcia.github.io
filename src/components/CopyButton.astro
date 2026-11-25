@@ -157,8 +157,8 @@ const { copied, copyFailed } = await getPostCopy();
     grid-area: 1 / 1;
     opacity: 0;
     transition:
-      opacity var(--dur-medium) var(--ease-settle),
-      display var(--dur-medium) allow-discrete;
+      opacity var(--dur-move) var(--ease-settle),
+      display var(--dur-move) allow-discrete;
   }
 
   .labels > :where(.failed) {
@@ -185,10 +185,10 @@ const { copied, copyFailed } = await getPostCopy();
       filter: blur(var(--swap-blur));
       scale: var(--swap-scale);
       transition:
-        opacity var(--dur-medium) var(--ease-settle),
-        filter var(--dur-medium) var(--ease-settle),
-        scale var(--dur-medium) var(--ease-settle),
-        display var(--dur-medium) allow-discrete;
+        opacity var(--dur-move) var(--ease-settle),
+        filter var(--dur-move) var(--ease-settle),
+        scale var(--dur-move) var(--ease-settle),
+        display var(--dur-move) allow-discrete;
     }
 
     :global([data-copy-button]:not([data-copy-state])) .idle,

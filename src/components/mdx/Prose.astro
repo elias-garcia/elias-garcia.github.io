@@ -319,7 +319,7 @@
         stroke: var(--text-3);
 
         @media (prefers-reduced-motion: no-preference) {
-          transition: rotate var(--dur-slow) var(--ease-settle);
+          transition: rotate var(--details-duration) var(--ease-settle);
         }
       }
     }
@@ -351,9 +351,9 @@
         overflow: clip;
         contain: layout;
         transition:
-          block-size var(--dur-slow) var(--ease-settle),
-          content-visibility var(--dur-slow),
-          display var(--dur-slow);
+          block-size var(--details-duration) var(--ease-settle),
+          content-visibility var(--details-duration),
+          display var(--details-duration);
         transition-behavior: allow-discrete;
       }
 

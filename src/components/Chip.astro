@@ -27,8 +27,8 @@ const { label, count, href, current } = Astro.props;
     -webkit-user-select: none;
     user-select: none;
     transition:
-      background var(--dur) var(--ease),
-      color var(--dur) var(--ease);
+      background var(--dur-quick) var(--ease),
+      color var(--dur-quick) var(--ease);
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
@@ -45,9 +45,9 @@ const { label, count, href, current } = Astro.props;
 
     @media (prefers-reduced-motion: no-preference) {
       transition:
-        background var(--dur) var(--ease),
-        color var(--dur) var(--ease),
-        scale var(--dur) var(--ease-settle);
+        background var(--dur-quick) var(--ease),
+        color var(--dur-quick) var(--ease),
+        scale var(--dur-quick) var(--ease-settle);
 
       &:active {
         scale: var(--press-scale);
@@ -69,8 +69,8 @@ const { label, count, href, current } = Astro.props;
     font-variant-numeric: tabular-nums;
     font-weight: var(--weight-medium);
     transition:
-      background var(--dur) var(--ease),
-      color var(--dur) var(--ease);
+      background var(--dur-quick) var(--ease),
+      color var(--dur-quick) var(--ease);
 
     .chip[aria-current="page"] & {
       background: var(--accent);

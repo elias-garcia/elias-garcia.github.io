@@ -65,7 +65,7 @@ const Title = tile ? "h3" : "h2";
      border darkens and its illustration plays, as it does while focused. */
   .card {
     :global(.cover) {
-      transition: border-color var(--dur) var(--ease);
+      transition: border-color var(--dur-quick) var(--ease);
     }
 
     &:has(.title-link:focus-visible) :global([data-loop]) {
@@ -85,8 +85,8 @@ const Title = tile ? "h3" : "h2";
     @media (prefers-reduced-motion: no-preference) {
       :global(.cover) {
         transition:
-          border-color var(--dur) var(--ease),
-          scale var(--dur) var(--ease-settle);
+          border-color var(--dur-quick) var(--ease),
+          scale var(--dur-quick) var(--ease-settle);
       }
 
       &:active :global(.cover) {
@@ -145,7 +145,7 @@ const Title = tile ? "h3" : "h2";
     gap: var(--space-1);
     color: var(--text-2);
     font-size: var(--text-small);
-    transition: color var(--dur) var(--ease);
+    transition: color var(--dur-quick) var(--ease);
 
     @media (width < 40rem) {
       display: none;
@@ -183,7 +183,7 @@ const Title = tile ? "h3" : "h2";
 
   @media (prefers-reduced-motion: no-preference) {
     .chevron {
-      transition: translate var(--dur) var(--ease-settle);
+      transition: translate var(--dur-quick) var(--ease-settle);
     }
   }
 </style>

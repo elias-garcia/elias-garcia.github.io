@@ -203,7 +203,7 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
     position: relative;
     display: inline-block;
     color: var(--text-2);
-    transition: color var(--dur) var(--ease);
+    transition: color var(--dur-quick) var(--ease);
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
@@ -231,7 +231,7 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
 
     @media (hover: hover) and (pointer: fine) {
       &::after {
-        transition: opacity var(--dur) var(--ease-settle);
+        transition: opacity var(--dur-quick) var(--ease-settle);
       }
 
       &:hover::after {

@@ -46,7 +46,7 @@ const { href, thumbnail, label, source } = Astro.props.video;
     border: var(--hairline) solid var(--line);
     border-radius: var(--r-lg);
     background: var(--bg);
-    transition: border-color var(--dur) var(--ease);
+    transition: border-color var(--dur-quick) var(--ease);
 
     &:focus-visible {
       border-color: var(--line-strong);
@@ -61,8 +61,8 @@ const { href, thumbnail, label, source } = Astro.props.video;
 
     @media (prefers-reduced-motion: no-preference) {
       transition:
-        border-color var(--dur) var(--ease),
-        scale var(--dur) var(--ease-settle);
+        border-color var(--dur-quick) var(--ease),
+        scale var(--dur-quick) var(--ease-settle);
 
       &:active {
         scale: var(--press-scale-tile);
@@ -104,9 +104,9 @@ const { href, thumbnail, label, source } = Astro.props.video;
     color: var(--text);
     backdrop-filter: var(--photo-control-backdrop);
     transition:
-      background var(--dur) var(--ease),
-      border-color var(--dur) var(--ease),
-      color var(--dur) var(--ease);
+      background var(--dur-quick) var(--ease),
+      border-color var(--dur-quick) var(--ease),
+      color var(--dur-quick) var(--ease);
 
     .video:focus-visible & {
       border-color: var(--text);
@@ -134,7 +134,7 @@ const { href, thumbnail, label, source } = Astro.props.video;
     font-size: var(--text-small);
     font-weight: var(--weight-medium);
     line-height: var(--leading-tight);
-    transition: color var(--dur) var(--ease);
+    transition: color var(--dur-quick) var(--ease);
 
     .video:focus-visible & {
       color: var(--accent);

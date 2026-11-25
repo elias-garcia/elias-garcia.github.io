@@ -99,7 +99,7 @@ const Row = href === undefined ? "div" : "a";
     /* Pressed on a touch screen, a row dims like the page's links, whether
        it's a link or an action (DESIGN.md §2.9). */
     @media (hover: none), (pointer: coarse) {
-      transition: opacity var(--dur) var(--ease-settle);
+      transition: opacity var(--dur-quick) var(--ease-settle);
 
       &:active {
         opacity: var(--press-dim);

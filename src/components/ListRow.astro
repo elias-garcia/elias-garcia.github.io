@@ -71,14 +71,14 @@ const Title = article ? "h3" : "span";
   }
 
   .row-interactive {
-    transition: opacity var(--dur) var(--ease);
+    transition: opacity var(--dur-quick) var(--ease);
   }
 
   /* Pressed on a touch screen, the row dims at once and comes back over
      150ms (DESIGN.md §2.9). */
   @media (hover: none), (pointer: coarse) {
     .row-interactive {
-      transition: opacity var(--dur) var(--ease-settle);
+      transition: opacity var(--dur-quick) var(--ease-settle);
     }
 
     .row-interactive:has(.title-link:active) {
@@ -118,7 +118,7 @@ const Title = article ? "h3" : "span";
 
   @media (hover: hover) and (pointer: fine) {
     .underline .title-text {
-      transition: text-decoration-color var(--dur) var(--ease);
+      transition: text-decoration-color var(--dur-quick) var(--ease);
     }
 
     .row-interactive:hover .underline .title-text {

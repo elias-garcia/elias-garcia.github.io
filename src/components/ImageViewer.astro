@@ -755,14 +755,14 @@ const copy = await getViewerCopy();
      slightly as it does, and the backdrop fades in. With reduced motion,
      and on phones, they only fade. */
   .viewer[open] {
-    transition: opacity var(--dur-slow) var(--ease-settle);
+    transition: opacity var(--dur-move) var(--ease-settle);
 
     @starting-style {
       opacity: 0;
     }
 
     &::backdrop {
-      transition: opacity var(--dur-slow) var(--ease-settle);
+      transition: opacity var(--dur-move) var(--ease-settle);
 
       @starting-style {
         opacity: 0;
@@ -773,8 +773,8 @@ const copy = await getViewerCopy();
   @media (prefers-reduced-motion: no-preference) {
     .viewer[open] {
       transition:
-        opacity var(--dur-slow) var(--ease-settle),
-        scale var(--dur-slow) var(--ease-settle);
+        opacity var(--dur-move) var(--ease-settle),
+        scale var(--dur-move) var(--ease-settle);
 
       @starting-style {
         scale: var(--viewer-scale);
@@ -789,7 +789,7 @@ const copy = await getViewerCopy();
     .viewer,
     .viewer::backdrop {
       transition-property: opacity, overlay, display;
-      transition-duration: var(--dur-medium);
+      transition-duration: var(--dur-quick);
       transition-timing-function: var(--ease-settle);
       transition-behavior: allow-discrete;
     }
@@ -810,7 +810,7 @@ const copy = await getViewerCopy();
 
   .viewer[open][data-closing]:not([data-leaving]),
   .viewer[open][data-closing]:not([data-leaving])::backdrop {
-    transition: opacity var(--dur-medium) var(--ease-settle);
+    transition: opacity var(--dur-quick) var(--ease-settle);
   }
 
   .figure {
@@ -851,7 +851,7 @@ const copy = await getViewerCopy();
       min-block-size: 0;
       opacity: 0;
       pointer-events: none;
-      transition: opacity var(--dur) var(--ease-settle);
+      transition: opacity var(--dur-quick) var(--ease-settle);
     }
 
     :global(.slide.current) {
@@ -912,14 +912,14 @@ const copy = await getViewerCopy();
     cursor: pointer;
     backdrop-filter: var(--photo-control-backdrop);
     transition:
-      border-color var(--dur) var(--ease),
-      background var(--dur) var(--ease);
+      border-color var(--dur-quick) var(--ease),
+      background var(--dur-quick) var(--ease);
 
     @media (prefers-reduced-motion: no-preference) {
       transition:
-        border-color var(--dur) var(--ease),
-        background var(--dur) var(--ease),
-        scale var(--dur) var(--ease-settle);
+        border-color var(--dur-quick) var(--ease),
+        background var(--dur-quick) var(--ease),
+        scale var(--dur-quick) var(--ease-settle);
 
       &:active {
         scale: var(--press-scale);
@@ -1024,21 +1024,21 @@ const copy = await getViewerCopy();
     @media (prefers-reduced-motion: no-preference) {
       .viewer[open] {
         transition:
-          opacity var(--dur-slow) var(--ease-settle),
-          translate var(--dur-slow) var(--ease-settle);
+          opacity var(--dur-move) var(--ease-settle),
+          translate var(--dur-move) var(--ease-settle);
 
         &::backdrop {
           transition:
-            opacity var(--dur-slow) var(--ease-settle),
-            background-color var(--dur-slow) var(--ease-settle);
+            opacity var(--dur-move) var(--ease-settle),
+            background-color var(--dur-move) var(--ease-settle);
         }
       }
 
       .viewer[data-leaving] {
         translate: 0 100%;
         transition:
-          opacity var(--dur) var(--ease-settle),
-          translate var(--dur) var(--ease-settle);
+          opacity var(--dur-quick) var(--ease-settle),
+          translate var(--dur-quick) var(--ease-settle);
 
         @supports (overlay: auto) {
           transition-property: opacity, translate, overlay, display;
@@ -1051,7 +1051,7 @@ const copy = await getViewerCopy();
        than they came in, with reduced motion too. */
     .viewer[data-leaving],
     .viewer[data-leaving]::backdrop {
-      transition-duration: var(--dur);
+      transition-duration: var(--dur-quick);
     }
 
     /* Following the finger exactly. */
@@ -1095,7 +1095,7 @@ const copy = await getViewerCopy();
       .track {
         display: flex;
         translate: calc(var(--track-index, 0) * -100%) 0;
-        transition: translate var(--dur-slow) var(--ease-settle);
+        transition: translate var(--dur-move) var(--ease-settle);
 
         :global(.slide) {
           flex: none;
@@ -1173,7 +1173,7 @@ const copy = await getViewerCopy();
         block-size: var(--dot-sm);
         border-radius: var(--r-full);
         background: var(--viewer-dot);
-        transition: background var(--dur) var(--ease);
+        transition: background var(--dur-quick) var(--ease);
       }
 
       :global(.position-dot.current) {

@@ -44,7 +44,7 @@ const { job, open } = Astro.props;
 
 <style>
   .job {
-    transition: opacity var(--dur) var(--ease);
+    transition: opacity var(--dur-quick) var(--ease);
   }
 
   .head {
@@ -114,7 +114,7 @@ const { job, open } = Astro.props;
     grid-area: icon;
     margin-block-start: var(--space-1);
     stroke: var(--text-3);
-    transition: stroke var(--dur) var(--ease);
+    transition: stroke var(--dur-quick) var(--ease);
 
     @media (hover: hover) and (pointer: fine) {
       .head:hover & {
@@ -160,8 +160,8 @@ const { job, open } = Astro.props;
   @media (prefers-reduced-motion: no-preference) {
     .plus {
       transition:
-        stroke var(--dur) var(--ease),
-        rotate var(--dur-slow) var(--ease-settle);
+        stroke var(--dur-quick) var(--ease),
+        rotate var(--details-duration) var(--ease-settle);
     }
 
     .job::details-content {
@@ -169,9 +169,9 @@ const { job, open } = Astro.props;
       overflow: clip;
       contain: layout;
       transition:
-        block-size var(--dur-slow) var(--ease-settle),
-        content-visibility var(--dur-slow),
-        display var(--dur-slow);
+        block-size var(--details-duration) var(--ease-settle),
+        content-visibility var(--details-duration),
+        display var(--details-duration);
       transition-behavior: allow-discrete;
     }
 

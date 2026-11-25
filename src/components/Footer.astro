@@ -146,10 +146,10 @@ const clock = copy.clock.split(/(\{time\}|\{country\})/).filter(Boolean);
     border-block-start: var(--hairline) solid var(--line);
     color: var(--text-3);
     font-size: var(--text-small);
-    animation: page-in var(--dur-slow) var(--ease-settle) backwards;
+    animation: page-in var(--dur-move) var(--ease-settle) backwards;
 
     @media (prefers-reduced-motion: reduce) {
-      animation: page-fade var(--dur) var(--ease-settle) backwards;
+      animation: page-fade var(--dur-quick) var(--ease-settle) backwards;
     }
 
     :global(:root[data-in-place]) & {

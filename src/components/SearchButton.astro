@@ -38,8 +38,8 @@ const copy = await getSearchCopy();
     font-size: var(--text-small);
     cursor: pointer;
     transition:
-      border-color var(--dur) var(--ease),
-      color var(--dur) var(--ease);
+      border-color var(--dur-quick) var(--ease),
+      color var(--dur-quick) var(--ease);
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
@@ -50,9 +50,9 @@ const copy = await getSearchCopy();
 
     @media (prefers-reduced-motion: no-preference) {
       transition:
-        border-color var(--dur) var(--ease),
-        color var(--dur) var(--ease),
-        scale var(--dur) var(--ease-settle);
+        border-color var(--dur-quick) var(--ease),
+        color var(--dur-quick) var(--ease),
+        scale var(--dur-quick) var(--ease-settle);
 
       &:active {
         scale: var(--press-scale);

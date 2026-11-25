@@ -194,12 +194,17 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
   .chevron {
     margin-inline-end: calc(-1 * var(--space-1));
 
+    /* It turns with the menu, and back more quickly (DESIGN.md §2.5). */
+    --chevron-duration: var(--dur-quick);
+
     :global(.button:has(+ .formats:popover-open)) & {
+      --chevron-duration: var(--dur-move);
+
       rotate: 180deg;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      transition: rotate var(--dur-medium) var(--ease-settle);
+      transition: rotate var(--chevron-duration) var(--ease-settle);
     }
 
     :global(.button:has(+ .formats[data-keyboard])) & {
@@ -243,7 +248,7 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
     &:popover-open {
       display: flex;
       flex-direction: column;
-      transition: opacity var(--dur-medium) var(--ease-settle);
+      transition: opacity var(--dur-move) var(--ease-settle);
 
       @starting-style {
         opacity: 0;
@@ -253,9 +258,9 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
     @media (prefers-reduced-motion: no-preference) {
       &:popover-open {
         transition:
-          opacity var(--dur-medium) var(--ease-settle),
-          scale var(--dur-medium) var(--ease-settle),
-          translate var(--dur-medium) var(--ease-settle);
+          opacity var(--dur-move) var(--ease-settle),
+          scale var(--dur-move) var(--ease-settle),
+          translate var(--dur-move) var(--ease-settle);
 
         @starting-style {
           scale: var(--menu-scale);
@@ -297,7 +302,7 @@ const [formats, copy] = await Promise.all([getCvFormats(), getHomeCopy()]);
     /* Pressed on a touch screen, a format dims and fades back like a search
        row (DESIGN.md §2.9). */
     @media (hover: none), (pointer: coarse) {
-      transition: opacity var(--dur) var(--ease-settle);
+      transition: opacity var(--dur-quick) var(--ease-settle);
 
       &:active {
         opacity: var(--press-dim);
