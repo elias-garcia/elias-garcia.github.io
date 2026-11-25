@@ -168,7 +168,7 @@ html:has(dialog:modal) {
       .anchor,
       .skip
     ):active {
-    opacity: var(--press-dim);
+    opacity: var(--dim-press);
   }
 }
 
@@ -260,6 +260,11 @@ details {
    blocks are only transparent, never hidden. With reduced motion the page
    only fades in, as one piece. */
 @media (prefers-reduced-motion: no-preference) {
+  :root[data-arrive] {
+    --arrive-gap: 100ms; /* between one block and the next */
+    --arrive-rise: 12px; /* how far each block rises */
+  }
+
   :root[data-arrive] .enter {
     animation: arrive-in var(--dur-arrive) var(--ease-settle) backwards;
     animation-delay: calc(var(--i) * var(--arrive-gap));

@@ -120,7 +120,7 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
   @media (hover: hover) and (pointer: fine) {
     .years:has(:global(.row-interactive:hover))
       :global(.row-interactive:not(:hover)) {
-      opacity: var(--row-fade);
+      opacity: var(--dim-rest);
     }
   }
 </style>

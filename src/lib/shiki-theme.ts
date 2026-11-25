@@ -1,19 +1,20 @@
 import type { ThemeRegistration } from "shiki";
 
 // The minimal indigo syntax theme (DESIGN.md §3, Syntax theme). Colours are
-// the code tokens, so code follows light and dark mode with the rest of the
-// site. Anything not matched below is --code-plain.
+// the site's tokens, so code follows light and dark mode with the rest of the
+// site. Anything not matched below is --text-2. A code block can recolour its
+// comments through --code-comment (CodeBlock, on a highlighted line).
 export const indigoMinimal: ThemeRegistration = {
   name: "indigo-minimal",
   type: "light",
   colors: {
-    "editor.foreground": "var(--code-plain)",
+    "editor.foreground": "var(--text-2)",
     "editor.background": "transparent",
   },
   tokenColors: [
     {
       scope: ["keyword", "storage", "keyword.control.at-rule"],
-      settings: { foreground: "var(--code-keyword)" },
+      settings: { foreground: "var(--accent)" },
     },
     {
       scope: [
@@ -38,7 +39,7 @@ export const indigoMinimal: ThemeRegistration = {
         "meta.object-literal.key",
         "variable.other.property",
       ],
-      settings: { foreground: "var(--code-name)" },
+      settings: { foreground: "var(--text)" },
     },
     {
       scope: [
@@ -47,16 +48,19 @@ export const indigoMinimal: ThemeRegistration = {
         "keyword.operator",
         "storage.type.function.arrow",
       ],
-      settings: { foreground: "var(--code-punct)" },
+      settings: { foreground: "var(--text-3)" },
     },
     {
       scope: ["comment", "punctuation.definition.comment"],
-      settings: { foreground: "var(--code-comment)", fontStyle: "italic" },
+      settings: {
+        foreground: "var(--code-comment, var(--text-3))",
+        fontStyle: "italic",
+      },
     },
     {
       // Shell arguments stay plain.
       scope: ["source.shell string.unquoted", "source.shell constant"],
-      settings: { foreground: "var(--code-plain)" },
+      settings: { foreground: "var(--text-2)" },
     },
   ],
 };

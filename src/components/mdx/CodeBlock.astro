@@ -38,7 +38,7 @@ const name =
 </div>
 
 <style>
-  /* Colours come from the code tokens through src/lib/shiki-theme.ts. */
+  /* Colours come from the site's tokens through src/lib/shiki-theme.ts. */
   .code {
     --code-bar-h: 48px;
 
@@ -87,12 +87,12 @@ const name =
       padding-inline: var(--space-5);
     }
 
-    /* Comments drop to the plain colour on a highlighted line: zinc-500 on
+    /* Comments drop to --text-2 on a highlighted line: zinc-500 on
        indigo-50 falls below 4.5:1. */
     & :global(.line.highlighted) {
-      --code-comment: var(--code-plain);
+      --code-comment: var(--text-2);
 
-      background: var(--code-highlight);
+      background: var(--tint);
       box-shadow: inset var(--rule-strong) 0 var(--accent);
     }
   }

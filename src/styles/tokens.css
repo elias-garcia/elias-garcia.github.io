@@ -28,24 +28,16 @@
   --tint-strong: #e0e7ff; /* indigo-100: text selection */
   --accent-line: #a3b3ff; /* indigo-300: underline under text links */
 
-  /* ---- Code: minimal indigo syntax theme (every colour ≥4.5:1 on --surface) ---- */
-  --code-plain: var(--text-2);
-  --code-keyword: var(--accent); /* const, import, return, @media */
+  /* ---- Code: minimal indigo syntax theme (every colour ≥4.5:1 on --surface).
+     It reuses the colours above; strings and numbers are its own. ---- */
   --code-literal: #372aac; /* indigo-800: strings, numbers */
-  --code-name: var(--text); /* functions, properties, tags */
-  --code-comment: var(--text-3); /* italic */
-  --code-punct: var(--text-3); /* punctuation, operators */
-  --code-highlight: var(--tint); /* highlighted line background */
 
   /* Behind the search dialog and the image viewer card. */
   --scrim: rgb(9 9 11 / 0.18);
   --scrim-backdrop: blur(2px);
-  --header-bg: color-mix(in oklab, var(--bg) 82%, transparent);
-  --photo-control-bg: color-mix(
-    in oklab,
-    var(--bg) 92%,
-    transparent
-  ); /* round buttons over photos: video play, image viewer */
+  /* One glass, always with a backdrop blur: the sticky header and the round
+     buttons over photos (video play, image viewer). */
+  --glass: color-mix(in oklab, var(--bg) 80%, transparent);
   --photo-control-backdrop: blur(4px);
 
   /* ---- Image viewer on phones: dark in both themes, so never redefined ---- */
@@ -116,15 +108,13 @@
   --ease: ease-out; /* hover and colour changes only */
   /* Everything that enters, leaves or moves. */
   --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
-  --row-fade: 0.45; /* other rows while one is hovered */
-  --press-dim: 0.6; /* a text link or list row pressed on a touch screen */
+  --dim-rest: 0.45; /* the other rows of a list while one is hovered */
+  --dim-press: 0.6; /* a text link or list row pressed on a touch screen */
   --press-scale: 0.97;
   --press-scale-tile: 0.99;
   --entrance-offset: 6px; /* how far the page rises, coming from another page */
   /* Arriving at the site, its blocks settle from the top one after another. */
   --dur-arrive: 400ms; /* each block */
-  --arrive-gap: 100ms; /* between one block and the next */
-  --arrive-rise: 12px; /* how far each block rises */
   --dur-flash: 2s; /* a footnote marker or a note you arrive at lights up, then fades; a deliberate exception */
 
   /* ---- Elevation and layers ---- */
