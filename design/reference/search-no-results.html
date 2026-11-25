@@ -22,8 +22,8 @@ button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user
 
 /* colour tokens: Tailwind zinc + indigo only. light / dark, switched by prefers-color-scheme.
    bg white/zinc-950 · surface zinc-50/900 · control zinc-100/800 · control-hover & line zinc-200 / zinc-700 & 800 · line-strong zinc-300/700
-   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950. Link underlines and the text selection are mixed from accent */
-:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-quick:150ms;--dur-move:250ms;--dur-arrive:400ms;--dim-press:.6;--dim-rest:.45;--glass:color-mix(in oklab, var(--bg) 80%, transparent);--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--scrim:rgba(9,9,11,.18)}
+   text zinc-900/100 · text-2 zinc-600/300 · text-3 zinc-500/400 · accent indigo-600/400 · tint indigo-50/950 · tint-strong indigo-100/900 · accent-line indigo-300/700 */
+:root{color-scheme:light dark;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-quick:150ms;--dur-move:250ms;--dur-arrive:400ms;--dim-press:.6;--dim-rest:.45;--glass:color-mix(in oklab, var(--bg) 80%, transparent);--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none}
@@ -32,7 +32,7 @@ a{color:var(--text);text-decoration:none}
 .site *{box-sizing:border-box}
 .site :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .site a:not([class]):focus-visible,.site .topiclink:focus-visible,.site .factlink:focus-visible,.site .more:focus-visible{border-radius:var(--r-sm)}
-.site{text-wrap:pretty}
+.site{text-wrap:pretty;overflow-wrap:break-word}
 
 /* one orchestrated load moment */
 
@@ -51,7 +51,7 @@ a{color:var(--text);text-decoration:none}
 .av{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 /* availability dot */
-.dot{--dot-ping-ease:cubic-bezier(0,0,.2,1);/* one-off: the ping decelerates more gently than --ease-settle */position:relative;width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+.dot{--dot-ping-ease:cubic-bezier(0,0,.2,1);/* one-off: the ping decelerates more gently than --ease-settle */position:relative;width:8px;height:8px;margin-top:calc((1.5em - 8px) / 2);/* centred on the first line of the text beside it */border-radius:50%;background:var(--accent);flex:none}
 .dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:ping 2.4s var(--dot-ping-ease) 1 both}
 @keyframes ping{0%{transform:scale(1);opacity:.45}80%,100%{transform:scale(2.6);opacity:0}}
 
@@ -64,12 +64,14 @@ a{color:var(--text);text-decoration:none}
 
 /* lists: hovering one row quiets the others */
 .list .item{transition:opacity var(--dur-quick) var(--ease)}
-@media (hover:hover) and (pointer:fine){.list:has(.item:hover) .item:not(:hover){opacity:var(--dim-rest)}}
+@media (hover:hover) and (pointer:fine){.list:has(.item:not(.plain):hover) .item:not(:hover){opacity:var(--dim-rest)}}
 
 /* jobs expand in place */
 .jobhead{display:flex;flex-wrap:wrap;align-items:flex-start;gap:4px 24px;width:100%;padding:12px 0;margin:0;background:none;border:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
 /* a row collapses quicker than it expands: the transition of the state it is going to applies */
 .jobbody{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows var(--dur-quick) var(--ease-settle),opacity var(--dur-quick) var(--ease-settle)}
+/* a job with nothing to expand is a plain row: no + icon, no pointer, not focusable (in production it is not a button at all, see DESIGN.md) */
+.job.plain .jobhead{cursor:default;pointer-events:none}.job.plain .chev{visibility:hidden}
 .job.open .jobbody{grid-template-rows:1fr;opacity:1;transition:grid-template-rows var(--dur-move) var(--ease-settle),opacity var(--dur-quick) var(--ease-settle)}
 .chev{width:16px;height:16px;margin-top:4px;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;transition:transform var(--dur-quick) var(--ease-settle),stroke var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.jobhead:hover .chev{stroke:var(--text)}}
@@ -88,8 +90,8 @@ a{color:var(--text);text-decoration:none}
 .tiles .tile{display:grid;grid-template-rows:subgrid;grid-row:span 3;align-content:start}
 @media (max-width: 639.98px){.tiles .tile{--tile-gap:32px;padding-bottom:calc(var(--tile-gap) - 4px)} /* 32 between stacked tiles: the grid's 4px row gap is the title-to-status gap */.tiles > li:last-child .tile{padding-bottom:0}}
 .tile .pv{margin-bottom:12px}
-.tile .tt{font-weight:500;line-height:1.35;text-wrap:balance}
-.tile .td{font-size:var(--text-label);color:var(--text-2);line-height:1.5}
+.tile .tt{font-weight:500;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .td{font-size:var(--text-label);color:var(--text-2);line-height:1.5;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
 .tile .pv{transition:transform var(--dur-quick) var(--ease-settle),border-color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.tile:hover .pv{border-color:var(--line-strong)}}
 .tile:active .pv{transform:scale(.99)}
@@ -174,13 +176,13 @@ main > header > :first-child{--i:0}main > header > :nth-child(2){--i:1}main > se
 .site > main{flex:1 0 auto;width:100%}
 .site > footer{width:100%;flex-shrink:0}
 @media (prefers-color-scheme: dark){
-:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--scrim:rgba(0,0,0,.55)}
+:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
 img:not([src$=".svg"]){filter:brightness(.92)}
 }
 
 /* final pass: motion and UX polish */
 html{scroll-padding-top:80px}
-::selection{background:color-mix(in oklab, var(--accent) 20%, transparent);color:var(--text)}
+::selection{background:var(--tint-strong);color:var(--text)}
 .skip{position:absolute;left:12px;top:12px;translate:0 -72px;z-index:var(--z-skip);padding:8px 16px;border-radius:var(--r-full);background:var(--text);color:var(--bg);font-size:var(--text-small);transition:translate var(--dur-quick) var(--ease-settle)}
 .skip:focus{translate:0 0;color:var(--bg)}
 @media (prefers-reduced-motion:reduce){.skip{transition:none}}
@@ -244,6 +246,8 @@ address{font-style:normal}
 @media (max-width: 639.98px){.clock > span:nth-child(n+2){display:none}}
 
 /* external-link arrow: a 12px icon like the see-more chevron, quieter than the text, nudging toward where it goes */
+/* the arrow and the end of its label wrap together, so the arrow never sits alone on a line */
+.tail{white-space:nowrap}
 .ext{display:inline-block;width:12px;height:12px;margin-left:4px;vertical-align:-1px;flex:none;fill:none;stroke:var(--text-3);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 a:focus-visible .ext{stroke:currentColor}@media (hover:hover) and (pointer:fine){a:hover .ext{stroke:currentColor}}
 @media (hover: hover) and (pointer: fine){a:hover .ext{transform:translate(1px,-1px)}}
@@ -276,7 +280,9 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
 /* project type line: a 14px line under the title ("Tool · 2026", "Experiment · 2026"), never a pill on the preview.
    Text carries the meaning; a small static indigo dot marks projects that are in progress (no pulse: pulsing is kept for "Open to remote roles") */
 .thead{display:flex;flex-direction:column;gap:4px;min-width:0}
-.sm{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
+/* metadata line: inline text that wraps like any sentence. A break comes before a separator, never after it (the dot is tied to the next item with a no-break space) */
+.msep{margin:0 4px}.nb{white-space:nowrap}
+.sm{margin:0;font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
 
 /* tiles: 8px between the status line and the description, as on Projects (the tile grid rows are only 4px apart) */
 .tile .thead{padding-bottom:4px}
@@ -384,7 +390,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 /* phones (< 640px): the platform photo viewer. Always dark (photos read best on black), photo edge to edge, caption and controls at the bottom within thumb reach.
    A visible close button; swipe sideways AND buttons to move (WCAG 2.5.1); drag down to close, the photo follows the finger (the button is the alternative, WCAG 2.5.7). Production: the back gesture closes it, pinch zooms */
 /* the viewer is dark in both themes: its own fixed colours */
-:root{--viewer-bg:#000000;--viewer-text:#F4F4F5;--viewer-text-2:#9F9FA9;}
+:root{--viewer-bg:#000000;--viewer-text:#F4F4F5;--viewer-control:rgb(255 255 255 / .12);--viewer-dot:rgb(255 255 255 / .32);--viewer-text-2:#9F9FA9;}
 .vmnav{display:none}
 @media (max-width: 639.98px){
 .vprev,.vnext,.vfoot{display:none}
@@ -394,16 +400,16 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 .vw-card .vdlg{width:100%;height:100%;display:flex;flex-direction:column;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible;padding:0 0 calc(16px + env(safe-area-inset-bottom, 0px));touch-action:none;transition:translate var(--dur-move) var(--ease-settle)}
 .vwrap.out .vdlg{transition-duration:var(--dur-quick)}
 .vwrap.drag .vdlg{transition:none}
-.vw-card .vclose{top:calc(8px + env(safe-area-inset-top, 0px));right:calc(8px + env(safe-area-inset-right, 0px));width:44px;height:44px;border-color:transparent;background:color-mix(in oklab, var(--viewer-text) 12%, transparent);color:var(--viewer-text)}
+.vw-card .vclose{top:calc(8px + env(safe-area-inset-top, 0px));right:calc(8px + env(safe-area-inset-right, 0px));width:44px;height:44px;border-color:transparent;background:var(--viewer-control);color:var(--viewer-text)}
 .vw-card .vfig{flex:1;min-height:0;padding-top:60px}
 .vw-card .vimgbox{flex:0 1 auto;min-height:0;margin:auto 0;border:0;background:transparent;aspect-ratio:3 / 2}
 .vw-card .vcap{padding:24px 20px 0}
 .vw-card .vtitle{color:var(--viewer-text)}
 .vw-card .vmeta{color:var(--viewer-text-2)}
 .vmnav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px calc(8px + env(safe-area-inset-right, 0px)) 0 calc(8px + env(safe-area-inset-left, 0px))}
-.vmnav .vbtn{position:static;flex:none;width:44px;height:44px;border-color:transparent;background:color-mix(in oklab, var(--viewer-text) 12%, transparent);color:var(--viewer-text)}
+.vmnav .vbtn{position:static;flex:none;width:44px;height:44px;border-color:transparent;background:var(--viewer-control);color:var(--viewer-text)}
 .vdots{display:flex;gap:8px}
-.vdot{width:6px;height:6px;border-radius:50%;background:color-mix(in oklab, var(--viewer-text) 32%, transparent);transition:background var(--dur-quick) var(--ease)}
+.vdot{width:6px;height:6px;border-radius:50%;background:var(--viewer-dot);transition:background var(--dur-quick) var(--ease)}
 .vdot.on{background:var(--viewer-text)}
 .vtrack{display:flex;translate:calc(var(--vi) * -100% + var(--vdx, 0px)) 0;transition:translate var(--dur-move) var(--ease-settle)}
 .vwrap.dragx .vtrack{transition:none}
@@ -466,7 +472,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
               <button data-dc-tpl="33" class="button" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="cv-menu">Download CV<svg data-dc-tpl="34" class="cvchev " viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-down"><path data-dc-tpl="35" d="M6 9l6 6l6 -6" vector-effect="non-scaling-stroke"></path></svg></button>
               
             </span>
-            <span data-dc-tpl="61" style="display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0px 4px; font-size: var(--text-small); color: var(--text-2);"><span data-dc-tpl="62" class="dot" aria-hidden="true"></span>Open to remote roles</span>
+            <span data-dc-tpl="61" style="display: inline-flex; align-items: flex-start; gap: 8px; min-height: var(--control-h); padding: calc((var(--control-h) - 1.5em) / 2) 4px; font-size: var(--text-small); line-height: 1.5; color: var(--text-2);"><span data-dc-tpl="62" class="dot" aria-hidden="true"></span>Open to remote roles</span>
           </div>
         </div>
       </div>
@@ -503,7 +509,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
               <circle data-dc-tpl="90" cx="54" cy="70" r="2.5" class="miss"></circle>
             </svg>
           </div>
-          <div data-dc-tpl="91" class="thead"><h3 data-dc-tpl="92" class="tt"><a data-dc-tpl="93" class="cl" href="Project.dc.html">Roleburn</a></h3><p data-dc-tpl="94" class="sm"><span data-dc-tpl="95">Tool</span><span data-dc-tpl="96" aria-hidden="true">·</span><time data-dc-tpl="97" datetime="2026">2026</time></p></div>
+          <div data-dc-tpl="91" class="thead"><h3 data-dc-tpl="92" class="tt"><a data-dc-tpl="93" class="cl" href="Project.dc.html">Roleburn</a></h3><p data-dc-tpl="94" class="sm"><span data-dc-tpl="95">Tool</span> <span data-dc-tpl="96" class="msep" aria-hidden="true">·&nbsp;</span><time data-dc-tpl="97" datetime="2026">2026</time></p></div>
           <span data-dc-tpl="98" class="td">A daily radar for remote roles that match my CV.</span>
         </div>
         </li>
@@ -524,7 +530,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
               <circle data-dc-tpl="112" cx="32" cy="106" r="4" class="runner anim"></circle>
             </svg>
           </div>
-          <div data-dc-tpl="113" class="thead"><h3 data-dc-tpl="114" class="tt"><a data-dc-tpl="115" class="cl" href="#">work-issue</a></h3><p data-dc-tpl="116" class="sm"><span data-dc-tpl="117">Experiment</span><span data-dc-tpl="118" aria-hidden="true">·</span><time data-dc-tpl="119" datetime="2026">2026</time></p></div>
+          <div data-dc-tpl="113" class="thead"><h3 data-dc-tpl="114" class="tt"><a data-dc-tpl="115" class="cl" href="#">work-issue</a></h3><p data-dc-tpl="116" class="sm"><span data-dc-tpl="117">Experiment</span> <span data-dc-tpl="118" class="msep" aria-hidden="true">·&nbsp;</span><time data-dc-tpl="119" datetime="2026">2026</time></p></div>
           <span data-dc-tpl="120" class="td">Agents that take a GitHub issue to a reviewed PR.</span>
         </div>
         </li>
@@ -540,7 +546,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
               <text data-dc-tpl="129" x="186" y="122" class="tag" style="text-anchor: end;">ApeX</text>
             </svg>
           </div>
-          <div data-dc-tpl="130" class="thead"><h3 data-dc-tpl="131" class="tt"><a data-dc-tpl="132" class="cl" href="#">POL funding spreads</a></h3><p data-dc-tpl="133" class="sm"><span data-dc-tpl="134">Research</span><span data-dc-tpl="135" aria-hidden="true">·</span><time data-dc-tpl="136" datetime="2026">2026</time></p></div>
+          <div data-dc-tpl="130" class="thead"><h3 data-dc-tpl="131" class="tt"><a data-dc-tpl="132" class="cl" href="#">POL funding spreads</a></h3><p data-dc-tpl="133" class="sm"><span data-dc-tpl="134">Research</span> <span data-dc-tpl="135" class="msep" aria-hidden="true">·&nbsp;</span><time data-dc-tpl="136" datetime="2026">2026</time></p></div>
           <span data-dc-tpl="137" class="td">Funding-rate arbitrage on POL perps across DEXes.</span>
         </div>
         </li>
@@ -552,8 +558,8 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
       <h2 data-dc-tpl="139" id="work-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Work experience</h2>
       <ul data-dc-tpl="140" class="list" role="list" style="display: flex; flex-direction: column;">
         
-          <li data-dc-tpl="142" class="item job ">
-            <button data-dc-tpl="143" class="jobhead" aria-expanded="false">
+          <li data-dc-tpl="142" class="item job  ">
+            <button data-dc-tpl="143" class="jobhead" aria-expanded="false" tabindex="0">
               <span data-dc-tpl="144" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2024"><span class="sc-interp">2024</span></time> – Now</span>
               <span data-dc-tpl="149" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
                 <span data-dc-tpl="150"><span data-dc-tpl="151" style="font-weight: 500;"><span class="sc-interp">Vesu</span></span><span data-dc-tpl="152" class="cmode"><span data-dc-tpl="153" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="154" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
@@ -568,13 +574,13 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
                   <div data-dc-tpl="163" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="164" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led engineering from launch to $84.6M in customer assets.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative; overflow-wrap: anywhere;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led engineering from launch to $84.6M in customer assets.</span></li>
                       
-                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the lender and borrower app, a risk-parameter admin panel and a blockchain-only fallback UI so users can exit positions during an outage, on a shared Ark UI design system.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative; overflow-wrap: anywhere;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the lender and borrower app, a risk-parameter admin panel and a blockchain-only fallback UI so users can exit positions during an outage, on a shared Ark UI design system.</span></li>
                       
-                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the real-time event-ingestion pipeline, a public API, an RFQ system for liquidations over WebSockets and an MCP server for product data.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative; overflow-wrap: anywhere;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the real-time event-ingestion pipeline, a public API, an RFQ system for liquidations over WebSockets and an MCP server for product data.</span></li>
                       
-                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Set up issue tracking, CI/CD and releases from zero, mentored the frontend team and introduced the company’s AI development practice.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative; overflow-wrap: anywhere;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Set up issue tracking, CI/CD and releases from zero, mentored the frontend team and introduced the company’s AI development practice.</span></li>
                       
                     </ul>
                     
@@ -584,8 +590,8 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </div>
           </li>
         
-          <li data-dc-tpl="142" class="item job ">
-            <button data-dc-tpl="143" class="jobhead" aria-expanded="false">
+          <li data-dc-tpl="142" class="item job  ">
+            <button data-dc-tpl="143" class="jobhead" aria-expanded="false" tabindex="0">
               <span data-dc-tpl="144" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2020"><span class="sc-interp">2020</span></time> – <time data-dc-tpl="148" datetime="2024"><span class="sc-interp">2024</span></time></span>
               <span data-dc-tpl="149" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
                 <span data-dc-tpl="150"><span data-dc-tpl="151" style="font-weight: 500;"><span class="sc-interp">Polygon Labs</span></span><span data-dc-tpl="152" class="cmode"><span data-dc-tpl="153" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="154" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
@@ -600,11 +606,11 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
                   <div data-dc-tpl="163" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="164" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Hermez: built the consumer wallet and block explorer, and contributed to the protocol SDK. Polygon acquired Hermez in 2021.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative; overflow-wrap: anywhere;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Hermez: built the consumer wallet and block explorer, and contributed to the protocol SDK. Polygon acquired Hermez in 2021.</span></li>
                       
-                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon zkEVM: led the 3-person frontend team across every user-facing product, including the bridge, as it grew to $180M in bridged assets.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative; overflow-wrap: anywhere;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon zkEVM: led the 3-person frontend team across every user-facing product, including the bridge, as it grew to $180M in bridged assets.</span></li>
                       
-                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon ID: tech lead of a 10-engineer team building the credential issuer, wallet, marketplace and schema tooling.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative; overflow-wrap: anywhere;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Polygon ID: tech lead of a 10-engineer team building the credential issuer, wallet, marketplace and schema tooling.</span></li>
                       
                     </ul>
                     
@@ -614,8 +620,8 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </div>
           </li>
         
-          <li data-dc-tpl="142" class="item job ">
-            <button data-dc-tpl="143" class="jobhead" aria-expanded="false">
+          <li data-dc-tpl="142" class="item job  ">
+            <button data-dc-tpl="143" class="jobhead" aria-expanded="false" tabindex="0">
               <span data-dc-tpl="144" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2019"><span class="sc-interp">2019</span></time> – <time data-dc-tpl="148" datetime="2020"><span class="sc-interp">2020</span></time></span>
               <span data-dc-tpl="149" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
                 <span data-dc-tpl="150"><span data-dc-tpl="151" style="font-weight: 500;"><span class="sc-interp">Nexiona</span></span><span data-dc-tpl="152" class="cmode"><span data-dc-tpl="153" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="154" class="vh">, </span><span class="sc-interp">Remote</span></span></span>
@@ -630,7 +636,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
                   <div data-dc-tpl="163" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="164" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the frontend of MIIMETIQ in React and Redux, used across Europe by companies including Celsa Group and Grifols.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative; overflow-wrap: anywhere;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built the frontend of MIIMETIQ in React and Redux, used across Europe by companies including Celsa Group and Grifols.</span></li>
                       
                     </ul>
                     
@@ -640,8 +646,8 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </div>
           </li>
         
-          <li data-dc-tpl="142" class="item job ">
-            <button data-dc-tpl="143" class="jobhead" aria-expanded="false">
+          <li data-dc-tpl="142" class="item job  ">
+            <button data-dc-tpl="143" class="jobhead" aria-expanded="false" tabindex="0">
               <span data-dc-tpl="144" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2018"><span class="sc-interp">2018</span></time> – <time data-dc-tpl="148" datetime="2019"><span class="sc-interp">2019</span></time></span>
               <span data-dc-tpl="149" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
                 <span data-dc-tpl="150"><span data-dc-tpl="151" style="font-weight: 500;"><span class="sc-interp">Netex Learning</span></span><span data-dc-tpl="152" class="cmode"><span data-dc-tpl="153" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="154" class="vh">, </span><span class="sc-interp">On-site, A Coruña</span></span></span>
@@ -656,9 +662,9 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
                   <div data-dc-tpl="163" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="164" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led the 4-person Angular team behind Netex Cloud, used by thousands of learners at companies including Amazon and Inditex. Delivered internationalisation and accessibility.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative; overflow-wrap: anywhere;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led the 4-person Angular team behind Netex Cloud, used by thousands of learners at companies including Amazon and Inditex. Delivered internationalisation and accessibility.</span></li>
                       
-                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led a cross-department initiative to build a shared component library adopted across the company’s products.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative; overflow-wrap: anywhere;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Led a cross-department initiative to build a shared component library adopted across the company’s products.</span></li>
                       
                     </ul>
                     
@@ -668,8 +674,8 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </div>
           </li>
         
-          <li data-dc-tpl="142" class="item job ">
-            <button data-dc-tpl="143" class="jobhead" aria-expanded="false">
+          <li data-dc-tpl="142" class="item job  ">
+            <button data-dc-tpl="143" class="jobhead" aria-expanded="false" tabindex="0">
               <span data-dc-tpl="144" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="145" datetime="2017"><span class="sc-interp">2017</span></time> – <time data-dc-tpl="148" datetime="2018"><span class="sc-interp">2018</span></time></span>
               <span data-dc-tpl="149" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
                 <span data-dc-tpl="150"><span data-dc-tpl="151" style="font-weight: 500;"><span class="sc-interp">Ágora Binaria</span></span><span data-dc-tpl="152" class="cmode"><span data-dc-tpl="153" class="wsep" aria-hidden="true">·</span><span data-dc-tpl="154" class="vh">, </span><span class="sc-interp">Hybrid, A Coruña</span></span></span>
@@ -684,7 +690,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
                   <div data-dc-tpl="163" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="164" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
                       
-                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built full-stack client applications and did performance work on existing Angular codebases.</span></li>
+                        <li data-dc-tpl="166" style="font-size: var(--text-body); color: var(--text-2); line-height: 1.6; padding-left: 16px; position: relative; overflow-wrap: anywhere;"><span data-dc-tpl="167" aria-hidden="true" style="position: absolute; left: 0px; top: 11px; width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong);"></span><span class="sc-interp">Built full-stack client applications and did performance work on existing Angular codebases.</span></li>
                       
                     </ul>
                     
@@ -766,54 +772,54 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             <time data-dc-tpl="248" datetime="2022-03" style="flex: 0 0 var(--gutter); color: var(--text-3);">Mar 2022</time>
             <span data-dc-tpl="249" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 4px;">
               <span data-dc-tpl="250" style="display: flex; flex-direction: column;">
-                <span data-dc-tpl="251" style="font-weight: 500;">The DeFi revolution<svg data-dc-tpl="252" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="253" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="254" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span>
-                <span data-dc-tpl="255" style="color: var(--text-2);">Online course in Spanish, Balio</span>
+                <span data-dc-tpl="251" style="font-weight: 500;">The DeFi <span data-dc-tpl="252" class="tail">revolution<svg data-dc-tpl="253" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="254" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="255" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></span>
+                <span data-dc-tpl="256" style="color: var(--text-2);">Online course in Spanish, Balio</span>
               </span>
-              <p data-dc-tpl="256" class="cmeta"><span data-dc-tpl="257" class="crate"><span data-dc-tpl="258" class="vh">Rated 4.7 out of 5 from 26 reviews.</span><span data-dc-tpl="259" class="crate-v" aria-hidden="true"><svg data-dc-tpl="260" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="star"><path data-dc-tpl="261" d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245" vector-effect="non-scaling-stroke"></path></svg><b data-dc-tpl="262">4.7</b><span data-dc-tpl="263">(26 reviews)</span></span></span><span data-dc-tpl="264" aria-hidden="true">·</span><span data-dc-tpl="265">30 lessons</span><span data-dc-tpl="266" aria-hidden="true">·</span><span data-dc-tpl="267">2h 20m</span></p>
+              <p data-dc-tpl="257" class="cmeta"><span data-dc-tpl="258" class="crate"><span data-dc-tpl="259" class="vh">Rated 4.7 out of 5 from 26 reviews.</span><span data-dc-tpl="260" class="crate-v" aria-hidden="true"><svg data-dc-tpl="261" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="star"><path data-dc-tpl="262" d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245" vector-effect="non-scaling-stroke"></path></svg><b data-dc-tpl="263">4.7</b><span data-dc-tpl="264">(26 reviews)</span></span></span></p>
             </span>
           </a>
-          <div data-dc-tpl="268" class="attach"><span data-dc-tpl="269" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="270" class="attach-c">
-            <a data-dc-tpl="271" class="lpc" href="https://www.youtube.com/watch?v=FESgArXJBX0">
-              <span data-dc-tpl="272" class="lpc-img"><img data-dc-tpl="273" src="../assets/course-trailer.jpg" alt="" loading="lazy"><span data-dc-tpl="274" class="play"><svg data-dc-tpl="275" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="player-play"><path data-dc-tpl="276" d="M7 4v16l13 -8l-13 -8" vector-effect="non-scaling-stroke"></path></svg></span></span>
-              <span data-dc-tpl="277" class="lpc-t"><span data-dc-tpl="278" class="lpc-title">Watch the trailer</span><span data-dc-tpl="279" class="lpc-src"><span data-dc-tpl="280" class="lpc-srct">Balio · youtube.com</span><svg data-dc-tpl="281" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="282" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="283" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></span>
+          <div data-dc-tpl="265" class="attach"><span data-dc-tpl="266" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="267" class="attach-c">
+            <a data-dc-tpl="268" class="lpc" href="https://www.youtube.com/watch?v=FESgArXJBX0">
+              <span data-dc-tpl="269" class="lpc-img"><img data-dc-tpl="270" src="../assets/course-trailer.jpg" alt="" loading="lazy"><span data-dc-tpl="271" class="play"><svg data-dc-tpl="272" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="player-play"><path data-dc-tpl="273" d="M7 4v16l13 -8l-13 -8" vector-effect="non-scaling-stroke"></path></svg></span></span>
+              <span data-dc-tpl="274" class="lpc-t"><span data-dc-tpl="275" class="lpc-title">Watch the trailer</span><span data-dc-tpl="276" class="lpc-src"><span data-dc-tpl="277" class="lpc-srct">Balio · youtube.com</span><svg data-dc-tpl="278" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="279" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="280" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></span>
             </a>
           </div></div>
         </li>
       </ul>
     </section>
 
-    <section data-dc-tpl="284" style="display: flex; flex-direction: column; gap: 16px;">
-      <h2 data-dc-tpl="285" id="edu-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Education</h2>
-      <div data-dc-tpl="286" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-        <span data-dc-tpl="287" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="288" datetime="2013">2013</time> – <time data-dc-tpl="289" datetime="2017">2017</time></span>
-        <span data-dc-tpl="290" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-          <span data-dc-tpl="291" style="font-weight: 500;">BSc Computer Science at University of A Coruña</span>
-          <span data-dc-tpl="292" style="color: var(--text-2);">Specialization in software engineering</span>
+    <section data-dc-tpl="281" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="282" id="edu-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Education</h2>
+      <div data-dc-tpl="283" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+        <span data-dc-tpl="284" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="285" datetime="2013">2013</time> – <time data-dc-tpl="286" datetime="2017">2017</time></span>
+        <span data-dc-tpl="287" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
+          <span data-dc-tpl="288" style="font-weight: 500;">BSc Computer Science at University of A Coruña</span>
+          <span data-dc-tpl="289" style="color: var(--text-2);">Specialization in software engineering</span>
         </span>
       </div>
     </section>
 
-    <section data-dc-tpl="293" id="contact" class="contact" style="display: flex; flex-direction: column; gap: 16px;">
-      <h2 data-dc-tpl="294" id="contact-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Contact</h2>
-      <address data-dc-tpl="295">
-      <dl data-dc-tpl="296" style="display: flex; flex-direction: column;">
-      <div data-dc-tpl="297" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
-        <dt data-dc-tpl="298" style="flex: 0 0 var(--gutter); color: var(--text-3);">Email</dt>
-        <dd data-dc-tpl="299" style="flex: 1 1 300px; min-width: 0px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-          <a data-dc-tpl="300" href="mailto:eliasgarciadev@gmail.com">eliasgarciadev@gmail.com<svg data-dc-tpl="301" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="302" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="303" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></a>
+    <section data-dc-tpl="290" id="contact" class="contact" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="291" id="contact-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Contact</h2>
+      <address data-dc-tpl="292">
+      <dl data-dc-tpl="293" style="display: flex; flex-direction: column;">
+      <div data-dc-tpl="294" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
+        <dt data-dc-tpl="295" style="flex: 0 0 var(--gutter); color: var(--text-3);">Email</dt>
+        <dd data-dc-tpl="296" style="flex: 1 1 300px; min-width: 0px; overflow-wrap: anywhere;">
+          <a data-dc-tpl="297" href="mailto:eliasgarciadev@gmail.com">eliasgarciadev@gmail.<span data-dc-tpl="298" class="tail">com<svg data-dc-tpl="299" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="300" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="301" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a>
         </dd>
       </div>
-      <div data-dc-tpl="304" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
-        <dt data-dc-tpl="305" style="flex: 0 0 var(--gutter); color: var(--text-3);">GitHub</dt>
-        <dd data-dc-tpl="306" style="flex: 1 1 300px;"><a data-dc-tpl="307" href="https://github.com/elias-garcia">elias-garcia<svg data-dc-tpl="308" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="309" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="310" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></a></dd>
+      <div data-dc-tpl="302" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
+        <dt data-dc-tpl="303" style="flex: 0 0 var(--gutter); color: var(--text-3);">GitHub</dt>
+        <dd data-dc-tpl="304" style="flex: 1 1 300px; min-width: 0px; overflow-wrap: anywhere;"><a data-dc-tpl="305" href="https://github.com/elias-garcia">elias-<span data-dc-tpl="306" class="tail">garcia<svg data-dc-tpl="307" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="308" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="309" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a></dd>
       </div>
-      <div data-dc-tpl="311" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
-        <dt data-dc-tpl="312" style="flex: 0 0 var(--gutter); color: var(--text-3);">LinkedIn</dt>
-        <dd data-dc-tpl="313" style="flex: 1 1 300px;"><a data-dc-tpl="314" href="https://www.linkedin.com/in/elias-garcia-marino">elias-garcia-marino<svg data-dc-tpl="315" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="316" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="317" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></a></dd>
+      <div data-dc-tpl="310" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
+        <dt data-dc-tpl="311" style="flex: 0 0 var(--gutter); color: var(--text-3);">LinkedIn</dt>
+        <dd data-dc-tpl="312" style="flex: 1 1 300px; min-width: 0px; overflow-wrap: anywhere;"><a data-dc-tpl="313" href="https://www.linkedin.com/in/elias-garcia-marino">elias-garcia-<span data-dc-tpl="314" class="tail">marino<svg data-dc-tpl="315" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="316" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="317" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a></dd>
       </div>
       <div data-dc-tpl="318" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
         <dt data-dc-tpl="319" style="flex: 0 0 var(--gutter); color: var(--text-3);">X</dt>
-        <dd data-dc-tpl="320" style="flex: 1 1 300px;"><a data-dc-tpl="321" href="https://x.com/eliasgarciadev">@eliasgarciadev<svg data-dc-tpl="322" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="323" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="324" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></a></dd>
+        <dd data-dc-tpl="320" style="flex: 1 1 300px; min-width: 0px; overflow-wrap: anywhere;"><a data-dc-tpl="321" href="https://x.com/eliasgarciadev">@eliasgarcia<span data-dc-tpl="322" class="tail">dev<svg data-dc-tpl="323" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="324" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="325" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a></dd>
       </div>
       </dl>
       </address>
@@ -821,13 +827,13 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 
   </main>
 
-  <footer data-dc-tpl="325" style="margin-top: var(--space-footer); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);">
-    <div data-dc-tpl="326" style="max-width: var(--column); margin: 0px auto; padding: 12px max(24px, env(safe-area-inset-right, 0px)) 12px max(24px, env(safe-area-inset-left, 0px)); min-height: var(--bar-h); box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: var(--text-small); color: var(--text-3);">
-      <span data-dc-tpl="327" style="display: flex; align-items: center; gap: 12px;">
-        <svg data-dc-tpl="328" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="329" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent);"></path><path data-dc-tpl="330" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="331" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="332" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="333" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
+  <footer data-dc-tpl="326" style="margin-top: var(--space-footer); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);">
+    <div data-dc-tpl="327" style="max-width: var(--column); margin: 0px auto; padding: 12px max(24px, env(safe-area-inset-right, 0px)) 12px max(24px, env(safe-area-inset-left, 0px)); min-height: var(--bar-h); box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: var(--text-small); color: var(--text-3);">
+      <span data-dc-tpl="328" style="display: flex; align-items: center; gap: 12px;">
+        <svg data-dc-tpl="329" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="330" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent);"></path><path data-dc-tpl="331" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="332" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="333" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="334" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
         Elías García, 2026
       </span>
-      <span data-dc-tpl="334" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="335"><time data-dc-tpl="336" datetime="16:43"><span class="sc-interp">16:43</span></time> in Portugal</span><span data-dc-tpl="337" aria-hidden="true">·</span><span data-dc-tpl="338"><span class="sc-interp">1h behind you</span></span></span>
+      <span data-dc-tpl="335" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="336"><time data-dc-tpl="337" datetime="18:21"><span class="sc-interp">18:21</span></time> in Portugal</span><span data-dc-tpl="338" aria-hidden="true">·</span><span data-dc-tpl="339"><span class="sc-interp">1h behind you</span></span></span>
     </div>
   </footer>
 
@@ -836,82 +842,82 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 
   
   
-    <div data-dc-tpl="388" class="pwrap " style="position: fixed; inset: 0px; z-index: var(--z-dialog); display: flex; justify-content: center; align-items: flex-start; padding: 96px 16px 0px;">
-      <button data-dc-tpl="389" class="pscrim" aria-label="Close search"></button>
-      <div data-dc-tpl="390" class="ppanel" role="dialog" aria-label="Search" style="position: relative; width: 100%; max-width: 560px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-overlay); overflow: hidden;">
-        <label data-dc-tpl="391" style="display: flex; align-items: center; gap: 12px; padding: 0px 16px; height: 56px; border-bottom: 1px solid var(--line);">
-          <svg data-dc-tpl="392" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="search" style="fill: none; stroke: var(--text-3); stroke-width: 1.5; flex: 0 0 auto;"><path data-dc-tpl="393" d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="394" d="M21 21l-6 -6" vector-effect="non-scaling-stroke"></path></svg>
-          <span data-dc-tpl="395" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px);">Search posts and projects</span>
+    <div data-dc-tpl="389" class="pwrap " style="position: fixed; inset: 0px; z-index: var(--z-dialog); display: flex; justify-content: center; align-items: flex-start; padding: 96px 16px 0px;">
+      <button data-dc-tpl="390" class="pscrim" aria-label="Close search"></button>
+      <div data-dc-tpl="391" class="ppanel" role="dialog" aria-label="Search" style="position: relative; width: 100%; max-width: 560px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-overlay); overflow: hidden;">
+        <label data-dc-tpl="392" style="display: flex; align-items: center; gap: 12px; padding: 0px 16px; height: 56px; border-bottom: 1px solid var(--line);">
+          <svg data-dc-tpl="393" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="search" style="fill: none; stroke: var(--text-3); stroke-width: 1.5; flex: 0 0 auto;"><path data-dc-tpl="394" d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="395" d="M21 21l-6 -6" vector-effect="non-scaling-stroke"></path></svg>
+          <span data-dc-tpl="396" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px);">Search posts and projects</span>
           
-          <input data-dc-tpl="398" class="pin" type="text" enterkeyhint="go" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Search posts and projects" role="combobox" aria-expanded="true" aria-controls="pal-list" aria-activedescendant="pal-0" autocomplete="off" value="kubernetes">
-          <button data-dc-tpl="400" class="pclear">Clear</button>
-          <span data-dc-tpl="401" class="pk">esc</span>
+          <input data-dc-tpl="399" class="pin" type="text" enterkeyhint="go" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Search posts and projects" role="combobox" aria-expanded="true" aria-controls="pal-list" aria-activedescendant="pal-0" autocomplete="off" value="kubernetes">
+          <button data-dc-tpl="401" class="pclear">Clear</button>
+          <span data-dc-tpl="402" class="pk">esc</span>
         </label>
         
-          <div data-dc-tpl="403" role="status" style="padding: 16px 16px 4px; display: flex; flex-direction: column; gap: 4px;">
-            <span data-dc-tpl="404" style="font-weight: 500;">No posts or projects match “<span class="sc-interp">kubernetes</span>”</span>
-            <span data-dc-tpl="405" style="font-size: var(--text-small); color: var(--text-3);">Try a topic I write about, or suggest this one.</span>
+          <div data-dc-tpl="404" role="status" style="padding: 16px 16px 4px; display: flex; flex-direction: column; gap: 4px;">
+            <span data-dc-tpl="405" style="font-weight: 500;">No posts or projects match “<span class="sc-interp">kubernetes</span>”</span>
+            <span data-dc-tpl="406" style="font-size: var(--text-small); color: var(--text-3);">Try a topic I write about, or suggest this one.</span>
           </div>
         
         
-        <div data-dc-tpl="408" id="pal-list" role="listbox" aria-label="Results" style="max-height: min(440px, 100dvh - 220px); overscroll-behavior: contain; overflow-y: auto; padding: 4px 8px 8px;">
+        <div data-dc-tpl="409" id="pal-list" role="listbox" aria-label="Results" style="max-height: min(440px, 100dvh - 220px); overscroll-behavior: contain; overflow-y: auto; padding: 4px 8px 8px;">
           
-            <div data-dc-tpl="410" role="group" aria-label="Topics">
-              <div data-dc-tpl="411" class="pgrp"><span class="sc-interp">Topics</span></div>
+            <div data-dc-tpl="411" role="group" aria-label="Topics">
+              <div data-dc-tpl="412" class="pgrp"><span class="sc-interp">Topics</span></div>
               
-                <a data-dc-tpl="413" class="popt act" id="pal-0" role="option" aria-selected="true" href="Writing.dc.html">
-                  <span data-dc-tpl="414" class="pic" aria-hidden="true"><svg data-dc-tpl="457" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="hash"><path data-dc-tpl="458" d="M5 9l14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="459" d="M5 15l14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="460" d="M11 4l-4 16" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="461" d="M17 4l-4 16" vector-effect="non-scaling-stroke"></path></svg></span>
-                  <span data-dc-tpl="481" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="482" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--text-label);"><span data-dc-tpl="487"><span class="sc-interp">AI</span></span></span>
+                <a data-dc-tpl="414" class="popt act" id="pal-0" role="option" aria-selected="true" href="Writing.dc.html">
+                  <span data-dc-tpl="415" class="pic" aria-hidden="true"><svg data-dc-tpl="458" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="hash"><path data-dc-tpl="459" d="M5 9l14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="460" d="M5 15l14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="461" d="M11 4l-4 16" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="462" d="M17 4l-4 16" vector-effect="non-scaling-stroke"></path></svg></span>
+                  <span data-dc-tpl="482" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="483" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--text-label);"><span data-dc-tpl="488"><span class="sc-interp">AI</span></span></span>
                     
                   </span>
-                  <span data-dc-tpl="495" style="font-size: var(--text-small); color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">3 posts</span></span>
-                  <span data-dc-tpl="496" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="496" style="font-size: var(--text-small); color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">3 posts</span></span>
+                  <span data-dc-tpl="497" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
-                <a data-dc-tpl="413" class="popt " id="pal-1" role="option" aria-selected="false" href="Writing.dc.html">
-                  <span data-dc-tpl="414" class="pic" aria-hidden="true"><svg data-dc-tpl="457" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="hash"><path data-dc-tpl="458" d="M5 9l14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="459" d="M5 15l14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="460" d="M11 4l-4 16" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="461" d="M17 4l-4 16" vector-effect="non-scaling-stroke"></path></svg></span>
-                  <span data-dc-tpl="481" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="482" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--text-label);"><span data-dc-tpl="487"><span class="sc-interp">DeFi</span></span></span>
+                <a data-dc-tpl="414" class="popt " id="pal-1" role="option" aria-selected="false" href="Writing.dc.html">
+                  <span data-dc-tpl="415" class="pic" aria-hidden="true"><svg data-dc-tpl="458" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="hash"><path data-dc-tpl="459" d="M5 9l14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="460" d="M5 15l14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="461" d="M11 4l-4 16" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="462" d="M17 4l-4 16" vector-effect="non-scaling-stroke"></path></svg></span>
+                  <span data-dc-tpl="482" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="483" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--text-label);"><span data-dc-tpl="488"><span class="sc-interp">DeFi</span></span></span>
                     
                   </span>
-                  <span data-dc-tpl="495" style="font-size: var(--text-small); color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">1 post</span></span>
-                  <span data-dc-tpl="496" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="496" style="font-size: var(--text-small); color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">1 post</span></span>
+                  <span data-dc-tpl="497" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
-                <a data-dc-tpl="413" class="popt " id="pal-2" role="option" aria-selected="false" href="Writing.dc.html">
-                  <span data-dc-tpl="414" class="pic" aria-hidden="true"><svg data-dc-tpl="457" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="hash"><path data-dc-tpl="458" d="M5 9l14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="459" d="M5 15l14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="460" d="M11 4l-4 16" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="461" d="M17 4l-4 16" vector-effect="non-scaling-stroke"></path></svg></span>
-                  <span data-dc-tpl="481" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="482" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--text-label);"><span data-dc-tpl="487"><span class="sc-interp">Design engineering</span></span></span>
+                <a data-dc-tpl="414" class="popt " id="pal-2" role="option" aria-selected="false" href="Writing.dc.html">
+                  <span data-dc-tpl="415" class="pic" aria-hidden="true"><svg data-dc-tpl="458" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="hash"><path data-dc-tpl="459" d="M5 9l14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="460" d="M5 15l14 0" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="461" d="M11 4l-4 16" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="462" d="M17 4l-4 16" vector-effect="non-scaling-stroke"></path></svg></span>
+                  <span data-dc-tpl="482" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="483" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--text-label);"><span data-dc-tpl="488"><span class="sc-interp">Design engineering</span></span></span>
                     
                   </span>
-                  <span data-dc-tpl="495" style="font-size: var(--text-small); color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">1 post</span></span>
-                  <span data-dc-tpl="496" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="496" style="font-size: var(--text-small); color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp">1 post</span></span>
+                  <span data-dc-tpl="497" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
             </div>
           
-            <div data-dc-tpl="410" role="group" aria-label="Suggest">
-              <div data-dc-tpl="411" class="pgrp"><span class="sc-interp">Suggest</span></div>
+            <div data-dc-tpl="411" role="group" aria-label="Suggest">
+              <div data-dc-tpl="412" class="pgrp"><span class="sc-interp">Suggest</span></div>
               
-                <a data-dc-tpl="413" class="popt " id="pal-3" role="option" aria-selected="false" href="mailto:eliasgarciadev@gmail.com?subject=Post%20idea%3A%20kubernetes">
-                  <span data-dc-tpl="414" class="pic" aria-hidden="true"><svg data-dc-tpl="463" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="mail"><path data-dc-tpl="464" d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="465" d="M3 7l9 6l9 -6" vector-effect="non-scaling-stroke"></path></svg></span>
-                  <span data-dc-tpl="481" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
-                    <span data-dc-tpl="482" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--text-label);"><span data-dc-tpl="487"><span class="sc-interp">Suggest “</span></span><mark data-dc-tpl="485" class="phl"><span class="sc-interp">kubernetes</span></mark><span data-dc-tpl="487"><span class="sc-interp">” as a post</span></span></span>
-                    <span data-dc-tpl="489" style="font-size: var(--text-small); color: var(--text-2);"><span data-dc-tpl="494"><span class="sc-interp">Opens your email app</span></span></span>
+                <a data-dc-tpl="414" class="popt " id="pal-3" role="option" aria-selected="false" href="mailto:eliasgarciadev@gmail.com?subject=Post%20idea%3A%20kubernetes">
+                  <span data-dc-tpl="415" class="pic" aria-hidden="true"><svg data-dc-tpl="464" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="mail"><path data-dc-tpl="465" d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="466" d="M3 7l9 6l9 -6" vector-effect="non-scaling-stroke"></path></svg></span>
+                  <span data-dc-tpl="482" style="flex: 1 1 0%; min-width: 0px; display: flex; flex-direction: column; line-height: 1.35;">
+                    <span data-dc-tpl="483" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--text-label);"><span data-dc-tpl="488"><span class="sc-interp">Suggest “</span></span><mark data-dc-tpl="486" class="phl"><span class="sc-interp">kubernetes</span></mark><span data-dc-tpl="488"><span class="sc-interp">” as a post</span></span></span>
+                    <span data-dc-tpl="490" style="font-size: var(--text-small); color: var(--text-2);"><span data-dc-tpl="495"><span class="sc-interp">Opens your email app</span></span></span>
                   </span>
-                  <span data-dc-tpl="495" style="font-size: var(--text-small); color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
-                  <span data-dc-tpl="496" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
+                  <span data-dc-tpl="496" style="font-size: var(--text-small); color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;"><span class="sc-interp"></span></span>
+                  <span data-dc-tpl="497" class="pret" aria-hidden="true"><span class="sc-interp">↵</span></span>
                 </a>
               
             </div>
           
         </div>
-        <div data-dc-tpl="497" style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--surface); font-size: var(--text-micro); color: var(--text-3);">
-          <span data-dc-tpl="498" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="499" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="500" class="pk">↑</span><span data-dc-tpl="501" class="pk">↓</span></span>to move</span>
-          <span data-dc-tpl="502" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="503" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="504" class="pk">↵</span></span>to open</span>
+        <div data-dc-tpl="498" style="display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--surface); font-size: var(--text-micro); color: var(--text-3);">
+          <span data-dc-tpl="499" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="500" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="501" class="pk">↑</span><span data-dc-tpl="502" class="pk">↓</span></span>to move</span>
+          <span data-dc-tpl="503" style="display: inline-flex; align-items: center; gap: 8px;"><span data-dc-tpl="504" style="display: inline-flex; gap: 4px;"><span data-dc-tpl="505" class="pk">↵</span></span>to open</span>
           
-          <span data-dc-tpl="509" style="margin-left: auto; font-variant-numeric: tabular-nums;"><span class="sc-interp">0 results</span></span>
+          <span data-dc-tpl="510" style="margin-left: auto; font-variant-numeric: tabular-nums;"><span class="sc-interp">0 results</span></span>
         </div>
       </div>
     </div>
