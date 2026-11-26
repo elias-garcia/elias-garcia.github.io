@@ -21,7 +21,7 @@ const { tableName } = await getPostCopy();
     border-radius: var(--r-lg);
 
     /* Cells never wrap mid-word on phones: the box scrolls instead. */
-    table {
+    & > table {
       inline-size: max-content;
       min-inline-size: 100%;
       border-collapse: collapse;

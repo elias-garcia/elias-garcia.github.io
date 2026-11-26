@@ -981,7 +981,7 @@ const copy = await getViewerCopy();
     font-size: var(--text-micro);
 
     /* "esc to close" stays on the right when there's nothing to move to. */
-    > :last-child {
+    & > :last-child {
       margin-inline-start: auto;
     }
   }
@@ -1172,7 +1172,7 @@ const copy = await getViewerCopy();
 
       /* In the row, but still positioned: a touch target (global.css) has
          to be laid out around its own button, not the row. */
-      .control {
+      & > .control {
         position: relative;
       }
     }

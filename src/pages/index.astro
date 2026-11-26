@@ -368,12 +368,12 @@ const hasPhotos = [work, projects, talks, courses, education].some((entries) =>
     gap: var(--space-1) var(--space-6);
     padding-block: var(--space-3);
 
-    dt {
+    & > dt {
       flex: 0 0 var(--gutter);
       color: var(--text-3);
     }
 
-    dd {
+    & > dd {
       flex: 1 1 var(--row-basis);
       margin: 0;
       /* A long address breaks instead of running off a narrow screen. */

@@ -77,15 +77,15 @@ const { chevron, icon, ...attributes } = Astro.props;
     }
 
     .quiet:hover {
-      .label::after {
+      & > .label::after {
         opacity: 1;
       }
 
-      .forward {
+      & > .forward {
         translate: var(--nudge) 0;
       }
 
-      .back {
+      & > .back {
         translate: calc(-1 * var(--nudge)) 0;
       }
     }

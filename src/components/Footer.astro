@@ -183,8 +183,8 @@ const clock = copy.clock.split(/(\{time\}|\{country\})/).filter(Boolean);
     font-variant-numeric: tabular-nums;
 
     @media (width < 40rem) {
-      .dot,
-      .offset {
+      & > .dot,
+      & > .offset {
         display: none;
       }
     }

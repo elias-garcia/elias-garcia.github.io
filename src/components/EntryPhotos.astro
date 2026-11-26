@@ -111,7 +111,7 @@ const photos = await Promise.all(
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
 
-      li {
+      & > li {
         flex: 0 0 calc(100% - var(--photo-peek));
         scroll-snap-align: start;
 
@@ -126,7 +126,7 @@ const photos = await Promise.all(
     .open:focus-visible {
       outline: none;
 
-      .photo {
+      & > .photo {
         outline: var(--focus-ring) solid var(--accent);
         outline-offset: calc(-1 * var(--focus-ring));
       }

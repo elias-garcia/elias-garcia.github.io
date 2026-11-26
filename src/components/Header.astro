@@ -191,7 +191,7 @@ const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
       flex-wrap: wrap;
       row-gap: 0;
 
-      li {
+      & > li {
         display: flex;
         align-items: center;
         min-block-size: var(--hit-area);

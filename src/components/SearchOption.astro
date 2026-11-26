@@ -211,11 +211,11 @@ const Row = href === undefined ? "div" : "a";
     /* A row with no summary (a topic and its post count): the count goes
        under the title the same way, and the icon is centred on both. */
     .option:has(.line:empty) {
-      .tile {
+      & > .tile {
         grid-row: 1 / span 2;
       }
 
-      .meta {
+      & > .meta {
         align-self: start;
         line-height: var(--leading-tight);
       }
