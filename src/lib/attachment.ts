@@ -1,17 +1,13 @@
-// Every list row attachment image fills one slot of a row of three in the
-// text column: link attachment images, and talk photos wherever the date column fits.
-export const attachmentImage = {
-  widths: [110, 165, 220, 330],
-  sizes: "(width < 40rem) calc((100vw - 4rem) / 3), 165px",
-} as const;
-
-// Talk photos fill the text column on rows too narrow for the date column:
-// windows under 484px (the row's 436px wrap plus the page's 24px sides), so up
-// to 435px wide, which 880 covers at 2×. Elsewhere they fill a slot, 163px in
-// the full column.
+// An entry's photos and its link card's image fill a slot of a row of three
+// in the text column, 163px in the full column. On rows too narrow for the
+// date column, windows under 484px (the row's 436px wrap plus the page's 24px
+// sides), they fill the text column: up to 435px wide, which 880 covers at
+// 2×. Up to 40rem an open job's body spans the row, so a slot is a third of
+// it.
 export const photoImage = {
-  widths: [...attachmentImage.widths, 480, 720, 880],
-  sizes: "(width < 484px) calc(100vw - 3rem), 163px",
+  widths: [110, 165, 220, 330, 480, 720, 880],
+  sizes:
+    "(width < 484px) calc(100vw - 3rem), (width < 40rem) calc((100vw - 4rem) / 3), 163px",
 } as const;
 
 // A talk photo in the image viewer: the card, at most 840px, or the full
