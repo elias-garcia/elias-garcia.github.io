@@ -28,7 +28,7 @@ button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user
 :root{color-scheme:light dark;--code-literal:#372AAC;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-full:999px;--dur-quick:150ms;--dur-move:250ms;--dur-arrive:400ms;--dim-press:.6;--dim-rest:.45;--glass:color-mix(in oklab, var(--bg) 80%, transparent);--ease:ease-out;--ease-settle:cubic-bezier(.22,1,.36,1);--shadow-overlay:0 1px 2px rgb(9 9 11 / .04),0 16px 48px -12px rgb(9 9 11 / .24);--z-header:10;--z-menu:30;--z-dialog:50;--z-skip:100;--bg:#FFFFFF;--surface:#FAFAFA;--control:#F4F4F5;--control-hover:#E4E4E7;--line:#E4E4E7;--line-strong:#D4D4D8;--text:#18181B;--text-2:#52525C;--text-3:#71717B;--accent:#4F39F6;--tint:#EEF2FF;--tint-strong:#E0E7FF;--accent-line:#A3B3FF;--scrim:rgba(9,9,11,.18)}
 
 body{margin:0;background:var(--bg)}
-a{color:var(--text);text-decoration:none}
+a{color:var(--text);text-decoration:none;transition:color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){a:hover{color:var(--accent)}}
 .site{font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);font-size:var(--text-label);line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .site *{box-sizing:border-box}
@@ -62,11 +62,11 @@ a{color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){.button:hover{background:var(--control-hover);color:var(--text)}}
 .button:active{transform:scale(.97)}
 /* copy buttons: both labels share one grid cell, so the button keeps the width of the longer one; they swap with a short blur crossfade */
-.sw{display:inline-grid;justify-items:center}
-.sw > span{grid-area:1 / 1;transition:opacity var(--dur-move) var(--ease-settle),filter var(--dur-move) var(--ease-settle),transform var(--dur-move) var(--ease-settle)}
-.sw-b,.done .sw-a{opacity:0;filter:blur(2px);transform:scale(.96)}
-.done .sw-b{opacity:1;filter:none;transform:none}
-@media (prefers-reduced-motion:reduce){.sw > span{filter:none !important;transform:none !important}}
+.sw{display:inline-grid;place-items:center;flex:none}
+.sw > *{grid-area:1 / 1;transition:opacity var(--dur-move) var(--ease-settle),filter var(--dur-move) var(--ease-settle),transform var(--dur-move) var(--ease-settle)}
+.sw-b,.sw-c,.done .sw-a,.failed .sw-a{opacity:0;filter:blur(2px);transform:scale(.96)}
+.done .sw-b,.failed .sw-c{opacity:1;filter:none;transform:none}
+@media (prefers-reduced-motion:reduce){.sw > *{filter:none !important;transform:none !important}}
 .button svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 
 
@@ -232,13 +232,10 @@ a{color:var(--text);text-decoration:none}
 .txt{flex:1 1 300px;min-width:0;display:flex;flex-direction:column}
 .ttl{font-weight:500;color:var(--text)}
 .ttl::after{content:"";position:absolute;inset:0}
-.ttl span{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:transparent;transition:text-decoration-color var(--dur-quick) var(--ease)}
-@media (hover:hover) and (pointer:fine){.row:hover .ttl span{text-decoration-color:currentColor}}
 
 
 @media (prefers-reduced-motion:reduce){
 
-.ttl span{transition:none}
 }
 
 .kbd{display:inline-flex;align-items:center;gap:8px;height:var(--control-h);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--bg);color:var(--text-2);font:inherit;font-size:var(--text-small);cursor:pointer;transition:border-color var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
@@ -554,8 +551,8 @@ a{color:var(--text);text-decoration:none}
 
 .body p{margin:0;font-size:var(--text-body);line-height:1.6;color:var(--text-2);text-wrap:pretty}
 /* links inside prose: indigo text with a soft underline that is always there, so they read as links without hover or colour */
-.body p a{color:var(--accent);text-decoration:underline;text-decoration-color:var(--accent-line);text-decoration-thickness:1px;text-underline-offset:3px;transition:text-decoration-color var(--dur-quick) var(--ease),text-decoration-thickness var(--dur-quick) var(--ease)}
-.body p a:focus-visible{color:var(--accent);text-decoration-color:var(--accent);text-decoration-thickness:2px}@media (hover:hover) and (pointer:fine){.body p a:hover{color:var(--accent);text-decoration-color:var(--accent);text-decoration-thickness:2px}}
+.body p a{color:var(--accent);text-decoration:underline;text-decoration-color:var(--accent-line);text-decoration-thickness:1px;text-underline-offset:3px;transition:text-decoration-color var(--dur-quick) var(--ease)}
+.body p a:focus-visible{color:var(--accent);text-decoration-color:var(--accent)}@media (hover:hover) and (pointer:fine){.body p a:hover{color:var(--accent);text-decoration-color:var(--accent)}}
 .h{position:relative;margin:0;font-size:var(--text-title);font-weight:600;letter-spacing:-0.01em;line-height:1.35}
 .h .anchor{position:absolute;left:-24px;top:0;width:20px;color:var(--text-3);font-weight:500;opacity:0;transition:opacity var(--dur-quick) var(--ease)}
 .h .anchor:focus-visible{opacity:1}@media (hover:hover) and (pointer:fine){.h:hover .anchor{opacity:1}}
@@ -654,7 +651,7 @@ html{scroll-padding-top:80px}
 }
 
 /* topic in the post header: metadata that links to the Writing list, filtered */
-.topiclink{color:var(--text-3);text-decoration:underline;text-decoration-color:transparent;text-underline-offset:3px;transition:color var(--dur-quick) var(--ease),text-decoration-color var(--dur-quick) var(--ease)}
+.topiclink{color:var(--text-3);text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:1px;text-underline-offset:3px;transition:color var(--dur-quick) var(--ease),text-decoration-color var(--dur-quick) var(--ease)}
 .topiclink:focus-visible{color:var(--text);text-decoration-color:currentColor}@media (hover:hover) and (pointer:fine){.topiclink:hover{color:var(--text);text-decoration-color:currentColor}}
 
 /* post meta: each dot stays with the item after it, so a line never ends on a dot; phones use the short date */
@@ -886,8 +883,8 @@ a:focus-visible .ext{stroke:currentColor}@media (hover:hover) and (pointer:fine)
 .ehead:has(> :nth-child(2)) + .desc{margin-top:8px}
 .ehead{display:flex;flex-direction:column}
 .et{font-weight:500;color:var(--text)}
-.etl{text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:1px;text-underline-offset:3px;transition:text-decoration-color var(--dur-quick) var(--ease)}
-@media (hover:hover) and (pointer:fine){.etl:hover{text-decoration-color:var(--line-strong)}.etl:hover .ext{stroke:currentColor}}
+.etl{transition:color var(--dur-quick) var(--ease)}
+@media (hover:hover) and (pointer:fine){.etl:hover .ext{stroke:currentColor}}
 .etl:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--r-sm)}
 /* description: body text in --text-2 at 1.6, 8 below the grey line; paragraphs and lists 8 apart; links inside are prose links */
 .desc{display:flex;flex-direction:column;gap:8px;color:var(--text-2);line-height:1.6;overflow-wrap:anywhere}
@@ -1137,19 +1134,19 @@ a:focus-visible .ext{stroke:currentColor}@media (hover:hover) and (pointer:fine)
       <span data-dc-tpl="477" class="mdx">MDX: <code data-dc-tpl="478">pre / code</code></span>
     </div>
     <div data-dc-tpl="479" class="demo"><div data-dc-tpl="480" class="body">      <div data-dc-tpl="481" class="codeblock">
-        <div data-dc-tpl="482" class="code-h"><span data-dc-tpl="483" class="lang">CSS</span><button data-dc-tpl="484" class="button" type="button" style="background: var(--bg);"><span data-dc-tpl="485" class="sw"><span data-dc-tpl="486" class="sw-a">Copy</span><span data-dc-tpl="487" class="sw-b" aria-hidden="true">Copied</span></span></button></div>
-        <pre data-dc-tpl="488" tabindex="0" role="region" aria-label="CSS for the page entrance"><code data-dc-tpl="489"><span data-dc-tpl="490" class="line"><span data-dc-tpl="491" class="tk-c">/* the page arrives as one piece */</span></span><span data-dc-tpl="492" class="line"><span data-dc-tpl="493" class="tk-k">@keyframes</span> <span data-dc-tpl="494" class="tk-n">page-in</span> <span data-dc-tpl="495" class="tk-p">{</span></span><span data-dc-tpl="496" class="line">  <span data-dc-tpl="497" class="tk-n">from</span> <span data-dc-tpl="498" class="tk-p">{</span> <span data-dc-tpl="499" class="tk-n">opacity</span><span data-dc-tpl="500" class="tk-p">:</span> <span data-dc-tpl="501" class="tk-s">0</span><span data-dc-tpl="502" class="tk-p">;</span> <span data-dc-tpl="503" class="tk-n">transform</span><span data-dc-tpl="504" class="tk-p">:</span> translateY<span data-dc-tpl="505" class="tk-p">(</span><span data-dc-tpl="506" class="tk-s">6px</span><span data-dc-tpl="507" class="tk-p">)</span><span data-dc-tpl="508" class="tk-p">;</span> <span data-dc-tpl="509" class="tk-p">}</span></span><span data-dc-tpl="510" class="line"><span data-dc-tpl="511" class="tk-p">}</span></span><span data-dc-tpl="512" class="line"><span data-dc-tpl="513" class="tk-k">@keyframes</span> <span data-dc-tpl="514" class="tk-n">page-fade</span> <span data-dc-tpl="515" class="tk-p">{</span></span><span data-dc-tpl="516" class="line">  <span data-dc-tpl="517" class="tk-n">from</span> <span data-dc-tpl="518" class="tk-p">{</span> <span data-dc-tpl="519" class="tk-n">opacity</span><span data-dc-tpl="520" class="tk-p">:</span> <span data-dc-tpl="521" class="tk-s">0</span><span data-dc-tpl="522" class="tk-p">;</span> <span data-dc-tpl="523" class="tk-p">}</span></span><span data-dc-tpl="524" class="line"><span data-dc-tpl="525" class="tk-p">}</span></span><span data-dc-tpl="526" class="line"><span data-dc-tpl="527" class="tk-n">main</span> <span data-dc-tpl="528" class="tk-p">{</span></span><span data-dc-tpl="529" class="line">  <span data-dc-tpl="530" class="tk-n">animation</span><span data-dc-tpl="531" class="tk-p">:</span> page-in <span data-dc-tpl="532" class="tk-s">250ms</span> cubic-bezier<span data-dc-tpl="533" class="tk-p">(</span><span data-dc-tpl="534" class="tk-s">.22</span><span data-dc-tpl="535" class="tk-p">,</span> <span data-dc-tpl="536" class="tk-s">1</span><span data-dc-tpl="537" class="tk-p">,</span> <span data-dc-tpl="538" class="tk-s">.36</span><span data-dc-tpl="539" class="tk-p">,</span> <span data-dc-tpl="540" class="tk-s">1</span><span data-dc-tpl="541" class="tk-p">)</span> backwards<span data-dc-tpl="542" class="tk-p">;</span></span><span data-dc-tpl="543" class="line"><span data-dc-tpl="544" class="tk-p">}</span></span><span data-dc-tpl="545" class="line"><span data-dc-tpl="546" class="tk-k">@view-transition</span> <span data-dc-tpl="547" class="tk-p">{</span> <span data-dc-tpl="548" class="tk-n">navigation</span><span data-dc-tpl="549" class="tk-p">:</span> auto<span data-dc-tpl="550" class="tk-p">;</span> <span data-dc-tpl="551" class="tk-p">}</span></span><span data-dc-tpl="552" class="line"><span data-dc-tpl="553" class="tk-c">/* reduced motion: still a fade, just no movement */</span></span><span data-dc-tpl="554" class="line"><span data-dc-tpl="555" class="tk-k">@media</span> <span data-dc-tpl="556" class="tk-p">(</span><span data-dc-tpl="557" class="tk-n">prefers-reduced-motion</span><span data-dc-tpl="558" class="tk-p">:</span> reduce<span data-dc-tpl="559" class="tk-p">)</span> <span data-dc-tpl="560" class="tk-p">{</span></span><span data-dc-tpl="561" class="line">  <span data-dc-tpl="562" class="tk-n">main</span> <span data-dc-tpl="563" class="tk-p">{</span> <span data-dc-tpl="564" class="tk-n">animation</span><span data-dc-tpl="565" class="tk-p">:</span> page-fade <span data-dc-tpl="566" class="tk-s">150ms</span> ease-out backwards<span data-dc-tpl="567" class="tk-p">;</span> <span data-dc-tpl="568" class="tk-p">}</span></span><span data-dc-tpl="569" class="line"><span data-dc-tpl="570" class="tk-p">}</span></span></code></pre>
+        <div data-dc-tpl="482" class="code-h"><span data-dc-tpl="483" class="lang">CSS</span><button data-dc-tpl="484" class="button" type="button" style="background: var(--bg);"><span data-dc-tpl="485" class="sw" aria-hidden="true"><svg data-dc-tpl="486" class="sw-a" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="copy"><path data-dc-tpl="487" d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="488" d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" vector-effect="non-scaling-stroke"></path></svg><svg data-dc-tpl="489" class="sw-b" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="check"><path data-dc-tpl="490" d="M5 12l5 5l10 -10" vector-effect="non-scaling-stroke"></path></svg><svg data-dc-tpl="491" class="sw-c" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="x"><path data-dc-tpl="492" d="M18 6l-12 12" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="493" d="M6 6l12 12" vector-effect="non-scaling-stroke"></path></svg></span>Copy</button></div>
+        <pre data-dc-tpl="494" tabindex="0" role="region" aria-label="CSS for the page entrance"><code data-dc-tpl="495"><span data-dc-tpl="496" class="line"><span data-dc-tpl="497" class="tk-c">/* the page arrives as one piece */</span></span><span data-dc-tpl="498" class="line"><span data-dc-tpl="499" class="tk-k">@keyframes</span> <span data-dc-tpl="500" class="tk-n">page-in</span> <span data-dc-tpl="501" class="tk-p">{</span></span><span data-dc-tpl="502" class="line">  <span data-dc-tpl="503" class="tk-n">from</span> <span data-dc-tpl="504" class="tk-p">{</span> <span data-dc-tpl="505" class="tk-n">opacity</span><span data-dc-tpl="506" class="tk-p">:</span> <span data-dc-tpl="507" class="tk-s">0</span><span data-dc-tpl="508" class="tk-p">;</span> <span data-dc-tpl="509" class="tk-n">transform</span><span data-dc-tpl="510" class="tk-p">:</span> translateY<span data-dc-tpl="511" class="tk-p">(</span><span data-dc-tpl="512" class="tk-s">6px</span><span data-dc-tpl="513" class="tk-p">)</span><span data-dc-tpl="514" class="tk-p">;</span> <span data-dc-tpl="515" class="tk-p">}</span></span><span data-dc-tpl="516" class="line"><span data-dc-tpl="517" class="tk-p">}</span></span><span data-dc-tpl="518" class="line"><span data-dc-tpl="519" class="tk-k">@keyframes</span> <span data-dc-tpl="520" class="tk-n">page-fade</span> <span data-dc-tpl="521" class="tk-p">{</span></span><span data-dc-tpl="522" class="line">  <span data-dc-tpl="523" class="tk-n">from</span> <span data-dc-tpl="524" class="tk-p">{</span> <span data-dc-tpl="525" class="tk-n">opacity</span><span data-dc-tpl="526" class="tk-p">:</span> <span data-dc-tpl="527" class="tk-s">0</span><span data-dc-tpl="528" class="tk-p">;</span> <span data-dc-tpl="529" class="tk-p">}</span></span><span data-dc-tpl="530" class="line"><span data-dc-tpl="531" class="tk-p">}</span></span><span data-dc-tpl="532" class="line"><span data-dc-tpl="533" class="tk-n">main</span> <span data-dc-tpl="534" class="tk-p">{</span></span><span data-dc-tpl="535" class="line">  <span data-dc-tpl="536" class="tk-n">animation</span><span data-dc-tpl="537" class="tk-p">:</span> page-in <span data-dc-tpl="538" class="tk-s">250ms</span> cubic-bezier<span data-dc-tpl="539" class="tk-p">(</span><span data-dc-tpl="540" class="tk-s">.22</span><span data-dc-tpl="541" class="tk-p">,</span> <span data-dc-tpl="542" class="tk-s">1</span><span data-dc-tpl="543" class="tk-p">,</span> <span data-dc-tpl="544" class="tk-s">.36</span><span data-dc-tpl="545" class="tk-p">,</span> <span data-dc-tpl="546" class="tk-s">1</span><span data-dc-tpl="547" class="tk-p">)</span> backwards<span data-dc-tpl="548" class="tk-p">;</span></span><span data-dc-tpl="549" class="line"><span data-dc-tpl="550" class="tk-p">}</span></span><span data-dc-tpl="551" class="line"><span data-dc-tpl="552" class="tk-k">@view-transition</span> <span data-dc-tpl="553" class="tk-p">{</span> <span data-dc-tpl="554" class="tk-n">navigation</span><span data-dc-tpl="555" class="tk-p">:</span> auto<span data-dc-tpl="556" class="tk-p">;</span> <span data-dc-tpl="557" class="tk-p">}</span></span><span data-dc-tpl="558" class="line"><span data-dc-tpl="559" class="tk-c">/* reduced motion: still a fade, just no movement */</span></span><span data-dc-tpl="560" class="line"><span data-dc-tpl="561" class="tk-k">@media</span> <span data-dc-tpl="562" class="tk-p">(</span><span data-dc-tpl="563" class="tk-n">prefers-reduced-motion</span><span data-dc-tpl="564" class="tk-p">:</span> reduce<span data-dc-tpl="565" class="tk-p">)</span> <span data-dc-tpl="566" class="tk-p">{</span></span><span data-dc-tpl="567" class="line">  <span data-dc-tpl="568" class="tk-n">main</span> <span data-dc-tpl="569" class="tk-p">{</span> <span data-dc-tpl="570" class="tk-n">animation</span><span data-dc-tpl="571" class="tk-p">:</span> page-fade <span data-dc-tpl="572" class="tk-s">150ms</span> ease-out backwards<span data-dc-tpl="573" class="tk-p">;</span> <span data-dc-tpl="574" class="tk-p">}</span></span><span data-dc-tpl="575" class="line"><span data-dc-tpl="576" class="tk-p">}</span></span></code></pre>
       </div></div>
     </div>
   </section>
-  <section data-dc-tpl="571" class="spec" aria-labelledby="c-figure">
-    <div data-dc-tpl="572" class="spec-h">
-      <h3 data-dc-tpl="573" id="c-figure">Figure</h3>
-      <p data-dc-tpl="574" class="spec-u">Image or illustration with a short caption below in grey.</p>
-      <p data-dc-tpl="575" class="spec-w">Used on: Home (Speaking), case studies</p>
-      <span data-dc-tpl="576" class="mdx">MDX: <code data-dc-tpl="577">img / Figure</code></span>
+  <section data-dc-tpl="577" class="spec" aria-labelledby="c-figure">
+    <div data-dc-tpl="578" class="spec-h">
+      <h3 data-dc-tpl="579" id="c-figure">Figure</h3>
+      <p data-dc-tpl="580" class="spec-u">Image or illustration with a short caption below in grey.</p>
+      <p data-dc-tpl="581" class="spec-w">Used on: Home (Speaking), case studies</p>
+      <span data-dc-tpl="582" class="mdx">MDX: <code data-dc-tpl="583">img / Figure</code></span>
     </div>
-    <div data-dc-tpl="578" class="demo"><figure data-dc-tpl="579" style="margin: 0px; display: flex; flex-direction: column; gap: 8px; max-width: 420px;"><div data-dc-tpl="580" style="aspect-ratio: 16 / 9; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--surface);"></div><figcaption data-dc-tpl="581" style="font-size: var(--text-small); color: var(--text-3);">Explaining identity systems at the Polygon DevX Global Tour, 2023.</figcaption></figure>
+    <div data-dc-tpl="584" class="demo"><figure data-dc-tpl="585" style="margin: 0px; display: flex; flex-direction: column; gap: 8px; max-width: 420px;"><div data-dc-tpl="586" style="aspect-ratio: 16 / 9; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--surface);"></div><figcaption data-dc-tpl="587" style="font-size: var(--text-small); color: var(--text-3);">Explaining identity systems at the Polygon DevX Global Tour, 2023.</figcaption></figure>
     </div>
   </section>
     </div>
