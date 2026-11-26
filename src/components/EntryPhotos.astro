@@ -36,39 +36,48 @@ const photos = await Promise.all(
 );
 ---
 
-<ul
-  class="photos"
-  role="list"
-  data-viewer-entry={title}
-  data-viewer-subtitle={subtitle}
-  data-viewer-date={date}
->
-  {photos.map(({ src, alt, large, label }) => (
-    <li>
-      <button
-        class="open"
-        type="button"
-        aria-label={label}
-        data-viewer-open
-        data-viewer-src={large.src}
-        data-viewer-srcset={large.srcSet.attribute}
-      >
-        <Image
-          class="photo"
-          src={src}
-          alt={alt}
-          widths={[...photoImage.widths]}
-          sizes={photoImage.sizes}
-          loading="lazy"
-        />
-      </button>
-    </li>
-  ))}
-</ul>
+<div class="strip">
+  <ul
+    class="photos"
+    role="list"
+    data-viewer-entry={title}
+    data-viewer-subtitle={subtitle}
+    data-viewer-date={date}
+  >
+    {photos.map(({ src, alt, large, label }) => (
+      <li>
+        <button
+          class="open"
+          type="button"
+          aria-label={label}
+          data-viewer-open
+          data-viewer-src={large.src}
+          data-viewer-srcset={large.srcSet.attribute}
+        >
+          <Image
+            class="photo"
+            src={src}
+            alt={alt}
+            widths={[...photoImage.widths]}
+            sizes={photoImage.sizes}
+            loading="lazy"
+          />
+        </button>
+      </li>
+    ))}
+  </ul>
+  {/* On narrow rows, where the photos scroll one at a time: how far along
+  the strip is. Decoration; each photo's name says which of how many it is. */}
+  {count > 1 && (
+    <div class="scroll-line" style={`--photos: ${count}`} aria-hidden="true">
+      <span class="marker"></span>
+    </div>
+  )}
+</div>
 
 <script>
-  // Tabbing to a photo that only peeks into the strip leaves it there, so
-  // slide the strip to the focused photo. Only for keyboard focus: a mouse
+  // Tabbing to a photo outside the strip's view leaves it there, so slide
+  // the strip to the focused photo. Only for keyboard focus: a mouse
   // press focuses the photo before the click lands, and sliding then would
   // move it out from under the pointer. Only the strip: scrolling the page
   // too would jump it whenever a photo sits under the sticky header.
@@ -92,17 +101,19 @@ const photos = await Promise.all(
   /* Always three slots, so one or two photos keep the same size. */
   .photos {
     --photo-hover: 0.88;
-    /* Room left for the next photo in the strip: the 8px gap plus a 32px peek. */
-    --photo-peek: 40px;
 
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-2);
   }
 
+  .scroll-line {
+    display: none;
+  }
+
   /* Rows too narrow for the date column (an entry wraps at 436px: the date
-     column, its gap and the text's basis) show the photos full width. Several
-     scroll sideways, the next one peeking in. */
+     column, its gap and the text's basis) show the photos full width, every
+     one as wide as a single photo. Several scroll sideways, one at a time. */
   @container entry (width < 436px) {
     .photos {
       display: flex;
@@ -112,12 +123,46 @@ const photos = await Promise.all(
       scrollbar-width: none;
 
       & > li {
-        flex: 0 0 calc(100% - var(--photo-peek));
+        flex: 0 0 100%;
         scroll-snap-align: start;
+      }
+    }
 
-        &:only-child {
-          flex-basis: 100%;
-        }
+    /* A line under the strip, with a marker one photo's share of it that the
+       strip's scrolling moves from end to end. Only where the browser can tie
+       it to the scrolling: a marker that doesn't move would mislead. It stays
+       with reduced motion: like a scrollbar, it only follows the finger. */
+    @supports (animation-timeline: scroll()) {
+      .strip {
+        timeline-scope: --photo-strip;
+      }
+
+      .photos {
+        scroll-timeline: --photo-strip x;
+      }
+
+      .scroll-line {
+        display: block;
+        block-size: var(--rule-strong);
+        margin-block-start: var(--space-3);
+        overflow: hidden;
+        border-radius: calc(var(--rule-strong) / 2);
+        background: var(--line);
+      }
+
+      .marker {
+        display: block;
+        inline-size: calc(100% / var(--photos));
+        block-size: 100%;
+        border-radius: inherit;
+        background: var(--text-3);
+        /* Longhands: the build's CSS minifier folds animation-timeline into
+           the animation shorthand, which browsers then reject. */
+        animation-name: scroll-line;
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: --photo-strip;
       }
     }
 
@@ -161,6 +206,18 @@ const photos = await Promise.all(
       .open:hover & {
         opacity: var(--photo-hover);
       }
+    }
+  }
+
+  @keyframes scroll-line {
+    to {
+      translate: calc((var(--photos) - 1) * 100%) 0;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .marker {
+      background: CanvasText;
     }
   }
 </style>
