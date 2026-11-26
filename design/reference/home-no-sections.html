@@ -13,7 +13,7 @@ a,button,summary,label,[role="button"]{touch-action:manipulation}
 button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user-select:none}
 .phbtn img{-webkit-touch-callout:none}
 /* touch: text links and rows dim while pressed (instantly), then fade back */
-@media (hover:none),(pointer:coarse){a:active:not(.button,.tile,.card,.cl,.pn,.lpc,.topic,.item a){opacity:var(--dim-press)}.list .item:has(a:active){opacity:var(--dim-press);transition:none}}
+@media (hover:none),(pointer:coarse){a:active:not(.button,.pn,.lpc,.topic,.item a){opacity:var(--dim-press)}.list .item:has(a:active){opacity:var(--dim-press);transition:none}}
 
 :root{--text-display:2rem;--text-title:1.5rem;--text-subtitle:1.25rem;--text-body:1rem;--text-label:1rem;--text-small:.875rem;--text-micro:.75rem;--text-code:.875rem;--column:688px;--gutter:112px;--control-h:32px;--icon-md:16px;--icon-sm:12px;--bar-h:64px}
 :root{--space-page:64px;--space-section:80px;--space-footer:96px}
@@ -77,7 +77,6 @@ a{color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){.jobhead:hover .chev{stroke:var(--text)}}
 .job.open .chev{transform:rotate(45deg);transition:transform var(--dur-move) var(--ease-settle),stroke var(--dur-quick) var(--ease)}
 
-/* project tiles: previews run only while hovered */
 /* "see more" links: same hover as the header nav, plus a small arrow that nudges */
 .more{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-small);color:var(--text-2);transition:color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){.more:hover{color:var(--text)}}
@@ -86,42 +85,11 @@ a{color:var(--text);text-decoration:none}
 @media (hover:hover) and (pointer:fine){.more:hover span::after{opacity:1}}
 .more svg{width:var(--icon-sm);height:var(--icon-sm);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--dur-quick) var(--ease-settle)}
 @media (hover:hover) and (pointer:fine){.more:hover svg{transform:translateX(2px)}}
-/* tiles share rows (preview, title, description): a long title never pushes its neighbours out of line */
-.tiles .tile{display:grid;grid-template-rows:subgrid;grid-row:span 3;align-content:start}
-@media (max-width: 639.98px){.tiles .tile{--tile-gap:32px;padding-bottom:calc(var(--tile-gap) - 4px)} /* 32 between stacked tiles: the grid's 4px row gap is the title-to-status gap */.tiles > li:last-child .tile{padding-bottom:0}}
-.tile .pv{margin-bottom:12px}
-.tile .tt{font-weight:500;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tile .td{font-size:var(--text-label);color:var(--text-2);line-height:1.5;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
-.tile .pv{transition:transform var(--dur-quick) var(--ease-settle),border-color var(--dur-quick) var(--ease)}
-@media (hover:hover) and (pointer:fine){.tile:hover .pv{border-color:var(--line-strong)}}
-.tile:active .pv{transform:scale(.99)}
-.anim{animation-play-state:paused !important}
-.tile:has(.cl:focus-visible) .anim{animation-play-state:running !important}@media (hover:hover) and (pointer:fine){.tile:hover .anim{animation-play-state:running !important}}
-.ill{width:100%;height:100%;display:block}
-.ring{fill:none;stroke:var(--line);stroke-width:1}
-.wedge{fill:var(--accent);opacity:.14}
-.sweep{transform-origin:100px 75px;transform-box:view-box;animation:spin 3s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.hit{fill:var(--accent)}
-.miss{fill:var(--line-strong)}
-.node{fill:var(--bg);stroke:var(--line-strong);stroke-width:1}
-.node.done{fill:var(--accent);stroke:var(--accent)}
-.lbl{font-size:10px;font-weight:500;text-anchor:middle;fill:var(--text-2);font-family:inherit}
-.lbl.light{fill:var(--bg)}
-.link{stroke:var(--line-strong);stroke-width:1}
-.track{stroke:var(--line);stroke-width:1;stroke-dasharray:2 4}
-.runner{fill:var(--accent);transform-box:fill-box;animation:travel 2.4s cubic-bezier(.65,0,.35,1) infinite}
-@keyframes travel{0%{transform:translateX(0)}42%,58%{transform:translateX(68px)}100%{transform:translateX(136px)}}
-.lineA{fill:none;stroke:var(--accent);stroke-width:1.5}
-.lineB{fill:none;stroke:var(--text-3);stroke-width:1.5}
-.scan{stroke:var(--text);stroke-opacity:.3;stroke-width:1;stroke-dasharray:3 3;animation:scan 2.8s ease-in-out infinite alternate}
-@keyframes scan{from{transform:translateX(0)}to{transform:translateX(150px)}}
-.tag{font-size:10px;font-family:inherit;fill:var(--text-3)}
 
 
 @media (prefers-reduced-motion:reduce){
-.dot::after,.anim{animation:none !important}
-.jobbody,.chev,.tile .pv{transition:opacity var(--dur-quick) var(--ease)}
+.dot::after{animation:none !important}
+.jobbody,.chev{transition:opacity var(--dur-quick) var(--ease)}
 }
 
 /* search menu */
@@ -167,7 +135,6 @@ main > header > :first-child{--i:0}main > header > :nth-child(2){--i:1}main > se
 ::view-transition-old(root){animation:vtOut var(--dur-quick) var(--ease-settle) both}
 ::view-transition-new(root){animation:none}
 @keyframes vtOut{to{opacity:0}}
-::view-transition-group(project-roleburn){animation-duration:var(--dur-move);animation-timing-function:var(--ease-settle)}::view-transition-old(project-roleburn),::view-transition-new(project-roleburn){height:100%;object-fit:cover}
 @media (prefers-reduced-motion:reduce){main,.site > footer{animation:pageFade var(--dur-quick) var(--ease) backwards !important}html.arrive :is(main > header > *,main > section){animation:none !important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
 
 
@@ -176,7 +143,7 @@ main > header > :first-child{--i:0}main > header > :nth-child(2){--i:1}main > se
 .site > main{flex:1 0 auto;width:100%}
 .site > footer{width:100%;flex-shrink:0}
 @media (prefers-color-scheme: dark){
-:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#D4D4D8;--text-3:#9F9FA9;--accent:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
+:root{--bg:#09090B;--surface:#18181B;--control:#27272A;--control-hover:#3F3F46;--line:#27272A;--line-strong:#3F3F46;--text:#F4F4F5;--text-2:#9F9FA9;--text-3:#85858F;--accent:#7C86FF;--tint:#1E1A4D;--tint-strong:#312C85;--accent-line:#432DD7;--scrim:rgba(0,0,0,.55)}
 img:not([src$=".svg"]){filter:brightness(.92)}
 }
 
@@ -221,9 +188,7 @@ html{scroll-padding-top:80px}
 
 
 /* semantic lists keep the existing look: no bullets, no indent. role="list" keeps list semantics in Safari */
-ul.list,ul.tiles{list-style:none;margin:0;padding:0}
-ul.tiles > li{display:grid;grid-template-rows:subgrid;grid-row:span 3}
-.tile .tt{margin:0;font-size:inherit}
+ul.list{list-style:none;margin:0;padding:0}
 .contact dl,.contact dd{margin:0}
 address{font-style:normal}
 
@@ -262,13 +227,8 @@ html:has(.pscrim){overflow:hidden;overscroll-behavior:none}
 /* jumping to a #link scrolls smoothly (heading anchors, footnotes, back links, skip link); instant with reduced motion */
 @media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
 
-/* project tiles: one per row with wide 16:7 previews below Tailwind sm (640px), three in a row from sm. No two-column stage, so no orphan tile */
-ul.tiles{grid-template-columns:minmax(0,1fr)}
-@media (min-width: 640px){ul.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width: 639.98px){.tile .pv{aspect-ratio:16 / 7 !important}}
 
-/* below Tailwind sm (640px): one tile per row, so previews use the wide 16:7 shape (illustrations stay at their desktop size on phones),
-   and the intro photo always sits above the name at 80px; from sm it sits beside it at 104px */
+/* below Tailwind sm (640px): the intro photo always sits above the name at 80px; from sm it sits beside it at 104px */
 @media (max-width: 639.98px){
 div:has(> .avbox){flex-direction:column !important;align-items:flex-start !important;gap:16px !important}
 }
@@ -277,22 +237,12 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
 /* work rows: below Tailwind sm the open row drops its empty date column, so the bullets start under the company name like the header does */
 @media (max-width: 639.98px){.jobgut{display:none}}
 
-/* project type line: a 14px line under the title ("Tool · 2026", "Experiment · 2026"), never a pill on the preview.
-   Text carries the meaning; a small static indigo dot marks projects that are in progress (no pulse: pulsing is kept for "Open to remote roles") */
-.thead{display:flex;flex-direction:column;gap:4px;min-width:0}
 /* metadata line: inline text that wraps like any sentence. A break comes before a separator, never after it (the dot is tied to the next item with a no-break space) */
 .msep{margin:0 4px}.nb{white-space:nowrap}
-.sm{margin:0;font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
 
-/* tiles: 8px between the status line and the description, as on Projects (the tile grid rows are only 4px apart) */
-.tile .thead{padding-bottom:4px}
 
-/* Teaching: course rows. Rating: one neutral star, score and review count; the spoken version is in .vh */
+/* text for screen readers only */
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.cmeta{margin:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
-.crate,.crate-v{display:inline-flex;align-items:center;gap:4px}
-.crate svg{width:var(--icon-sm);height:var(--icon-sm);color:var(--text);fill:currentColor;flex:none}
-.crate b{font-weight:500;color:var(--text)}
 @media (max-width: 639.98px){}
 .play{position:absolute;inset:0;margin:auto;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--glass);border:1px solid var(--line);color:var(--text);backdrop-filter:blur(4px);transition:background var(--dur-quick) var(--ease),color var(--dur-quick) var(--ease)}
 .play svg{width:var(--icon-md);height:var(--icon-md);fill:currentColor;margin-left:2px}
@@ -430,8 +380,32 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 }
 @media (prefers-reduced-motion:reduce){.vdlg{animation:palFade var(--dur-quick) var(--ease-settle) both;transition:none}.vscrim{animation:none}.vtrack{display:block !important;translate:none !important;transition:none !important}.vslide{position:absolute !important;inset:0 !important;flex:none !important;translate:none !important;opacity:0 !important;transition:opacity var(--dur-quick) var(--ease-settle) !important}.vslide.on{opacity:1 !important}}
 
-/* title-only link: the title's link is stretched over the card or tile with ::after, so the whole card is still one target; the focus ring is drawn on that ::after, round the card */
-.card,.tile{position:relative}.cl{color:inherit}.cl::after{content:"";position:absolute;inset:0}.site .cl:focus-visible{outline:none}.site .cl:focus-visible::after{outline:2px solid var(--accent);outline-offset:3px}
+
+/* entries: every Home section is the same row. Date · title (a link when the entry has one: it underlines on hover; external ones end in the arrow) ·
+   the grey line · the description (Markdown, always open outside Work) · then up to three images OR one link card */
+.ebody{flex:1 1 300px;min-width:0;display:flex;flex-direction:column}
+/* the description sits 8 below the grey line; an entry with no grey line reads like a list row: its description follows the title directly, as a post's summary does */
+.ehead:has(> :nth-child(2)) + .desc{margin-top:8px}
+.ehead{display:flex;flex-direction:column}
+.et{font-weight:500;color:var(--text)}
+.etl{text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:1px;text-underline-offset:3px;transition:text-decoration-color var(--dur-quick) var(--ease)}
+@media (hover:hover) and (pointer:fine){.etl:hover{text-decoration-color:var(--line-strong)}.etl:hover .ext{stroke:currentColor}}
+.etl:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--r-sm)}
+/* description: body text in --text-2 at 1.6, 8 below the grey line; paragraphs and lists 8 apart; links inside are prose links */
+.desc{display:flex;flex-direction:column;gap:8px;color:var(--text-2);line-height:1.6;overflow-wrap:anywhere}
+.desc p{margin:0}
+.desc ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.desc li{position:relative;padding-left:16px}
+.desc li::before{content:"";position:absolute;left:0;top:11px;width:4px;height:4px;border-radius:50%;background:var(--line-strong)}
+.desc a{color:var(--accent);text-decoration:underline;text-decoration-color:var(--accent-line);text-decoration-thickness:1px;text-underline-offset:3px;transition:text-decoration-color var(--dur-quick) var(--ease)}
+@media (hover:hover) and (pointer:fine){.desc a:hover{text-decoration-color:var(--accent)}}
+/* images or a link card sit 16 below the text (the row's 4px gap + 12): one step more than paragraph to paragraph, so they read as the entry's attachment */
+.list li > .attach{margin:12px 0 0}
+/* an image has no space of its own above and below, as a line of text does: 8 more under an attachment puts the next entry as far away as it is after text */
+.list li:not(:last-child) > .attach{margin-bottom:8px}
+/* sample screenshots: there are no real ones yet; these grey stand-ins take the same 3:2 box as a photo */
+.photos .shot{display:block;width:100%;aspect-ratio:3 / 2;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
+.shot .b{fill:var(--bg)}.shot .l{fill:var(--line)}.shot .d{fill:var(--line-strong)}
 </style>
 <script>/* arrival: a direct visit or a refresh plays the cascade; coming from another page of the site doesn't (DESIGN.md §2.5) */
 (function(){var n=performance.getEntriesByType('navigation')[0];var inside=false;try{inside=!!document.referrer&&new URL(document.referrer).origin===location.origin}catch(e){}if(!inside||(n&&n.type==='reload'))document.documentElement.classList.add('arrive')})()</script>
@@ -469,7 +443,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
               <button data-dc-tpl="30" class="button" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="cv-menu">Download CV<svg data-dc-tpl="31" class="cvchev " viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="chevron-down"><path data-dc-tpl="32" d="M6 9l6 6l6 -6" vector-effect="non-scaling-stroke"></path></svg></button>
               
             </span>
-            <span data-dc-tpl="58" style="display: inline-flex; align-items: flex-start; gap: 8px; min-height: var(--control-h); padding: calc((var(--control-h) - 1.5em) / 2) 4px; font-size: var(--text-small); line-height: 1.5; color: var(--text-2);"><span data-dc-tpl="59" class="dot" aria-hidden="true"></span>Open to remote roles</span>
+            <span data-dc-tpl="58" style="display: inline-flex; align-items: flex-start; gap: 8px; min-height: var(--control-h); padding: calc((var(--control-h) - 1.5em) / 2) 4px; font-size: var(--text-small); line-height: 1.5; color: var(--text-2);"><span data-dc-tpl="59" class="dot" aria-hidden="true"></span>Open to work</span>
           </div>
         </div>
       </div>
@@ -498,7 +472,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </button>
             <div data-dc-tpl="86" class="jobbody">
               <div data-dc-tpl="87" style="min-height: 0px; overflow: hidden;">
-                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 12px; margin-top: -4px;">
                   <span data-dc-tpl="89" class="jobgut" style="flex: 0 0 var(--gutter);"></span>
                   <div data-dc-tpl="90" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="91" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
@@ -530,7 +504,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </button>
             <div data-dc-tpl="86" class="jobbody">
               <div data-dc-tpl="87" style="min-height: 0px; overflow: hidden;">
-                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 12px; margin-top: -4px;">
                   <span data-dc-tpl="89" class="jobgut" style="flex: 0 0 var(--gutter);"></span>
                   <div data-dc-tpl="90" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="91" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
@@ -560,7 +534,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </button>
             <div data-dc-tpl="86" class="jobbody">
               <div data-dc-tpl="87" style="min-height: 0px; overflow: hidden;">
-                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 12px; margin-top: -4px;">
                   <span data-dc-tpl="89" class="jobgut" style="flex: 0 0 var(--gutter);"></span>
                   <div data-dc-tpl="90" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="91" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
@@ -586,7 +560,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </button>
             <div data-dc-tpl="86" class="jobbody">
               <div data-dc-tpl="87" style="min-height: 0px; overflow: hidden;">
-                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 12px; margin-top: -4px;">
                   <span data-dc-tpl="89" class="jobgut" style="flex: 0 0 var(--gutter);"></span>
                   <div data-dc-tpl="90" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="91" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
@@ -614,7 +588,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
             </button>
             <div data-dc-tpl="86" class="jobbody">
               <div data-dc-tpl="87" style="min-height: 0px; overflow: hidden;">
-                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 16px;">
+                <div data-dc-tpl="88" style="display: flex; flex-wrap: wrap; gap: 0px 24px; padding: 0px 0px 12px; margin-top: -4px;">
                   <span data-dc-tpl="89" class="jobgut" style="flex: 0 0 var(--gutter);"></span>
                   <div data-dc-tpl="90" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 16px;">
                     <ul data-dc-tpl="91" style="margin: 0px; padding: 0px; list-style: none; display: flex; flex-direction: column; gap: 8px;">
@@ -664,62 +638,50 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 
     <section data-dc-tpl="144" id="teaching" style="display: flex; flex-direction: column; gap: 16px;">
       <h2 data-dc-tpl="145" id="teaching-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Teaching</h2>
-      
-      <ul data-dc-tpl="146" class="list courses" role="list">
-        <li data-dc-tpl="147" class="crow">
-          <a data-dc-tpl="148" class="item" href="https://balio.app/curso/defi/" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-            <time data-dc-tpl="149" datetime="2022-03" style="flex: 0 0 var(--gutter); color: var(--text-3);">Mar 2022</time>
-            <span data-dc-tpl="150" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column; gap: 4px;">
-              <span data-dc-tpl="151" style="display: flex; flex-direction: column;">
-                <span data-dc-tpl="152" style="font-weight: 500;">The DeFi <span data-dc-tpl="153" class="tail">revolution<svg data-dc-tpl="154" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="155" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="156" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></span>
-                <span data-dc-tpl="157" style="color: var(--text-2);">Online course in Spanish, Balio</span>
-              </span>
-              <p data-dc-tpl="158" class="cmeta"><span data-dc-tpl="159" class="crate"><span data-dc-tpl="160" class="vh">Rated 4.7 out of 5 from 26 reviews.</span><span data-dc-tpl="161" class="crate-v" aria-hidden="true"><svg data-dc-tpl="162" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="star"><path data-dc-tpl="163" d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245" vector-effect="non-scaling-stroke"></path></svg><b data-dc-tpl="164">4.7</b><span data-dc-tpl="165">(26 reviews)</span></span></span></p>
-            </span>
-          </a>
-          <div data-dc-tpl="166" class="attach"><span data-dc-tpl="167" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="168" class="attach-c">
-            <a data-dc-tpl="169" class="lpc" href="https://www.youtube.com/watch?v=FESgArXJBX0">
-              <span data-dc-tpl="170" class="lpc-img"><img data-dc-tpl="171" src="../assets/course-trailer.jpg" alt="" loading="lazy"><span data-dc-tpl="172" class="play"><svg data-dc-tpl="173" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="player-play"><path data-dc-tpl="174" d="M7 4v16l13 -8l-13 -8" vector-effect="non-scaling-stroke"></path></svg></span></span>
-              <span data-dc-tpl="175" class="lpc-t"><span data-dc-tpl="176" class="lpc-title">Watch the trailer</span><span data-dc-tpl="177" class="lpc-src"><span data-dc-tpl="178" class="lpc-srct">Balio · youtube.com</span><svg data-dc-tpl="179" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="180" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="181" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></span>
+      <ul data-dc-tpl="146" class="list" role="list" style="display: flex; flex-direction: column;">
+        <li data-dc-tpl="147" class="entry" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+          <span data-dc-tpl="148" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="149" datetime="2022-03">Mar 2022</time></span>
+          <div data-dc-tpl="150" class="ebody"><span data-dc-tpl="151" class="ehead"><a data-dc-tpl="152" class="et etl" href="https://balio.app/curso/defi/">The DeFi <span data-dc-tpl="153" class="tail">revolution<svg data-dc-tpl="154" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="155" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="156" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a><span data-dc-tpl="157" style="color: var(--text-2);">Online course in Spanish, Balio</span></span></div><div data-dc-tpl="158" class="attach"><span data-dc-tpl="159" class="attach-gut" aria-hidden="true"></span><div data-dc-tpl="160" class="attach-c">
+            <a data-dc-tpl="161" class="lpc" href="https://www.youtube.com/watch?v=FESgArXJBX0">
+              <span data-dc-tpl="162" class="lpc-img"><img data-dc-tpl="163" src="../assets/course-trailer.jpg" alt="" loading="lazy"><span data-dc-tpl="164" class="play"><svg data-dc-tpl="165" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="player-play"><path data-dc-tpl="166" d="M7 4v16l13 -8l-13 -8" vector-effect="non-scaling-stroke"></path></svg></span></span>
+              <span data-dc-tpl="167" class="lpc-t"><span data-dc-tpl="168" class="lpc-title">Watch the trailer</span><span data-dc-tpl="169" class="lpc-src"><span data-dc-tpl="170" class="lpc-srct">Balio · youtube.com</span><svg data-dc-tpl="171" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="172" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="173" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></span>
             </a>
           </div></div>
         </li>
       </ul>
     </section>
 
-
-    <section data-dc-tpl="182" style="display: flex; flex-direction: column; gap: 16px;">
-      <h2 data-dc-tpl="183" id="edu-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Education</h2>
-      <div data-dc-tpl="184" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
-        <span data-dc-tpl="185" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="186" datetime="2013">2013</time> – <time data-dc-tpl="187" datetime="2017">2017</time></span>
-        <span data-dc-tpl="188" style="flex: 1 1 300px; min-width: 0px; display: flex; flex-direction: column;">
-          <span data-dc-tpl="189" style="font-weight: 500;">BSc Computer Science at University of A Coruña</span>
-          <span data-dc-tpl="190" style="color: var(--text-2);">Specialization in software engineering</span>
-        </span>
-      </div>
+    <section data-dc-tpl="174" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="175" id="edu-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Education</h2>
+      <ul data-dc-tpl="176" class="list" role="list" style="display: flex; flex-direction: column;">
+        <li data-dc-tpl="177" class="entry" style="display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 12px 0px;">
+          <span data-dc-tpl="178" style="flex: 0 0 var(--gutter); color: var(--text-3); font-variant-numeric: tabular-nums;"><time data-dc-tpl="179" datetime="2013">2013</time> – <time data-dc-tpl="180" datetime="2017">2017</time></span>
+          <div data-dc-tpl="181" class="ebody"><span data-dc-tpl="182" class="ehead"><span data-dc-tpl="183" class="et">BSc Computer Science, Software Engineering</span><span data-dc-tpl="184" style="color: var(--text-2);">University of A Coruña</span></span></div>
+        </li>
+      </ul>
     </section>
 
-    <section data-dc-tpl="191" id="contact" class="contact" style="display: flex; flex-direction: column; gap: 16px;">
-      <h2 data-dc-tpl="192" id="contact-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Contact</h2>
-      <address data-dc-tpl="193">
-      <dl data-dc-tpl="194" style="display: flex; flex-direction: column;">
-      <div data-dc-tpl="195" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
-        <dt data-dc-tpl="196" style="flex: 0 0 var(--gutter); color: var(--text-3);">Email</dt>
-        <dd data-dc-tpl="197" style="flex: 1 1 300px; min-width: 0px; overflow-wrap: anywhere;">
-          <a data-dc-tpl="198" href="mailto:eliasgarciadev@gmail.com">eliasgarciadev@gmail.<span data-dc-tpl="199" class="tail">com<svg data-dc-tpl="200" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="201" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="202" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a>
+    <section data-dc-tpl="185" id="contact" class="contact" style="display: flex; flex-direction: column; gap: 16px;">
+      <h2 data-dc-tpl="186" id="contact-h" style="margin: 0px; font-size: var(--text-label); font-weight: 500; line-height: 1.5;">Contact</h2>
+      <address data-dc-tpl="187">
+      <dl data-dc-tpl="188" style="display: flex; flex-direction: column;">
+      <div data-dc-tpl="189" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
+        <dt data-dc-tpl="190" style="flex: 0 0 var(--gutter); color: var(--text-3);">Email</dt>
+        <dd data-dc-tpl="191" style="flex: 1 1 300px; min-width: 0px; overflow-wrap: anywhere;">
+          <a data-dc-tpl="192" href="mailto:eliasgarciadev@gmail.com">eliasgarciadev@gmail.<span data-dc-tpl="193" class="tail">com<svg data-dc-tpl="194" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="195" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="196" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a>
         </dd>
       </div>
-      <div data-dc-tpl="203" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
-        <dt data-dc-tpl="204" style="flex: 0 0 var(--gutter); color: var(--text-3);">GitHub</dt>
-        <dd data-dc-tpl="205" style="flex: 1 1 300px; min-width: 0px; overflow-wrap: anywhere;"><a data-dc-tpl="206" href="https://github.com/elias-garcia">elias-<span data-dc-tpl="207" class="tail">garcia<svg data-dc-tpl="208" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="209" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="210" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a></dd>
+      <div data-dc-tpl="197" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
+        <dt data-dc-tpl="198" style="flex: 0 0 var(--gutter); color: var(--text-3);">GitHub</dt>
+        <dd data-dc-tpl="199" style="flex: 1 1 300px; min-width: 0px; overflow-wrap: anywhere;"><a data-dc-tpl="200" href="https://github.com/elias-garcia">elias-<span data-dc-tpl="201" class="tail">garcia<svg data-dc-tpl="202" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="203" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="204" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a></dd>
       </div>
-      <div data-dc-tpl="211" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
-        <dt data-dc-tpl="212" style="flex: 0 0 var(--gutter); color: var(--text-3);">LinkedIn</dt>
-        <dd data-dc-tpl="213" style="flex: 1 1 300px; min-width: 0px; overflow-wrap: anywhere;"><a data-dc-tpl="214" href="https://www.linkedin.com/in/elias-garcia-marino">elias-garcia-<span data-dc-tpl="215" class="tail">marino<svg data-dc-tpl="216" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="217" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="218" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a></dd>
+      <div data-dc-tpl="205" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
+        <dt data-dc-tpl="206" style="flex: 0 0 var(--gutter); color: var(--text-3);">LinkedIn</dt>
+        <dd data-dc-tpl="207" style="flex: 1 1 300px; min-width: 0px; overflow-wrap: anywhere;"><a data-dc-tpl="208" href="https://www.linkedin.com/in/elias-garcia-marino">elias-garcia-<span data-dc-tpl="209" class="tail">marino<svg data-dc-tpl="210" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="211" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="212" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a></dd>
       </div>
-      <div data-dc-tpl="219" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
-        <dt data-dc-tpl="220" style="flex: 0 0 var(--gutter); color: var(--text-3);">X</dt>
-        <dd data-dc-tpl="221" style="flex: 1 1 300px; min-width: 0px; overflow-wrap: anywhere;"><a data-dc-tpl="222" href="https://x.com/eliasgarciadev">@eliasgarcia<span data-dc-tpl="223" class="tail">dev<svg data-dc-tpl="224" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="225" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="226" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a></dd>
+      <div data-dc-tpl="213" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding: 12px 0px;">
+        <dt data-dc-tpl="214" style="flex: 0 0 var(--gutter); color: var(--text-3);">X</dt>
+        <dd data-dc-tpl="215" style="flex: 1 1 300px; min-width: 0px; overflow-wrap: anywhere;"><a data-dc-tpl="216" href="https://x.com/eliasgarciadev">@eliasgarcia<span data-dc-tpl="217" class="tail">dev<svg data-dc-tpl="218" class="ext" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-icon="arrow-up-right"><path data-dc-tpl="219" d="M17 7l-10 10" vector-effect="non-scaling-stroke"></path><path data-dc-tpl="220" d="M8 7l9 0l0 9" vector-effect="non-scaling-stroke"></path></svg></span></a></dd>
       </div>
       </dl>
       </address>
@@ -727,13 +689,13 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 
   </main>
 
-  <footer data-dc-tpl="227" style="margin-top: var(--space-footer); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);">
-    <div data-dc-tpl="228" style="max-width: var(--column); margin: 0px auto; padding: 12px max(24px, env(safe-area-inset-right, 0px)) 12px max(24px, env(safe-area-inset-left, 0px)); min-height: var(--bar-h); box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: var(--text-small); color: var(--text-3);">
-      <span data-dc-tpl="229" style="display: flex; align-items: center; gap: 12px;">
-        <svg data-dc-tpl="230" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="231" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent);"></path><path data-dc-tpl="232" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="233" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="234" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="235" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
+  <footer data-dc-tpl="221" style="margin-top: var(--space-footer); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px);">
+    <div data-dc-tpl="222" style="max-width: var(--column); margin: 0px auto; padding: 12px max(24px, env(safe-area-inset-right, 0px)) 12px max(24px, env(safe-area-inset-left, 0px)); min-height: var(--bar-h); box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap; font-size: var(--text-small); color: var(--text-3);">
+      <span data-dc-tpl="223" style="display: flex; align-items: center; gap: 12px;">
+        <svg data-dc-tpl="224" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="225" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent);"></path><path data-dc-tpl="226" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="227" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="228" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="229" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
         Elías García, 2026
       </span>
-      <span data-dc-tpl="236" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="237"><time data-dc-tpl="238" datetime="18:24"><span class="sc-interp">18:24</span></time> in Portugal</span><span data-dc-tpl="239" aria-hidden="true">·</span><span data-dc-tpl="240"><span class="sc-interp">1h behind you</span></span></span>
+      <span data-dc-tpl="230" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="231"><time data-dc-tpl="232" datetime="01:06"><span class="sc-interp">01:06</span></time> in Portugal</span><span data-dc-tpl="233" aria-hidden="true">·</span><span data-dc-tpl="234"><span class="sc-interp">1h behind you</span></span></span>
     </div>
   </footer>
 

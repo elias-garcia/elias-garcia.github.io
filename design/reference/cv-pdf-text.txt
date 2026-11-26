@@ -69,14 +69,14 @@ Experience
 
 Projects
 
-2026          Roleburn · eliasgarcia.dev/projects/roleburn
+2026          POL funding spreads
+              Funding-rate arbitrage on POL perps across DEXes.
+
+2026          Roleburn
               A daily radar for remote roles that match my CV.
 
-2026          work-issue · eliasgarcia.dev/projects/work-issue
+2026          work-issue
               Agents that take a GitHub issue to a reviewed PR.
-
-2026          POL funding spreads · eliasgarcia.dev/projects/pol-funding-spreads
-              Funding-rate arbitrage on POL perps across DEXes.
 
 
 
@@ -102,6 +102,5 @@ Mar 2022      The DeFi revolution · balio.app/curso/defi
 
 Education
 
-2013 – 2017   BSc Computer Science at University of A Coruña
-              Specialization in software engineering
+2013 – 2017   BSc Computer Science, Software Engineering at University of A Coruña
 
