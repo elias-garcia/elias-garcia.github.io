@@ -740,7 +740,7 @@ const copy = await getViewerCopy();
         var(--viewer-share),
         min(100% - 2 * var(--space-6), var(--viewer-min))
       ),
-      (100dvh - var(--viewer-chrome)) * 3 / 2
+      (100dvh - var(--viewer-chrome)) * 16 / 9
     );
     max-block-size: calc(100% - 2 * var(--space-6));
     /* Not only while open: a closing viewer keeps its layout while it fades
@@ -835,19 +835,19 @@ const copy = await getViewerCopy();
     min-block-size: 0;
   }
 
-  /* Content box, so the bottom hairline doesn't take a pixel from the 3:2
+  /* Content box, so the bottom hairline doesn't take a pixel from the 16:9
      photo, which would leave the photo narrower than the frame. */
   .frame {
     box-sizing: content-box;
     min-block-size: 0;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 16 / 9;
     overflow: hidden;
     border-block-end: var(--hairline) solid var(--line);
     background: var(--surface);
   }
 
   /* The photos are stacked and crossfade; on phones they slide (below).
-     Each one fills the 3:2 frame, cropped if it's another shape. */
+     Each one fills the 16:9 frame, cropped if it's another shape. */
   .track {
     display: grid;
     block-size: 100%;

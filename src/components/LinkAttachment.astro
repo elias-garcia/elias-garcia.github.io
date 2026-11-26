@@ -115,7 +115,7 @@ const video = preview?.type?.startsWith("video") === true;
     flex: none;
     place-items: center;
     inline-size: calc((100% + 2 * var(--hairline) - 2 * var(--space-2)) / 3);
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 16 / 9;
     border-inline-end: var(--hairline) solid var(--line);
     background: var(--surface);
   }
@@ -168,6 +168,7 @@ const video = preview?.type?.startsWith("video") === true;
   .text {
     display: flex;
     flex-direction: column;
+    gap: var(--space-1);
     min-inline-size: 0;
     padding-inline: var(--space-4);
   }
