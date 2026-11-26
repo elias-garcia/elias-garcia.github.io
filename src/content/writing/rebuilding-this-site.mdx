@@ -1,0 +1,65 @@
+---
+title: "Rebuilding this site"
+description: "Why it stayed one column, and how I spent the motion budget."
+date: 2026-11-09
+topic: Design engineering
+---
+
+For a few years my site was a hosted profile: one column, small type, dates in the margin, nothing to configure. When the service shut down, I exported my profile and never quite replaced it.
+
+This site is the replacement. I wanted to keep what that profile got right, and add the two things it never gave me: room to write up projects properly, and a blog.
+
+## What I kept
+
+One column, about 640 pixels wide. Dates live in a left gutter, so a whole career scans in a second. One typeface. Grey for context, black for the thing itself. No cards, unless the content is something you can open.
+
+## Spending the motion budget
+
+I wanted the site to feel crafted without feeling busy, so motion follows a few rules.[^1] When you arrive, the page settles from the top in a few steps. Everything else responds to something you did, and the interface answers within a quarter of a second.
+
+Easing does most of the work. Things entering the screen use ease-out: they arrive fast and settle, which reads as responsive. Linear is for things that never stop, like a spinner. Press replay and compare.
+
+<EasingDemo caption="Same distance, same 600 ms. Only the curve changes." />
+
+I tried staggering every element in, and it felt slow and uneven. Staggering whole sections works, as long as it happens once: when you arrive, the blocks on screen rise twelve pixels and fade in from the top, a tenth of a second apart, while the header stays exactly where it is.[^2] After that, moving between pages is quicker: the old content fades out and the new page arrives as one piece, so it reads as one continuous site. This is the core of it:
+
+```css
+/* between pages: the page arrives as one piece */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+}
+main {
+  animation: page-in 250ms cubic-bezier(.22, 1, .36, 1) backwards;
+}
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
+/* arriving at the site: the blocks settle from the top */
+@keyframes arrive-in {
+  from { opacity: 0; transform: translateY(12px); }
+}
+[data-arrive] main { animation: none; }
+[data-arrive] .enter {
+  animation: arrive-in 400ms cubic-bezier(.22, 1, .36, 1) backwards;
+  animation-delay: calc(var(--i) * 100ms);
+}
+/* reduced motion: still a fade, just no movement */
+@keyframes page-fade {
+  from { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  main, [data-arrive] main { animation: page-fade 150ms cubic-bezier(.22, 1, .36, 1) backwards; }
+  [data-arrive] .enter { animation: none; }
+}
+```
+
+## Details you only notice when they're missing
+
+Hover any list and the other rows step back. Search is one keystroke away on every page. The header knows how far you've read. None of it is necessary, and all of it is the kind of detail I care about in product work.
+
+## What's next
+
+Proper write-ups for the projects, and notes on what I'm building with AI agents. If there's something you'd like me to write about, [send me an email](mailto:eliasgarciadev@gmail.com).
+
+[^1]: Borrowed largely from [Emil Kowalski's writing on animation](https://emilkowal.ski): how often something happens decides whether it should animate at all.
+[^2]: With reduced motion turned on in your system settings, pages fade in without moving.

@@ -1,0 +1,9 @@
+# The two downloads of the CV, in the Download CV menu and in search.
+# In search, typing the start of the label or of a keyword selects a format.
+pdf:
+  label: PDF
+  description: For reading, printing and sharing
+markdown:
+  label: Markdown
+  keywords: [md]
+  description: Plain text for AI tools and agents

@@ -1,0 +1,424 @@
+---
+import avatar from "../../../assets/avatar.jpg";
+import Icon from "../../../components/Icon.astro";
+import type { GetStaticPaths } from "astro";
+import { getImage } from "astro:assets";
+import { getCv } from "../../../lib/cv.ts";
+import "../../../styles/tokens.css";
+
+// The page the CV PDF is printed from (DESIGN.md, CV PDF). A rest route, so
+// the site's build leaves it out: it's only built in `npm run dev` and while
+// the CV is printed (`--mode cv`, scripts/cv-pdf.ts).
+export const getStaticPaths = (() =>
+  import.meta.env.DEV || import.meta.env.MODE === "cv"
+    ? [{ params: { index: undefined } }]
+    : []) satisfies GetStaticPaths;
+
+const cv = await getCv();
+const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
+---
+
+<html lang="en" data-palette="light">
+  <head>
+    <meta charset="utf-8" />
+    <title>{cv.title}</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <main class="cv">
+      <header class="header">
+        <div class="identity">
+          <img class="photo" src={photo.src} alt={cv.name} />
+          <div class="who">
+            <h1 class="name">{cv.name}</h1>
+            <p class="role">{cv.role}</p>
+          </div>
+        </div>
+        <ul class="contact">
+          {cv.contact.map(({ href, text, icon }) => (
+            <li>
+              <Icon name={icon} size="sm" class="contact-icon" />
+              <a href={href}>{text}</a>
+            </li>
+          ))}
+        </ul>
+      </header>
+
+      <div class="sections">
+        <section class="section">
+          <h2>{cv.about.title}</h2>
+          {cv.about.paragraphs.map((paragraph) => (
+            <p class="detail">{paragraph}</p>
+          ))}
+        </section>
+
+        {cv.experience.jobs.length > 0 && (
+          <section class="section">
+            <h2>{cv.experience.title}</h2>
+            <ul class="rows jobs">
+              {cv.experience.jobs.map((job) => (
+                <li class="row job">
+                  <p class="date">{job.dates}</p>
+                  <div class="job-body">
+                    <div class="entry">
+                      <h3>
+                        <span class="company">{job.company}</span>{" "}
+                        <span class="separator">·</span>{" "}
+                        <span class="note">{job.place}</span>
+                      </h3>
+                      {job.role !== undefined && (
+                        <p class="position">{job.role}</p>
+                      )}
+                    </div>
+                    {job.description.markdown !== "" && (
+                      <div class="description">
+                        <job.description.Content />
+                      </div>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {[cv.projects, cv.speaking, cv.teaching].map(
+          (section) =>
+            section.entries.length > 0 && (
+              <section class="section">
+                <h2>{section.title}</h2>
+                <ul class="rows">
+                  {section.entries.map((entry) => (
+                    <li class="row">
+                      <p class="date">{entry.date}</p>
+                      <div class="entry">
+                        <h3>
+                          {entry.title}
+                          {entry.address !== undefined && (
+                            <>
+                              {" "}
+                              <span class="separator">·</span>{" "}
+                              <a class="note" href={entry.address.href}>
+                                {entry.address.text}
+                              </a>
+                            </>
+                          )}
+                        </h3>
+                        {"subtitle" in entry
+                          ? entry.subtitle !== undefined && (
+                              <p class="detail">{entry.subtitle}</p>
+                            )
+                          : entry.description.markdown !== "" && (
+                              <div class="detail description">
+                                <entry.description.Content />
+                              </div>
+                            )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ),
+        )}
+
+        {cv.education.degrees.length > 0 && (
+          <section class="section">
+            <h2>{cv.education.title}</h2>
+            <ul class="rows">
+              {cv.education.degrees.map((degree) => (
+                <li class="row">
+                  <p class="date">{degree.dates}</p>
+                  <div class="entry">
+                    <h3>{degree.title}</h3>
+                    {degree.description.markdown !== "" && (
+                      <div class="detail description">
+                        <degree.description.Content />
+                      </div>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
+    </main>
+  </body>
+</html>
+
+<style>
+  /* Static instances of the site's font at its text optical size: Chrome
+     embeds a variable font in a PDF as Type 3 (Inter's .otf files too),
+     which some parsers read badly. These .ttf files embed as TrueType, and
+     they include the "→" the web subset may not. */
+  @font-face {
+    font-family: "Inter Static";
+    src: url("../../../assets/fonts/Inter-Regular.ttf") format("truetype");
+    font-weight: 400;
+  }
+
+  @font-face {
+    font-family: "Inter Static";
+    src: url("../../../assets/fonts/Inter-Medium.ttf") format("truetype");
+    font-weight: 500;
+  }
+
+  @font-face {
+    font-family: "Inter Static";
+    src: url("../../../assets/fonts/Inter-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+  }
+
+  /* A4, with the margins of .cv's --cv-margin-block and --cv-margin-inline:
+     page descriptors can't read custom properties. */
+  @page {
+    size: A4;
+    margin: 16mm 18mm;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+  }
+
+  /* The CV is only ever a sheet of A4, so its sizes are in pt and mm. 10pt
+     here stands for the site's 16px, so its spacing steps are the site's
+     times 0.625 (DESIGN.md, CV PDF, Spacing and line heights). */
+  .cv {
+    --cv-margin-block: 16mm;
+    --cv-margin-inline: 18mm;
+    --cv-text: 10pt; /* resume guides ask for 10–12pt */
+    --cv-name: 20pt; /* the site's display size */
+    --cv-hairline: 0.5pt;
+    --cv-photo: 40pt; /* the site's 64 step: the height of the name and role line */
+    --cv-date-column: 24mm; /* the widest date, "2020 – 2024", is about 21mm */
+    --cv-separator-padding: 1pt;
+    --cv-space-4: 2.5pt;
+    --cv-space-8: 5pt;
+    --cv-space-12: 7.5pt;
+    --cv-space-16: 10pt;
+    --cv-space-24: 15pt;
+    --cv-space-32: 20pt;
+    --cv-space-48: 30pt;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-32);
+    box-sizing: border-box;
+    color: var(--text);
+    font-family: "Inter Static", ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--cv-text);
+    /* 1.5, not the site's 1.6 for reading: a CV is scanned, and resume
+       guides call more than 1.5 too open. */
+    line-height: var(--leading-normal);
+    /* Only glyphs with a character code of their own: Chrome writes Inter's
+       alternates (tabular figures and punctuation, the dash raised between
+       figures) into the PDF under private-use codes, which parsers read as
+       nothing. Never add tabular-nums or font-feature-settings here. */
+    font-variant-ligatures: no-contextual;
+    /* Kerning at print sizes, as the reference sets it. */
+    text-rendering: optimizeLegibility;
+    print-color-adjust: exact;
+
+    /* The page's own elements and the descriptions' Markdown alike. */
+    & :global(:is(h1, h2, h3, p, ul)) {
+      margin: 0;
+    }
+
+    /* :where() keeps the reset below the rules for each kind of link. */
+    & :global(:where(a)) {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* On screen, the page as it prints: a sheet on a grey desk. */
+    @media screen {
+      inline-size: 210mm;
+      min-block-size: 297mm;
+      margin: var(--space-6) auto;
+      padding: var(--cv-margin-block) var(--cv-margin-inline);
+      background: var(--bg);
+    }
+  }
+
+  @media screen {
+    body {
+      background: var(--line);
+    }
+  }
+
+  /* Each break is bigger than the one inside it. The hairlines are the
+     darker --line-strong, which survives an office printer. */
+  .header {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: var(--cv-space-16);
+    padding-block-end: var(--cv-space-24);
+    border-block-end: var(--cv-hairline) solid var(--line-strong);
+  }
+
+  .photo {
+    flex: none;
+    inline-size: var(--cv-photo);
+    block-size: var(--cv-photo);
+    border-radius: var(--r-full);
+    object-fit: cover;
+  }
+
+  .who {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-4);
+  }
+
+  .name {
+    font-size: var(--cv-name);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .role {
+    color: var(--text-2);
+  }
+
+  /* Three columns sized to the addresses, spread to the full width. Each
+     address is written out (what parsers read); the icon only says what it
+     is. */
+  .contact {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    justify-content: space-between;
+    gap: var(--cv-space-4) var(--cv-space-24);
+    padding: var(--cv-space-12) 0;
+    border-block-end: var(--cv-hairline) solid var(--line-strong);
+    color: var(--text-2);
+
+    & > li {
+      display: flex;
+      align-items: center;
+      gap: var(--cv-space-8);
+      white-space: nowrap;
+    }
+  }
+
+  .contact-icon {
+    color: var(--text-3);
+  }
+
+  .sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-48);
+  }
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-16);
+
+    & > h2 {
+      font-size: var(--cv-text);
+      font-weight: var(--weight-semibold);
+      break-after: avoid;
+    }
+  }
+
+  .rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-16);
+    padding: 0;
+  }
+
+  .jobs {
+    gap: var(--cv-space-24);
+  }
+
+  /* The site's date column, scaled for paper. A row never splits across
+     pages: one that doesn't fit moves whole to the next. The date and the
+     title share a baseline, as their line heights differ. */
+  .row {
+    display: grid;
+    grid-template-columns: var(--cv-date-column) 1fr;
+    column-gap: var(--cv-space-24);
+    align-items: baseline;
+    break-inside: avoid;
+  }
+
+  .date {
+    color: var(--text-3);
+    white-space: nowrap;
+  }
+
+  /* A title and its second line. */
+  .entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-4);
+  }
+
+  h3 {
+    font-size: var(--cv-text);
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-tight);
+  }
+
+  .company {
+    font-weight: var(--weight-semibold);
+  }
+
+  .separator {
+    padding-inline: var(--cv-separator-padding);
+    color: var(--text-3);
+    font-weight: normal;
+  }
+
+  /* After a title: how and where, or an address. */
+  .note {
+    color: var(--text-2);
+    font-weight: normal;
+  }
+
+  /* The job title is what recruiters scan for: text colour at 500, under the
+     company at 600. */
+  .position {
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-tight);
+  }
+
+  .detail {
+    color: var(--text-2);
+  }
+
+  .job-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-12);
+  }
+
+  /* An entry's Markdown body: paragraphs, and a job's bullets. */
+  .description {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cv-space-4);
+    color: var(--text-2);
+
+    & :global(ul) {
+      display: flex;
+      flex-direction: column;
+      gap: var(--cv-space-4);
+      padding-inline-start: var(--cv-space-16);
+      list-style-type: disc;
+    }
+
+    & :global(li)::marker {
+      color: var(--text-3);
+    }
+  }
+</style>

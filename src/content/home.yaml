@@ -1,0 +1,24 @@
+home:
+  # Under the name; {role}, {city} and {country} come from the profile.
+  role: "{role} in {city}, {country}"
+  # Section titles. Writing takes its page's title. The site's share image
+  # lists them too.
+  about: About
+  work: Work experience
+  projects: Projects
+  speaking: Speaking
+  teaching: Teaching
+  education: Education
+  contact: Contact
+  # The menu button under the name; search offers the same download.
+  downloadCv: Download CV
+  # Beside it, when the profile is open to work.
+  openToWork: Open to work
+  allPosts: All posts
+  # A degree on the CV; {title} and {school} are the entry's title and grey
+  # line.
+  degree: "{title} at {school}"
+  # The end of a range of years that hasn't ended.
+  present: Now
+  # The work section's title in the Markdown CV.
+  experience: Experience

@@ -1,0 +1,40 @@
+---
+import { getPostCopy } from "../../lib/content.ts";
+
+const { callout } = await getPostCopy();
+---
+
+<aside class="note" aria-label={callout}>
+  <span class="label" aria-hidden="true">
+    {callout}
+  </span>
+  <div class="text">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  /* Grey, never indigo: indigo stays reserved for state. */
+  .note {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+  }
+
+  .label {
+    font-size: var(--text-small);
+    font-weight: var(--weight-medium);
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    color: var(--text-2);
+    line-height: var(--leading-body);
+  }
+</style>

@@ -1,0 +1,58 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { getPostCopy } from "../../lib/content.ts";
+
+// Wide tables scroll sideways inside a box that keyboards can reach.
+type Props = HTMLAttributes<"table">;
+
+const { tableName } = await getPostCopy();
+---
+
+<div class="table" tabindex="0" role="region" aria-label={tableName}>
+  <table {...Astro.props}>
+    <slot />
+  </table>
+</div>
+
+<style>
+  .table {
+    overflow-x: auto;
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+
+    /* Cells never wrap mid-word on phones: the box scrolls instead. */
+    & > table {
+      inline-size: max-content;
+      min-inline-size: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-small);
+      line-height: var(--leading-normal);
+    }
+
+    :global(th) {
+      padding: var(--space-2) var(--space-4);
+      border-block-end: var(--hairline) solid var(--line);
+      background: var(--surface);
+      color: var(--text-3);
+      font-size: var(--text-small);
+      font-weight: var(--weight-medium);
+      text-align: start;
+      white-space: nowrap;
+    }
+
+    :global(td) {
+      padding: var(--space-2) var(--space-4);
+      border-block-start: var(--hairline) solid var(--line);
+      color: var(--text-2);
+      vertical-align: top;
+    }
+
+    :global(tbody tr:first-child td) {
+      border-block-start: 0;
+    }
+
+    :global(:is(th, td)[style*="right"]) {
+      font-variant-numeric: tabular-nums;
+    }
+  }
+</style>

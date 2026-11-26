@@ -1,0 +1,32 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"a">;
+---
+
+<a class="text-link" {...Astro.props}>
+  <slot />
+</a>
+
+<style>
+  /* A link inside a sentence (DESIGN.md §3, Links): indigo with a soft
+     underline that is always there and turns solid, never thicker. */
+  .text-link {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-line);
+    text-decoration-thickness: var(--hairline);
+    text-underline-offset: var(--underline-offset);
+    transition: text-decoration-color var(--dur-quick) var(--ease);
+
+    &:focus-visible {
+      text-decoration-color: var(--accent);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        text-decoration-color: var(--accent);
+      }
+    }
+  }
+</style>

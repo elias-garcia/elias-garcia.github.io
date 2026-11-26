@@ -1,0 +1,36 @@
+name: External links
+
+# Links to other sites break without any change here, so they're checked on
+# a schedule, not on pull requests.
+on:
+  schedule:
+    - cron: "0 6 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: npm
+      - run: npm ci
+      # The build prints the CV with Google Chrome.
+      - run: npx playwright install chrome
+      - run: npm run build
+      # The site's own addresses are read from the build: a page may not be
+      # live yet.
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --include-fragments
+            --root-dir ${{ github.workspace }}/dist
+            --fallback-extensions html
+            --remap 'https://eliasgarcia\.dev/?(.*) file://${{ github.workspace }}/dist/$1'
+            --no-progress
+            'dist/**/*.html'

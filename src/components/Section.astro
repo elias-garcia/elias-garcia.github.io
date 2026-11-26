@@ -1,0 +1,44 @@
+---
+// Not labelled: a named <section> is a region landmark, and one per section
+// would crowd the page's landmarks. The headings are the way through.
+type Props = {
+  title: string;
+  arrivalStep?: number;
+  // For links to the section, like the old Projects page's redirect.
+  id?: string;
+};
+
+const { title, arrivalStep, id } = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={["section", { enter: arrivalStep !== undefined }]}
+  style={arrivalStep === undefined ? undefined : `--i: ${String(arrivalStep)}`}
+>
+  <div class="heading">
+    <h2>{title}</h2>
+    <slot name="action" />
+  </div>
+  <slot />
+</section>
+
+<style>
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+
+    & > h2 {
+      font-size: inherit;
+      font-weight: var(--weight-medium);
+    }
+  }
+</style>

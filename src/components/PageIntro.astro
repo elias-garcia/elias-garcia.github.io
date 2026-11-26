@@ -1,0 +1,83 @@
+---
+import PageTitle from "./PageTitle.astro";
+import VisuallyHidden from "./VisuallyHidden.astro";
+
+// `label` sits above the title ("404"); screen readers hear it as part of the
+// title instead. The intro is the `intro` prop, or the `intro` slot for a page
+// that fills it in with a script. The title and intro are the page's first
+// step when it arrives (DESIGN.md §2.5).
+type Props = {
+  title: string;
+  intro?: string;
+  label?: string;
+};
+
+const { title, intro, label } = Astro.props;
+---
+
+<header class="page-intro">
+  <div class="heading enter" style="--i: 0">
+    <div class="titles">
+      {label !== undefined && (
+        <p class="label" aria-hidden="true">
+          {label}
+        </p>
+      )}
+      <div class="title-row">
+        <PageTitle>
+          {label !== undefined && <VisuallyHidden>{label}: </VisuallyHidden>}
+          {title}
+        </PageTitle>
+        <slot name="action" />
+      </div>
+    </div>
+    <p>
+      <slot name="intro">{intro}</slot>
+    </p>
+  </div>
+  <slot />
+</header>
+
+<style>
+  .page-intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+
+    & > p {
+      color: var(--text-2);
+      line-height: var(--leading-body);
+    }
+  }
+
+  .titles {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .heading .label {
+    color: var(--text-3);
+    font-size: var(--text-display);
+    font-weight: var(--weight-semibold);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+  }
+
+  /* A link beside the title sits on its baseline, so the row is the
+     title's own line. */
+  .title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+</style>

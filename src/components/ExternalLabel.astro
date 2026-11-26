@@ -1,0 +1,28 @@
+---
+import { arrowTail, opensNewTab } from "../lib/links.ts";
+import ExternalArrow from "./ExternalArrow.astro";
+import NewTabNote from "./NewTabNote.astro";
+
+// A link's label followed by the external arrow, which never starts a line:
+// it stays with the end of the label (DESIGN.md, External-link arrow).
+type Props = {
+  href: string;
+  label: string;
+};
+
+const { href, label } = Astro.props;
+const { start, end } = arrowTail(label);
+---
+
+{start}
+<span class="end">
+  {end}
+  <ExternalArrow />
+</span>
+{opensNewTab(href) && <NewTabNote />}
+
+<style>
+  .end {
+    white-space: nowrap;
+  }
+</style>

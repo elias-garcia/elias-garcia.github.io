@@ -1,0 +1,57 @@
+---
+// In MDX, a Markdown image passed as the content:
+// <Figure caption="…">![alt](path)</Figure>, or a placeholder for an image
+// still to come.
+type Props = {
+  caption: string;
+  placeholder?: string;
+};
+
+const { caption, placeholder } = Astro.props;
+---
+
+<figure class="figure">
+  {placeholder === undefined ? (
+    <div class="markdown">
+      <slot />
+    </div>
+  ) : (
+    <div class="placeholder">{placeholder}</div>
+  )}
+  <figcaption class="caption">{caption}</figcaption>
+</figure>
+
+<style>
+  .figure {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .markdown :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    border-radius: var(--r-lg);
+    background: var(--control);
+    object-fit: cover;
+  }
+
+  .placeholder {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 10;
+    padding: var(--space-6);
+    border: var(--hairline) dashed var(--line-strong);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    color: var(--text-3);
+    font-size: var(--text-small);
+    text-align: center;
+  }
+
+  .caption {
+    color: var(--text-3);
+    font-size: var(--text-small);
+  }
+</style>

@@ -1,0 +1,119 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import Icon from "./Icon.astro";
+
+// A quiet link (DESIGN.md §3, Links): grey 14px text that darkens on hover,
+// with a 1px underline fading in under its label. A chevron points where it
+// leads ("All posts ›", "‹ Writing") and nudges that way; an icon goes
+// before the label (Subscribe). Either sits 4px from the label.
+type Props = HTMLAttributes<"a"> & {
+  chevron?: "back" | "forward";
+  icon?: "rss";
+};
+
+const { chevron, icon, ...attributes } = Astro.props;
+---
+
+<a class="quiet" {...attributes}>
+  {chevron === "back" && (
+    <Icon name="chevron-left" size="sm" class="chevron back" />
+  )}
+  {icon !== undefined && <Icon name={icon} />}
+  <span class="label">
+    <slot />
+  </span>
+  {chevron === "forward" && (
+    <Icon name="chevron-right" size="sm" class="chevron forward" />
+  )}
+</a>
+
+<style>
+  .quiet {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--text-2);
+    font-size: var(--text-small);
+    line-height: var(--leading-normal);
+    transition: color var(--dur-quick) var(--ease);
+
+    &:focus-visible {
+      color: var(--text);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: var(--text);
+      }
+    }
+  }
+
+  /* The link's baseline is the label's, not the icon's bottom edge, so it
+     lines up with text beside it. Alone in its baseline group, the label sits
+     at the top, which is the middle: it is the tallest item. */
+  .label {
+    position: relative;
+    align-self: baseline;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      inset-block-end: calc(-1 * var(--hairline));
+      block-size: var(--hairline);
+      background: currentColor;
+      opacity: 0;
+    }
+
+    .quiet:focus-visible &::after {
+      opacity: 1;
+    }
+  }
+
+  /* Except on touch, which keeps its 44px (global.css), a click anywhere in
+     a button's height counts, as the header's links take the bar's; hover
+     follows it. How it looks doesn't change. */
+  @media not (pointer: coarse) {
+    .quiet::before {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      inset-block-start: 50%;
+      block-size: var(--control-h);
+      translate: 0 -50%;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .label::after {
+      transition: opacity var(--dur-quick) var(--ease-settle);
+    }
+
+    .quiet:hover {
+      & > .label::after {
+        opacity: 1;
+      }
+
+      & > .forward {
+        translate: var(--nudge) 0;
+      }
+
+      & > .back {
+        translate: calc(-1 * var(--nudge)) 0;
+      }
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .chevron {
+      transition: translate var(--dur-quick) var(--ease-settle);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .label::after {
+      background: LinkText;
+    }
+  }
+</style>

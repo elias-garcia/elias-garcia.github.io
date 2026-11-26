@@ -1,0 +1,193 @@
+/* ==========================================================================
+   Elías García: design tokens
+   The design system's shared values: colours, type, spacing, radii, motion
+   and the sizes more than one component uses. A value only one component
+   uses is a custom property at the top of that component's styles.
+   Colours come from the zinc and indigo palettes, plus one step of our own
+   (zinc-450, the dark --text-3).
+   Light by default; dark follows the visitor's system setting. No toggle.
+   The sans-serif family (--font-sans) comes from Astro's Fonts API.
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  /* ---- Neutrals ---- */
+  --bg: #ffffff; /* page; also text on indigo fills and on the dark skip link · white */
+  --surface: #fafafa; /* previews, code blocks, card hover · zinc-50 */
+  --control: #f4f4f5; /* buttons, chips, search icon tiles · zinc-100 */
+  --control-hover: #e4e4e7; /* button and chip hover · zinc-200 */
+  --line: #e4e4e7; /* every border and divider · zinc-200 */
+  --line-strong: #d4d4d8; /* hover borders, illustration strokes · zinc-300 */
+  --text: #18181b; /* titles, names, primary text · zinc-900 */
+  --text-2: #52525c; /* body copy, descriptions, button labels · zinc-600 */
+  --text-3: #71717b; /* dates, metadata, captions; only on bg/surface, never on control · zinc-500 */
+
+  /* ---- Accent: only for state (current page, selected chip, links in prose) ---- */
+  --accent: #4f39f6; /* indigo-600 */
+  --tint: #eef2ff; /* indigo-50: selected chip, active search row */
+  --tint-strong: #e0e7ff; /* indigo-100: text selection */
+  --accent-line: #a3b3ff; /* indigo-300: underline under text links */
+
+  /* ---- Code: minimal indigo syntax theme (every colour ≥4.5:1 on --surface).
+     It reuses the colours above; strings and numbers are its own. ---- */
+  --code-literal: #372aac; /* indigo-800: strings, numbers */
+
+  /* Behind the search dialog and the image viewer card. */
+  --scrim: rgb(9 9 11 / 0.18);
+  --scrim-backdrop: blur(2px);
+  /* One glass, always with a backdrop blur: the sticky header and the round
+     buttons over photos (video play, image viewer). */
+  --glass: color-mix(in oklab, var(--bg) 80%, transparent);
+  --photo-control-backdrop: blur(4px);
+
+  /* ---- Image viewer on phones: dark in both themes, so never redefined ---- */
+  --viewer-bg: #000000; /* full-screen backdrop */
+  --viewer-text: #f4f4f5; /* zinc-100: caption title, icons, active dot */
+  --viewer-text-2: #9f9fa9; /* zinc-400: caption meta (7.6:1 on black) */
+  --viewer-control: rgb(255 255 255 / 0.12); /* round buttons: ×, ‹, › */
+  --viewer-dot: rgb(255 255 255 / 0.32); /* inactive position dots */
+  --logo-shade: #000000; /* folds in the logo mark, drawn at low opacity */
+  --photo-brightness: 1; /* photos are dimmed in dark mode */
+
+  /* ---- Typography (DESIGN.md §2.2): sizes in rem, from the design's px / 16 ---- */
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-display: 2rem; /* 32px, 28px on phones: post titles */
+  --text-title: 1.5rem; /* 24px: h2 in posts */
+  --text-subtitle: 1.25rem; /* 20px: page titles, h3 and the Notes heading in posts */
+  --text-body: 1rem; /* 16px: everything you read or navigate with */
+  --text-small: 0.875rem; /* 14px: facts and compact controls only */
+  --text-micro: 0.75rem; /* 12px: counts, key hints, labels in compact menus and search */
+  --text-code: 0.875rem; /* 14px: code blocks */
+
+  --leading-none: 1; /* single-line controls */
+  --leading-display: 1.2;
+  --leading-tight: 1.35;
+  --leading-normal: 1.5; /* single lines and small text */
+  --leading-body: 1.6; /* running text */
+  --leading-code: 1.7; /* code blocks */
+
+  --tracking-display: -0.02em;
+  --tracking-title: -0.01em;
+
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* ---- Spacing (DESIGN.md §2.3): ten steps on the 4px grid ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px; /* inside boxed components, never between blocks */
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Page rhythm: steps down on phones, below. */
+  --space-page: var(--space-16); /* top of main, under the header */
+  --space-section: var(--space-20); /* between Home sections */
+  --space-footer: var(--space-24); /* above the footer */
+  /* The page's sides, clear of a notch in landscape (DESIGN.md §2.9). */
+  --page-start: max(var(--space-6), env(safe-area-inset-left, 0px));
+  --page-end: max(var(--space-6), env(safe-area-inset-right, 0px));
+
+  /* ---- Radius ---- */
+  --r-sm: 4px; /* key hints, footnote markers, focus ring on text links */
+  --r-md: 8px; /* icon tiles, menu and search rows */
+  --r-lg: 12px; /* cards, previews, code blocks, menus, search panel */
+  --r-full: 999px; /* buttons, chips */
+
+  /* ---- Motion: anything that opens or moves takes 250ms; anything that
+     closes or leaves takes 150ms, the same as feedback ---- */
+  --dur-quick: 150ms; /* feedback and leaving: press, hover, colour/opacity, underlines, skip link; old page fading out; viewer and search closing; a row collapsing; a dragged-away photo leaving */
+  --dur-move: 250ms; /* opening and moving: Download CV menu, viewer and search opening, a row expanding, photo slides, the copy buttons' icon swap, page entrance between pages */
+  --ease: ease-out; /* hover and colour changes only */
+  /* Everything that enters, leaves or moves. */
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --dim-rest: 0.45; /* the other rows of a list while one is hovered */
+  --dim-press: 0.6; /* a text link or list row pressed on a touch screen */
+  --press-scale: 0.97;
+  --press-scale-tile: 0.99;
+  --entrance-offset: 6px; /* how far the page rises, coming from another page */
+  /* Arriving at the site, its blocks settle from the top one after another. */
+  --dur-arrive: 400ms; /* each block */
+  --dur-flash: 2s; /* a footnote marker or a note you arrive at lights up, then fades; a deliberate exception */
+
+  /* ---- Elevation and layers ---- */
+  /* Things that float: search dialog, image viewer card, Download CV menu. */
+  --shadow-overlay:
+    0 1px 2px rgb(9 9 11 / 0.04), 0 16px 48px -12px rgb(9 9 11 / 0.24);
+  --z-header: 10;
+  --z-skip: 100;
+
+  /* ---- Fixed sizes ---- */
+  --column: 688px; /* content column: 640px of text + 24px each side */
+  --gutter: 112px; /* date/label column in list rows */
+  --control-h: 32px; /* buttons and chips (minimum) */
+  --bar-h: 64px; /* header and footer (minimum) */
+  --hit-area: 44px; /* touch target on coarse pointers */
+  --icon-md: 16px;
+  --icon-sm: 12px; /* inline markers only: see-more chevron, external arrow, rating star */
+  --row-basis: 300px; /* text column next to the gutter; wraps below it when narrower */
+  --nudge: 2px; /* arrows nudging toward where they lead */
+  --hairline: 1px;
+  --rule-strong: 2px; /* quote rule, key bottom edge, highlighted code line, the photo strip's scroll line */
+  --focus-ring: 2px;
+  --focus-offset: 3px;
+  --underline-offset: 3px; /* text links, the post's topic link */
+  --kbd-min: 20px; /* narrowest key hint */
+}
+
+@media (width < 40rem) {
+  :root {
+    --text-display: 1.75rem; /* 28px */
+    --space-page: var(--space-8);
+    --space-section: var(--space-16);
+    --space-footer: var(--space-16);
+  }
+}
+
+:root[data-palette="light"] {
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* The CV's print page is always light (DESIGN.md, CV PDF). :where() keeps
+     the weight of :root, so the forced colours below still win. */
+  :root:where(:not([data-palette="light"])) {
+    --bg: #09090b; /* zinc-950 */
+    --surface: #18181b; /* zinc-900 */
+    --control: #27272a; /* zinc-800 */
+    --control-hover: #3f3f46; /* zinc-700 */
+    --line: #27272a; /* zinc-800 */
+    --line-strong: #3f3f46; /* zinc-700 */
+    --text: #f4f4f5; /* zinc-100 */
+    --text-2: #9f9fa9; /* zinc-400: 7.6:1 on the page, as light's 7.7; zinc-300 read as white beside the titles */
+    --text-3: #85858f; /* zinc-450, our step between zinc-400 and zinc-500: zinc-500 fails on a dark page (4.1:1); this is 5.5:1 on bg, 4.9:1 on surface */
+    --accent: #7c86ff; /* indigo-400 */
+    --tint: #1e1a4d; /* indigo-950 */
+    --tint-strong: #312c85; /* indigo-900 */
+    --accent-line: #432dd7; /* indigo-700 */
+    --code-literal: #c6d2ff; /* indigo-200 */
+    --scrim: rgb(0 0 0 / 0.55);
+    --photo-brightness: 0.92;
+  }
+}
+
+/* Forced colours (Windows contrast themes): the browser replaces every colour
+   that isn't a system colour, backgrounds included. As system colours, the
+   accent keeps what is drawn with it (dots, the reading progress, a checked
+   box), and the tints go: a selected or highlighted thing gets a border or an
+   outline where it's styled. Text colours stay as they are, so the browser
+   still tells links from text. */
+@media (forced-colors: active) {
+  :root {
+    --accent: LinkText;
+    --accent-line: LinkText;
+    --tint: Canvas;
+  }
+}

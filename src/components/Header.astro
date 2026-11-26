@@ -1,0 +1,250 @@
+---
+import { getLayoutCopy } from "../lib/content.ts";
+import { currentState } from "../lib/navigation.ts";
+import { routes } from "../lib/routes.ts";
+import { getSections } from "../lib/sections.ts";
+import { fill } from "../lib/template.ts";
+import Logo from "./Logo.astro";
+import SearchButton from "./SearchButton.astro";
+
+type Props = {
+  name: string;
+  readingProgress: boolean;
+};
+
+const { name, readingProgress } = Astro.props;
+const { pathname } = Astro.url;
+const [copy, sections] = await Promise.all([getLayoutCopy(), getSections()]);
+---
+
+<header class="header">
+  <div class="bar">
+    <a
+      class="home"
+      href={routes.home}
+      aria-label={fill(copy.homeName, { name })}
+    >
+      <Logo size="md" />
+    </a>
+    {/* Home alone, the page it would point to, is no navigation. */}
+    {sections.length > 1 && (
+      <nav aria-label={copy.navName}>
+        <ul class="links" role="list">
+          {sections.map(({ label, href }) => (
+            <li>
+              <a
+                class="link"
+                href={href}
+                aria-current={currentState(href, pathname)}
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )}
+    <div class="search">
+      <SearchButton />
+    </div>
+  </div>
+  {readingProgress && <div class="progress" aria-hidden="true" />}
+</header>
+
+<style>
+  .header {
+    --header-backdrop: saturate(1.4) blur(12px);
+    --progress-h: 2px;
+    --nav-gap: var(--space-6);
+
+    @media (width < 40rem) {
+      --nav-gap: var(--space-4);
+    }
+
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--z-header);
+
+    /* With the text this large, the bar wraps, and two lines kept on
+       screen would take too much of it. */
+    @media (width < 20em) {
+      position: relative;
+    }
+
+    border-block-end: var(--hairline) solid var(--line);
+    background: var(--glass);
+    backdrop-filter: var(--header-backdrop);
+    view-transition-name: site-header;
+  }
+
+  /* Grows with the page's scroll, where scroll-driven animations exist. */
+  .progress {
+    display: none;
+  }
+
+  /* Not below 20em, where the header scrolls away with the page. */
+  @media (prefers-reduced-motion: no-preference) and (width >= 20em) {
+    @supports (animation-timeline: scroll()) {
+      .progress {
+        display: block;
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: calc(-1 * var(--hairline));
+        block-size: var(--progress-h);
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+        /* Longhands: the build's CSS minifier folds animation-timeline into
+           the animation shorthand, which browsers then reject. */
+        animation-name: grow;
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: scroll(root block);
+      }
+    }
+  }
+
+  /* Empty until the page scrolls: a page too short to scroll keeps it at 0. */
+  @keyframes grow {
+    from {
+      transform: scaleX(0);
+    }
+
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    column-gap: var(--nav-gap);
+    max-inline-size: var(--column);
+    min-block-size: var(--bar-h);
+    margin-inline: auto;
+    padding-inline: var(--page-start) var(--page-end);
+
+    /* Each item moves to the next line when the line is full, in its own
+       order, so what you see, the reading order and the tab order match. */
+    @media (width < 20em) {
+      flex-wrap: wrap;
+    }
+  }
+
+  .home {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-block-size: var(--hit-area);
+    margin-inline-end: auto;
+
+    @media (width < 20em) {
+      margin-inline-end: 0;
+    }
+  }
+
+  /* The logo and the links take a click anywhere in the bar's height, and
+     the links up to halfway into the gaps beside them, so a fast click just
+     off one still lands on the nearest; how they look doesn't change. */
+  .home::before,
+  .link::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 50%;
+    block-size: var(--bar-h);
+    translate: 0 -50%;
+
+    /* Wrapped lines sit directly under each other: each takes a touch
+       area's height, not the bar's. */
+    @media (width < 20em) {
+      block-size: var(--hit-area);
+    }
+  }
+
+  .link::before {
+    inset-inline: calc(var(--nav-gap) / -2);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Wrapped onto a line of its own, search keeps a touch area's height. */
+  .search {
+    display: flex;
+    align-items: center;
+
+    @media (width < 20em) {
+      min-block-size: var(--hit-area);
+    }
+  }
+
+  .links {
+    display: flex;
+    align-items: center;
+    gap: var(--nav-gap);
+
+    @media (width < 20em) {
+      flex-wrap: wrap;
+      row-gap: 0;
+
+      & > li {
+        display: flex;
+        align-items: center;
+        min-block-size: var(--hit-area);
+      }
+    }
+  }
+
+  .link {
+    position: relative;
+    display: inline-block;
+    color: var(--text-2);
+    transition: color var(--dur-quick) var(--ease);
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: var(--text);
+      }
+    }
+
+    &[aria-current] {
+      color: var(--accent);
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      inset-block-end: calc(-1 * var(--space-1));
+      block-size: var(--hairline);
+      background: currentColor;
+      opacity: 0;
+    }
+
+    &[aria-current]::after {
+      opacity: 1;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &::after {
+        transition: opacity var(--dur-quick) var(--ease-settle);
+      }
+
+      &:hover::after {
+        opacity: 1;
+      }
+    }
+  }
+
+  /* currentColor isn't a system colour, so forced colours would drop the
+     underline. */
+  @media (forced-colors: active) {
+    .link::after {
+      background: LinkText;
+    }
+  }
+</style>

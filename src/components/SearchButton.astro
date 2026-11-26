@@ -1,0 +1,84 @@
+---
+import { getSearchCopy } from "../lib/content.ts";
+import Icon from "./Icon.astro";
+import VisuallyHidden from "./VisuallyHidden.astro";
+
+const copy = await getSearchCopy();
+// The visible shortcut is part of the name, so what's on screen is what
+// speech input can say (WCAG 2.5.3).
+---
+
+<button
+  class="search-button"
+  type="button"
+  aria-keyshortcuts="Meta+K Control+K"
+  data-search-open
+>
+  <Icon name="search" />
+  <VisuallyHidden>{copy.button}</VisuallyHidden>
+  <span class="shortcut apple">{copy.shortcut}</span>
+  <span class="shortcut other">{copy.shortcutOther}</span>
+</button>
+
+<style>
+  .search-button {
+    /* On phones, icon only. */
+    --search-button-sm: 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-block-size: var(--control-h);
+    padding-inline: var(--space-3);
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--bg);
+    color: var(--text-2);
+    font-size: var(--text-small);
+    cursor: pointer;
+    transition:
+      border-color var(--dur-quick) var(--ease),
+      color var(--dur-quick) var(--ease);
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        border-color: var(--line-strong);
+        color: var(--text);
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        border-color var(--dur-quick) var(--ease),
+        color var(--dur-quick) var(--ease),
+        scale var(--dur-quick) var(--ease-settle);
+
+      &:active {
+        scale: var(--press-scale);
+      }
+    }
+
+    /* Search needs the script: without it, there's no button. */
+    @media (scripting: none) {
+      display: none;
+    }
+
+    @media (width < 40rem) {
+      inline-size: var(--search-button-sm);
+      padding: 0;
+    }
+  }
+
+  .shortcut {
+    @media (width < 40rem) {
+      display: none;
+    }
+  }
+
+  /* The head script marks systems other than Apple's. */
+  :global(:root[data-shortcut="other"]) .apple,
+  :global(:root:not([data-shortcut="other"])) .other {
+    display: none;
+  }
+</style>

@@ -1,0 +1,10 @@
+---
+// Vercel Web Analytics: cookieless page views, from the address the browser
+// is on, with the referrer. On the 404 page they're the log of broken links.
+---
+
+<script>
+  import { inject } from "@vercel/analytics";
+
+  inject({ mode: "production" });
+</script>

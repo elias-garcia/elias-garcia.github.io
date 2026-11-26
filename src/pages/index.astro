@@ -1,0 +1,387 @@
+---
+import { getImage, Image } from "astro:assets";
+import avatar from "../assets/avatar.jpg";
+import DownloadCv from "../components/DownloadCv.astro";
+import Entry from "../components/Entry.astro";
+import ExternalLabel from "../components/ExternalLabel.astro";
+import ImageViewer from "../components/ImageViewer.astro";
+import List from "../components/List.astro";
+import Link from "../components/mdx/Link.astro";
+import UnorderedList from "../components/mdx/UnorderedList.astro";
+import ListRow from "../components/ListRow.astro";
+import PageTitle from "../components/PageTitle.astro";
+import QuietLink from "../components/QuietLink.astro";
+import Section from "../components/Section.astro";
+import StructuredData from "../components/StructuredData.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  getCourses,
+  getEducation,
+  getHomeCopy,
+  getPage,
+  getPosts,
+  getProfile,
+  getProjects,
+  getTalks,
+  getWork,
+  withDescriptions,
+} from "../lib/content.ts";
+import { formatCountry, formatMonthYear, isoMonth } from "../lib/format.ts";
+import { linkTarget } from "../lib/links.ts";
+import { requireSite } from "../lib/navigation.ts";
+import { routes } from "../lib/routes.ts";
+import { hasWriting } from "../lib/sections.ts";
+import { person, website } from "../lib/structured-data.ts";
+import { fill } from "../lib/template.ts";
+
+const [
+  copy,
+  writingPage,
+  profile,
+  posts,
+  work,
+  projects,
+  talks,
+  courses,
+  education,
+] = await Promise.all([
+  getHomeCopy(),
+  getPage("writing"),
+  getProfile(),
+  getPosts(),
+  getWork().then(withDescriptions),
+  getProjects().then(withDescriptions),
+  getTalks().then(withDescriptions),
+  getCourses().then(withDescriptions),
+  getEducation().then(withDescriptions),
+]);
+const [description = profile.role] = profile.about;
+const siteUrl = requireSite(Astro.site, "structured data");
+const portrait = await getImage({ src: avatar, width: 400 });
+const websiteData = website(profile, siteUrl);
+const personData = person(profile, siteUrl, new URL(portrait.src, siteUrl));
+// A section with no entries isn't built (DESIGN.md §8).
+const built = {
+  work: work.length > 0,
+  projects: projects.length > 0,
+  writing: hasWriting,
+  speaking: talks.length > 0,
+  teaching: courses.length > 0,
+  education: education.length > 0,
+};
+// Arriving (DESIGN.md §2.5): the name block, About, the first section and
+// the second one after another, then everything below as one last step.
+const [firstSection, secondSection] = Object.entries(built)
+  .filter(([, isBuilt]) => isBuilt)
+  .map(([section]) => section);
+const lastArrivalStep = 4;
+const sectionStep = (section: keyof typeof built) =>
+  section === firstSection
+    ? 2
+    : section === secondSection
+      ? 3
+      : lastArrivalStep;
+// A description's links go through the posts' Link (a new tab for another
+// site), and its lists keep their semantics without markers.
+const descriptionComponents = { a: Link, ul: UnorderedList };
+const hasPhotos = [work, projects, talks, courses, education].some((entries) =>
+  entries.some(({ data }) => data.images !== undefined),
+);
+---
+
+<BaseLayout
+  title={profile.name}
+  description={description}
+  lastArrivalStep={lastArrivalStep}
+>
+  <StructuredData slot="head" data={websiteData} />
+  <StructuredData slot="head" data={personData} />
+  <div class="home">
+    <header class="intro">
+      <div class="identity enter" style="--i: 0">
+        <Image
+          class="avatar"
+          src={avatar}
+          alt={profile.name}
+          widths={[80, 104, 160, 208]}
+          sizes="(width < 40rem) 80px, 104px"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <div class="who">
+          <PageTitle>{profile.name}</PageTitle>
+          <p class="role">
+            {fill(copy.role, {
+              role: profile.role,
+              city: profile.city,
+              country: formatCountry(profile.country),
+            })}
+          </p>
+          <div class="actions">
+            <DownloadCv />
+            {profile.openToWork && (
+              <p class="availability">
+                <span class="dot" aria-hidden="true"></span>
+                {copy.openToWork}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+      <Section title={copy.about} arrivalStep={1}>
+        <div class="about">
+          {profile.about.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+        </div>
+      </Section>
+    </header>
+
+    {built.work && (
+      <Section title={copy.work} arrivalStep={sectionStep("work")}>
+        <List>
+          {work.map(({ data, Content }) => (
+            <Entry {...data} collapsible>
+              <Content components={descriptionComponents} />
+            </Entry>
+          ))}
+        </List>
+      </Section>
+    )}
+
+    {built.projects && (
+      <Section
+        id="projects"
+        title={copy.projects}
+        arrivalStep={sectionStep("projects")}
+      >
+        <List>
+          {projects.map(({ data, Content }) => (
+            <Entry {...data}>
+              <Content components={descriptionComponents} />
+            </Entry>
+          ))}
+        </List>
+      </Section>
+    )}
+
+    {built.writing && (
+      <Section title={writingPage.title} arrivalStep={sectionStep("writing")}>
+        <QuietLink slot="action" href={routes.writing} chevron="forward">
+          {copy.allPosts}
+        </QuietLink>
+        <List>
+          {posts.slice(0, 3).map((post) => (
+            <ListRow title={post.data.title} href={routes.post(post.id)}>
+              <time slot="date" datetime={isoMonth(post.data.date)}>
+                {formatMonthYear(post.data.date)}
+              </time>
+              {post.data.description}
+            </ListRow>
+          ))}
+        </List>
+      </Section>
+    )}
+
+    {built.speaking && (
+      <Section title={copy.speaking} arrivalStep={sectionStep("speaking")}>
+        <List>
+          {talks.map(({ data, Content }) => (
+            <Entry {...data}>
+              <Content components={descriptionComponents} />
+            </Entry>
+          ))}
+        </List>
+      </Section>
+    )}
+
+    {built.teaching && (
+      <Section title={copy.teaching} arrivalStep={sectionStep("teaching")}>
+        <List>
+          {courses.map(({ data, Content }) => (
+            <Entry {...data}>
+              <Content components={descriptionComponents} />
+            </Entry>
+          ))}
+        </List>
+      </Section>
+    )}
+
+    {built.education && (
+      <Section title={copy.education} arrivalStep={sectionStep("education")}>
+        <List>
+          {education.map(({ data, Content }) => (
+            <Entry {...data}>
+              <Content components={descriptionComponents} />
+            </Entry>
+          ))}
+        </List>
+      </Section>
+    )}
+
+    <Section title={copy.contact} arrivalStep={lastArrivalStep}>
+      <address>
+        <dl>
+          {profile.contact.map((link) => (
+            <div class="contact-row">
+              <dt>{link.label}</dt>
+              <dd>
+                <a href={link.href} {...linkTarget(link.href)}>
+                  <ExternalLabel href={link.href} label={link.text} />
+                </a>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </address>
+    </Section>
+  </div>
+  {hasPhotos && <ImageViewer />}
+</BaseLayout>
+
+<style>
+  .home {
+    --dot: 8px; /* the availability dot */
+
+    /* The availability dot's one ping. */
+    --dur-ping: 2.4s;
+    --ease-ping: cubic-bezier(0, 0, 0.2, 1);
+    --avatar: 104px;
+    --avatar-sm: 80px;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-section);
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+
+    @media (width < 40rem) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  .avatar {
+    flex: none;
+    inline-size: var(--avatar);
+    block-size: var(--avatar);
+    border-radius: 50%;
+    background: var(--control);
+    object-fit: cover;
+
+    @media (width < 40rem) {
+      inline-size: var(--avatar-sm);
+      block-size: var(--avatar-sm);
+    }
+  }
+
+  .who {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-inline-size: 0;
+  }
+
+  .role {
+    color: var(--text-2);
+    line-height: var(--leading-body);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block-start: var(--space-3);
+  }
+
+  /* As tall as the Download CV button beside it on one line; when the text
+     wraps, it grows down and the dot stays centred on the first line. */
+  .availability {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: calc((var(--control-h) - 1lh) / 2) var(--space-1);
+    color: var(--text-2);
+    font-size: var(--text-small);
+  }
+
+  .dot {
+    position: relative;
+    flex: none;
+    margin-block-start: calc((1lh - var(--dot)) / 2);
+    inline-size: var(--dot);
+    block-size: var(--dot);
+    border-radius: 50%;
+    background: var(--accent);
+
+    @media (prefers-reduced-motion: no-preference) {
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: ping var(--dur-ping) var(--ease-ping) both;
+      }
+    }
+  }
+
+  @keyframes ping {
+    from {
+      opacity: 0.45;
+    }
+
+    80%,
+    to {
+      opacity: 0;
+      scale: 2.6;
+    }
+  }
+
+  /* A list row's padding, so the first line sits as far below the heading
+     as every list's first row. */
+  .about {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding-block: var(--space-3);
+    color: var(--text-2);
+    line-height: var(--leading-body);
+  }
+
+  /* The list rows' padding, so the first row starts as far under the
+     heading as every other section's. */
+  .contact-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-6);
+    padding-block: var(--space-3);
+
+    & > dt {
+      flex: 0 0 var(--gutter);
+      color: var(--text-3);
+    }
+
+    & > dd {
+      flex: 1 1 var(--row-basis);
+      margin: 0;
+      /* A long address breaks instead of running off a narrow screen. */
+      overflow-wrap: anywhere;
+    }
+  }
+
+  address {
+    font-style: normal;
+  }
+</style>

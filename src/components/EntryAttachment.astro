@@ -1,0 +1,38 @@
+---
+import type { ImageMetadata } from "astro";
+import EntryPhotos from "./EntryPhotos.astro";
+import LinkAttachment from "./LinkAttachment.astro";
+
+// What hangs under an entry's text: its photos, or one link card, never both
+// (DESIGN.md, Entry attachment). Both follow the row's wrap through the
+// entry's container.
+type Props = {
+  title: string;
+  subtitle?: string | undefined;
+  date: string;
+  images?: readonly { src: ImageMetadata; alt: string }[] | undefined;
+  attachment?:
+    | {
+        href: string;
+        title?: string | undefined;
+        image?: ImageMetadata | undefined;
+        site?: string | undefined;
+      }
+    | undefined;
+};
+
+const { title, subtitle, date, images, attachment } = Astro.props;
+---
+
+<div>
+  {images !== undefined ? (
+    <EntryPhotos
+      title={title}
+      subtitle={subtitle}
+      date={date}
+      photos={images}
+    />
+  ) : (
+    attachment !== undefined && <LinkAttachment attachment={attachment} />
+  )}
+</div>

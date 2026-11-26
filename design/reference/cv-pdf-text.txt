@@ -1,0 +1,106 @@
+          Elías García
+          Software engineer in Porto, Portugal
+
+
+   eliasgarciadev@gmail.com                       eliasgarcia.dev                  github.com/elias-garcia
+   linkedin.com/in/elias-garcia-marino            x.com/eliasgarciadev
+
+
+
+About
+
+I’ve spent nine years building products end to end, from real-time data pipelines and APIs to the
+interfaces on top. Most recently I led engineering at Vesu, a lending protocol on Starknet. Before that,
+four years at Polygon Labs, leading the frontend of Polygon zkEVM and the team behind Polygon ID.
+
+These days I’m also exploring how AI agents change the way small teams ship. This site is where I keep
+the projects and notes.
+
+
+
+Experience
+
+2024 – Now        Vesu · Remote
+                  Engineering Lead
+
+                    Led engineering from launch to $84.6M in customer assets.
+                    Built the lender and borrower app, a risk-parameter admin panel and a blockchain-
+                    only fallback UI so users can exit positions during an outage, on a shared Ark UI
+                    design system.
+                    Built the real-time event-ingestion pipeline, a public API, an RFQ system for
+                    liquidations over WebSockets and an MCP server for product data.
+                    Set up issue tracking, CI/CD and releases from zero, mentored the frontend team
+                    and introduced the company’s AI development practice.
+
+
+2020 – 2024       Polygon Labs · Remote
+                  Staff Frontend Engineer → Tech Lead
+
+                    Hermez: built the consumer wallet and block explorer, and contributed to the
+                    protocol SDK. Polygon acquired Hermez in 2021.
+                    Polygon zkEVM: led the 3-person frontend team across every user-facing product,
+                    including the bridge, as it grew to $180M in bridged assets.
+                    Polygon ID: tech lead of a 10-engineer team building the credential issuer, wallet,
+                    marketplace and schema tooling.
+
+
+2019 – 2020       Nexiona · Remote
+                  Senior Frontend Engineer
+
+                    Built the frontend of MIIMETIQ in React and Redux, used across Europe by
+                    companies including Celsa Group and Grifols.
+2018 – 2019   Netex Learning · On-site, A Coruña
+              Lead Frontend Engineer
+
+                Led the 4-person Angular team behind Netex Cloud, used by thousands of learners
+                at companies including Amazon and Inditex. Delivered internationalisation and
+                accessibility.
+                Led a cross-department initiative to build a shared component library adopted
+                across the company’s products.
+
+
+2017 – 2018   Ágora Binaria · Hybrid, A Coruña
+              Full-Stack Engineer
+
+                Built full-stack client applications and did performance work on existing Angular
+                codebases.
+
+
+
+Projects
+
+2026          POL funding spreads
+              Funding-rate arbitrage on POL perps across DEXes.
+
+2026          Roleburn
+              A daily radar for remote roles that match my CV.
+
+2026          work-issue
+              Agents that take a GitHub issue to a reviewed PR.
+
+
+
+Speaking
+
+Jan 2024      Preserving privacy with Polygon ID profiles
+              House of ZK, EthDenver
+
+Jan 2024      Zero-knowledge identity with Polygon ID
+              Polygon AggCave, EthDenver
+
+Jul 2023      Issuing verifiable credentials with Polygon ID
+              Polygon DevX Global Tour, Lisbon
+
+
+
+Teaching
+
+Mar 2022      The DeFi revolution · balio.app/curso/defi
+              Online course in Spanish, Balio
+
+
+
+Education
+
+2013 – 2017   BSc Computer Science, Software Engineering at University of A Coruña
+

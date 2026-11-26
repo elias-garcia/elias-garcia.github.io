@@ -1,0 +1,109 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { getPostCopy } from "../../lib/content.ts";
+import { fill } from "../../lib/template.ts";
+import CopyButton from "../CopyButton.astro";
+
+type Props = HTMLAttributes<"pre"> & { "data-language"?: string };
+
+const { class: className, style, "data-language": fence } = Astro.props;
+const copy = await getPostCopy();
+// Astro names a fence without a language "plaintext".
+const language = fence === "plaintext" ? undefined : fence;
+const name =
+  language === undefined
+    ? copy.plainCodeName
+    : fill(copy.codeName, { language });
+---
+
+<div class="code" data-copy-scope>
+  {language !== undefined && (
+    <div class="header">
+      <span class="language">{language}</span>
+      <CopyButton
+        label={copy.copyCode}
+        name={fill(copy.copyCodeName, { language })}
+        icon="copy"
+        onSurface
+      />
+    </div>
+  )}
+  <pre
+    class:list={["block", className]}
+    style={style}
+    tabindex="0"
+    role="region"
+    aria-label={name}
+    data-copy-text
+  ><slot /></pre>
+</div>
+
+<style>
+  /* Colours come from the site's tokens through src/lib/shiki-theme.ts. */
+  .code {
+    --code-bar-h: 48px;
+
+    overflow: hidden;
+    border: var(--hairline) solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: var(--code-bar-h);
+    padding-inline: var(--space-4) var(--space-2);
+    border-block-end: var(--hairline) solid var(--line);
+  }
+
+  .language {
+    color: var(--text-3);
+    font-size: var(--text-micro);
+    font-weight: var(--weight-medium);
+  }
+
+  .block {
+    margin: 0;
+    padding-block: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-code);
+    line-height: var(--leading-code);
+
+    &:focus-visible {
+      outline-offset: calc(-1 * var(--focus-ring));
+    }
+
+    & :global(code) {
+      display: block;
+      min-inline-size: max-content;
+    }
+
+    /* Shiki separates lines with newlines, so lines stay inline-block:
+       display: block would add an empty line between each. */
+    & :global(.line) {
+      display: inline-block;
+      inline-size: 100%;
+      padding-inline: var(--space-5);
+    }
+
+    /* Comments and punctuation rise to --text-2 on a highlighted line:
+       zinc-500 on indigo-50 is 4.3:1, below 4.5:1. */
+    & :global(.line.highlighted) {
+      --code-muted: var(--text-2);
+
+      background: var(--tint);
+      box-shadow: inset var(--rule-strong) 0 var(--accent);
+    }
+  }
+
+  /* A highlighted line's tint and inset shadow are gone in forced colours:
+     an edge marks it. */
+  @media (forced-colors: active) {
+    .block :global(.line.highlighted) {
+      border-inline-start: var(--rule-strong) solid Highlight;
+      padding-inline-start: calc(var(--space-5) - var(--rule-strong));
+    }
+  }
+</style>

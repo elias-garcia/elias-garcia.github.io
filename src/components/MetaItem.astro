@@ -1,0 +1,38 @@
+---
+type Props = {
+  // Kept on one line, like "4 min read".
+  nowrap?: boolean;
+};
+
+const { nowrap = false } = Astro.props;
+---
+
+<span class="item">
+  {" "}
+  <span class="sep" aria-hidden="true">
+    ·&nbsp;
+  </span>
+  {nowrap ? (
+    <span class="nowrap">
+      <slot />
+    </span>
+  ) : (
+    <slot />
+  )}
+</span>
+
+<style>
+  /* A normal space before the dot and a no-break space after it: a line can
+     break before a separator, never after. The first item has none. */
+  .sep {
+    margin-inline: var(--space-1);
+  }
+
+  .item:first-child .sep {
+    display: none;
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+</style>

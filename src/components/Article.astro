@@ -1,0 +1,74 @@
+---
+import DisplayTitle from "./DisplayTitle.astro";
+import Prose from "./mdx/Prose.astro";
+
+// A post: the way back with an action beside it, the title and what sits
+// under it, the content (the default slot, set as prose), and what closes
+// the page. Arriving, the head is the first step and the rest the second
+// (DESIGN.md §2.5).
+type Props = {
+  title: string;
+};
+
+const { title } = Astro.props;
+---
+
+<article class="article">
+  <div class="reading">
+    <div class="head enter" style="--i: 0">
+      <div class="top">
+        <slot name="back" />
+        <slot name="action" />
+      </div>
+      <header class="intro">
+        <DisplayTitle>{title}</DisplayTitle>
+        <slot name="intro" />
+      </header>
+    </div>
+    <Prose arrivalStep={1}>
+      <slot />
+    </Prose>
+  </div>
+  <div class="end enter" style="--i: 1">
+    <slot name="end" />
+  </div>
+</article>
+
+<style>
+  .article {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  .reading,
+  .end {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  /* Nothing closes the page: no gap either. */
+  .end:not(:has(*)) {
+    display: none;
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+</style>

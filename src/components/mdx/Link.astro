@@ -1,0 +1,174 @@
+---
+import { getPostCopy } from "../../lib/content.ts";
+import { linkTarget, opensNewTab } from "../../lib/links.ts";
+import { fill } from "../../lib/template.ts";
+import Icon from "../Icon.astro";
+import TextLink from "../TextLink.astro";
+import NewTabNote from "../NewTabNote.astro";
+
+// What MDX passes for a Markdown link. GFM marks footnote references and back
+// links with data attributes.
+type Props = {
+  href?: string;
+  id?: string;
+  title?: string;
+  "aria-label"?: string;
+  "data-footnote-ref"?: unknown;
+  "data-footnote-backref"?: unknown;
+};
+
+const {
+  href,
+  id,
+  title,
+  "aria-label": label,
+  "data-footnote-ref": reference,
+  "data-footnote-backref": backlink,
+} = Astro.props;
+const number =
+  reference === undefined ? "" : await Astro.slots.render("default");
+const { footnoteName } = await getPostCopy();
+---
+
+{reference !== undefined ? (
+  <a class="fn" href={href} id={id} aria-label={fill(footnoteName, { number })}>
+    {number}
+  </a>
+) : backlink !== undefined ? (
+  <a class="backref" href={href} aria-label={label}>
+    <Icon name="corner-down-left" size="sm" />
+  </a>
+) : (
+  <TextLink href={href} id={id} title={title} {...linkTarget(href)}>
+    <slot />
+    {opensNewTab(href) && <NewTabNote />}
+  </TextLink>
+)}
+
+<style>
+  /* A footnote marker in the text. */
+  .fn {
+    /* With the 12px text, these draw a box of about 20×20 around one
+       digit. */
+    --marker-padding-block: 2.5px;
+    --marker-padding-inline: 6px;
+    /* Markers sit just above the baseline. */
+    --marker-lift: 2px;
+    /* A marker you return to lands a third of the way down. */
+    --marker-scroll: 30vh;
+
+    /* A plain inline, never an inline box: a line can break before one of
+       those, leaving the marker at the start of the next line. */
+    display: inline;
+    margin-inline-start: var(--space-1);
+    padding: var(--marker-padding-block) var(--marker-padding-inline);
+    border-radius: var(--r-sm);
+    background: var(--control);
+    color: var(--text-2);
+    font-size: var(--text-micro);
+    font-weight: var(--weight-semibold);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--leading-none);
+    vertical-align: var(--marker-lift);
+    /* Returning from a note, the marker lands with the sentence before it in
+       view, and lights up in its hover colours. */
+    scroll-margin-block-start: var(--marker-scroll);
+    transition:
+      background var(--dur-quick) var(--ease),
+      color var(--dur-quick) var(--ease);
+
+    &:focus-visible {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: var(--accent);
+        color: var(--bg);
+      }
+    }
+
+    &:target {
+      animation: light var(--dur-flash) var(--ease) both;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        background: var(--accent);
+        color: var(--bg);
+      }
+    }
+  }
+
+  @keyframes light {
+    0%,
+    25% {
+      background: var(--accent);
+      color: var(--bg);
+    }
+  }
+
+  /* The link from a note back to its marker: a 24px target around the 12px
+     icon. The negative block margins keep the line height as it is. */
+  .backref {
+    /* The smallest target (WCAG 2.5.8). */
+    --target-sm: 24px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--target-sm);
+    block-size: var(--target-sm);
+    margin: calc(-1 * var(--space-1)) 0 calc(-1 * var(--space-1)) var(--space-1);
+    border-radius: var(--r-sm);
+    color: var(--text-3);
+    vertical-align: middle;
+    transition:
+      color var(--dur-quick) var(--ease),
+      background var(--dur-quick) var(--ease);
+
+    &:focus-visible {
+      background: var(--control);
+      color: var(--accent);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: var(--control);
+        color: var(--accent);
+      }
+    }
+  }
+
+  /* Touch: the 44px hit area is centred on the small markers. */
+  @media (pointer: coarse) {
+    :is(.fn, .backref)::before {
+      inset-inline: 50% auto;
+      inline-size: var(--hit-area);
+      translate: -50% -50%;
+    }
+  }
+
+  /* Forced colours drop the marker's fill: it gets an edge, and its number
+     stays readable on the accent. */
+  @media (forced-colors: active) {
+    .fn {
+      border: var(--hairline) solid ButtonBorder;
+
+      /* Not adjusted, or the browser paints a plate behind the number. */
+      &:is(:focus-visible, :target) {
+        forced-color-adjust: none;
+        background: LinkText;
+        color: Canvas;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          forced-color-adjust: none;
+          background: LinkText;
+          color: Canvas;
+        }
+      }
+    }
+  }
+</style>

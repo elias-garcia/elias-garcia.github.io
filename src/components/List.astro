@@ -1,0 +1,21 @@
+<ul class="list" role="list">
+  <slot />
+</ul>
+
+<style>
+  .list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Hovering a row that links or opens quiets every other row of the list,
+     plain ones included, on real pointers only. A plain row has no hover,
+     so it quiets nothing. What hangs under a post row (photos, an
+     attachment) isn't part of `.row` and stays; an open job's body is part
+     of its row and fades with it. */
+  @media (hover: hover) and (pointer: fine) {
+    .list:has(:global(.row-interactive:hover)) :global(.row:not(:hover)) {
+      opacity: var(--dim-rest);
+    }
+  }
+</style>

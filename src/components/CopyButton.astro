@@ -1,0 +1,163 @@
+---
+import { getPostCopy } from "../lib/content.ts";
+import Button from "./Button.astro";
+import Icon from "./Icon.astro";
+import VisuallyHidden from "./VisuallyHidden.astro";
+
+type Props = {
+  label: string;
+  name: string;
+  // The icon before the label, until copying swaps it for a check or an ×.
+  icon: "markdown" | "copy";
+  onSurface?: boolean;
+  // Copies this URL's text; without it, the text of the [data-copy-text]
+  // element inside the closest [data-copy-scope].
+  url?: string;
+};
+
+const { label, name, icon, url, onSurface = false } = Astro.props;
+const { copied, copyFailed } = await getPostCopy();
+---
+
+<span class="copy">
+  <Button
+    aria-label={name}
+    onSurface={onSurface}
+    data-copy-button
+    data-copy-url={url}
+    data-copied={copied}
+    data-copy-failed={copyFailed}
+  >
+    <span class="icons" aria-hidden="true">
+      <Icon name={icon} class="idle" />
+      <Icon name="check" class="done" />
+      <Icon name="x" class="failed" />
+    </span>
+    {label}
+  </Button>
+  <VisuallyHidden>
+    <span role="status" data-copy-status></span>
+  </VisuallyHidden>
+</span>
+
+<script>
+  const shownFor = { copied: 1500, failed: 2000 };
+  const timers = new WeakMap<HTMLElement, number>();
+
+  async function textToCopy(button: HTMLElement): Promise<string> {
+    const { copyUrl } = button.dataset;
+    if (copyUrl !== undefined) {
+      const response = await fetch(copyUrl);
+      if (!response.ok) {
+        throw new Error(`Could not load ${copyUrl}.`);
+      }
+      return response.text();
+    }
+    const source = button
+      .closest("[data-copy-scope]")
+      ?.querySelector<HTMLElement>("[data-copy-text]");
+    return source?.innerText ?? "";
+  }
+
+  // The label and the name stay as they are: only the icon shows the result,
+  // and the live region says it.
+  function show(button: HTMLElement, state: "copied" | "failed"): void {
+    const status = button.parentElement?.querySelector("[data-copy-status]");
+    if (status === null || status === undefined) {
+      return;
+    }
+    const message =
+      (state === "copied"
+        ? button.dataset.copied
+        : button.dataset.copyFailed) ?? "";
+    button.dataset.copyState = state;
+    // VoiceOver skips a message identical to the region's last one, so a
+    // repeat while it's still showing gets an invisible difference.
+    status.textContent =
+      status.textContent === message ? `${message}\u00A0` : message;
+    window.clearTimeout(timers.get(button));
+    timers.set(
+      button,
+      window.setTimeout(() => {
+        button.dataset.copyState = "idle";
+        status.textContent = "";
+      }, shownFor[state]),
+    );
+  }
+
+  async function copy(button: HTMLElement): Promise<void> {
+    try {
+      // A promise inside ClipboardItem keeps the click's permission while the
+      // text loads, which Safari needs for the fetched Markdown.
+      await navigator.clipboard.write([
+        new ClipboardItem({ "text/plain": textToCopy(button) }),
+      ]);
+      show(button, "copied");
+    } catch {
+      show(button, "failed");
+    }
+  }
+
+  for (const button of document.querySelectorAll<HTMLElement>(
+    "[data-copy-button]",
+  )) {
+    button.addEventListener("click", () => {
+      void copy(button);
+    });
+  }
+</script>
+
+<style>
+  .copy {
+    --swap-blur: 2px;
+    --swap-scale: 0.96;
+
+    display: inline-flex;
+
+    /* Copying needs the script. */
+    @media (scripting: none) {
+      display: none;
+    }
+  }
+
+  /* One cell for the three icons, so the button never changes width. They
+     swap with a short crossfade, as transitions so a second click mid-swap
+     reverses smoothly; with reduced motion only the opacity changes.
+     :where() keeps the hidden default below the rules that show an icon. */
+  .icons {
+    display: inline-grid;
+    place-items: center;
+  }
+
+  .icons > :where(.idle, .done, .failed) {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transition: opacity var(--dur-move) var(--ease-settle);
+  }
+
+  :global([data-copy-button]:not([data-copy-state])) .idle,
+  :global([data-copy-state="idle"]) .idle,
+  :global([data-copy-state="copied"]) .done,
+  :global([data-copy-state="failed"]) .failed {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .icons > :where(.idle, .done, .failed) {
+      filter: blur(var(--swap-blur));
+      scale: var(--swap-scale);
+      transition:
+        opacity var(--dur-move) var(--ease-settle),
+        filter var(--dur-move) var(--ease-settle),
+        scale var(--dur-move) var(--ease-settle);
+    }
+
+    :global([data-copy-button]:not([data-copy-state])) .idle,
+    :global([data-copy-state="idle"]) .idle,
+    :global([data-copy-state="copied"]) .done,
+    :global([data-copy-state="failed"]) .failed {
+      filter: none;
+      scale: 1;
+    }
+  }
+</style>

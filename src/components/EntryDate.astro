@@ -1,0 +1,25 @@
+---
+import { getHomeCopy } from "../lib/content.ts";
+import { formatEntryDate } from "../lib/format.ts";
+
+// An entry's date column: one date, or a range whose open end ("now") reads
+// as the interface's word for it.
+type Props = { date: string } | { start: string; end: string };
+
+const { present } = await getHomeCopy();
+const props = Astro.props;
+---
+
+{"date" in props ? (
+  <time datetime={props.date}>{formatEntryDate(props.date)}</time>
+) : (
+  <>
+    <time datetime={props.start}>{formatEntryDate(props.start)}</time>
+    {" – "}
+    {props.end === "now" ? (
+      present
+    ) : (
+      <time datetime={props.end}>{formatEntryDate(props.end)}</time>
+    )}
+  </>
+)}

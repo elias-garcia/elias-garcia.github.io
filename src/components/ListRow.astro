@@ -1,0 +1,134 @@
+---
+import { leavesSite, linkTarget } from "../lib/links.ts";
+import ExternalLabel from "./ExternalLabel.astro";
+
+type Props = {
+  title: string;
+  href?: string | undefined;
+  article?: boolean;
+  // Below 40rem, drop the date column with what's in it.
+  dateOnPhones?: boolean;
+};
+
+const { title, href, article = false, dateOnPhones = true } = Astro.props;
+// Rendered first, so a slot passed empty leaves no wrapper: Astro reports a
+// slot whose content renders nothing as present.
+const meta = Astro.slots.has("meta")
+  ? (await Astro.slots.render("meta")).trim()
+  : "";
+const Row = article ? "article" : "div";
+const Title = article ? "h3" : "span";
+---
+
+<li>
+  <Row class:list={["row", { "row-interactive": href !== undefined }]}>
+    <div class:list={["date", { "date-wide-only": !dateOnPhones }]}>
+      <slot name="date" />
+    </div>
+    <div class="text">
+      <Title class="title">
+        {href === undefined ? (
+          title
+        ) : (
+          <a class="title-link" href={href} {...linkTarget(href)}>
+            {leavesSite(href) ? (
+              <ExternalLabel href={href} label={title} />
+            ) : (
+              title
+            )}
+          </a>
+        )}
+      </Title>
+      <span class="description">
+        <slot />
+      </span>
+      {meta !== "" && (
+        <span class="meta">
+          <Fragment set:html={meta} />
+        </span>
+      )}
+    </div>
+  </Row>
+</li>
+
+<style>
+  .row {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-6);
+    padding-block: var(--space-3);
+    /* It fades with the list's dimming. */
+    transition: opacity var(--dur-quick) var(--ease);
+  }
+
+  /* Pressed on a touch screen, the row dims at once and comes back over
+     150ms (DESIGN.md §2.9). */
+  @media (hover: none), (pointer: coarse) {
+    .row-interactive {
+      transition: opacity var(--dur-quick) var(--ease-settle);
+    }
+
+    .row-interactive:has(.title-link:active) {
+      opacity: var(--dim-press);
+      transition: none;
+    }
+  }
+
+  /* The title link covers the whole row: one row, one action. */
+  .title-link {
+    /* Not positioned, despite the touch target rule in global.css, so the
+       ::after covers the row instead of the link. */
+    position: static;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+
+    &:focus-visible {
+      outline: none;
+
+      &::after {
+        border-radius: var(--r-sm);
+        outline: var(--focus-ring) solid var(--accent);
+        outline-offset: var(--focus-offset);
+      }
+    }
+  }
+
+  .date {
+    flex: 0 0 var(--gutter);
+    color: var(--text-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .date-wide-only {
+    @media (width < 40rem) {
+      display: none;
+    }
+  }
+
+  .text {
+    display: flex;
+    flex: 1 1 var(--row-basis);
+    flex-direction: column;
+    min-inline-size: 0;
+  }
+
+  .title {
+    font-size: inherit;
+    font-weight: var(--weight-medium);
+  }
+
+  .description {
+    color: var(--text-2);
+  }
+
+  .meta {
+    margin-block-start: var(--space-1);
+    color: var(--text-3);
+    font-size: var(--text-small);
+  }
+</style>

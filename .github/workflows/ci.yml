@@ -1,0 +1,101 @@
+name: CI
+
+# Every pull request is checked and, once the checks pass, deployed as a
+# preview. Every push to main (a merged pull request) is checked again and
+# deployed to production.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# A newer push replaces a pull request's run; runs on main finish, so a deploy
+# to production is never cut off.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: npm
+      - run: npm ci
+      # The build prints the CV with Google Chrome, and the accessibility
+      # check and Lighthouse run in it.
+      - run: npx playwright install chrome
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: npm run html
+      # Internal links and their anchors, without the network. /writing is
+      # writing.html in dist.
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --offline
+            --include-fragments
+            --root-dir ${{ github.workspace }}/dist
+            --fallback-extensions html
+            --no-progress
+            'dist/**/*.html'
+      - run: npm run a11y
+      - run: npm run lighthouse
+
+  # Vercel only hosts what this job uploads: its own builds can't run Chrome,
+  # which prints the CV (vercel.json turns them off). Its project and token are
+  # repository secrets: VERCEL_ORG_ID, VERCEL_PROJECT_ID and VERCEL_TOKEN.
+  deploy:
+    needs: checks
+    # Pull requests from forks can't read the secrets.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    # GitHub records each run as a deployment to this environment, with the
+    # address it deployed to: a pull request shows it with a "View
+    # deployment" button, kept up to date on every push. A preview is the pull
+    # request merged into main, as the checks built it. Pull requests share
+    # `preview`, so a newer one's deploy marks an older one's inactive (the
+    # older preview still works). The name repeats ENVIRONMENT's expression:
+    # this key can't read `env`.
+    environment:
+      name: ${{ github.event_name == 'push' && 'production' || 'preview' }}
+      url: ${{ steps.deploy.outputs.url }}
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      ENVIRONMENT: ${{ github.event_name == 'push' && 'production' || 'preview' }}
+    steps:
+      # Nothing that installs or builds gets a GitHub token through git.
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: npm
+      - run: npm ci
+      # The build prints the CV with Google Chrome.
+      - run: npx playwright install chrome
+      - run: npm install --global vercel@66.6.0
+      # The Vercel token can deploy to production, so only the two steps that
+      # talk to Vercel get it: never the build, which runs every package's
+      # code. The dependencies are already installed (vercel.json's empty
+      # installCommand).
+      - run: vercel pull --yes --environment="$ENVIRONMENT"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      # Production builds and deploys with --prod; previews with nothing.
+      - run: vercel build ${{ env.ENVIRONMENT == 'production' && '--prod' || '' }}
+      - id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          url=$(vercel deploy --prebuilt ${{ env.ENVIRONMENT == 'production' && '--prod' || '' }})
+          echo "url=$url" >> "$GITHUB_OUTPUT"

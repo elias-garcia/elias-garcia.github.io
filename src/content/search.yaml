@@ -1,0 +1,54 @@
+search:
+  button: Search the site
+  shortcut: ⌘K
+  # On systems other than Apple's.
+  shortcutOther: Ctrl K
+  dialog: Search
+  # The input's placeholder and label: the second when there are no posts.
+  input:
+    label: Search posts
+    labelNothing: Search the site
+  clear: Clear
+  results: Results
+  goTo: Go to
+  # One line for each section the site can have, by its path.
+  sections:
+    /: About me, work experience, talks and contact
+    /writing: All posts
+  actions: Actions
+  email: Send me an email
+  cv:
+    line: PDF or Markdown
+    placeholder: Choose a format
+    # When what's typed starts no format's name; {query} is what was typed.
+    noMatch: No format matches “{query}”. Backspace to go back.
+    back: Back to all results
+  rss:
+    title: Subscribe with RSS
+    line: Get new posts in your reader
+  # {query} is what the visitor typed. The second title is for a site with no
+  # posts, like the input.
+  noResults:
+    title: No posts match “{query}”
+    titleNothing: Nothing matches “{query}”
+    hint: Try a topic I write about, or suggest this one.
+    # Without posts there are no topics to offer and nothing to suggest.
+    hintWithoutPosts: Try another word, or send me an email.
+  topics: Topics
+  suggest: Suggest
+  suggestion:
+    title: Suggest “{query}” as a post
+    line: Opens your email app
+    subject: "Post idea: {query}"
+  hints:
+    escape: esc
+    move: to move
+    open: to open
+    back: to go back
+  # Counts by plural category ("one", "other"); {count} is the number.
+  resultCount:
+    one: "{count} result"
+    other: "{count} results"
+  postCount:
+    one: "{count} post"
+    other: "{count} posts"
