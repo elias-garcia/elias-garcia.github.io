@@ -76,8 +76,9 @@ const video = preview?.type?.startsWith("video") === true;
     --play: 32px;
     --play-stacked: 48px;
 
+    /* As tall as the taller of the 16:9 image and the text with its
+       padding: when the text needs more room, the image frame stretches. */
     display: flex;
-    align-items: center;
     overflow: hidden;
     border: var(--hairline) solid var(--line);
     border-radius: var(--r-lg);
@@ -109,7 +110,8 @@ const video = preview?.type?.startsWith("video") === true;
   /* The size of a photo slot: a third of the text column, less the gaps
      between slots. The card's own border is added back, so the thumbnail
      lines up with the photos above it. Without an image, the link icon sits
-     in the same frame, so every card has the same shape. */
+     in the same frame, so every card has the same frame. The image is out of
+     the flow, so it fills a stretched frame and never stretches it. */
   .thumbnail {
     position: relative;
     display: grid;
@@ -122,7 +124,8 @@ const video = preview?.type?.startsWith("video") === true;
   }
 
   .image {
-    display: block;
+    position: absolute;
+    inset: 0;
     inline-size: 100%;
     block-size: 100%;
     object-fit: cover;
@@ -166,12 +169,14 @@ const video = preview?.type?.startsWith("video") === true;
     }
   }
 
+  /* 16 on every side, as in every bordered card. */
   .text {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: var(--space-1);
     min-inline-size: 0;
-    padding-inline: var(--space-4);
+    padding: var(--space-4);
   }
 
   /* At most two lines, and an address in it may break anywhere. */
@@ -222,7 +227,6 @@ const video = preview?.type?.startsWith("video") === true;
   @container entry (width < 436px) {
     .link-card {
       flex-direction: column;
-      align-items: stretch;
     }
 
     .thumbnail {
@@ -233,16 +237,6 @@ const video = preview?.type?.startsWith("video") === true;
       &:not(:has(.image)) {
         display: none;
       }
-    }
-
-    /* Out of the flow, so a tall image can't stretch the 16:9 frame. */
-    .image {
-      position: absolute;
-      inset: 0;
-    }
-
-    .text {
-      padding-block: var(--space-3);
     }
 
     .play {
