@@ -30,6 +30,8 @@ button,summary,[role="button"],.button,.topic,.kbd{-webkit-user-select:none;user
 body{margin:0;background:var(--bg)}
 a{color:var(--text);text-decoration:none;transition:color var(--dur-quick) var(--ease)}
 @media (hover:hover) and (pointer:fine){a:hover{color:var(--accent)}}
+/* wrapping: pretty everywhere (set on the root); standalone headings balance their lines */
+h1,.body h2,.body h3,.body h4,.notes h2{text-wrap:balance}
 /* quiet link with an icon in front (Subscribe): same 4px as the chevrons of All posts and the back link */
 .quiet{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-small);line-height:1.5;color:var(--text-2);position:relative;transition:color var(--dur-quick) var(--ease)}
 .quiet svg{width:var(--icon-md);height:var(--icon-md);flex:none}
