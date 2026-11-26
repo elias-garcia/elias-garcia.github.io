@@ -124,23 +124,30 @@ const attachmentProps = {
 </li>
 
 <style>
-  /* Like a list row: the text beside the date column, until the row is too
-     narrow for it (436px: the column, its gap and the text's basis), when
-     the date goes above. */
+  /* The row's width decides how its attachment is drawn: on rows narrower
+     than 436px, photos and link cards span the text column. */
+  .entry {
+    container: entry / inline-size;
+  }
+
   .entry:not(.collapsible) {
     padding-block: var(--space-3);
+  }
 
-    .head {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-1) var(--space-6);
-    }
+  /* Like a list row: the text beside the date column, until the row is too
+     narrow for it (436px: the column, its gap and the text's basis), when
+     the date goes above. Every nested selector starts with &: Astro leaves
+     one without it unscoped, and a bare .text reached the link card's. */
+  .entry:not(.collapsible) > .head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-6);
 
-    .date {
+    & > .date {
       flex: 0 0 var(--gutter);
     }
 
-    .text {
+    & > .text {
       flex: 1 1 var(--row-basis);
       min-inline-size: 0;
     }

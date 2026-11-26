@@ -103,7 +103,7 @@ const photos = await Promise.all(
   /* Rows too narrow for the date column (an entry wraps at 436px: the date
      column, its gap and the text's basis) show the photos full width. Several
      scroll sideways, the next one peeking in. */
-  @container attachment (width < 436px) {
+  @container entry (width < 436px) {
     .photos {
       display: flex;
       overflow-x: auto;

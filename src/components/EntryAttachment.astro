@@ -4,8 +4,8 @@ import EntryPhotos from "./EntryPhotos.astro";
 import LinkAttachment from "./LinkAttachment.astro";
 
 // What hangs under an entry's text: its photos, or one link card, never both
-// (DESIGN.md, Entry attachment). A container, so the photos can follow the
-// row's wrap with a container query.
+// (DESIGN.md, Entry attachment). Both follow the row's wrap through the
+// entry's container.
 type Props = {
   title: string;
   subtitle?: string | undefined;
@@ -24,7 +24,7 @@ type Props = {
 const { title, subtitle, date, images, attachment } = Astro.props;
 ---
 
-<div class="attachment">
+<div>
   {images !== undefined ? (
     <EntryPhotos
       title={title}
@@ -36,9 +36,3 @@ const { title, subtitle, date, images, attachment } = Astro.props;
     attachment !== undefined && <LinkAttachment attachment={attachment} />
   )}
 </div>
-
-<style>
-  .attachment {
-    container: attachment / inline-size;
-  }
-</style>

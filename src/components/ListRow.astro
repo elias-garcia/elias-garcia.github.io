@@ -11,14 +11,10 @@ type Props = {
 };
 
 const { title, href, article = false, dateOnPhones = true } = Astro.props;
-// Rendered first, so a slot passed empty (a talk without photos, a course
-// without a rating or a trailer) leaves no wrapper: Astro reports a slot
-// whose content renders nothing as present.
+// Rendered first, so a slot passed empty leaves no wrapper: Astro reports a
+// slot whose content renders nothing as present.
 const meta = Astro.slots.has("meta")
   ? (await Astro.slots.render("meta")).trim()
-  : "";
-const attachment = Astro.slots.has("attachment")
-  ? (await Astro.slots.render("attachment")).trim()
   : "";
 const Row = article ? "article" : "div";
 const Title = article ? "h3" : "span";
@@ -53,13 +49,6 @@ const Title = article ? "h3" : "span";
       )}
     </div>
   </Row>
-  {attachment !== "" && (
-    <div class="attachment">
-      <div class="attachment-content">
-        <Fragment set:html={attachment} />
-      </div>
-    </div>
-  )}
 </li>
 
 <style>
@@ -141,27 +130,5 @@ const Title = article ? "h3" : "span";
     margin-block-start: var(--space-1);
     color: var(--text-3);
     font-size: var(--text-small);
-  }
-
-  /* Media under the row's text. It wraps like the row, with an empty date
-     column, so it starts under the title and drops below with the date. It
-     spans the row, so its contents can follow the row's wrap with a
-     container query. */
-  .attachment {
-    container: attachment / inline-size;
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: var(--space-6);
-    margin-block-end: var(--space-3);
-
-    &::before {
-      content: "";
-      flex: 0 0 var(--gutter);
-    }
-  }
-
-  .attachment-content {
-    flex: 1 1 var(--row-basis);
-    min-inline-size: 0;
   }
 </style>
