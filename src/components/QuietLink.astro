@@ -71,6 +71,20 @@ const { chevron, icon, ...attributes } = Astro.props;
     }
   }
 
+  /* Except on touch, which keeps its 44px (global.css), a click anywhere in
+     a button's height counts, as the header's links take the bar's; hover
+     follows it. How it looks doesn't change. */
+  @media not (pointer: coarse) {
+    .quiet::before {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      inset-block-start: 50%;
+      block-size: var(--control-h);
+      translate: 0 -50%;
+    }
+  }
+
   @media (hover: hover) and (pointer: fine) {
     .label::after {
       transition: opacity var(--dur-quick) var(--ease-settle);
