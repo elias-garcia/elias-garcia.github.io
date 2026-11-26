@@ -63,7 +63,12 @@ const attachmentProps = {
 ---
 
 <li>
-  <Row class:list={["entry", { collapsible }]}>
+  <Row
+    class:list={[
+      "entry",
+      { collapsible, row: collapsible, "row-interactive": opens },
+    ]}
+  >
     <Head class="head">
       <span class="date">
         <EntryDate {...dates} />
@@ -139,6 +144,11 @@ const attachmentProps = {
       flex: 1 1 var(--row-basis);
       min-inline-size: 0;
     }
+  }
+
+  /* It fades with the list's dimming. */
+  .collapsible {
+    transition: opacity var(--dur-quick) var(--ease);
   }
 
   /* A job: date, text and the + on one line; on phones the + stays beside
