@@ -329,12 +329,18 @@ const copy = await getViewerCopy();
       track.style.removeProperty("translate");
     };
 
+    // Whether this viewing was closed from the keyboard: only then does the
+    // thumbnail it returns to show its focus ring. A close the browser makes
+    // by itself (a Back it won't let the page hold) counts as a pointer's.
+    let closedByKey = false;
+
     // From the keyboard it closes at once. Dragged down, it carries on down
     // as it fades. Otherwise it fades out where it is.
     const close = (how: "key" | "drag" | "pointer") => {
       if (!dialog.open || isClosing(dialog)) {
         return;
       }
+      closedByKey = how === "key";
       settleWrap();
       const shut = () => {
         dialog.close();
@@ -362,6 +368,7 @@ const copy = await getViewerCopy();
       if (strip === null) {
         return;
       }
+      closedByKey = false;
       // The last close's drag stays until now, so the viewer could leave
       // from where it was dropped.
       endDrag();
@@ -510,7 +517,8 @@ const copy = await getViewerCopy();
       // one that opened the viewer. Safari doesn't focus a button on click,
       // so the browser can't do it. Scrolled out of its strip (on phones),
       // the strip slides to it; the page stays where it was, even with the
-      // photo under the sticky header.
+      // photo under the sticky header. Browsers otherwise guess whether to
+      // show the ring, and iOS shows it after a tap on ×.
       const photo = photos[current];
       const strip = photo?.closest("[data-viewer-entry]");
       if (photo !== undefined && strip !== null && strip !== undefined) {
@@ -520,7 +528,7 @@ const copy = await getViewerCopy();
           strip.scrollBy({ left: box.left - bounds.left });
         }
       }
-      photo?.focus({ preventScroll: true });
+      photo?.focus({ preventScroll: true, focusVisible: closedByKey });
     });
 
     // A click from Enter or Space has no pointer behind it (`detail` 0).
