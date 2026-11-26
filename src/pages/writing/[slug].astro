@@ -3,13 +3,12 @@ import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import { render } from "astro:content";
 import Article from "../../components/Article.astro";
 import AuthorFooter from "../../components/AuthorFooter.astro";
-import BackLink from "../../components/BackLink.astro";
 import CopyButton from "../../components/CopyButton.astro";
-import Icon from "../../components/Icon.astro";
 import MetaItem from "../../components/MetaItem.astro";
 import MetaLine from "../../components/MetaLine.astro";
 import { mdxComponents } from "../../components/mdx/index.ts";
 import PreviousNext from "../../components/PreviousNext.astro";
+import QuietLink from "../../components/QuietLink.astro";
 import StructuredData from "../../components/StructuredData.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
@@ -78,15 +77,16 @@ const structuredData = blogPosting(
   <link slot="head" rel="alternate" type="text/markdown" href={markdown} />
   <StructuredData slot="head" data={structuredData} />
   <Article title={title}>
-    <BackLink slot="back" href={routes.writing} label={writing.title} />
+    <QuietLink slot="back" href={routes.writing} chevron="back">
+      {writing.title}
+    </QuietLink>
     <CopyButton
       slot="action"
       label={copy.copyPage}
       name={copy.copyPageName}
       url={markdown}
-    >
-      <Icon name="markdown" />
-    </CopyButton>
+      icon="markdown"
+    />
     <p slot="intro" class="meta">
       <MetaLine>
         <MetaItem>
@@ -155,6 +155,7 @@ const structuredData = blogPosting(
     color: var(--text-3);
     text-decoration: underline;
     text-decoration-color: transparent;
+    text-decoration-thickness: var(--hairline);
     text-underline-offset: var(--underline-offset);
     transition:
       color var(--dur-quick) var(--ease),

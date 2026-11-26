@@ -5,8 +5,8 @@ import { availableParallelism } from "node:os";
 import { chromium, type Page } from "playwright";
 
 // Clicks a post's Copy page button with a clipboard that takes the text or
-// refuses it. The label only stays for 1.5s, less than a check takes, so
-// every pending timer is cancelled to keep it up.
+// refuses it. The result only shows for 1.5s or 2s, less than a check
+// takes, so every pending timer is cancelled to keep it up.
 async function copyPage(
   page: Page,
   outcome: "copied" | "failed",

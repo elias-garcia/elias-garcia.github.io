@@ -158,7 +158,6 @@ html:has(dialog:modal) {
    # link isn't shown on touch, and the skip link keeps its slide. */
 @media (hover: none), (pointer: coarse) {
   a:not(
-      .button,
       .chip,
       .card,
       .link-card,

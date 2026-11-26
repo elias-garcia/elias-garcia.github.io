@@ -2,30 +2,18 @@
 import type { HTMLAttributes } from "astro/types";
 
 // onSurface: on a grey surface (a code block), the fill turns --bg.
-type Props = { onSurface?: boolean } & (
-  | (HTMLAttributes<"button"> & { href?: never })
-  | (HTMLAttributes<"a"> & { href: string })
-);
+type Props = HTMLAttributes<"button"> & { onSurface?: boolean };
 
 const { class: className, onSurface = false, ...attributes } = Astro.props;
 ---
 
-{attributes.href === undefined ? (
-  <button
-    class:list={["button", { "on-surface": onSurface }, className]}
-    type="button"
-    {...attributes}
-  >
-    <slot />
-  </button>
-) : (
-  <a
-    class:list={["button", { "on-surface": onSurface }, className]}
-    {...attributes}
-  >
-    <slot />
-  </a>
-)}
+<button
+  class:list={["button", { "on-surface": onSurface }, className]}
+  type="button"
+  {...attributes}
+>
+  <slot />
+</button>
 
 <style>
   .button {
@@ -43,7 +31,6 @@ const { class: className, onSurface = false, ...attributes } = Astro.props;
     font-size: var(--text-small);
     line-height: var(--leading-none);
     cursor: pointer;
-    /* A link button's label isn't selected by a long press either. */
     -webkit-user-select: none;
     user-select: none;
     transition:

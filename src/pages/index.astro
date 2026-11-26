@@ -10,8 +10,8 @@ import Link from "../components/mdx/Link.astro";
 import UnorderedList from "../components/mdx/UnorderedList.astro";
 import ListRow from "../components/ListRow.astro";
 import PageTitle from "../components/PageTitle.astro";
+import QuietLink from "../components/QuietLink.astro";
 import Section from "../components/Section.astro";
-import SeeMore from "../components/SeeMore.astro";
 import StructuredData from "../components/StructuredData.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {
@@ -167,7 +167,9 @@ const hasPhotos = [work, projects, talks, courses, education].some((entries) =>
 
     {built.writing && (
       <Section title={writingPage.title} arrivalStep={sectionStep("writing")}>
-        <SeeMore slot="action" href={routes.writing} label={copy.allPosts} />
+        <QuietLink slot="action" href={routes.writing} chevron="forward">
+          {copy.allPosts}
+        </QuietLink>
         <List>
           {posts.slice(0, 3).map((post) => (
             <ListRow title={post.data.title} href={routes.post(post.id)}>

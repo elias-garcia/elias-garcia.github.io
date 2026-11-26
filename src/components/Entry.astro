@@ -198,20 +198,6 @@ const attachmentProps = {
     font-weight: var(--weight-medium);
   }
 
-  /* An underline that fades in, on every line of a title that wraps. */
-  .title-link {
-    text-decoration: underline var(--hairline) transparent;
-    text-underline-offset: var(--underline-offset);
-    transition: text-decoration-color var(--dur-quick) var(--ease);
-
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        color: inherit;
-        text-decoration-color: var(--line-strong);
-      }
-    }
-  }
-
   .place {
     color: var(--text-3);
     font-size: var(--text-small);

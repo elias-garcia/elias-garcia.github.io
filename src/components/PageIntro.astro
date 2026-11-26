@@ -48,7 +48,7 @@ const { title, intro, label } = Astro.props;
   .heading {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-3);
 
     p {
       color: var(--text-2);
@@ -71,17 +71,13 @@ const { title, intro, label } = Astro.props;
     letter-spacing: var(--tracking-display);
   }
 
+  /* A link beside the title sits on its baseline, so the row is the
+     title's own line. */
   .title-row {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
     gap: var(--space-3);
-
-    /* The 32px button beside the title doesn't make the row taller than the
-       title's own line, so the intro stays 8 below it. */
-    & > :global(:not(.page-title)) {
-      margin-block: calc(-1 * var(--space-1));
-    }
   }
 </style>

@@ -10,15 +10,14 @@ import {
 import { formatMonthDay, isoDate } from "../lib/format.ts";
 import { linkTarget } from "../lib/links.ts";
 import { routes } from "../lib/routes.ts";
-import Button from "./Button.astro";
 import Chip from "./Chip.astro";
-import Icon from "./Icon.astro";
 import List from "./List.astro";
 import ListRow from "./ListRow.astro";
 import MetaItem from "./MetaItem.astro";
 import MetaLine from "./MetaLine.astro";
 import NewTabNote from "./NewTabNote.astro";
 import PageIntro from "./PageIntro.astro";
+import QuietLink from "./QuietLink.astro";
 import Section from "./Section.astro";
 
 type Props = {
@@ -45,11 +44,15 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
 
 <div class="writing">
   <PageIntro title={page.title} intro={page.intro}>
-    <Button slot="action" href={routes.feed} {...linkTarget(routes.feed)}>
-      <Icon name="rss" />
+    <QuietLink
+      slot="action"
+      href={routes.feed}
+      icon="rss"
+      {...linkTarget(routes.feed)}
+    >
       {copy.subscribe}
       <NewTabNote />
-    </Button>
+    </QuietLink>
     <nav class="topics enter" aria-label={copy.filterName} style="--i: 1">
       <Chip
         label={copy.all}
@@ -77,7 +80,6 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
               title={post.data.title}
               href={routes.post(post.id)}
               article
-              underline
             >
               <time slot="date" datetime={isoDate(post.data.date)}>
                 {formatMonthDay(post.data.date)}
@@ -96,10 +98,12 @@ const years = Map.groupBy(rows, ({ post }) => post.data.date.getUTCFullYear());
 </div>
 
 <style>
+  /* 48 from the chips to the first year, a little more than one year is
+     from the next, so the first year heading goes with its posts. */
   .writing {
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
+    gap: var(--space-12);
   }
 
   .topics {
