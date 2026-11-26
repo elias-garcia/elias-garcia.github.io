@@ -258,12 +258,12 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
 .lpc{display:flex;align-items:center;width:100%;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);overflow:hidden;color:inherit;text-decoration:none;transition:border-color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 .lpc:active{transform:scale(.99)}
 .lpc:focus-visible{border-color:var(--line-strong)}@media (hover:hover) and (pointer:fine){.lpc:hover{border-color:var(--line-strong)}}
-.lpc-img{position:relative;flex:none;width:calc((100% - 14px) / 3);aspect-ratio:3 / 2;background:var(--surface);border-right:1px solid var(--line)}
+.lpc-img{position:relative;flex:none;width:calc((100% - 14px) / 3);aspect-ratio:16 / 9;background:var(--surface);border-right:1px solid var(--line)}
 .lpc-img img{display:block;width:100%;height:100%;object-fit:cover}
 .lpc .play{width:32px;height:32px}
 .lpc .play svg{width:var(--icon-sm);height:var(--icon-sm)}
 .lpc:focus-visible .play{background:var(--text);color:var(--bg);border-color:var(--text)}@media (hover:hover) and (pointer:fine){.lpc:hover .play{background:var(--text);color:var(--bg);border-color:var(--text)}}
-.lpc-t{display:flex;flex-direction:column;gap:0;padding:0 16px;min-width:0}
+.lpc-t{display:flex;flex-direction:column;gap:4px;padding:0 16px;min-width:0}
 .lpc-title{font-size:var(--text-small);font-weight:500;line-height:1.35;color:var(--text)}
 
 /* link attachment: title cut at two lines (addresses may break anywhere), site line at one; no image: a link icon on --surface */
@@ -276,13 +276,13 @@ div:has(> .avbox){flex-direction:column !important;align-items:flex-start !impor
 .lpc-src{font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
 .lpc:focus-visible .lpc-title{color:var(--accent)}@media (hover:hover) and (pointer:fine){.lpc:hover .lpc-title{color:var(--accent)}}
 
-/* attachments on list rows: every attachment image has one size and shape: a third of the text column (a slot in the row of three), 3:2.
+/* attachments on list rows: every attachment image has one size and shape: a third of the text column (a slot in the row of three), 16:9.
    Photos sit in a row of three (fewer stay left-aligned); the video preview's thumbnail fills the first slot, so it lines up with the photos */
 .list li > .attach{flex:1 1 100%;margin:8px 0 0}
 /* under a row that is a link, the row's own 12px padding is the gap above, and 12 below keeps the next row at the same distance: 12 from the text, 12 to the next row, as under a plain row */
 .list li > a.item + .attach{margin:0 0 12px}
 .photos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.photos img{display:block;width:100%;aspect-ratio:3 / 2;object-fit:cover;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
+.photos img{display:block;width:100%;aspect-ratio:16 / 9;object-fit:cover;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
 
 
 /* work mode: plain grey text after the company name ("Polygon Labs · Remote", "Netex Learning · On-site, A Coruña"); no chips, icons or colour. The "·" has 8px each side; screen readers hear a comma */
@@ -327,13 +327,13 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 @media (hover:hover) and (pointer:fine){.vbtn:hover{border-color:var(--line-strong);background:var(--bg)}}
 /* the viewer is a card in the search palette's language: the photo on top of a bordered card, caption below, a footer with key hints */
 .vw-card .vscrim{background:var(--scrim);backdrop-filter:blur(2px)}
-.vw-card{--vw-w:min(840px, max(70vw, min(100vw - 48px, 560px)), calc((100dvh - 176px) * 1.5))}
+.vw-card{--vw-w:min(840px, max(70vw, min(100vw - 48px, 560px)), calc((100dvh - 176px) * 16 / 9))}
 .vw-card .vdlg{width:var(--vw-w);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);overflow:hidden}
-.vw-card .vimgbox{aspect-ratio:3 / 2;background:var(--surface);border-bottom:1px solid var(--line)}
+.vw-card .vimgbox{aspect-ratio:16 / 9;background:var(--surface);border-bottom:1px solid var(--line)}
 .vw-card .vcap{padding:16px 20px}
 .vw-card .vclose{top:12px;right:12px}
-.vw-card .vprev{left:12px;top:calc(var(--vw-w) / 3);margin-top:-20px}
-.vw-card .vnext{right:12px;top:calc(var(--vw-w) / 3);margin-top:-20px}
+.vw-card .vprev{left:12px;top:calc(var(--vw-w) * 9 / 32);margin-top:-20px}
+.vw-card .vnext{right:12px;top:calc(var(--vw-w) * 9 / 32);margin-top:-20px}
 .vfoot{display:flex;justify-content:space-between;gap:16px;height:44px;align-items:center;padding:0 20px;border-top:1px solid var(--line);font-size:var(--text-micro);color:var(--text-3)}
 .vfoot > span{display:inline-flex;align-items:center;gap:8px}
 .vkeys{display:inline-flex;gap:4px}
@@ -352,7 +352,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 .vwrap.drag .vdlg{transition:none}
 .vw-card .vclose{top:calc(8px + env(safe-area-inset-top, 0px));right:calc(8px + env(safe-area-inset-right, 0px));width:44px;height:44px;border-color:transparent;background:var(--viewer-control);color:var(--viewer-text)}
 .vw-card .vfig{flex:1;min-height:0;padding-top:60px}
-.vw-card .vimgbox{flex:0 1 auto;min-height:0;margin:auto 0;border:0;background:transparent;aspect-ratio:3 / 2}
+.vw-card .vimgbox{flex:0 1 auto;min-height:0;margin:auto 0;border:0;background:transparent;aspect-ratio:16 / 9}
 .vw-card .vcap{padding:24px 20px 0}
 .vw-card .vtitle{color:var(--viewer-text)}
 .vw-card .vmeta{color:var(--viewer-text-2)}
@@ -403,8 +403,8 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
 .list li > .attach{margin:12px 0 0}
 /* an image has no space of its own above and below, as a line of text does: 8 more under an attachment puts the next entry as far away as it is after text */
 .list li:not(:last-child) > .attach{margin-bottom:8px}
-/* sample screenshots: there are no real ones yet; these grey stand-ins take the same 3:2 box as a photo */
-.photos .shot{display:block;width:100%;aspect-ratio:3 / 2;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
+/* sample screenshots: there are no real ones yet; these grey stand-ins take the same 16:9 box as a photo */
+.photos .shot{display:block;width:100%;aspect-ratio:16 / 9;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
 .shot .b{fill:var(--bg)}.shot .l{fill:var(--line)}.shot .d{fill:var(--line-strong)}
 </style>
 <script>/* arrival: a direct visit or a refresh plays the cascade; coming from another page of the site doesn't (DESIGN.md §2.5) */
@@ -745,7 +745,7 @@ html:has(.vwrap){overflow:hidden;overscroll-behavior:none}
         <svg data-dc-tpl="357" viewBox="0 0 35.44 60" width="9.45" height="16" aria-hidden="true" style="display: block; flex: 0 0 auto;"><path data-dc-tpl="358" d="M35.06,18.67a2.46,2.46,0,0,0-3.5-.7,42.61,42.61,0,0,0-5.49,4.29c0-6.79-.5-6.89-1.1-7.38a2.35,2.35,0,0,0-1.59-.6A2.5,2.5,0,0,0,21,16.47a4.52,4.52,0,0,1-4.49,4A4.2,4.2,0,0,1,13,18c-.1-.3-.29-.5-.39-.8a12.89,12.89,0,0,0,6.78-2.29c2.9-2.1,4.5-4.4,4.6-7a7.48,7.48,0,0,0-2.2-5.59A8,8,0,0,0,16.39,0C14.09,0,12,1.1,10,3.09a13.36,13.36,0,0,0-3.2,7.69v.3a13.85,13.85,0,0,1-3-1.4,2.45,2.45,0,0,0-3.39.8A2.5,2.5,0,0,0,1.21,14,25.34,25.34,0,0,0,7.1,16.47l.3.9c1.1,3.6,3.8,8,9,8h.2a11.39,11.39,0,0,0,4.49-1.1v2.79A48.74,48.74,0,0,0,11.9,40.93c-2.9,7-3.4,12.28-1.3,15.68a6.88,6.88,0,0,0,4.79,3.29c.2,0,.5.1,1,.1A6.55,6.55,0,0,0,20,58.9c2.6-1.6,4.3-4.89,5.29-9.78.8-4.1,1-12.08,1-19.07V29h0l.1-.1a62.39,62.39,0,0,1,8.09-6.79A2.57,2.57,0,0,0,35.06,18.67ZM11.8,11.78a8.62,8.62,0,0,1,1.89-5.29,4.9,4.9,0,0,1,2.7-1.6h.1a3.07,3.07,0,0,1,1.8.7l.1.1a3,3,0,0,1,.69,1.7c-.1,1-1,2.09-2.49,3.19A8.07,8.07,0,0,1,11.9,12C11.8,12,11.8,11.88,11.8,11.78Zm9.28,23.06h0V36a74.15,74.15,0,0,1-.9,12.18C19.08,53.81,17.09,55,16.29,55H16a2.47,2.47,0,0,1-1.2-.9c-.5-.9-1.5-3.79,1.7-11.18a39.57,39.57,0,0,1,4.59-8.09Z" style="fill: var(--accent);"></path><path data-dc-tpl="359" d="M26.17,30.3a23.23,23.23,0,0,0-2.3,2.5,41.77,41.77,0,0,0-2.7,3.6V34.9h0a32.88,32.88,0,0,1,2.4-3.2,37.32,37.32,0,0,1,2.6-2.7Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="360" d="M12.57,17.1s-1.3,0-2.7-.1a26,26,0,0,1-2.8-.5l.3.9a20.07,20.07,0,0,0,2.6.5,8.48,8.48,0,0,0,3,0Z" style="fill: rgb(0, 0, 0); opacity: 0.3;"></path><path data-dc-tpl="361" d="M11.8,11.78v.3a8.79,8.79,0,0,1-2.4-.2,14.31,14.31,0,0,1-2.5-.8v-.3a15.12,15.12,0,0,0,2.6.7A7.52,7.52,0,0,0,11.8,11.78Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path><path data-dc-tpl="362" d="M26.07,21.8c-.2.2-2,1.8-2.6,2.3s-2,2-2.3,2.4V27s1.5-1.7,2.4-2.5l2.5-2.3Z" style="fill: rgb(0, 0, 0); opacity: 0.1;"></path></svg>
         Elías García, 2026
       </span>
-      <span data-dc-tpl="363" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="364"><time data-dc-tpl="365" datetime="01:04"><span class="sc-interp">01:04</span></time> in Portugal</span><span data-dc-tpl="366" aria-hidden="true">·</span><span data-dc-tpl="367"><span class="sc-interp">1h behind you</span></span></span>
+      <span data-dc-tpl="363" class="clock" style="display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums;"><span data-dc-tpl="364"><time data-dc-tpl="365" datetime="01:50"><span class="sc-interp">01:50</span></time> in Portugal</span><span data-dc-tpl="366" aria-hidden="true">·</span><span data-dc-tpl="367"><span class="sc-interp">1h behind you</span></span></span>
     </div>
   </footer>
 

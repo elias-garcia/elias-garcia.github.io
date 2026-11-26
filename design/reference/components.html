@@ -762,12 +762,12 @@ a:focus-visible .ext{stroke:currentColor}@media (hover:hover) and (pointer:fine)
 .lpc{display:flex;align-items:center;width:100%;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);overflow:hidden;color:inherit;text-decoration:none;transition:border-color var(--dur-quick) var(--ease),transform var(--dur-quick) var(--ease-settle)}
 .lpc:active{transform:scale(.99)}
 .lpc:focus-visible{border-color:var(--line-strong)}@media (hover:hover) and (pointer:fine){.lpc:hover{border-color:var(--line-strong)}}
-.lpc-img{position:relative;flex:none;width:calc((100% - 14px) / 3);aspect-ratio:3 / 2;background:var(--surface);border-right:1px solid var(--line)}
+.lpc-img{position:relative;flex:none;width:calc((100% - 14px) / 3);aspect-ratio:16 / 9;background:var(--surface);border-right:1px solid var(--line)}
 .lpc-img img{display:block;width:100%;height:100%;object-fit:cover}
 .lpc .play{width:32px;height:32px}
 .lpc .play svg{width:var(--icon-sm);height:var(--icon-sm)}
 .lpc:focus-visible .play{background:var(--text);color:var(--bg);border-color:var(--text)}@media (hover:hover) and (pointer:fine){.lpc:hover .play{background:var(--text);color:var(--bg);border-color:var(--text)}}
-.lpc-t{display:flex;flex-direction:column;gap:0;padding:0 16px;min-width:0}
+.lpc-t{display:flex;flex-direction:column;gap:4px;padding:0 16px;min-width:0}
 .lpc-title{font-size:var(--text-small);font-weight:500;line-height:1.35;color:var(--text)}
 .lpc-src{font-size:var(--text-small);line-height:1.5;color:var(--text-3)}
 .lpc:focus-visible .lpc-title{color:var(--accent)}@media (hover:hover) and (pointer:fine){.lpc:hover .lpc-title{color:var(--accent)}}
@@ -775,7 +775,7 @@ a:focus-visible .ext{stroke:currentColor}@media (hover:hover) and (pointer:fine)
 /* under a row that is a link, the row's own 12px padding is the gap above, and 12 below keeps the next row at the same distance: 12 from the text, 12 to the next row, as under a plain row */
 .list li > a.item + .attach{margin:0 0 12px}
 .photos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.photos img{display:block;width:100%;aspect-ratio:3 / 2;object-fit:cover;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
+.photos img{display:block;width:100%;aspect-ratio:16 / 9;object-fit:cover;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
 
 
 /* emphasis inside spec text uses the type scale's 500, never bold 700 */
