@@ -24,6 +24,9 @@ const timeout = 5000;
 const maximumRedirects = 3;
 const maximumPageBytes = 2_000_000;
 const maximumImageBytes = 10_000_000;
+// Some sites (YouTube) send a page without its share data now and then: it's
+// asked for again, up to this many times in all.
+const attempts = 3;
 
 const courseSchema = z.record(
   z.string(),
@@ -94,7 +97,7 @@ async function readBody(response: Response, limit: number, stop?: RegExp) {
   return Buffer.concat(chunks);
 }
 
-async function fetchPage(address: string): Promise<ShareData> {
+async function fetchPage(address: string) {
   const signal = AbortSignal.timeout(timeout);
   const { response, url } = await request(address, signal);
   // A page that sends us to another site (a consent or sign-in page) isn't
@@ -114,6 +117,26 @@ async function fetchPage(address: string): Promise<ShareData> {
   // The share data is in the <head>: the rest of the page isn't read.
   const bytes = await readBody(response, maximumPageBytes, /<\/head>|<body/i);
   return readShareData(decoder.decode(bytes), address);
+}
+
+// A page without Open Graph tags, after every attempt, only stands in for
+// one never saved: its <title> alone is worse than what was.
+async function fetchShareData(
+  address: string,
+  saved: boolean,
+): Promise<ShareData> {
+  for (let attempt = 1; ; attempt += 1) {
+    const { data, openGraph } = await fetchPage(address);
+    if (openGraph) {
+      return data;
+    }
+    if (attempt === attempts) {
+      if (saved) {
+        throw new Error("the page came without its share data");
+      }
+      return data;
+    }
+  }
 }
 
 // Saves the image under a name made from the page's address, and returns
@@ -146,7 +169,10 @@ const previews: Saved = {};
 for (const address of new Set(addresses)) {
   const before = saved[address];
   try {
-    const { image, ...page } = await fetchPage(address);
+    const { image, ...page } = await fetchShareData(
+      address,
+      before !== undefined,
+    );
     // A page that shows no image for now keeps the saved one.
     let savedImage = before?.image;
     if (image === undefined && savedImage !== undefined) {

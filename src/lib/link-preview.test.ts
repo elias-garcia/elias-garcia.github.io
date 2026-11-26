@@ -24,7 +24,7 @@ test("readShareData reads the Open Graph tags", () => {
         <meta property="og:type" content="video.other">
       </head>`,
       address,
-    ),
+    ).data,
     {
       title: "A post",
       image: "https://cdn.example.com/a.jpg",
@@ -34,12 +34,24 @@ test("readShareData reads the Open Graph tags", () => {
   );
 });
 
+test("readShareData says when a page has no Open Graph tags", () => {
+  assert.equal(
+    readShareData("<title>A page</title>", address).openGraph,
+    false,
+  );
+  assert.equal(
+    readShareData('<meta property="og:type" content="website">', address)
+      .openGraph,
+    true,
+  );
+});
+
 test("readShareData falls back to the page's first <title>", () => {
   assert.deepEqual(
     readShareData(
       "<title>\n  The page &amp; more\n</title><svg><title>Icon</title></svg>",
       address,
-    ),
+    ).data,
     { title: "The page & more" },
   );
 });
@@ -50,14 +62,15 @@ test("readShareData keeps the first of a repeated tag", () => {
       `<meta property="og:title" content="First">
        <meta property="og:title" content="Second">`,
       address,
-    ),
+    ).data,
     { title: "First" },
   );
 });
 
 test("readShareData resolves a relative image against the page", () => {
   assert.deepEqual(
-    readShareData('<meta property="og:image" content="/cover.png">', address),
+    readShareData('<meta property="og:image" content="/cover.png">', address)
+      .data,
     { image: "https://example.com/cover.png" },
   );
 });
@@ -68,7 +81,7 @@ test("readShareData leaves out an image that isn't https", () => {
       `<meta property="og:image" content="http://example.com/a.jpg">
        <meta property="og:image" content="data:image/svg+xml,<svg/>">`,
       address,
-    ),
+    ).data,
     {},
   );
 });
@@ -79,7 +92,7 @@ test("readShareData ignores empty tags and runs no markup", () => {
       `<meta property="og:title" content="  ">
        <meta property="og:site_name" content="<script>alert(1)</script>">`,
       address,
-    ),
+    ).data,
     { siteName: "<script>alert(1)</script>" },
   );
 });

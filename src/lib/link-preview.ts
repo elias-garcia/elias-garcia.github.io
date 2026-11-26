@@ -16,7 +16,12 @@ function clean(text: string): string {
 // Reads a page's share data from its HTML: og:title (or the page's <title>),
 // og:image as an https address, og:site_name and og:type. The parser only
 // splits the markup into tags and text: nothing in the page runs or loads.
-export function readShareData(html: string, address: string): ShareData {
+// `openGraph` says whether the page had any Open Graph tag: some sites send
+// a page without them now and then.
+export function readShareData(
+  html: string,
+  address: string,
+): { data: ShareData; openGraph: boolean } {
   const meta = new Map<string, string>();
   let pageTitle = "";
   let inTitle = false;
@@ -61,10 +66,13 @@ export function readShareData(html: string, address: string): ShareData {
   const siteName = meta.get("og:site_name");
   const type = meta.get("og:type");
   return {
-    ...(title !== "" && { title }),
-    ...(image?.protocol === "https:" && { image: image.href }),
-    ...(siteName !== undefined && { siteName }),
-    ...(type !== undefined && { type }),
+    data: {
+      ...(title !== "" && { title }),
+      ...(image?.protocol === "https:" && { image: image.href }),
+      ...(siteName !== undefined && { siteName }),
+      ...(type !== undefined && { type }),
+    },
+    openGraph: meta.size > 0,
   };
 }
 
