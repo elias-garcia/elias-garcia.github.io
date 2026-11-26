@@ -2,6 +2,7 @@ import { z } from "astro/zod";
 import { createHash } from "node:crypto";
 import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { parse } from "yaml";
+import { entryFolders } from "../src/lib/entries.ts";
 import {
   imageType,
   previewDomain,
@@ -14,7 +15,7 @@ import {
 // image in src/assets/link-previews/. Runs before every build and fetches
 // every address each time. An address that can't be fetched keeps what was
 // saved for it and prints a warning: link previews never fail the build.
-const courses = new URL("../src/content/courses.yaml", import.meta.url);
+const content = new URL("../src/content/", import.meta.url);
 const output = new URL("../src/content/link-previews.json", import.meta.url);
 const images = new URL("../src/assets/link-previews/", import.meta.url);
 // Where the saved data points to an image, relative to the JSON file.
@@ -28,10 +29,9 @@ const maximumImageBytes = 10_000_000;
 // asked for again, up to this many times in all.
 const attempts = 3;
 
-const courseSchema = z.record(
-  z.string(),
-  z.object({ attachment: z.object({ href: z.url() }).optional() }),
-);
+const entrySchema = z.object({
+  attachment: z.object({ href: z.url() }).optional(),
+});
 const savedSchema = z.record(
   z.string(),
   z.object({
@@ -157,11 +157,24 @@ function reason(error: unknown) {
   return error instanceof Error ? error.message : String(error);
 }
 
-const addresses = Object.values(
-  courseSchema.parse(parse(await readFile(courses, "utf8"))),
-).flatMap(({ attachment }) =>
-  attachment === undefined ? [] : attachment.href,
-);
+// Every attachment's address, from the entries' frontmatter.
+const addresses: string[] = [];
+for (const section of entryFolders) {
+  const folder = new URL(`${section}/`, content);
+  for (const name of (await readdir(folder)).filter((file) =>
+    file.endsWith(".mdx"),
+  )) {
+    const text = await readFile(new URL(name, folder), "utf8");
+    const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text)?.[1];
+    if (frontmatter === undefined) {
+      throw new Error(`src/content/${section}/${name} has no frontmatter.`);
+    }
+    const { attachment } = entrySchema.parse(parse(frontmatter));
+    if (attachment !== undefined) {
+      addresses.push(attachment.href);
+    }
+  }
+}
 const saved = savedSchema.parse(JSON.parse(await readFile(output, "utf8")));
 await mkdir(images, { recursive: true });
 

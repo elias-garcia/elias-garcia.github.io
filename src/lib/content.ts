@@ -25,77 +25,63 @@ export async function getProfile() {
   return data;
 }
 
-function byYearThenTitle(
-  a: { readonly year: number; readonly title: string },
-  b: { readonly year: number; readonly title: string },
+// Entries go newest first, by their date or the start of their range, then
+// by title. Dates are "2024" or "2024-01", which sort as text.
+function byDateThenTitle(
+  a: { readonly date: string; readonly title: string },
+  b: { readonly date: string; readonly title: string },
 ): number {
-  return b.year - a.year || compareText(a.title, b.title);
+  return compareText(b.date, a.date) || compareText(a.title, b.title);
+}
+
+function byStartThenTitle(
+  a: { readonly start: string; readonly title: string },
+  b: { readonly start: string; readonly title: string },
+): number {
+  return compareText(b.start, a.start) || compareText(a.title, b.title);
 }
 
 export async function getWork() {
   const jobs = await getCollection("work");
-  return jobs.sort(
-    (a, b) =>
-      b.data.start - a.data.start ||
-      compareText(a.data.company, b.data.company),
-  );
+  return jobs.sort((a, b) => byStartThenTitle(a.data, b.data));
 }
 
-function byDateThenTitle(
-  a: { readonly date: Date; readonly title: string },
-  b: { readonly date: Date; readonly title: string },
-): number {
-  return b.date.valueOf() - a.date.valueOf() || compareText(a.title, b.title);
+export async function getProjects() {
+  const projects = await getCollection("projects");
+  return projects.sort((a, b) => byDateThenTitle(a.data, b.data));
 }
 
 export async function getTalks() {
-  const talks = await getCollection("talks");
+  const talks = await getCollection("speaking");
   return talks.sort((a, b) => byDateThenTitle(a.data, b.data));
 }
 
 export async function getCourses() {
-  const courses = await getCollection("courses");
+  const courses = await getCollection("teaching");
   return courses.sort((a, b) => byDateThenTitle(a.data, b.data));
-}
-
-// "Remote", or the mode and the city, comma separated.
-export function workMode(job: CollectionEntry<"work">["data"]): string {
-  return job.mode === "Remote" ? job.mode : `${job.mode}, ${job.place}`;
 }
 
 export async function getEducation() {
   const degrees = await getCollection("education");
-  return degrees.sort(
-    (a, b) =>
-      b.data.start - a.data.start || compareText(a.data.title, b.data.title),
+  return degrees.sort((a, b) => byStartThenTitle(a.data, b.data));
+}
+
+// Each entry with its body rendered: the description an Entry shows.
+export async function withDescriptions<
+  Entry extends CollectionEntry<
+    "work" | "projects" | "speaking" | "teaching" | "education"
+  >,
+>(entries: readonly Entry[]) {
+  return Promise.all(
+    entries.map(async (entry) => ({
+      ...entry,
+      Content: (await render(entry)).Content,
+    })),
   );
 }
 
 // Drafts show in `npm run dev`, never in production.
 const showsDrafts = import.meta.env.DEV;
-
-export async function getProjects() {
-  const projects = await getCollection(
-    "projects",
-    ({ data }) => showsDrafts || !data.draft,
-  );
-  const inProgress = (project: CollectionEntry<"projects">) =>
-    project.data.status === "In progress" ? 0 : 1;
-  return projects.sort(
-    (a, b) => inProgress(a) - inProgress(b) || byYearThenTitle(a.data, b.data),
-  );
-}
-
-// Home shows the first few projects as tiles, the rest only on Projects.
-export async function getHomeProjects() {
-  return (await getProjects()).slice(0, 3);
-}
-
-// The view transition name a project's cover takes on its tile or card and
-// on its case study, so one morphs into the other (DESIGN.md §2.5).
-export function coverName(project: CollectionEntry<"projects">): string {
-  return `project-${project.id}`;
-}
 
 function byNewest(
   a: CollectionEntry<"writing">,
@@ -136,11 +122,6 @@ export async function getNotFoundPage() {
 
 export async function getPostCopy() {
   const { data } = await requireEntry("post", "post");
-  return data;
-}
-
-export async function getProjectCopy() {
-  const { data } = await requireEntry("project", "project");
   return data;
 }
 

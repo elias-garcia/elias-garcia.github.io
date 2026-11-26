@@ -6,22 +6,20 @@ import {
   getCvFormatCopy,
   getEducation,
   getHomeCopy,
-  getPage,
   getProfile,
   getProjects,
   getTalks,
   getWork,
-  workMode,
+  withDescriptions,
 } from "./content.ts";
 import {
   formatCountry,
+  formatEntryDate,
+  formatEntryRange,
   formatFileSize,
-  formatMonthYear,
-  formatYearRange,
 } from "./format.ts";
-import { writtenAddress } from "./links.ts";
+import { leavesSite, writtenAddress } from "./links.ts";
 import { routes } from "./routes.ts";
-import { hasProjects } from "./sections.ts";
 import { fill } from "./template.ts";
 
 type IconName = ComponentProps<typeof Icon>["name"];
@@ -41,33 +39,37 @@ function profileIcon(href: string): IconName {
   return icon;
 }
 
-// An address written out on the CV, as a link.
+// An address written out on the CV, as a link. One on this site is
+// written in full.
 function address(href: string) {
-  return { href, text: writtenAddress(href) };
+  const url = leavesSite(href)
+    ? href
+    : new URL(href, import.meta.env.SITE).href;
+  return { href: url, text: writtenAddress(url) };
+}
+
+// An entry's description: its Markdown, for the Markdown CV, and its body
+// rendered, for the PDF.
+function description<Content>(entry: {
+  body?: string | undefined;
+  Content: Content;
+}) {
+  return { markdown: (entry.body ?? "").trim(), Content: entry.Content };
 }
 
 // What the CV PDF shows, from the collections (DESIGN.md, CV PDF): nothing is
 // written for it. Sections without entries are left out.
 export async function getCv() {
-  const [
-    copy,
-    projectsPage,
-    profile,
-    work,
-    talks,
-    courses,
-    education,
-    projects,
-  ] = await Promise.all([
-    getHomeCopy(),
-    getPage("projects"),
-    getProfile(),
-    getWork(),
-    getTalks(),
-    getCourses(),
-    getEducation(),
-    getProjects(),
-  ]);
+  const [copy, profile, work, talks, courses, education, projects] =
+    await Promise.all([
+      getHomeCopy(),
+      getProfile(),
+      getWork().then(withDescriptions),
+      getTalks().then(withDescriptions),
+      getCourses().then(withDescriptions),
+      getEducation().then(withDescriptions),
+      getProjects().then(withDescriptions),
+    ]);
   const site = import.meta.env.SITE;
   const isEmail = (href: string) => href.startsWith("mailto:");
 
@@ -92,52 +94,60 @@ export async function getCv() {
     about: { title: copy.about, paragraphs: profile.about },
     experience: {
       title: copy.experience,
-      jobs: work.map(({ data }) => ({
-        dates: formatYearRange(data, copy.present),
-        company: data.company,
-        mode: workMode(data),
-        role: data.role,
-        points: data.points,
+      jobs: work.map((job) => ({
+        dates: formatEntryRange(job.data, copy.present),
+        company: job.data.title,
+        place: job.data.place,
+        role: job.data.subtitle,
+        description: description(job),
       })),
     },
     projects: {
-      title: projectsPage.title,
-      entries: hasProjects
-        ? projects.map((project) => ({
-            year: String(project.data.year),
-            title: project.data.title,
-            // Its page on the site first, then the project's own links.
-            addresses: [
-              new URL(routes.project(project.id), site).href,
-              ...project.data.links.map(({ href }) => href),
-            ].map(address),
-            summary: project.data.summary,
-          }))
-        : [],
+      title: copy.projects,
+      entries: projects.map((project) => ({
+        date: formatEntryDate(project.data.date),
+        title: project.data.title,
+        address:
+          project.data.link === undefined
+            ? undefined
+            : address(project.data.link),
+        description: description(project),
+      })),
     },
     speaking: {
       title: copy.speaking,
-      talks: talks.map(({ data }) => ({
-        date: formatMonthYear(data.date),
-        title: data.title,
-        where: data.where,
+      entries: talks.map((talk) => ({
+        date: formatEntryDate(talk.data.date),
+        title: talk.data.title,
+        address:
+          talk.data.link === undefined ? undefined : address(talk.data.link),
+        subtitle: talk.data.subtitle,
       })),
     },
     teaching: {
       title: copy.teaching,
-      courses: courses.map(({ data }) => ({
-        date: formatMonthYear(data.date),
-        title: data.title,
-        address: address(data.href),
-        where: data.where,
+      entries: courses.map((course) => ({
+        date: formatEntryDate(course.data.date),
+        title: course.data.title,
+        address:
+          course.data.link === undefined
+            ? undefined
+            : address(course.data.link),
+        subtitle: course.data.subtitle,
       })),
     },
     education: {
       title: copy.education,
-      degrees: education.map(({ data }) => ({
-        dates: formatYearRange(data, copy.present),
-        title: fill(copy.degree, { title: data.title, school: data.school }),
-        detail: data.detail,
+      degrees: education.map((degree) => ({
+        dates: formatEntryRange(degree.data, copy.present),
+        title:
+          degree.data.subtitle === undefined
+            ? degree.data.title
+            : fill(copy.degree, {
+                title: degree.data.title,
+                school: degree.data.subtitle,
+              }),
+        description: description(degree),
       })),
     },
   };
@@ -154,9 +164,15 @@ export async function renderCvMarkdown(): Promise<string> {
     separator = "\n",
   ) =>
     entries.length > 0 ? [`## ${title}\n\n${entries.join(separator)}`] : [];
-  // A title followed by its addresses, as on the PDF.
-  const titled = (title: string, addresses: readonly { text: string }[]) =>
-    [title, ...addresses.map(({ text }) => text)].join(" · ");
+  // A title followed by its address, as on the PDF.
+  const titled = (title: string, link: { text: string } | undefined) =>
+    link === undefined ? title : `${title} · ${link.text}`;
+  // One list item: its date, its title, then a line of text, if any. A
+  // description of several paragraphs is joined into that line.
+  const item = (date: string, title: string, text: string | undefined) =>
+    [`- ${date}: ${title}.`, text?.replace(/\s+/g, " ")]
+      .filter((part) => part !== undefined && part !== "")
+      .join(" ");
 
   return [
     `# ${cv.name}`,
@@ -167,39 +183,47 @@ export async function renderCvMarkdown(): Promise<string> {
       cv.experience.title,
       cv.experience.jobs.map((job) =>
         [
-          `### ${job.company} · ${job.mode}`,
-          `${job.role} · ${job.dates}`,
-          ...(job.points.length > 0
-            ? ["", ...job.points.map((point) => `- ${point}`)]
-            : []),
+          `### ${job.company} · ${job.place}`,
+          [job.role, job.dates]
+            .filter((part) => part !== undefined)
+            .join(" · "),
+          ...(job.description.markdown === ""
+            ? []
+            : ["", job.description.markdown]),
         ].join("\n"),
       ),
       "\n\n",
     ),
     ...section(
       cv.projects.title,
-      cv.projects.entries.map(
-        (project) =>
-          `- ${project.year}: ${titled(project.title, project.addresses)}. ${project.summary}`,
+      cv.projects.entries.map((project) =>
+        item(
+          project.date,
+          titled(project.title, project.address),
+          project.description.markdown,
+        ),
       ),
     ),
     ...section(
       cv.speaking.title,
-      cv.speaking.talks.map(
-        (talk) => `- ${talk.date}: ${talk.title}. ${talk.where}`,
+      cv.speaking.entries.map((talk) =>
+        item(talk.date, titled(talk.title, talk.address), talk.subtitle),
       ),
     ),
     ...section(
       cv.teaching.title,
-      cv.teaching.courses.map(
-        (course) =>
-          `- ${course.date}: ${titled(course.title, [course.address])}. ${course.where}`,
+      cv.teaching.entries.map((course) =>
+        item(
+          course.date,
+          titled(course.title, course.address),
+          course.subtitle,
+        ),
       ),
     ),
     ...section(
       cv.education.title,
-      cv.education.degrees.map(
-        (degree) => `- ${degree.dates}: ${degree.title}. ${degree.detail}`,
+      cv.education.degrees.map((degree) =>
+        item(degree.dates, degree.title, degree.description.markdown),
       ),
     ),
   ]

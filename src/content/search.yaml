@@ -4,12 +4,9 @@ search:
   # On systems other than Apple's.
   shortcutOther: Ctrl K
   dialog: Search
-  # The input's placeholder and label, naming only the sections the site has:
-  # posts and projects, posts only, projects only, or neither.
+  # The input's placeholder and label: the second when there are no posts.
   input:
-    label: Search posts and projects
-    labelPosts: Search posts
-    labelProjects: Search projects
+    label: Search posts
     labelNothing: Search the site
   clear: Clear
   results: Results
@@ -17,7 +14,6 @@ search:
   # One line for each section the site can have, by its path.
   sections:
     /: About me, work experience, talks and contact
-    /projects: Side projects
     /writing: All posts
   actions: Actions
   email: Send me an email
@@ -30,12 +26,10 @@ search:
   rss:
     title: Subscribe with RSS
     line: Get new posts in your reader
-  # {query} is what the visitor typed. Each title names only the sections the
-  # site has, like the input.
+  # {query} is what the visitor typed. The second title is for a site with no
+  # posts, like the input.
   noResults:
-    title: No posts or projects match “{query}”
-    titlePosts: No posts match “{query}”
-    titleProjects: No projects match “{query}”
+    title: No posts match “{query}”
     titleNothing: Nothing matches “{query}”
     hint: Try a topic I write about, or suggest this one.
     # Without posts there are no topics to offer and nothing to suggest.

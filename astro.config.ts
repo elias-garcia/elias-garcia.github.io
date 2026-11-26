@@ -3,6 +3,7 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { transformerNotationHighlight } from "@shikijs/transformers";
 import { defineConfig, fontProviders } from "astro/config";
+import { mdastEntryDescriptionPlugin } from "./src/lib/mdast-entry-description.ts";
 import { mdastReadingTimePlugin } from "./src/lib/mdast-reading-time.ts";
 import { indigoMinimal } from "./src/lib/shiki-theme.ts";
 
@@ -14,7 +15,7 @@ export default defineConfig({
   },
   markdown: {
     processor: satteri({
-      mdastPlugins: [mdastReadingTimePlugin],
+      mdastPlugins: [mdastReadingTimePlugin, mdastEntryDescriptionPlugin],
       // Straight quotes, as typed (DESIGN.md §5).
       features: {
         smartPunctuation: { quotes: false, dashes: true, ellipses: true },

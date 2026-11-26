@@ -1,22 +1,22 @@
 ---
 import { getImage, Image } from "astro:assets";
-import type { CollectionEntry } from "astro:content";
+import type { ImageMetadata } from "astro";
 import { photoImage, viewerImage } from "../lib/attachment.ts";
 import { getViewerCopy } from "../lib/content.ts";
-import { formatMonthYear } from "../lib/format.ts";
 import { fill } from "../lib/template.ts";
 
-// A talk's photos. Each one is a button that opens the image viewer
-// (ImageViewer.astro), which reads the talk and a larger copy of the same
-// file from here.
-type Talk = CollectionEntry<"talks">["data"];
-
+// An entry's photos. Each one is a button that opens the image viewer
+// (ImageViewer.astro), which reads the entry's caption and a larger copy of
+// the same file from here.
 type Props = {
-  talk: Pick<Talk, "title" | "where" | "date">;
-  photos: NonNullable<Talk["photos"]>;
+  title: string;
+  subtitle?: string | undefined;
+  // As the entry's date column shows it.
+  date: string;
+  photos: readonly { src: ImageMetadata; alt: string }[];
 };
 
-const { talk, photos: sources } = Astro.props;
+const { title, subtitle, date, photos: sources } = Astro.props;
 const copy = await getViewerCopy();
 const count = sources.length;
 const photos = await Promise.all(
@@ -29,7 +29,7 @@ const photos = await Promise.all(
     const label = fill(count === 1 ? copy.openOne : copy.open, {
       index: String(index + 1),
       count: String(count),
-      title: talk.title,
+      title,
     });
     return { src, alt, large, label };
   }),
@@ -39,9 +39,9 @@ const photos = await Promise.all(
 <ul
   class="photos"
   role="list"
-  data-viewer-talk={talk.title}
-  data-viewer-where={talk.where}
-  data-viewer-date={formatMonthYear(talk.date)}
+  data-viewer-entry={title}
+  data-viewer-subtitle={subtitle}
+  data-viewer-date={date}
 >
   {photos.map(({ src, alt, large, label }) => (
     <li>
@@ -72,7 +72,7 @@ const photos = await Promise.all(
   // press focuses the photo before the click lands, and sliding then would
   // move it out from under the pointer. Only the strip: scrolling the page
   // too would jump it whenever a photo sits under the sticky header.
-  for (const photos of document.querySelectorAll("[data-viewer-talk]")) {
+  for (const photos of document.querySelectorAll("[data-viewer-entry]")) {
     photos.addEventListener("focusin", (event) => {
       if (
         event.target instanceof HTMLElement &&
@@ -100,7 +100,7 @@ const photos = await Promise.all(
     gap: var(--space-2);
   }
 
-  /* Rows too narrow for the date column (ListRow wraps at 436px: the date
+  /* Rows too narrow for the date column (an entry wraps at 436px: the date
      column, its gap and the text's basis) show the photos full width. Several
      scroll sideways, the next one peeking in. */
   @container attachment (width < 436px) {

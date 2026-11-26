@@ -1,38 +1,7 @@
 ---
+date: 2026
 title: Roleburn
-summary: A daily radar for remote roles that match my CV.
-description: A daily radar for remote roles in Web3, payments and AI that match my CV. A folder of markdown files plus scheduled agents in Claude Cowork, soon open source.
-cover:
-  kind: illustration
-  name: roleburn
-type: Tool # TODO: confirm the type (the designer's placeholder)
-status: In progress
-year: 2026
-links: [] # TODO: add { label, href } once public, e.g. Website, then GitHub
+# TODO: add a link once it's public.
 ---
 
-## Why I built it
-
-Job boards are noisy. Finding the few remote roles in Web3, payments and AI that actually fit my experience meant checking a dozen sites and reading past hundreds of listings that were never going to fit. I wanted that short list to arrive on its own, already filtered against my CV.
-
-## How it works
-
-The first version is deliberately low-tech. There's no repository and no backend, just a folder of markdown files and scheduled tasks in Claude Cowork. One file holds my CV, another my criteria, another the companies worth watching, and a few prompts tell the agent how to search, score and summarise. On a schedule, a task reads the folder and writes the digest.
-
-```
-roleburn/
-├── cv.md          # the source of truth
-├── criteria.md    # remote from Europe, senior, Web3, payments, AI
-├── companies.md   # teams worth watching
-└── prompts/
-    ├── search.md
-    └── digest.md
-```
-
-<RoleburnHero caption="Illustration: new listings are checked against my criteria and CV. Matches stay, the rest fade out." />
-
-<Figure caption="A digest as it lands. Each match links to the listing and says why it fits." placeholder="[Screenshot: a real digest from Roleburn]" />
-
-## What's next
-
-I'm preparing it as an open-source repository on GitHub, so anyone can drop in their own CV and criteria and get the same daily list.
+A daily radar for remote roles that match my CV.

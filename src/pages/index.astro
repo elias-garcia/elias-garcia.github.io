@@ -1,22 +1,18 @@
 ---
 import { getImage, Image } from "astro:assets";
 import avatar from "../assets/avatar.jpg";
-import CourseRating from "../components/CourseRating.astro";
 import DownloadCv from "../components/DownloadCv.astro";
+import Entry from "../components/Entry.astro";
 import ExternalLabel from "../components/ExternalLabel.astro";
 import ImageViewer from "../components/ImageViewer.astro";
-import LinkAttachment from "../components/LinkAttachment.astro";
 import List from "../components/List.astro";
+import Link from "../components/mdx/Link.astro";
+import UnorderedList from "../components/mdx/UnorderedList.astro";
 import ListRow from "../components/ListRow.astro";
 import PageTitle from "../components/PageTitle.astro";
-import PreviewMorph from "../components/PreviewMorph.astro";
-import ProjectCard from "../components/ProjectCard.astro";
-import RowPhotos from "../components/RowPhotos.astro";
 import Section from "../components/Section.astro";
 import SeeMore from "../components/SeeMore.astro";
 import StructuredData from "../components/StructuredData.astro";
-import WorkRow from "../components/WorkRow.astro";
-import Years from "../components/Years.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {
   getCourses,
@@ -25,61 +21,72 @@ import {
   getPage,
   getPosts,
   getProfile,
-  getHomeProjects,
+  getProjects,
   getTalks,
   getWork,
+  withDescriptions,
 } from "../lib/content.ts";
 import { formatCountry, formatMonthYear, isoMonth } from "../lib/format.ts";
 import { linkTarget } from "../lib/links.ts";
 import { requireSite } from "../lib/navigation.ts";
 import { routes } from "../lib/routes.ts";
-import { hasProjects, hasWriting } from "../lib/sections.ts";
+import { hasWriting } from "../lib/sections.ts";
 import { person, website } from "../lib/structured-data.ts";
 import { fill } from "../lib/template.ts";
 
 const [
   copy,
-  projectsPage,
   writingPage,
   profile,
-  projects,
-  work,
   posts,
+  work,
+  projects,
   talks,
   courses,
   education,
 ] = await Promise.all([
   getHomeCopy(),
-  getPage("projects"),
   getPage("writing"),
   getProfile(),
-  getHomeProjects(),
-  getWork(),
   getPosts(),
-  getTalks(),
-  getCourses(),
-  getEducation(),
+  getWork().then(withDescriptions),
+  getProjects().then(withDescriptions),
+  getTalks().then(withDescriptions),
+  getCourses().then(withDescriptions),
+  getEducation().then(withDescriptions),
 ]);
 const [description = profile.role] = profile.about;
 const siteUrl = requireSite(Astro.site, "structured data");
 const portrait = await getImage({ src: avatar, width: 400 });
 const websiteData = website(profile, siteUrl);
 const personData = person(profile, siteUrl, new URL(portrait.src, siteUrl));
+// A section with no entries isn't built (DESIGN.md §8).
+const built = {
+  work: work.length > 0,
+  projects: projects.length > 0,
+  writing: hasWriting,
+  speaking: talks.length > 0,
+  teaching: courses.length > 0,
+  education: education.length > 0,
+};
 // Arriving (DESIGN.md §2.5): the name block, About, the first section and
 // the second one after another, then everything below as one last step.
-const [firstSection, secondSection] = [
-  hasProjects ? "projects" : undefined,
-  "work",
-  hasWriting ? "writing" : undefined,
-  "speaking",
-].filter((section) => section !== undefined);
+const [firstSection, secondSection] = Object.entries(built)
+  .filter(([, isBuilt]) => isBuilt)
+  .map(([section]) => section);
 const lastArrivalStep = 4;
-const sectionStep = (section: string) =>
+const sectionStep = (section: keyof typeof built) =>
   section === firstSection
     ? 2
     : section === secondSection
       ? 3
       : lastArrivalStep;
+// A description's links go through the posts' Link (a new tab for another
+// site), and its lists keep their semantics without markers.
+const descriptionComponents = { a: Link, ul: UnorderedList };
+const hasPhotos = [work, projects, talks, courses, education].some((entries) =>
+  entries.some(({ data }) => data.images !== undefined),
+);
 ---
 
 <BaseLayout
@@ -87,7 +94,6 @@ const sectionStep = (section: string) =>
   description={description}
   lastArrivalStep={lastArrivalStep}
 >
-  <PreviewMorph slot="head" />
   <StructuredData slot="head" data={websiteData} />
   <StructuredData slot="head" data={personData} />
   <div class="home">
@@ -113,10 +119,12 @@ const sectionStep = (section: string) =>
           </p>
           <div class="actions">
             <DownloadCv />
-            <p class="availability">
-              <span class="dot" aria-hidden="true"></span>
-              {profile.availability}
-            </p>
+            {profile.openToWork && (
+              <p class="availability">
+                <span class="dot" aria-hidden="true"></span>
+                {copy.openToWork}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -129,30 +137,35 @@ const sectionStep = (section: string) =>
       </Section>
     </header>
 
-    {hasProjects && (
-      <Section title={projectsPage.title} arrivalStep={sectionStep("projects")}>
-        <SeeMore
-          slot="action"
-          href={routes.projects}
-          label={copy.allProjects}
-        />
-        <ul class="tiles" role="list">
-          {projects.map((project) => (
-            <ProjectCard project={project} tile />
+    {built.work && (
+      <Section title={copy.work} arrivalStep={sectionStep("work")}>
+        <List>
+          {work.map(({ data, Content }) => (
+            <Entry {...data} collapsible>
+              <Content components={descriptionComponents} />
+            </Entry>
           ))}
-        </ul>
+        </List>
       </Section>
     )}
 
-    <Section title={copy.work} arrivalStep={sectionStep("work")}>
-      <List>
-        {work.map((job) => (
-          <WorkRow job={job.data} />
-        ))}
-      </List>
-    </Section>
+    {built.projects && (
+      <Section
+        id="projects"
+        title={copy.projects}
+        arrivalStep={sectionStep("projects")}
+      >
+        <List>
+          {projects.map(({ data, Content }) => (
+            <Entry {...data}>
+              <Content components={descriptionComponents} />
+            </Entry>
+          ))}
+        </List>
+      </Section>
+    )}
 
-    {hasWriting && (
+    {built.writing && (
       <Section title={writingPage.title} arrivalStep={sectionStep("writing")}>
         <SeeMore slot="action" href={routes.writing} label={copy.allPosts} />
         <List>
@@ -168,56 +181,41 @@ const sectionStep = (section: string) =>
       </Section>
     )}
 
-    <Section title={copy.speaking} arrivalStep={sectionStep("speaking")}>
-      <List>
-        {talks.map(({ data }) => (
-          <ListRow title={data.title}>
-            <time slot="date" datetime={isoMonth(data.date)}>
-              {formatMonthYear(data.date)}
-            </time>
-            {data.where}
-            {data.photos !== undefined && (
-              <RowPhotos slot="attachment" talk={data} photos={data.photos} />
-            )}
-          </ListRow>
-        ))}
-      </List>
-    </Section>
+    {built.speaking && (
+      <Section title={copy.speaking} arrivalStep={sectionStep("speaking")}>
+        <List>
+          {talks.map(({ data, Content }) => (
+            <Entry {...data}>
+              <Content components={descriptionComponents} />
+            </Entry>
+          ))}
+        </List>
+      </Section>
+    )}
 
-    <Section title={copy.teaching} arrivalStep={lastArrivalStep}>
-      <List>
-        {courses.map(({ data }) => (
-          <ListRow title={data.title} href={data.href}>
-            <time slot="date" datetime={isoMonth(data.date)}>
-              {formatMonthYear(data.date)}
-            </time>
-            {data.where}
-            {data.rating !== undefined && (
-              <CourseRating slot="meta" rating={data.rating} />
-            )}
-            {data.attachment !== undefined && (
-              <LinkAttachment slot="attachment" attachment={data.attachment} />
-            )}
-          </ListRow>
-        ))}
-      </List>
-    </Section>
+    {built.teaching && (
+      <Section title={copy.teaching} arrivalStep={sectionStep("teaching")}>
+        <List>
+          {courses.map(({ data, Content }) => (
+            <Entry {...data}>
+              <Content components={descriptionComponents} />
+            </Entry>
+          ))}
+        </List>
+      </Section>
+    )}
 
-    <Section title={copy.education} arrivalStep={lastArrivalStep}>
-      <List>
-        {education.map(({ data }) => (
-          <ListRow
-            title={fill(copy.degree, {
-              title: data.title,
-              school: data.school,
-            })}
-          >
-            <Years slot="date" start={data.start} end={data.end} />
-            {data.detail}
-          </ListRow>
-        ))}
-      </List>
-    </Section>
+    {built.education && (
+      <Section title={copy.education} arrivalStep={sectionStep("education")}>
+        <List>
+          {education.map(({ data, Content }) => (
+            <Entry {...data}>
+              <Content components={descriptionComponents} />
+            </Entry>
+          ))}
+        </List>
+      </Section>
+    )}
 
     <Section title={copy.contact} arrivalStep={lastArrivalStep}>
       <address>
@@ -236,7 +234,7 @@ const sectionStep = (section: string) =>
       </address>
     </Section>
   </div>
-  {talks.some(({ data }) => data.photos !== undefined) && <ImageViewer />}
+  {hasPhotos && <ImageViewer />}
 </BaseLayout>
 
 <style>
@@ -357,16 +355,6 @@ const sectionStep = (section: string) =>
     padding-block: var(--space-3);
     color: var(--text-2);
     line-height: var(--leading-body);
-  }
-
-  .tiles {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-8) var(--space-6);
-
-    @media (width >= 40rem) {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
   }
 
   /* The list rows' padding, so the first row starts as far under the

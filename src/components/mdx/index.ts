@@ -8,13 +8,12 @@ import ListItem from "./ListItem.astro";
 import Note from "./Note.astro";
 import OrderedList from "./OrderedList.astro";
 import Quote from "./Quote.astro";
-import RoleburnHero from "./RoleburnHero.astro";
 import Summary from "./Summary.astro";
 import Table from "./Table.astro";
 import UnorderedList from "./UnorderedList.astro";
 
-// Markdown elements mapped to components, and the components posts and case
-// studies can use, for <Content components={mdxComponents} />.
+// Markdown elements mapped to components, and the components posts can use,
+// for <Content components={mdxComponents} />.
 export const mdxComponents = {
   a: Link,
   h2: Heading,
@@ -29,5 +28,4 @@ export const mdxComponents = {
   Figure,
   Note,
   Quote,
-  RoleburnHero,
 };

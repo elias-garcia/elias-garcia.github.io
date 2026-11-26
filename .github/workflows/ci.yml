@@ -35,8 +35,8 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run html
-      # Internal links and their anchors, without the network. /projects is
-      # projects.html in dist.
+      # Internal links and their anchors, without the network. /writing is
+      # writing.html in dist.
       - uses: lycheeverse/lychee-action@v2
         with:
           args: >-

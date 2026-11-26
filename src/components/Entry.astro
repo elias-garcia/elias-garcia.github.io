@@ -1,0 +1,343 @@
+---
+import type { ComponentProps } from "astro/types";
+import { getHomeCopy } from "../lib/content.ts";
+import { formatEntryDate, formatEntryRange } from "../lib/format.ts";
+import { leavesSite, linkTarget } from "../lib/links.ts";
+import EntryAttachment from "./EntryAttachment.astro";
+import EntryDate from "./EntryDate.astro";
+import ExternalLabel from "./ExternalLabel.astro";
+import Icon from "./Icon.astro";
+import VisuallyHidden from "./VisuallyHidden.astro";
+
+// One entry of a Home section (DESIGN.md, Entry): its date, its title (the
+// link, when it has one), the grey line, its description (the default slot:
+// the entry's Markdown body), then its photos or a link card. A collapsible
+// entry (Work) opens to show its description and attachment; one with
+// nothing to show is a plain row.
+type Props = ComponentProps<typeof EntryDate> &
+  Pick<
+    ComponentProps<typeof EntryAttachment>,
+    "title" | "subtitle" | "images" | "attachment"
+  > & {
+    link?: string | undefined;
+    // A job's place, after its title: "Remote", "On-site, A Coruña".
+    place?: string | undefined;
+    collapsible?: boolean;
+  };
+
+const {
+  title,
+  subtitle,
+  link,
+  place,
+  images,
+  attachment,
+  collapsible = false,
+} = Astro.props;
+const { present } = await getHomeCopy();
+const dates =
+  "date" in Astro.props
+    ? { date: Astro.props.date }
+    : { start: Astro.props.start, end: Astro.props.end };
+// Rendered first, so an entry without a body leaves no wrapper behind.
+const description = Astro.slots.has("default")
+  ? (await Astro.slots.render("default")).trim()
+  : "";
+const hasAttachment = images !== undefined || attachment !== undefined;
+const opens = collapsible && (description !== "" || hasAttachment);
+const Row = opens ? "details" : "div";
+const Head = opens ? "summary" : "div";
+// A <summary> holds only phrasing content: in a collapsible entry the
+// description goes in the body instead.
+const Text = collapsible ? "span" : "div";
+const attachmentProps = {
+  title,
+  subtitle,
+  date:
+    "date" in dates
+      ? formatEntryDate(dates.date)
+      : formatEntryRange(dates, present),
+  images,
+  attachment,
+};
+---
+
+<li>
+  <Row class:list={["entry", { collapsible }]}>
+    <Head class="head">
+      <span class="date">
+        <EntryDate {...dates} />
+      </span>
+      <Text class="text">
+        <span class="title-line">
+          {link === undefined ? (
+            <span class="title">{title}</span>
+          ) : (
+            <a class="title title-link" href={link} {...linkTarget(link)}>
+              {leavesSite(link) ? (
+                <ExternalLabel href={link} label={title} />
+              ) : (
+                title
+              )}
+            </a>
+          )}
+          {place !== undefined && (
+            <span class="place">
+              <span class="separator" aria-hidden="true">
+                ·
+              </span>
+              <VisuallyHidden>,</VisuallyHidden>
+              {place}
+            </span>
+          )}
+        </span>
+        {subtitle !== undefined && <span class="subtitle">{subtitle}</span>}
+        {!collapsible && description !== "" && (
+          <div class="description">
+            <Fragment set:html={description} />
+          </div>
+        )}
+      </Text>
+      {opens && <Icon name="plus" class="plus" />}
+    </Head>
+    {opens && (
+      <div class="body">
+        {description !== "" && (
+          <div class="description">
+            <Fragment set:html={description} />
+          </div>
+        )}
+        {hasAttachment && <EntryAttachment {...attachmentProps} />}
+      </div>
+    )}
+    {!collapsible && hasAttachment && (
+      <div class="attachment-row">
+        <EntryAttachment {...attachmentProps} />
+      </div>
+    )}
+  </Row>
+</li>
+
+<style>
+  /* Like a list row: the text beside the date column, until the row is too
+     narrow for it (436px: the column, its gap and the text's basis), when
+     the date goes above. */
+  .entry:not(.collapsible) {
+    padding-block: var(--space-3);
+
+    .head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1) var(--space-6);
+    }
+
+    .date {
+      flex: 0 0 var(--gutter);
+    }
+
+    .text {
+      flex: 1 1 var(--row-basis);
+      min-inline-size: 0;
+    }
+  }
+
+  /* A job: date, text and the + on one line; on phones the + stays beside
+     the date and the text goes below. */
+  .collapsible .head {
+    display: grid;
+    grid-template-areas: "date text icon";
+    grid-template-columns: var(--gutter) minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--space-1) var(--space-6);
+    padding-block: var(--space-3);
+    list-style: none;
+
+    &:is(summary) {
+      cursor: pointer;
+    }
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:focus-visible {
+      border-radius: var(--r-sm);
+    }
+
+    @media (width < 40rem) {
+      grid-template-areas:
+        "date icon"
+        "text text";
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+
+  .date {
+    grid-area: date;
+    color: var(--text-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .text {
+    display: flex;
+    grid-area: text;
+    flex-direction: column;
+  }
+
+  .title {
+    font-weight: var(--weight-medium);
+  }
+
+  /* An underline that fades in, on every line of a title that wraps. */
+  .title-link {
+    text-decoration: underline var(--hairline) transparent;
+    text-underline-offset: var(--underline-offset);
+    transition: text-decoration-color var(--dur-quick) var(--ease);
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: inherit;
+        text-decoration-color: var(--line-strong);
+      }
+    }
+  }
+
+  .place {
+    color: var(--text-3);
+    font-size: var(--text-small);
+  }
+
+  .separator {
+    margin-inline: var(--space-2);
+  }
+
+  .subtitle {
+    color: var(--text-2);
+
+    & + .description {
+      margin-block-start: var(--space-2);
+    }
+  }
+
+  .plus {
+    grid-area: icon;
+    margin-block-start: var(--space-1);
+    stroke: var(--text-3);
+    transition: stroke var(--dur-quick) var(--ease);
+
+    @media (hover: hover) and (pointer: fine) {
+      .head:hover & {
+        stroke: var(--text);
+      }
+    }
+
+    .entry[open] & {
+      rotate: 45deg;
+    }
+  }
+
+  /* Paragraphs and lists 8 apart. With no grey line the description follows
+     the title directly, as a post's summary does. */
+  .description {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    color: var(--text-2);
+    line-height: var(--leading-body);
+    /* An address or identifier breaks instead of being cut. */
+    overflow-wrap: anywhere;
+
+    :global(ul) {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    :global(li) {
+      position: relative;
+      padding-inline-start: var(--space-4);
+
+      &::before {
+        content: "";
+        position: absolute;
+        /* Centred on the first line. */
+        inset-block-start: calc((1lh - var(--space-1)) / 2);
+        inset-inline-start: 0;
+        inline-size: var(--space-1);
+        block-size: var(--space-1);
+        border-radius: 50%;
+        background: var(--line-strong);
+      }
+    }
+  }
+
+  /* An open job: in the text's column, the description 8 under the job
+     title (the head's 12 of padding, pulled up 4), the attachment 16 under
+     the description, and 12 after the last of them. */
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-block-start: calc(var(--space-2) - var(--space-3));
+    padding-block-end: var(--space-3);
+    padding-inline-start: calc(var(--gutter) + var(--space-6));
+
+    @media (width < 40rem) {
+      padding-inline-start: 0;
+    }
+  }
+
+  /* Under the text, 16 below it, starting under the title: an empty date
+     column wraps with the row's and drops away with it. An image has none of
+     the space a line of text carries above and below it, so 8 more under it
+     puts the next entry as far away as it is after text. */
+  .attachment-row {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--space-6);
+    margin-block-start: var(--space-4);
+
+    li:not(:last-child) & {
+      margin-block-end: var(--space-2);
+    }
+
+    &::before {
+      content: "";
+      flex: 0 0 var(--gutter);
+    }
+
+    & > :global(*) {
+      flex: 1 1 var(--row-basis);
+      min-inline-size: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .plus {
+      transition:
+        stroke var(--dur-quick) var(--ease),
+        rotate var(--details-duration) var(--ease-settle);
+    }
+
+    .entry::details-content {
+      interpolate-size: allow-keywords;
+      overflow: clip;
+      contain: layout;
+      transition:
+        block-size var(--details-duration) var(--ease-settle),
+        content-visibility var(--details-duration),
+        display var(--details-duration);
+      transition-behavior: allow-discrete;
+    }
+
+    .entry:not([open])::details-content {
+      block-size: 0;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .description :global(li)::before {
+      background: CanvasText;
+    }
+  }
+</style>

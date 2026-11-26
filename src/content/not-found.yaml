@@ -8,7 +8,6 @@ notFound:
   # One line for each section the site can have, by its path.
   suggestions:
     /: About me, work experience, talks and contact
-    /projects: Tools, experiments with agents, and research
     /writing: Notes on building products, DeFi interfaces and AI agents
   # {link} is the email link. The script adds the requested path to the
   # subject, and fills in the body's {url} and {referrer}.

@@ -1,4 +1,4 @@
-import { getPosts, getProjects, getSearchCopy, getTopics } from "./content.ts";
+import { getPosts, getSearchCopy, getTopics } from "./content.ts";
 import { formatCount, formatMonthYear } from "./format.ts";
 import { routes } from "./routes.ts";
 
@@ -15,18 +15,13 @@ export type SearchTopic = {
 };
 export type SearchIndex = {
   readonly posts: readonly SearchEntry[];
-  readonly projects: readonly SearchEntry[];
   readonly topics: readonly SearchTopic[];
 };
 
 // What the search dialog carries in its HTML. A query matches only what a
 // row shows, its title and line, so every result shows why it matched.
 export async function getSearchIndex(): Promise<SearchIndex> {
-  const [posts, projects, copy] = await Promise.all([
-    getPosts(),
-    getProjects(),
-    getSearchCopy(),
-  ]);
+  const [posts, copy] = await Promise.all([getPosts(), getSearchCopy()]);
   const topics = getTopics(posts);
 
   return {
@@ -35,12 +30,6 @@ export async function getSearchIndex(): Promise<SearchIndex> {
       line: post.data.description,
       meta: formatMonthYear(post.data.date),
       href: routes.post(post.id),
-    })),
-    projects: projects.map((project) => ({
-      title: project.data.title,
-      line: project.data.summary,
-      meta: project.data.type,
-      href: routes.project(project.id),
     })),
     topics: [...topics.values()].map(({ slug, label, count }) => ({
       label,

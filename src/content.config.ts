@@ -1,6 +1,7 @@
-import { defineCollection } from "astro:content";
+import { defineCollection, type SchemaContext } from "astro:content";
 import { file, glob } from "astro/loaders";
 import { z } from "astro/zod";
+import { entryFolders } from "./lib/entries.ts";
 import { topicSlug } from "./lib/topics.ts";
 
 const link = z.object({
@@ -31,7 +32,8 @@ const site = defineCollection({
     // the time "in {country}", where the timezone is.
     country: z.string().regex(/^[A-Z]{2}$/),
     timezone: z.string(),
-    availability: z.string(),
+    // Shows "Open to work" on Home.
+    openToWork: z.boolean(),
     about: z.array(z.string()),
     contact: z.array(link.extend({ text: z.string() })),
     // Every page's browser title but Home's, which is the name alone.
@@ -42,63 +44,99 @@ const site = defineCollection({
   }),
 });
 
-const job = z.object({
-  start: z.number().int(),
-  end: z.number().int().optional(),
-  company: z.string(),
-  about: z.string(),
-  role: z.string(),
-  points: z.array(z.string()),
+// Every Home section but Writing is a folder of MDX files, one per entry:
+// the frontmatter holds the facts, the body is the description (DESIGN.md §8,
+// Content collections), which holds paragraphs, lists, bold, italic and
+// links only (src/lib/mdast-entry-description.ts).
+
+// "2024" or "2024-01". YAML reads a bare 2024 as a number, so it's read as
+// text first.
+const month = z.coerce
+  .string()
+  .regex(/^\d{4}(-(0[1-9]|1[0-2]))?$/, { error: "Use YYYY or YYYY-MM." });
+
+// A page on this site ("/writing/…") or on another (https://…).
+const entryLink = z.union([
+  z.url({ protocol: /^https$/ }),
+  z.string().startsWith("/"),
+]);
+
+const shared = (image: SchemaContext["image"]) => ({
+  title: z.string().min(1),
+  // The grey line: a job title, a venue, a course's provider, a school.
+  subtitle: z.string().optional(),
+  images: z
+    .array(z.object({ src: image(), alt: z.string().min(1) }))
+    .min(1)
+    .max(3)
+    .optional(),
+  // A card linking to another page (DESIGN.md, Link attachment). Its title,
+  // image and site name come from that page, saved by `npm run previews`;
+  // set them here only to replace the page's own.
+  attachment: z
+    .object({
+      href: z.url({ protocol: /^https$/ }),
+      title: z.string().optional(),
+      image: image().optional(),
+      site: z.string().optional(),
+    })
+    .optional(),
 });
 
-const work = defineCollection({
-  loader: file("src/content/work.yaml"),
-  schema: z.discriminatedUnion("mode", [
-    job.extend({ mode: z.literal("Remote") }),
-    job.extend({ mode: z.enum(["On-site", "Hybrid"]), place: z.string() }),
-  ]),
-});
+// Checked last: Zod can't extend a schema once it has a refinement.
+const imagesOrAttachment = (data: { images?: unknown; attachment?: unknown }) =>
+  data.images === undefined || data.attachment === undefined;
+const notBoth = {
+  error: "An entry has images or an attachment, not both.",
+  path: ["attachment"],
+};
 
-const talks = defineCollection({
-  loader: file("src/content/talks.yaml"),
-  schema: ({ image }) =>
-    z.object({
-      date: z.coerce.date(),
-      title: z.string(),
-      where: z.string(),
-      photos: z
-        .array(z.object({ src: image(), alt: z.string() }))
-        .min(1)
-        .max(3)
-        .optional(),
-    }),
-});
+const range = { start: month, end: z.union([month, z.literal("now")]) };
 
-const courses = defineCollection({
-  loader: file("src/content/courses.yaml"),
-  schema: z.object({
-    date: z.coerce.date(),
-    title: z.string(),
-    where: z.string(),
-    href: z.url(),
-    rating: z
-      .object({
-        score: z.number().min(0).max(5),
-        reviews: z.number().int().positive(),
-      })
-      .optional(),
-    // A card under the row linking to another page (DESIGN.md, Link
-    // attachment). Its title and site name come from that page, saved by
-    // `npm run previews`; set them here only to replace the page's own.
-    attachment: z
-      .object({
-        href: z.url(),
-        title: z.string().optional(),
-        site: z.string().optional(),
-      })
-      .optional(),
-  }),
-});
+const endsAfterStart = (data: { start: string; end: string }) =>
+  data.end === "now" || data.end >= data.start;
+const endBeforeStart = {
+  error: "The end is before the start.",
+  path: ["end"],
+};
+
+const section = <Schema extends z.ZodType>(
+  folder: (typeof entryFolders)[number],
+  schema: (context: SchemaContext) => Schema,
+) =>
+  defineCollection({
+    loader: glob({ pattern: "*.mdx", base: `./src/content/${folder}` }),
+    schema,
+  });
+
+// Projects, talks and courses: one date and an optional link.
+const dated = ({ image }: SchemaContext) =>
+  z
+    .object({ date: month, link: entryLink.optional(), ...shared(image) })
+    .strict()
+    .refine(imagesOrAttachment, notBoth);
+
+// A job's head opens it, so it has no link. Its place is "Remote", or how
+// and where ("On-site, A Coruña").
+const work = section("work", ({ image }) =>
+  z
+    .object({ ...range, place: z.string().min(1), ...shared(image) })
+    .strict()
+    .refine(imagesOrAttachment, notBoth)
+    .refine(endsAfterStart, endBeforeStart),
+);
+
+const education = section("education", ({ image }) =>
+  z
+    .object({ ...range, link: entryLink.optional(), ...shared(image) })
+    .strict()
+    .refine(imagesOrAttachment, notBoth)
+    .refine(endsAfterStart, endBeforeStart),
+);
+
+const projects = section("projects", dated);
+const speaking = section("speaking", dated);
+const teaching = section("teaching", dated);
 
 // What each attachment's page says about itself when shared, keyed by its
 // address. Written by `npm run previews` (scripts/previews.ts), never by hand.
@@ -122,17 +160,6 @@ const cvFormats = defineCollection({
   }),
 });
 
-const education = defineCollection({
-  loader: file("src/content/education.yaml"),
-  schema: z.object({
-    start: z.number().int(),
-    end: z.number().int(),
-    title: z.string(),
-    school: z.string(),
-    detail: z.string(),
-  }),
-});
-
 const writing = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/writing" }),
   schema: z.object({
@@ -142,37 +169,6 @@ const writing = defineCollection({
     topic: z.string().transform((label) => ({ label, slug: topicSlug(label) })),
     draft: z.boolean().default(false),
   }),
-});
-
-const projects = defineCollection({
-  loader: glob({ pattern: "**/*.mdx", base: "./src/content/projects" }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      summary: z.string(),
-      description: z.string(),
-      // The project's picture, on its tile, its card and its case study.
-      cover: z.discriminatedUnion("kind", [
-        z.object({
-          kind: z.literal("illustration"),
-          name: z.enum(["roleburn", "work-issue"]),
-        }),
-        z.object({
-          kind: z.literal("image"),
-          src: image(),
-          alt: z.string().min(1),
-        }),
-      ]),
-      // What it is (Tool, Experiment, Research…); any length, the type line
-      // wraps.
-      type: z.string().min(1),
-      // Whether it's alive; a fixed list, so a status is never a sentence.
-      status: z.enum(["In progress", "Live", "Paused", "Archived"]).optional(),
-      year: z.number().int(),
-      links: z.array(link),
-      // A draft shows in `npm run dev` only, like a post.
-      draft: z.boolean().default(false),
-    }),
 });
 
 const pages = defineCollection({
@@ -250,34 +246,17 @@ const home = defineCollection({
     role: template("{role}", "{city}", "{country}"),
     about: z.string(),
     work: z.string(),
+    projects: z.string(),
     speaking: z.string(),
     teaching: z.string(),
     education: z.string(),
     contact: z.string(),
     downloadCv: z.string(),
-    allProjects: z.string(),
+    openToWork: z.string(),
     allPosts: z.string(),
     degree: template("{title}", "{school}"),
     present: z.string(),
-    rating: template("{score}", "{reviews}"),
-    reviews: template("{reviews}"),
-    reviewCount: counts,
     experience: z.string(),
-  }),
-});
-
-const project = defineCollection({
-  loader: file("src/content/project.yaml"),
-  schema: z.object({
-    view: z.string(),
-    year: z.string(),
-    type: z.string(),
-    status: z.string(),
-    links: z.string(),
-    noLinks: z.string(),
-    more: z.string(),
-    previous: z.string(),
-    next: z.string(),
   }),
 });
 
@@ -318,11 +297,9 @@ const search = defineCollection({
     shortcut: z.string(),
     shortcutOther: z.string(),
     dialog: z.string(),
-    // Naming only the sections the site has (DESIGN.md §8), like noResults.
+    // The second for a site with no posts (DESIGN.md §8), like noResults.
     input: z.object({
       label: z.string(),
-      labelPosts: z.string(),
-      labelProjects: z.string(),
       labelNothing: z.string(),
     }),
     clear: z.string(),
@@ -338,11 +315,8 @@ const search = defineCollection({
       back: z.string(),
     }),
     rss: z.object({ title: z.string(), line: z.string() }),
-    // Naming only the sections the site has (DESIGN.md §8).
     noResults: z.object({
       title: template("{query}"),
-      titlePosts: template("{query}"),
-      titleProjects: template("{query}"),
       titleNothing: template("{query}"),
       hint: z.string(),
       hintWithoutPosts: z.string(),
@@ -371,17 +345,16 @@ export const collections = {
   notFound,
   layout,
   home,
-  project,
   writingIndex,
   search,
   viewer,
   post,
   work,
-  talks,
-  courses,
-  linkPreviews,
+  projects,
+  speaking,
+  teaching,
   education,
+  linkPreviews,
   cvFormats,
   writing,
-  projects,
 };

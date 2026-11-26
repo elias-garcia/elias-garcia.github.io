@@ -64,16 +64,16 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
                       <h3>
                         <span class="company">{job.company}</span>{" "}
                         <span class="separator">·</span>{" "}
-                        <span class="note">{job.mode}</span>
+                        <span class="note">{job.place}</span>
                       </h3>
-                      <p class="position">{job.role}</p>
+                      {job.role !== undefined && (
+                        <p class="position">{job.role}</p>
+                      )}
                     </div>
-                    {job.points.length > 0 && (
-                      <ul class="points">
-                        {job.points.map((point) => (
-                          <li>{point}</li>
-                        ))}
-                      </ul>
+                    {job.description.markdown !== "" && (
+                      <div class="description">
+                        <job.description.Content />
+                      </div>
                     )}
                   </div>
                 </li>
@@ -82,71 +82,43 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
           </section>
         )}
 
-        {cv.projects.entries.length > 0 && (
-          <section class="section">
-            <h2>{cv.projects.title}</h2>
-            <ul class="rows">
-              {cv.projects.entries.map((project) => (
-                <li class="row">
-                  <p class="date">{project.year}</p>
-                  <div class="entry">
-                    <h3>
-                      {project.title}
-                      {project.addresses.map(({ href, text }) => (
-                        <>
-                          {" "}
-                          <span class="separator">·</span>{" "}
-                          <a class="note" href={href}>
-                            {text}
-                          </a>
-                        </>
-                      ))}
-                    </h3>
-                    <p class="detail">{project.summary}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {cv.speaking.talks.length > 0 && (
-          <section class="section">
-            <h2>{cv.speaking.title}</h2>
-            <ul class="rows">
-              {cv.speaking.talks.map((talk) => (
-                <li class="row">
-                  <p class="date">{talk.date}</p>
-                  <div class="entry">
-                    <h3>{talk.title}</h3>
-                    <p class="detail">{talk.where}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {cv.teaching.courses.length > 0 && (
-          <section class="section">
-            <h2>{cv.teaching.title}</h2>
-            <ul class="rows">
-              {cv.teaching.courses.map((course) => (
-                <li class="row">
-                  <p class="date">{course.date}</p>
-                  <div class="entry">
-                    <h3>
-                      {course.title} <span class="separator">·</span>{" "}
-                      <a class="note" href={course.address.href}>
-                        {course.address.text}
-                      </a>
-                    </h3>
-                    <p class="detail">{course.where}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
+        {[cv.projects, cv.speaking, cv.teaching].map(
+          (section) =>
+            section.entries.length > 0 && (
+              <section class="section">
+                <h2>{section.title}</h2>
+                <ul class="rows">
+                  {section.entries.map((entry) => (
+                    <li class="row">
+                      <p class="date">{entry.date}</p>
+                      <div class="entry">
+                        <h3>
+                          {entry.title}
+                          {entry.address !== undefined && (
+                            <>
+                              {" "}
+                              <span class="separator">·</span>{" "}
+                              <a class="note" href={entry.address.href}>
+                                {entry.address.text}
+                              </a>
+                            </>
+                          )}
+                        </h3>
+                        {"subtitle" in entry
+                          ? entry.subtitle !== undefined && (
+                              <p class="detail">{entry.subtitle}</p>
+                            )
+                          : entry.description.markdown !== "" && (
+                              <div class="detail description">
+                                <entry.description.Content />
+                              </div>
+                            )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ),
         )}
 
         {cv.education.degrees.length > 0 && (
@@ -158,7 +130,11 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
                   <p class="date">{degree.dates}</p>
                   <div class="entry">
                     <h3>{degree.title}</h3>
-                    <p class="detail">{degree.detail}</p>
+                    {degree.description.markdown !== "" && (
+                      <div class="detail description">
+                        <degree.description.Content />
+                      </div>
+                    )}
                   </div>
                 </li>
               ))}
@@ -425,13 +401,20 @@ const photo = await getImage({ src: avatar, width: 400, format: "jpg" });
     gap: var(--cv-space-12);
   }
 
-  .points {
+  /* An entry's Markdown body: paragraphs, and a job's bullets. */
+  .description {
     display: flex;
     flex-direction: column;
     gap: var(--cv-space-4);
-    padding-inline-start: var(--cv-space-16);
     color: var(--text-2);
-    list-style-type: disc;
+
+    & ul {
+      display: flex;
+      flex-direction: column;
+      gap: var(--cv-space-4);
+      padding-inline-start: var(--cv-space-16);
+      list-style-type: disc;
+    }
 
     & li::marker {
       color: var(--text-3);

@@ -1,6 +1,7 @@
 ---
+import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
-import { getEntry, type CollectionEntry } from "astro:content";
+import { getEntry } from "astro:content";
 import { attachmentImage } from "../lib/attachment.ts";
 import { addressTitle, namedSite, previewDomain } from "../lib/link-preview.ts";
 import { linkTarget, opensNewTab } from "../lib/links.ts";
@@ -11,13 +12,20 @@ import VisuallyHidden from "./VisuallyHidden.astro";
 
 // A card linking to another page, drawn from what that page says about
 // itself when shared (DESIGN.md, Link attachment). An address that was never
-// fetched shows no image and the address as its title.
+// fetched shows no image and the address as its title. The entry can replace
+// the page's title, image or site name with its own.
 type Props = {
-  attachment: NonNullable<CollectionEntry<"courses">["data"]["attachment"]>;
+  attachment: {
+    href: string;
+    title?: string | undefined;
+    image?: ImageMetadata | undefined;
+    site?: string | undefined;
+  };
 };
 
-const { href, title, site } = Astro.props.attachment;
+const { href, title, image: ownImage, site } = Astro.props.attachment;
 const preview = (await getEntry("linkPreviews", href))?.data;
+const image = ownImage ?? preview?.image;
 const name = title ?? preview?.title ?? addressTitle(href);
 const siteName = namedSite(site ?? preview?.siteName, href);
 const video = preview?.type?.startsWith("video") === true;
@@ -25,12 +33,12 @@ const video = preview?.type?.startsWith("video") === true;
 
 <a class="link-card" href={href} {...linkTarget(href)}>
   <span class="thumbnail">
-    {preview?.image === undefined ? (
+    {image === undefined ? (
       <Icon name="link" class="placeholder" />
     ) : (
       <Image
         class="image"
-        src={preview.image}
+        src={image}
         alt=""
         widths={[...attachmentImage.widths]}
         sizes={attachmentImage.sizes}

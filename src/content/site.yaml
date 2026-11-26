@@ -4,7 +4,7 @@ profile:
   city: Porto
   country: PT
   timezone: Europe/Lisbon
-  availability: Open to remote roles
+  openToWork: true
   pageTitle: "{page} · {name}"
   # The RSS feed's title; {page} is the Writing page's title.
   feedTitle: "{name}: {page}"

@@ -196,6 +196,11 @@ const Row = href === undefined ? "div" : "a";
       color: var(--text-3);
       line-height: var(--leading-tight);
       white-space: normal;
+
+      /* --text-3 is too faint on the tint background (DESIGN.md §2.1). */
+      [aria-selected="true"] & {
+        color: var(--text-2);
+      }
     }
 
     .hint {
@@ -217,9 +222,11 @@ const Row = href === undefined ? "div" : "a";
     }
   }
 
+  /* Shown only on the selected row, so always on the tint background:
+     --text-3 is too faint there (DESIGN.md §2.1). */
   .hint {
     inline-size: var(--icon-md);
-    color: var(--text-3);
+    color: var(--text-2);
     font-size: var(--text-small);
     opacity: 0;
 

@@ -4,7 +4,7 @@ import { getViewerCopy } from "../lib/content.ts";
 import Icon from "./Icon.astro";
 import KeyHintGroup from "./KeyHintGroup.astro";
 
-// The image viewer for the talk photos (RowPhotos.astro): a card over the
+// The image viewer for an entry's photos (EntryPhotos.astro): a card over the
 // page, and on phones a full-screen dark viewer.
 const copy = await getViewerCopy();
 ---
@@ -56,9 +56,11 @@ const copy = await getViewerCopy();
     <figcaption class="caption">
       <span class="title" data-viewer-title></span>
       <span class="meta">
-        <span data-viewer-where></span>
-        <span class="dot" aria-hidden="true">
-          ·
+        <span class="subtitle" data-viewer-subtitle-part>
+          <span data-viewer-subtitle></span>
+          <span class="dot" aria-hidden="true">
+            ·
+          </span>
         </span>
         <span data-viewer-date></span>
         <span class="dot" aria-hidden="true" data-viewer-several>
@@ -138,7 +140,10 @@ const copy = await getViewerCopy();
   const frame = dialog?.querySelector<HTMLElement>("[data-viewer-frame]");
   const track = dialog?.querySelector<HTMLElement>("[data-viewer-track]");
   const title = dialog?.querySelector<HTMLElement>("[data-viewer-title]");
-  const where = dialog?.querySelector<HTMLElement>("[data-viewer-where]");
+  const subtitlePart = dialog?.querySelector<HTMLElement>(
+    "[data-viewer-subtitle-part]",
+  );
+  const subtitle = dialog?.querySelector<HTMLElement>("[data-viewer-subtitle]");
   const date = dialog?.querySelector<HTMLElement>("[data-viewer-date]");
   const position = dialog?.querySelector<HTMLElement>("[data-viewer-position]");
   const dots = dialog?.querySelector<HTMLElement>("[data-viewer-dots]");
@@ -149,7 +154,8 @@ const copy = await getViewerCopy();
     frame &&
     track &&
     title &&
-    where &&
+    subtitlePart &&
+    subtitle &&
     date &&
     position &&
     dots &&
@@ -163,7 +169,7 @@ const copy = await getViewerCopy();
     let slides: HTMLElement[] = [];
     let images: HTMLImageElement[] = [];
     let current = 0;
-    let talkTitle = "";
+    let entryTitle = "";
     // Puts a photo moved past the end of the row for a wrap back in its
     // place, at once.
     let unwrap: (() => void) | undefined;
@@ -222,7 +228,7 @@ const copy = await getViewerCopy();
         });
     };
 
-    // One slide per photo of the talk. Each shows its thumbnail, already on
+    // One slide per photo of the entry. Each shows its thumbnail, already on
     // the page and the same crop of the same file, until the larger photo
     // loads; a thumbnail that hasn't loaded yet (it's lazy) shows nothing.
     const buildSlides = () => {
@@ -272,7 +278,7 @@ const copy = await getViewerCopy();
       const values = {
         index: String(current + 1),
         count: String(photos.length),
-        title: talkTitle,
+        title: entryTitle,
       };
       dialog.setAttribute(
         "aria-label",
@@ -352,8 +358,8 @@ const copy = await getViewerCopy();
     };
 
     const open = (button: HTMLButtonElement, { key = false } = {}) => {
-      const talk = button.closest<HTMLElement>("[data-viewer-talk]");
-      if (talk === null) {
+      const strip = button.closest<HTMLElement>("[data-viewer-entry]");
+      if (strip === null) {
         return;
       }
       // The last close's drag stays until now, so the viewer could leave
@@ -362,12 +368,13 @@ const copy = await getViewerCopy();
       endSwipe();
       delete dialog.dataset.leaving;
       photos = [
-        ...talk.querySelectorAll<HTMLButtonElement>("[data-viewer-open]"),
+        ...strip.querySelectorAll<HTMLButtonElement>("[data-viewer-open]"),
       ];
-      talkTitle = talk.dataset.viewerTalk ?? "";
-      title.textContent = talkTitle;
-      where.textContent = talk.dataset.viewerWhere ?? "";
-      date.textContent = talk.dataset.viewerDate ?? "";
+      entryTitle = strip.dataset.viewerEntry ?? "";
+      title.textContent = entryTitle;
+      subtitle.textContent = strip.dataset.viewerSubtitle ?? "";
+      subtitlePart.hidden = subtitle.textContent === "";
+      date.textContent = strip.dataset.viewerDate ?? "";
       for (const element of dialog.querySelectorAll<HTMLElement>(
         "[data-viewer-several]",
       )) {
@@ -505,7 +512,7 @@ const copy = await getViewerCopy();
       // the strip slides to it; the page stays where it was, even with the
       // photo under the sticky header.
       const photo = photos[current];
-      const strip = photo?.closest("[data-viewer-talk]");
+      const strip = photo?.closest("[data-viewer-entry]");
       if (photo !== undefined && strip !== null && strip !== undefined) {
         const box = photo.getBoundingClientRect();
         const bounds = strip.getBoundingClientRect();
@@ -885,6 +892,12 @@ const copy = await getViewerCopy();
     column-gap: var(--space-2);
     color: var(--text-3);
     font-size: var(--text-small);
+  }
+
+  /* Its dot spaced by the line's gap, like the others. Hidden, it isn't:
+     `display` here would undo the attribute. */
+  .subtitle:not([hidden]) {
+    display: contents;
   }
 
   .position {

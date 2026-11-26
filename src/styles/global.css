@@ -228,20 +228,6 @@ details {
   animation: none;
 }
 
-/* A project's cover morphs between its tile or card and its case study.
-   Their shapes differ (4:3 and 16:7), so each picture is cropped as it
-   moves, never stretched. */
-::view-transition-group(*.project-cover) {
-  animation-duration: var(--dur-move);
-  animation-timing-function: var(--ease-settle);
-}
-
-::view-transition-old(*.project-cover),
-::view-transition-new(*.project-cover) {
-  block-size: 100%;
-  object-fit: cover;
-}
-
 @keyframes page-out {
   to {
     opacity: 0;

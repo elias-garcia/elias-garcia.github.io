@@ -2,20 +2,19 @@
 import DisplayTitle from "./DisplayTitle.astro";
 import Prose from "./mdx/Prose.astro";
 
-// What a post and a case study share: the way back with an action beside
-// it, the title and what sits under it, facts, a cover, the content (the
-// default slot, set as prose), and what closes the page. Arriving, the head
-// is the first step and the rest the second (DESIGN.md §2.5).
+// A post: the way back with an action beside it, the title and what sits
+// under it, the content (the default slot, set as prose), and what closes
+// the page. Arriving, the head is the first step and the rest the second
+// (DESIGN.md §2.5).
 type Props = {
   title: string;
 };
 
 const { title } = Astro.props;
-const facts = Astro.slots.has("facts");
 ---
 
 <article class="article">
-  <div class:list={["reading", { facts }]}>
+  <div class="reading">
     <div class="head enter" style="--i: 0">
       <div class="top">
         <slot name="back" />
@@ -25,8 +24,6 @@ const facts = Astro.slots.has("facts");
         <DisplayTitle>{title}</DisplayTitle>
         <slot name="intro" />
       </header>
-      <slot name="facts" />
-      <slot name="cover" />
     </div>
     <Prose arrivalStep={1}>
       <slot />
@@ -51,15 +48,8 @@ const facts = Astro.slots.has("facts");
     gap: var(--space-8);
   }
 
-  /* Facts end in a rule, and the content starts further below it. */
-  .reading.facts {
-    gap: var(--space-12);
-  }
-
-  /* Nothing closes the page, or a project has no article yet: no gap
-     either. */
-  .end:not(:has(*)),
-  .reading > :global(.prose:not(:has(*))) {
+  /* Nothing closes the page: no gap either. */
+  .end:not(:has(*)) {
     display: none;
   }
 

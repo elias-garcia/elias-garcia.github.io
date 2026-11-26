@@ -4,12 +4,15 @@
 type Props = {
   title: string;
   arrivalStep?: number;
+  // For links to the section, like the old Projects page's redirect.
+  id?: string;
 };
 
-const { title, arrivalStep } = Astro.props;
+const { title, arrivalStep, id } = Astro.props;
 ---
 
 <section
+  id={id}
   class:list={["section", { enter: arrivalStep !== undefined }]}
   style={arrivalStep === undefined ? undefined : `--i: ${String(arrivalStep)}`}
 >

@@ -9,20 +9,19 @@ import {
 import { describeSections } from "../lib/navigation.ts";
 import { routes } from "../lib/routes.ts";
 import { getSearchIndex } from "../lib/search.ts";
-import { getSections, hasProjects, hasWriting } from "../lib/sections.ts";
+import { getSections, hasWriting } from "../lib/sections.ts";
 import Icon from "./Icon.astro";
 import KeyHint from "./KeyHint.astro";
 import KeyHintGroup from "./KeyHintGroup.astro";
 import SearchOption from "./SearchOption.astro";
 import VisuallyHidden from "./VisuallyHidden.astro";
 
-const [copy, home, profile, writing, projects, formats, index, navigation] =
+const [copy, home, profile, writing, formats, index, navigation] =
   await Promise.all([
     getSearchCopy(),
     getHomeCopy(),
     getProfile(),
     getPage("writing"),
-    getPage("projects"),
     getCvFormats(),
     getSearchIndex(),
     getSections(),
@@ -32,32 +31,10 @@ const email = profile.contact.find(({ href }) => href.startsWith("mailto:"));
 if (email === undefined) {
   throw new Error("The profile has no `mailto:` contact for the search.");
 }
-const bySections = (
-  both: string,
-  postsOnly: string,
-  projectsOnly: string,
-  neither: string,
-) =>
-  hasWriting && hasProjects
-    ? both
-    : hasWriting
-      ? postsOnly
-      : hasProjects
-        ? projectsOnly
-        : neither;
-const inputLabel = bySections(
-  copy.input.label,
-  copy.input.labelPosts,
-  copy.input.labelProjects,
-  copy.input.labelNothing,
-);
+// Without posts, search names the whole site instead (DESIGN.md §8).
+const inputLabel = hasWriting ? copy.input.label : copy.input.labelNothing;
 const noResults = {
-  title: bySections(
-    copy.noResults.title,
-    copy.noResults.titlePosts,
-    copy.noResults.titleProjects,
-    copy.noResults.titleNothing,
-  ),
+  title: hasWriting ? copy.noResults.title : copy.noResults.titleNothing,
   hint: hasWriting ? copy.noResults.hint : copy.noResults.hintWithoutPosts,
 };
 ---
@@ -193,20 +170,6 @@ const noResults = {
         </div>
       </div>
     )}
-    {hasProjects && (
-      <div
-        class="group"
-        role="group"
-        aria-label={projects.title}
-        hidden
-        data-view="results"
-        data-results="projects"
-      >
-        <div class="group-label" aria-hidden="true">
-          {projects.title}
-        </div>
-      </div>
-    )}
     {hasWriting && (
       <div
         class="group"
@@ -284,13 +247,6 @@ const noResults = {
       </SearchOption>
     </template>
   )}
-  {hasProjects && (
-    <template data-search-template="projects">
-      <SearchOption href="">
-        <Icon name="layout-grid" />
-      </SearchOption>
-    </template>
-  )}
   {hasWriting && (
     <template data-search-template="topics">
       <SearchOption href="">
@@ -337,8 +293,6 @@ const noResults = {
       isRecord(value) &&
       Array.isArray(value.posts) &&
       value.posts.every(isEntry) &&
-      Array.isArray(value.projects) &&
-      value.projects.every(isEntry) &&
       Array.isArray(value.topics) &&
       value.topics.every(isTopic)
     );
@@ -477,7 +431,7 @@ const noResults = {
     list.querySelectorAll<HTMLElement>('[role="option"]').forEach(identify);
 
     const row = (
-      kind: "posts" | "projects" | "topics",
+      kind: "posts" | "topics",
       title: Node[],
       line: Node[],
       meta: string,
@@ -498,10 +452,7 @@ const noResults = {
       return option;
     };
 
-    const fillGroup = (
-      kind: "posts" | "projects" | "topics",
-      rows: HTMLElement[],
-    ) => {
+    const fillGroup = (kind: "posts" | "topics", rows: HTMLElement[]) => {
       const group = list.querySelector<HTMLElement>(`[data-results="${kind}"]`);
       if (group === null) {
         return;
@@ -585,24 +536,19 @@ const noResults = {
       const found = (entry: SearchEntry) =>
         matches(`${entry.title} ${entry.line}`, terms);
       const posts = index.posts.filter(found);
-      const projects = index.projects.filter(found);
-      const total = posts.length + projects.length;
-      const toRow = (kind: "posts" | "projects") => (entry: SearchEntry) =>
-        row(
-          kind,
-          markMatches(entry.title, terms).map(toNode),
-          markMatches(entry.line, terms).map(toNode),
-          entry.meta,
-          entry.href,
-        );
+      const total = posts.length;
       fillGroup(
         "posts",
-        posts.map(toRow("posts")).filter((option) => option !== undefined),
-      );
-      fillGroup(
-        "projects",
-        projects
-          .map(toRow("projects"))
+        posts
+          .map((entry) =>
+            row(
+              "posts",
+              markMatches(entry.title, terms).map(toNode),
+              markMatches(entry.line, terms).map(toNode),
+              entry.meta,
+              entry.href,
+            ),
+          )
           .filter((option) => option !== undefined),
       );
       count.textContent = fill(

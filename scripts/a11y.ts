@@ -72,15 +72,15 @@ const states: Record<
       },
     },
     {
-      name: "a work row open",
-      open: (page) => page.locator("details.job > summary").first().click(),
+      name: "a work entry open",
+      open: (page) => page.locator("details.entry > summary").first().click(),
     },
     {
       name: "image viewer open",
-      // The talk with several photos, so the arrows and the count show.
+      // The entry with several photos, so the arrows and the count show.
       open: (page) =>
         page
-          .locator("[data-viewer-talk]")
+          .locator("[data-viewer-entry]")
           .filter({ has: page.locator("li + li") })
           .locator("[data-viewer-open]")
           .first()

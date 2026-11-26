@@ -6,6 +6,10 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/projects", "destination": "/#projects" },
+    { "source": "/projects/:path*", "destination": "/#projects" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

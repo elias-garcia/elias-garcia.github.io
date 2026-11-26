@@ -12,11 +12,7 @@ export function describeSections(
   // Against every section the site can have, not just the ones it has now:
   // a section with no content is left out of the navigation, but keeps its
   // line for when it's back.
-  const sectionPaths: readonly string[] = [
-    routes.home,
-    routes.projects,
-    routes.writing,
-  ];
+  const sectionPaths: readonly string[] = [routes.home, routes.writing];
   const unknown = Object.keys(descriptions).filter(
     (path) => !sectionPaths.includes(path),
   );

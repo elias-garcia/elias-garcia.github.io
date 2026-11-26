@@ -91,24 +91,18 @@ export function formatFileSize(bytes: number): string {
   return kilobytes.format(Math.max(1, Math.round(bytes / 1000))).toUpperCase();
 }
 
-export type YearRange = {
-  readonly start: number;
-  readonly end?: number | undefined;
-};
-
-// `present` stands for the end of a range that hasn't ended.
-export function formatYearRange(
-  { start, end }: YearRange,
-  present: string,
-): string {
-  return `${String(start)} – ${end === undefined ? present : String(end)}`;
+// An entry's date ("2024" or "2024-01") as the site shows it: the year
+// alone, or "Jan 2024".
+export function formatEntryDate(value: string): string {
+  return /^\d{4}$/.test(value)
+    ? value
+    : monthYear.format(new Date(`${value}-01T00:00:00Z`));
 }
 
-const score = new Intl.NumberFormat(locale, {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
-
-export function formatScore(value: number): string {
-  return score.format(value);
+// `present` stands in for the end of a range that hasn't ended ("now").
+export function formatEntryRange(
+  { start, end }: { readonly start: string; readonly end: string },
+  present: string,
+): string {
+  return `${formatEntryDate(start)} – ${end === "now" ? present : formatEntryDate(end)}`;
 }

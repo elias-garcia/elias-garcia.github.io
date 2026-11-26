@@ -1,15 +1,22 @@
 import type { APIRoute } from "astro";
-import { getHomeCopy, getPage, getProfile } from "../../lib/content.ts";
+import {
+  getHomeCopy,
+  getPage,
+  getProfile,
+  getProjects,
+  getTalks,
+} from "../../lib/content.ts";
 import { requireSite } from "../../lib/navigation.ts";
-import { hasProjects, hasWriting } from "../../lib/sections.ts";
+import { hasWriting } from "../../lib/sections.ts";
 import { renderSiteImage } from "../../lib/share-image.ts";
 
 // The share image for every page but posts. Along its bottom: what the site
-// holds, under the titles the pages use.
+// holds, under the titles Home and Writing use.
 export const GET: APIRoute = async ({ site }) => {
-  const [profile, projects, writing, home] = await Promise.all([
+  const [profile, projects, talks, writing, home] = await Promise.all([
     getProfile(),
-    getPage("projects"),
+    getProjects(),
+    getTalks(),
     getPage("writing"),
     getHomeCopy(),
   ]);
@@ -17,9 +24,9 @@ export const GET: APIRoute = async ({ site }) => {
     name: profile.name,
     role: profile.role,
     sections: [
-      ...(hasProjects ? [projects.title] : []),
+      ...(projects.length > 0 ? [home.projects] : []),
       ...(hasWriting ? [writing.title] : []),
-      home.speaking,
+      ...(talks.length > 0 ? [home.speaking] : []),
     ],
     domain: requireSite(site, "the domain on share images").host,
   });
