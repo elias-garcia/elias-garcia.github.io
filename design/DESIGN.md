@@ -91,7 +91,10 @@ Nothing a visitor reads is below 12px.
 
 Line heights: 1 (single-line controls), 1.2 (display), 1.35 (headings and titles), 1.5 (single lines and small text), 1.6 (body), 1.7 (code).
 
-**Wrapping.** `text-wrap: pretty` is set once on the site root, so every wrapped text avoids ending on a single short word: paragraphs, the second line of a list row, entry descriptions, captions. Titles that wrap (`h1`) override it with `text-wrap: balance`.
+**Wrapping.** Two values, each with its place:
+  - **`text-wrap: pretty`**, set once on the site root: paragraphs, the second line of a list row, entry descriptions, captions, notes, and **titles inside rows and boxes** (post rows, entry titles, the link card, previous / next, search results). A row title sits above a grey line that runs the full width, and a balanced title would look shorter than the text under it; inside a bordered box, balancing leaves visible empty space against the border.
+  - **`text-wrap: balance`** on **standalone headings**: page titles (`h1`: the name on Home, Writing, Page not found, a post's title), the headings inside posts (`h2`, `h3`, `h4`), the Notes heading and the post title on the share image. They split into lines of similar length instead of leaving a word alone underneath. In code: `PageTitle`, `DisplayTitle`, `Heading` (the post `h2` and Notes) and `Prose` (`h3`, `h4`).
+  - Balance only works on short text (Chrome balances up to 6 lines, Firefox up to 10; longer text wraps normally), so never on paragraphs or descriptions. Both are progressive enhancements: browsers without them wrap normally.
 
 The display size is a token, so it changes in one place: `--text-display: 2rem`, `1.75rem` below `sm` (`tokens.css`).
 

@@ -91,7 +91,7 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-wrap: break-word;
   /* Every wrapped text, not only paragraphs: a row's second line or a
-     caption doesn't end on one short word either. Titles balance instead. */
+     caption doesn't end on one short word either. Standalone headings balance instead. */
   text-wrap: pretty;
 }
 
